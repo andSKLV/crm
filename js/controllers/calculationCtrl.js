@@ -54,8 +54,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
      * @param {string} key параметр, который нужно поменять
      * @param {park} park в каком парке нужно поменять
      */
-    this.setParamToAllProcess=function(value,key,park){
-        park.processes.forEach(function (process) {
+    this.setParamToAllProcess=function(value,key,process){
+        const park = process.park;
+        const index = park.processes.indexOf(process);
+        const processes = park.processes.filter((process, i) => i>index);
+        processes.forEach(process => {
             process[key]=value;
             if(key==="limit" && process.package!==undefined){
                 delete process.multi.packName;

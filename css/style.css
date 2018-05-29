@@ -23,12 +23,12 @@
     border-top: 5px solid rgb(146, 167, 205);
 }
 div.mi_slider{
-    margin: auto;
+    margin: auto; 
 }
 
 @media (min-width: 1800px) and (max-width: 3600px) {
     .tooltip_span{
-        font-size: 14px;
+        font-size: 20px;
     }
     div.mi_slider {
         width:1650px;
@@ -79,8 +79,8 @@ div.mi_slider{
 }
 @media (min-width: 1300px) and (max-width: 1800px) {
     .tooltip_span{
-        font-size: 14pt;
-    }
+        font-size: 18pt;
+      }
     div.mi_slider{
         width:1200px;
         height: 800px;
@@ -247,7 +247,6 @@ input.properties{
 .multi{
     height:20px;
     float: left;
-    background: gray;
     width: 50px;
     background: rgb(230, 230, 230);
 }
@@ -711,3 +710,18 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 .animate-switch.ng-enter.ng-enter-active {
     top:0;
 }
+
+.magnifer {
+    font-size: 3em; /* задает размер иконки */
+    width: 0.3em; height: 0.3em; margin-bottom: 20px;
+    margin-top: 100px;
+    border: 0.1em solid #52C8E4;
+    position: absolute;
+    border-radius: 50%;
+}
+.magnifer:before {
+    content: "";
+    width: 0.3em; height: 0.08em;
+    position: absolute; right: -0.25em; bottom: -0.1em;
+    background: #52C8E4;
+    transform: rotate(45deg);}
