@@ -1,0 +1,41 @@
+<ul ng-repeat="park in calculation.myFactory.parks track by $index" class="park">
+    <li ng-repeat="process in park.processes track by $index">
+        <table>
+            <tr>
+                <td ng-repeat="(key,value) in process track by $index" ng-if="calculation.checkTransportProp(key)!=-1" ng-click="loadProcess(process, key)">
+                   {{key=="wrapping" || key=="risk" ? value : calculation.applyFilter(value, key) }}
+                   <span ng-if="key=='amount'" class="gearwheel"><img src="img/gearwheel.png" alt="" ng-click="clicking($event, process)"></span>
+               </td>
+            </tr>
+        </table>
+        <ul ng-show="process.showCars" class="cars-list">
+            <li ng-repeat="car in park.cars"><input type="checkbox" ng-checked="process.amount==park.amount" id="{{calculation.getUniqueId(process, $index)}}"><label for="{{calculation.getUniqueId(process, $index)}}"></label>
+                <table>
+                    <tr>
+                        <td>
+                            <input type="text" ng-model="car.number" ng-keypress="console()">
+                        </td>
+                        <td>
+                            <input type="text">
+                        </td>
+                        <td>
+                            <input type="text">
+                        </td>
+                        <td>
+                            <input type="text">
+                        </td>
+                        <td>
+                            <input type="text">
+                        </td>
+                        <td>
+                            <input type="text">
+                        </td>
+                    </tr>
+                </table>
+                
+            </li>
+        </ul>
+        
+    </li>
+</ul>
+<div ng-if="dashboard.myFactory.matrixType=='HIP' && dashboard.myFactory.totalPrice!=undefined && dashboard.myFactory.totalPrice!=0" calculation-bottom-view></div>

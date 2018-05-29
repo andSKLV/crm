@@ -1,0 +1,55 @@
+<div class="ul_container">
+    <div ng-class="[
+            {mi_current: dashboard.currentUl($index)},
+            {mi_moveFromRight: dashboard.currentUl($index)},
+            { mi_moveToRight: !dashboard.currentUl($index)}
+        ]"
+        ng-show="dashboard.currentUl($index)" class="ul">
+        <textarea  ng-model="dashboard.myFactory.polisCurrent.name"
+        style="width: 100%;background:rgb(230, 230, 230); resize: none; height: 100%;" autofocus></textarea>
+    </div>
+    <div ng-repeat="param in currObj" class="ul"
+         ng-class="[
+            {mi_current: dashboard.currentUl($index)},
+            {mi_moveFromRight: dashboard.currentUl($index)},
+            { mi_moveToRight: !dashboard.currentUl($index)}
+         ]"
+         ng-show="dashboard.currentUl($index)" >      
+         <textarea  ng-model="param.text"
+         style="width: 100%;background:rgb(230, 230, 230); resize: none; height: 100%;" autofocus></textarea>
+    </div>
+    <div ng-class="[
+            {mi_current: dashboard.currentUl(currObj.length+1)},
+            {mi_moveFromRight: dashboard.currentUl(currObj.length+1)},
+            { mi_moveToRight: !dashboard.currentUl(currObj.length+1)}
+        ]"
+        ng-show="dashboard.currentUl(currObj.length+1)" class="ul">
+        <textarea  ng-model="newValue" ng-keyup="addNewValue($event)"
+        style="width: 100%;background:rgb(230, 230, 230); resize: none; height: 100%;" autofocus></textarea>
+    </div>
+
+</div>
+<div class="nav">
+    <div>
+        <div    ng-click="dashboard.selectParam($index) "
+                    ng-class="[
+                    {mi_selected: dashboard.myFactory.document.selectedParam===$index}
+            ]">
+           Название списка
+       </div>
+        <div    ng-repeat="param in currObj"
+                ng-click="dashboard.selectParam($index) "
+                ng-if="param.checked"
+                ng-class="[
+                    {mi_selected: dashboard.myFactory.document.selectedParam===$index}
+                ]">
+            {{$index+1}}
+        </div>
+        <div    ng-click="dashboard.selectParam(currObj.length+1) "
+                ng-class="[
+                {mi_selected: dashboard.myFactory.document.selectedParam===currObj.length+1}
+                ]">
+            +
+        </div>
+    </div>
+</div>

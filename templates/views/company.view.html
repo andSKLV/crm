@@ -1,0 +1,10 @@
+<table class="matrix" ng-if="isntEmpty(dashboard.myFactory.newClientCard)" ng-click="dashboard.relocatePage({urlTo:'company'})">
+    <tbody>
+    <tr ng-repeat="param in dashboard.myFactory.newClientCard" class="matrix_row" ng-if="isntEmpty(param)">
+        <td ng-repeat="(key,value) in param" ng-if="isntEmpty(param)" class="properties"
+                ng-class="{light_red: value=='' || value=='Форма организации'}" ng-click="loadClient(key)">
+            {{value=="" || value=="Форма организации" ? key : value}}
+        </td>
+    </tr>
+    </tbody>
+</table>

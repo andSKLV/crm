@@ -1,0 +1,7 @@
+<table class="matrix">
+    <tbody>
+        <tr ng-repeat="param in clientCard" class="matrix_row">
+            <td ng-repeat="(key,value) in param" ng-if="value!==''" data-tooltip="{{key}}" ng-mouseenter="appendTooltip(key)" ng-mouseleave="removeTooltip()" title="{{key}}" class="properties" ng-click="loadToDashboard(key)">{{value}}</td>
+        </tr>
+    </tbody>
+</table>

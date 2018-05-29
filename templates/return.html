@@ -1,0 +1,30 @@
+<table style="text-align: center; width:100%; height:100px; " class="animate-switch-container">
+    <tbody ng-if="dashboard.config=='tooltip'">
+    <tr>
+        <td class="tooltip_span" style="color: rgb(146, 167, 205);height: 100px;">{{dashboard.tooltip.title}}</td>
+    </tr>
+    </tbody>
+    <tbody ng-if="dashboard.config!='dashboard.json' && mode=='calc'" ng-switch="dashboard.karetka.mode" class="animate-switch-container animate-switch">
+        <tr class="animate-switch" ng-switch-when="changing process">
+            <td ng-click="dashboard.clean()">Выйти из режима изменения</td>
+        </tr>
+        <tr class="animate-switch" ng-switch-when="making new process">
+            <td ng-click="dashboard.clean()">Отменить создание</td>
+        </tr>
+        <tr class="animate-switch" ng-switch-when="confirm refresh">
+            <td ng-click="dashboard.reloadDashboard('dashboard.json'); dashboard.myFactory.matrixType=null;" style="float: left">Да</td>
+            <td class="not_hover">Вернуться в основное меню?</td>
+            <td ng-click="dashboard.karetka.mode='listener'" style="float: right">Нет</td>
+        </tr>
+        <tr class="animate-switch" ng-switch-default="">
+            <td ng-click="dashboard.Confirm()">Вернуться</td>
+
+        </tr>
+    </tbody>
+    <tbody ng-if="dashboard.config=='calculationActions.json'">
+        <tr>
+            <td ng-click="dashboard.reloadDashboard('HIP.json','HIP')">Вернуться к расчету</td>
+        </tr>
+    </tbody>
+
+</table>

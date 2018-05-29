@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="templates/paths/calculation/style.css">
+<div ng-model="dashboard.myFactory.multi.mode" 
+    ng-if="dashboard.myFactory.matrixType=='HIP'" 
+    ng-click="calculation.multiClicked()" 
+    ng-class="{alreadySelected: dashboard.myFactory.multi.mode}" 
+    class="multi">MULTI</div>
+
+<div class="dashboard_container" calculation-dashboard></div>
+
+<div id="tooltip_box" calculation-return></div>
+
+<div class="matrix_container" ng-controller="matrixCtrl as matrixCtrl" ng-class="{calc: dashboard.myFactory.matrixType=='HIP'}">
+    <table class="matrix" ng-if="dashboard.myFactory.matrixType=='find_company'" find-company></table>
+    <table class="matrix" ng-if="dashboard.myFactory.matrixType=='calculationActions'" find-calculation-view></table>
+    <div ng-if="dashboard.myFactory.matrixType=='HIP'" calculation-matrix ng-controller="HIP as HIP"></div>
+</div>
+
+<div ng-if="dashboard.myFactory.matrixType=='HIP' && dashboard.myFactory.totalPrice!=undefined && dashboard.myFactory.totalPrice!=0" calculation-bottom></div>

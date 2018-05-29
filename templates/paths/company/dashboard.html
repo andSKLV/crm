@@ -1,0 +1,40 @@
+<div class="ul_container">
+    <div ng-repeat="param in currObj" class="ul"
+        ng-class="[
+            {ul_move_to_left: newDashboard.toLeft($index)},
+            {ul_move_from_left: newDashboard.fromLeft($index)},
+            {ul_move_to_right: newDashboard.toRight($index)},
+            {ul_move_from_right: newDashboard.fromRight($index)},
+            {ul_current: newDashboard.checkCurrentPage($index)}
+        ]" ng-if="$index==newDashboard.previousPage || $index==newDashboard.currentPage">
+        <div>
+            <div 
+                 ng-class="[
+                    {alreadySelected: value.selected}            
+                 ]"
+                 ng-repeat="val in param.values  track by $index"
+                 ng-click="dashboard.clickedOnTopOfDashboard(val, param)"
+            >
+                <input class="company_dashboard_inputs" tabindex="0" ng-keydown="keydownHandler($event, param, val)" type="text" ng-if="val.type=='input' && param.name!=='Контакты'" placeholder="{{val.name}}" ng-change="inputHandler(clientCard[param.name][val.name])" ng-model="clientCard[param.name][val.name]">
+                <input class="company_dashboard_inputs" tabindex="0" ng-keydown="keydownHandler($event, param, val)" type="text" ng-if="val.type=='input' && param.name==='Контакты'" placeholder="{{val.name}}" ng-model="contact[val.name]">
+                <input class="company_dashboard_inputs" tabindex="0" ng-keydown="keydownHandler($event, param, val)" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="{{val.name}}" ng-if="val.type=='date'"  ng-change="inputHandler(clientCard[param.name][val.name])" ng-model="clientCard[param.name][val.name]">
+                <select class="company_dashboard_inputs" tabindex="0" ng-keydown="keydownHandler($event, param, val)" name="" id="" ng-if="val.type=='select'" placeholder="123" ng-change="inputHandler(clientCard[param.name][val.name])" ng-model="clientCard[param.name][val.name]">
+                    <option ng-repeat="option in val.values" value="{{option}}">{{option}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+   
+</div>
+<div class="nav">
+    <div>
+        <div ng-repeat="param in currObj"
+             ng-click="newDashboard.setCurrentPage($index)"
+             ng-class="[
+                {mi_selected: newDashboard.checkCurrentPage($index)},
+                {alreadySelected : dashboard.alreadySelected(param.model)}
+             ]">
+            {{param.name}}
+        </div>
+    </div>
+</div>

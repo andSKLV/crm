@@ -1,0 +1,12 @@
+<fieldset>
+<legend>{{addition.name}}:</legend>
+<table class="matrix">
+    <tbody>
+        <tr class="matrix_row" ng-repeat="value in addition.values" ng-if="value.checked && value.text!==''">
+            <td>
+                {{value.text}}
+            </td>
+        </tr>
+    </tbody>
+</table>
+</fieldset>

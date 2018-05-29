@@ -1,0 +1,59 @@
+<div class="ul_container">
+    <div ng-repeat="param in currObj" class="ul"
+         
+    ng-class="[
+    {ul_move_to_left: newDashboard.toLeft($index)},
+    {ul_move_from_left: newDashboard.fromLeft($index)},
+    {ul_move_to_right: newDashboard.toRight($index)},
+    {ul_move_from_right: newDashboard.fromRight($index)}
+]" ng-if="$index==newDashboard.previousPage || $index==newDashboard.currentPage" >
+
+         <!-- найти/создать/изменить расчет или компанию -->
+        <div ng-if="param.type=='search/create'">
+            <div>
+                <input ng-controller="searchCtrl as searchCtrl" type="search" ng-model="param.values[0].name" placeholder="Найти"
+                ng-keyup="param.values[0].name.length>2 ? searchCtrl.searchForPolis({
+                    type: param.name,
+                    value: param.values[0].name
+                }) : ''" 
+                >
+            </div>
+            <div ng-click="changeLocation(param.name)">Создать/Изменить</div>
+        </div>
+
+        <!-- доп. списки -->
+        <div ng-if="param.type=='lists'">
+            <div ng-repeat="addition in dashboard.myFactory.polis" ng-class="{alreadySelected: addition.included}" ng-click="addition.included=!addition.included">{{
+                addition.name
+            }}</div>
+            <div class="addAddition" ng-click="dashboard.myFactory.addNewPolisProperty(); dashboard.relocatePage({urlTo:'polisEditor'})">Добавить</div>
+        </div>
+        <!-- финансовый блок -->
+        <div ng-if="param.type=='finance'">
+            <div ng-repeat="value in param.values">{{value.name}}</div>
+        </div>
+
+        <!-- Даты, эту хуйню пока не придумал -->
+        <div id="horizontal-container"  ng-if="param.type=='dates'" class="sortable-row" as-sortable="sortableOptions" data-ng-model="itemsList.items1">
+          
+                <div ng-repeat="item in itemsList.items1" as-sortable-item>
+                    <div as-sortable-item-handle>{{item.Label}}</div>
+                </div>
+                <div ng-click="polisCtrl.makePDF()">make polis</div>
+        </div>
+        
+    </div>
+
+</div>
+<div class="nav">
+    <div>
+        <div ng-repeat="param in currObj"
+             ng-click="newDashboard.setCurrentPage($index)"
+             ng-class="[
+                {mi_selected: newDashboard.checkCurrentPage($index)},
+                {alreadySelected : dashboard.alreadySelected(param.model)}
+             ]">
+            {{param.name}}
+        </div>
+    </div>
+</div>

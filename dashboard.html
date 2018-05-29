@@ -1,0 +1,10 @@
+<div class="dashboard_container" karetka  tabindex="0" ng-keypress="dashboard.keyboard($event)" ng-focus="dashboard.myFactory.foc=true; dashboard.consolelog('focus')" ng-blur="dashboard.myFactory.foc=false"></div>
+<div id="tooltip_box" return></div>
+<div class="matrix_container" ng-controller="matrixCtrl as matrixCtrl" ng-class="{calc: dashboard.myFactory.matrixType=='HIP'}">
+    <table class="matrix" ng-if="dashboard.myFactory.matrixType=='find_company'" find-company></table>
+    <table class="matrix" ng-if="dashboard.myFactory.matrixType=='find_calculation'" find-calculation></table>
+    <table class="matrix" ng-if="dashboard.myFactory.matrixType=='calculationActions'" find-calculation-view></table>
+    <div ng-if="dashboard.myFactory.matrixType=='HIP'" calculation ng-controller="HIP as HIP"></div>
+</div>
+
+

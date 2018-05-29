@@ -1,0 +1,17 @@
+<table style="text-align: center; width:100%;" class="animate-switch-container">
+    <tbody ng-if="tooltip!=''">
+        <tr>
+            <td style="color: rgb(146, 167, 205);">{{tooltip}}</td>
+        </tr>
+    </tbody>
+    <tbody ng-if="tooltip=='' && dashboard.myFactory.makingPolis==false">
+        <tr>
+            <td ng-click="changeLocation('/dashboard')">К основному меню</td>
+        </tr>
+    </tbody>
+    <tbody ng-if="tooltip=='' && dashboard.myFactory.makingPolis==true">
+        <tr>
+            <td ng-click="changeLocation('/polis')">Вернуться</td>
+        </tr>
+    </tbody>
+</table>

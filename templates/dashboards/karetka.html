@@ -1,0 +1,37 @@
+
+<div class="ul_container">
+    <div ng-repeat="param in dashboard.currObj" class="ul" ng-class="[{mi_current: dashboard.currentUl($index)}, {mi_moveFromRight: dashboard.currentUl($index)},{ mi_moveToRight: !dashboard.currentUl($index)}]" ng-show="dashboard.currentUl($index)" >
+        <div>
+            <div key="{{dashboard.addNumberKey(value, param)}}" ng-class="[{alreadySelected: value.selected},{keyFriendly : dashboard.myFactory.foc}]" ng-repeat="value in param.values  track by $index"
+                 ng-click="dashboard.clickedOnTopOfDashboard(value, param)">
+                {{value.able=="none" ? "" : value.type == "text" || value.type == "relocate_here" || value.type =="relocatePage" || value.type=="reloadDashboard" || value.type=="risk" || value.type=="saveCalc" || value.type=="button" ? value.name : value.type=="currency" || value.type=="amount" ? dashboard.applyFilter(value) : value.type=="amountType" ? dashboard.myFactory.amountType : value.type=="currencyValue" ? dashboard.myFactory.document.currency : ""}}
+                <input ng-if="value.type == 'inputForCurrency'" ng-focus="dashboard.myFactory.foc=false" ng-blur="dashboard.myFactory.foc=true" type="text" param="{{param.model}}" ng-model="param.selected" placeholder="{{value.type=='inputForCurrency' ? 'Точное число' : value.name}}" style="color: #35bfff;" currency-input="{{param}}">
+                <input ng-if="value.type == 'input'" type="text"  ng-focus="dashboard.myFactory.foc=false" ng-blur="dashboard.myFactory.foc=true"  ng-value="value.selected" placeholder="{{value.type=='inputForCurrency' ? 'Точное число' : value.name}}" style="color: #35bfff;">
+                <input ng-if="value.type == 'input_search'"  ng-focus="dashboard.myFactory.foc=false" ng-blur="dashboard.myFactory.foc=true" name="value.model" ng-model="value.val" ng-controller="searchCtrl as searchCtrl" ng-change="searchCtrl.makeSearch(param)" type="text" placeholder="{{value.type=='inputForCurrency' ? 'Точное число' : value.name}}">
+                <input ng-if="value.type == 'date_search'"  ng-focus="dashboard.myFactory.foc=false" ng-blur="dashboard.myFactory.foc=true" type="date">
+                <input ng-if="value.type == 'inputSaveCalc'" ng-focus="dashboard.myFactory.foc=false" ng-blur="dashboard.myFactory.foc=true" type="text" 
+                ng-model="dashboard.nameOfCalculation" ng-controller="searchCtrl as searchCtrl" 
+                ng-change="searchCtrl.makeSearch({
+                    url:'calculationActions',
+                    values:[
+                        {
+                            model: 'name',
+                            name: 'Название',
+                            val: dashboard.nameOfCalculation
+                        }
+                    ]
+                })" 
+                placeholder="{{value.name}}" style="color: #35bfff;">
+            </div>
+        </div>
+    </div>
+    <div  id="pseudoDashboard" class="ul" ng-click="dashboard.reloadDashboard('calculationActions.json','calculationActions')" ng-class="[{mi_current: dashboard.myFactory.document.currParam===''}, {mi_moveFromRight: dashboard.myFactory.document.currParam===''},{ mi_moveToRight: !dashboard.myFactory.document.currParam===''}]" ng-show="dashboard.myFactory.document.currParam===''" >
+        <div>Управление объектом</div>
+
+    </div>
+</div>
+<div class="nav">
+    <div>
+        <div key="{{dashboard.addQwertyKey($index)}}" ng-repeat="param in dashboard.currObj" ng-click="param.able=='none' ? '' : dashboard.karetka.mode!='changing process' ? dashboard.selectParam($index) : dashboard.selectParam($index) " ng-if="param.name" ng-class="[{mi_selected: dashboard.myFactory.document.selectedParam===$index}]">{{param.able=='none' ? '' : param.selected ? param.model=="amount" ? dashboard.applyFilter(param.selected, "badAssAmount") : dashboard.applyFilter(param.selected,param.model) : param.name}}</div>
+    </div>
+</div>

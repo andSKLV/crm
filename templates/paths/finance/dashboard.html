@@ -1,0 +1,23 @@
+<div class="ul_container">
+    <div class="ul"
+    ng-class="[
+    {ul_move_to_left: newDashboard.toLeft($index)},
+    {ul_move_from_left: newDashboard.fromLeft($index)},
+    {ul_move_to_right: newDashboard.toRight($index)},
+    {ul_move_from_right: newDashboard.fromRight($index)}
+]" ng-if="$index==newDashboard.previousPage || $index==newDashboard.currentPage" >
+        
+    </div>
+</div>
+<div class="nav">
+    <div>
+        <div ng-repeat="param in currObj"
+             ng-click="newDashboard.setCurrentPage($index)"
+             ng-class="[
+                {mi_selected: newDashboard.checkCurrentPage($index)},
+                {alreadySelected : dashboard.alreadySelected(param.model)}
+             ]">
+            {{param.name}}
+        </div>
+    </div>
+</div>

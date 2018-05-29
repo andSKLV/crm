@@ -1,0 +1,19 @@
+<!doctype html>
+<html ng-app="mainApp">
+<head>
+    <meta charset="utf-8">
+    <script src="js/lib/angular.min.js"></script>
+    <script src="js/lib/angular-cookies.min.js"></script>
+    <script src="controller.js"></script>
+
+</head>
+<body ng-controller="app">
+    {{myCookieVal.one}}
+    {{myCookieVal.two}}
+    <input type="text" ng-model="cookieVal.one">
+    <button ng-click="setCookie(cookieVal)">Update Cookie Val</button>
+
+    <input type="text" ng-model="cookieVal.two">
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<table class="matrix bottom">
+    <tbody>
+        <tr class="matrix">
+
+            <!-- Премия -->
+            <td class="properties button"      ng-if="calculation.myFactory.bottom.priceMode=='price'" ng-click="calculation.myFactory.bottom.priceMode='practicalPrice'">Премия:</td>
+            <td style="color: #35bfff; text-align: center" ng-if="calculation.myFactory.bottom.priceMode=='price'" ng-hide="calculation.myFactory.bottom.singleAmount">{{calculation.applyFilter(calculation.myFactory.totalPrice, "cost")}}</td>
+            <td style="color: #35bfff; text-align: center" ng-if="calculation.myFactory.bottom.priceMode=='price'" ng-show="calculation.myFactory.bottom.singleAmount">{{calculation.applyFilter(calculation.myFactory.totalPriceForSingle, "cost")}}</td>
+            <!-- /Премия -->
+
+            <!-- Фактическая премия -->
+            <td class="properties" ng-if="calculation.myFactory.bottom.priceMode=='practicalPrice'" ng-click="calculation.myFactory.bottom.priceMode='agents'">Факт. премия:</td>
+            <td class="properties" ng-if="calculation.myFactory.bottom.priceMode=='practicalPrice'"><input ng-class="{redPrice: calculation.myFactory.practicalPrice.koef && calculation.myFactory.practicalPrice.koef!=1}" type="text" ng-model="calculation.myFactory.practicalPrice.val" currency-input="practicalPrice"></td>
+            <!-- /Фактическая премия -->
+
+            <!-- Агентские -->
+            <td class="properties" ng-if="calculation.myFactory.bottom.priceMode=='agents'" ng-click="calculation.myFactory.bottom.priceMode='price'">Агентские</td>
+            <td class="properties" ng-if="calculation.myFactory.bottom.priceMode=='agents'">
+                <input style="float: left; width: 70%!important;" type="text" ng-model="calculation.myFactory.agents.val" currency-input="agents">
+                <input style="font-size: 13pt;height: 100%;width: 28%;float: right;" type="button"  class="properties" ng-if="calculation.myFactory.bottom.priceMode=='agents'" ng-click="calculation.myFactory.agents.changeMode()" value="{{calculation.myFactory.agents.mode}}">
+            </td>
+            <!-- /Агентские -->
+
+            <!-- Грузооборот -->
+            <td class="properties button" ng-click="calculation.myFactory.bottom.singleAmount=true; calculation.myFactory.finalCalc()" ng-hide="calculation.myFactory.bottom.singleAmount">{{calculation.applyFilter(calculation.myFactory.totalAmount, "amount")}}</td>
+            <td class="properties button" ng-click="calculation.myFactory.bottom.singleAmount=false; calculation.myFactory.finalCalc()" ng-show="calculation.myFactory.bottom.singleAmount">{{calculation.applyFilter(calculation.myFactory.totalAmountForSingle, "amount")}}</td>
+            <!-- /Грузооборот -->
+
+            <!-- Агрегатный лимит -->
+            <td class="properties button" ng-click="calculation.myFactory.changeAlimit(); calculation.myFactory.finalCalc()">{{calculation.myFactory.a_limit.type}}:</td>
+            <td><input type="text" ng-model="calculation.myFactory.a_limit.value" currency-input="a_limit" ng-class="{hand: calculation.myFactory.a_limit.hand}"></td>
+            <!-- /Агрегатный лимит -->
+
+
+            <td style="text-align: center;" ng-click="calculation.myFactory.payment.changeMode(); calculation.myFactory.finalCalc();">Этапы  <span style="color: orange;">{{calculation.myFactory.payment.mode}}</span></td>
+            <td class="properties"><input type="text" ng-model="calculation.myFactory.payment.val" currency-input="payment" ng-class="{hand: calculation.myFactory.payment.hand}"></td>
+        </tr>
+    </tbody>
+</table>

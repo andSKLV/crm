@@ -1,0 +1,14 @@
+<tr ng-class="{matrix_row: !row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index">
+    <td class="properties">{{row.name}}</td>
+    <td class="properties" ng-if="dashboard.isArray(row.contact)" ng-click="row.close!='disable' && row.show!=true ? row.show=true : null" colspan="{{row.show ? 2 : 1}}">
+        <div ng-show="!row.show" ng-class="{multi_close : dashboard.isMulti(row)}">{{row.contact[0].name}}</div>
+        <div ng-repeat="ctx in row.contact track by $index" class="matrix_row multi_cell" style="line-height: 3; width: 100%; position: relative;" ng-show="row.show" ng-click="row.close!='disable' ? alert('загрузка контакта '+ ctx.name) : null">
+            <div style="display: inline-block; width: 49%;">{{ctx.name}}</div>
+            <div style="display: inline-block; width: 49%;">{{ctx.phone}}</div>
+            <div class="block" ng-if="$index==row.contact.length-1" ng-mouseover="row.close='disable'" ng-mouseleave="row.close='enable'" ng-click="row.close!='enable'? row.show=false : null"></div>
+        </div>
+    </td>
+    <td class="properties" ng-if="!dashboard.isArray(row.contact)">{{row.contact}}</td>
+    <td class="properties"  ng-show="!row.show">{{row.company_phone}}</td>
+    <td class="properties">{{row.Legal_address}}</td>
+</tr>

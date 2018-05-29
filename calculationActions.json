@@ -1,0 +1,63 @@
+[
+  {
+    "name": "Сохранить",
+    "values":[
+      {
+        "name":"Введите название расчета",
+        "type":"inputSaveCalc",
+        "model":"dashboard.nameOfCalculation"
+      },
+      {
+        "name":"Сохранить",
+        "type":"saveCalc",
+        "function": "saveCalc"
+      }
+    ]
+  },
+  {
+    "name": "Клиент",
+    "values":[
+      {
+        "name":"",
+        "type":""
+      }
+    ],
+    "able":"none"
+  },
+  {
+    "name": "Контакт",
+    "values":[
+      {
+        "name":"",
+        "type":""
+      }
+    ],
+    "able":"none"
+  },
+  {
+    "name": "Проект документа",
+    "values":[
+      {
+        "name":"Полис",
+        "type":"relocatePage",
+        "urlTo": "polis"
+      },
+      {
+        "name":"Заявление",
+        "type":"text",
+        "able":"none"
+      },
+      {
+        "name":"Комерческое предложение",
+        "type":"text",
+        "able":"none"
+      },
+      {
+        "name":"Послать по email",
+        "type":"text",
+        "able":"none"
+      }
+    ]
+
+  }
+]

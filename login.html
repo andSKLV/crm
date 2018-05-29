@@ -1,0 +1,12 @@
+
+<div class="container author">
+    <h1>CHIMS</h1>
+    <div ng-controller="loginCtrl"  class="login">
+        <form action="/" id="myLogin" method="post">
+            <input type="text" name="username" id="username" ng-model="username" placeholder="Username" required="required" class="input-txt" ng-keyup="$event.keyCode == 13 ? enter() : null"><br>
+            <input type="password" name="password" id="password" ng-model="password" placeholder="Password" required="required" class="input-txt" ng-keyup="$event.keyCode == 13 ? enter() : null"><br>
+            <br>
+            <button type="button" ng-click="enter()"  class="btn btn--right">Login</button>
+        </form>
+    </div>
+</div>

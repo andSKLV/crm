@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/lib/angular.min.js"></script>
+</head>
+<body ng-controller="Ctrl as Ctrl">
+<script type="text/javascript">
+    var app=angular.module('myApp',[]);
+    app.controller('Ctrl',function(){
+        this.val=1;
+       this.func=function(val){
+           this.val=val;
+       };
+
+    });
+</script>
+<button  ng-click="Ctrl.func(2)">asd1f</button>
+<input type="text" ng-model="Ctrl.val">
+</body>
+</html>
