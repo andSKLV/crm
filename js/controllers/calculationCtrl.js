@@ -137,12 +137,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
 
             let isTitle=false;
             if(typeof title === "object"){
-                this.title=title;
-                // DONE: избавиться от скобок объекта
-                // this.title=title.join(" + ");
+                // DONE: no more ['...'] if it is array
+                title=title.join(`; `);
                 isTitle=true;
             }
-            else if(risks[title]!==undefined){
+            else if (risks[title]!==undefined){
                 scope.currObj.forEach(obj=>{
                     obj.values.forEach(value=>{
                         if(value.name==title && value.title!==undefined){

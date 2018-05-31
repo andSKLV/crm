@@ -287,7 +287,7 @@ div.keyFriendly:after{
 }
 
 div#tooltip_box{
-    display: inline-block;
+    display: inline-table;
     margin-left: 50px;
 }
 
@@ -300,6 +300,10 @@ div#tooltip_box>table>tbody>tr>td:not(.tooltip_span){
     display: inline-block;
     color:rgb(230, 230, 230);
     font-size:30pt;
+}
+.tooltip_span{
+    height: 100%;
+    display: inline-block;
 }
 .alreadySelected {
     background: rgb(0, 111, 167)!important;
@@ -710,18 +714,3 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 .animate-switch.ng-enter.ng-enter-active {
     top:0;
 }
-
-.magnifer {
-    font-size: 3em; /* задает размер иконки */
-    width: 0.3em; height: 0.3em; margin-bottom: 20px;
-    margin-top: 100px;
-    border: 0.1em solid #52C8E4;
-    position: absolute;
-    border-radius: 50%;
-}
-.magnifer:before {
-    content: "";
-    width: 0.3em; height: 0.08em;
-    position: absolute; right: -0.25em; bottom: -0.1em;
-    background: #52C8E4;
-    transform: rotate(45deg);}
