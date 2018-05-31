@@ -251,8 +251,8 @@ input.properties{
     width: 20px;
     height: 20px;
     border-radius: 50%; 
-    border: 3px solid #35bfff;
-    color: #35bfff;
+    border: 3px solid rgb(0, 111, 167);
+    color: rgb(0, 111, 167);
     font:20px Arial, Helvetica, sans-serif; 
     font-weight:bold; 
     background:rgb(230, 230, 230); 
