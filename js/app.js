@@ -992,6 +992,15 @@ app.factory('myFactory', function(){
                     if(transportProp.indexOf(key)!=-1) this.process[key]=process[key];
                 }
                 let index=park.processes.indexOf(process);
+                if (process.multi) {
+                    //SKLV: 30.05.18 fixed index of multi-cell
+                    let minIndex=park.processes.length;
+                    process.multi.processes.forEach(proc=> {
+                        let ind = park.processes.indexOf(proc);
+                        if (ind<minIndex) minIndex = ind;
+                    })
+                    index=minIndex;
+                }
                 park.processes.splice(park.processes.indexOf(process), 1);
                 if(this.multi.template.length>0){//если меняем на пакет
                     let obj=this.makePackage();
@@ -1015,7 +1024,6 @@ app.factory('myFactory', function(){
                 let array=obj.array;
                 this.multi.multies.push(new Multi(array, obj.packName, obj.template));
                 this.choosePark(array);
-
             }
             //если не мульти
             else{

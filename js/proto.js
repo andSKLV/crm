@@ -350,7 +350,10 @@ class Process{
         if(this.multi && this.multi!=="deleted"){
             this.multi.processes.splice(this.multi.processes.indexOf(this),1);
         }
-        this.park.processes.splice(this.park.processes.indexOf(this),1);
+        // SKLV 01.06.18: delete process if it is in main object of park
+        if (this.park.processes.indexOf(this)!==-1){
+            this.park.processes.splice(this.park.processes.indexOf(this),1);
+        }
     }
 }
 class Park{

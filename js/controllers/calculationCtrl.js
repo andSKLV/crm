@@ -138,6 +138,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             let isTitle=false;
             if(typeof title === "object"){
                 this.title=title;
+                // DONE: избавиться от скобок объекта
+                // this.title=title.join(" + ");
                 isTitle=true;
             }
             else if(risks[title]!==undefined){
