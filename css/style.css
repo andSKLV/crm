@@ -55,7 +55,7 @@ div.mi_slider{
     div.matrix_container.calc{
         width:1770px;
         font-size: 16pt;
-        height:600px;
+        /* height:600px; */
     }
     .matrix_row,.matrix.bottom, td.properties.btns{
         height: 80px;
@@ -112,7 +112,7 @@ div.mi_slider{
     div.matrix_container.calc{
         width:1340px;
         font-size: 14pt;
-        height:560px;
+        /* height:560px; */
     }
     .matrix_row,.matrix.bottom, td.properties.btns{
         height: 60px;
@@ -163,7 +163,7 @@ div.mi_slider{
     div.matrix_container.calc{
         width:1170px;
         font-size: 14pt;
-        height:400px;
+        /* height:400px; */
     }
     .matrix_row,.matrix.bottom, td.properties.btns{
         height: 60px;

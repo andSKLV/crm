@@ -460,6 +460,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     };
 
     this.clickedSelectAll=function(param, value){
+        // SKLV 01.06.18:  кнопка вызова функции удалена из интерфейса
         scope.myFactory.multiChangeMode(true);
 
         let flag=true;

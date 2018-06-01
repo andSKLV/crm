@@ -750,7 +750,11 @@ app.factory('myFactory', function(){
                 }
             }
             if(park){
-                park.check();
+                // TODO: проверить нужен ли тут чек, а то он все портит и не записывает возвращаемый
+                // аргумент. С ним появляется ошибка если парк из двух строк и на первую сделать мульти
+                // вторая исчезнет.
+                // Эксперементально закомиченно
+                // park.check();
                 array.forEach(function (process) {
                     process.park=park;
                     if(park.processes.indexOf(process)===-1) park.processes.splice(index, 0,process);
@@ -991,7 +995,9 @@ app.factory('myFactory', function(){
                 for(let key in process){
                     if(transportProp.indexOf(key)!=-1) this.process[key]=process[key];
                 }
+                //SKLV: deleting existing procceses that are in multi
                 let index=park.processes.indexOf(process);
+                const nubOfMulti = multiChanging? multiChanging.processes.length : 1;
                 if (process.multi) {
                     //SKLV: 30.05.18 fixed index of multi-cell
                     let minIndex=park.processes.length;
@@ -1001,7 +1007,9 @@ app.factory('myFactory', function(){
                     })
                     index=minIndex;
                 }
-                park.processes.splice(park.processes.indexOf(process), 1);
+                else {
+                    park.processes.splice(index, nubOfMulti);
+                }
                 if(this.multi.template.length>0){//если меняем на пакет
                     let obj=this.makePackage();
                     let array=obj.array;

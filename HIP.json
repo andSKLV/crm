@@ -250,12 +250,6 @@
     "model": "risk",
     "values":[
       {
-        "name": "Выбрать все",
-        "type": "risk",
-        "action": "selectAll",
-        "value":1
-      },
-      {
         "name": "Противоправные действия третьих лиц",
         "type": "risk",
         "value":2,
