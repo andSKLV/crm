@@ -23,7 +23,12 @@
     border-top: 5px solid rgb(146, 167, 205);
 }
 div.mi_slider{
-    margin: auto; 
+    margin: auto;
+    height: auto; 
+}
+div.matrix_container.calc{
+    overflow: auto;
+    height: auto;
 }
 
 @media (min-width: 1800px) and (max-width: 3600px) {
@@ -32,7 +37,7 @@ div.mi_slider{
     }
     div.mi_slider {
         width:1650px;
-        height: 1000px;
+        /* height: 1000px; */
 
     }
     .line{
@@ -55,7 +60,7 @@ div.mi_slider{
     div.matrix_container.calc{
         width:1770px;
         font-size: 16pt;
-        /* height:600px; */
+    
     }
     .matrix_row,.matrix.bottom, td.properties.btns{
         height: 80px;
@@ -83,7 +88,7 @@ div.mi_slider{
       }
     div.mi_slider{
         width:1200px;
-        height: 800px;
+        /* height: 800px; */
 
     }
     .line{
@@ -112,7 +117,7 @@ div.mi_slider{
     div.matrix_container.calc{
         width:1340px;
         font-size: 14pt;
-        /* height:560px; */
+
     }
     .matrix_row,.matrix.bottom, td.properties.btns{
         height: 60px;
@@ -133,7 +138,7 @@ div.mi_slider{
     }
     div.mi_slider{
         width:1050px;
-        height: 700px;
+        /* height: 700px; */
 
     }
     .line{
@@ -163,7 +168,6 @@ div.mi_slider{
     div.matrix_container.calc{
         width:1170px;
         font-size: 14pt;
-        /* height:400px; */
     }
     .matrix_row,.matrix.bottom, td.properties.btns{
         height: 60px;
@@ -341,9 +345,6 @@ table.matrix.park{
 table.matrix{
     width: 100%;
     table-layout: fixed;
-
-
-
 }
 table.matrix>tbody>tr{
     display: table-row;
@@ -409,7 +410,8 @@ body{
     font-family: 'Lato', Calibri, Arial, sans-serif;
     height:100%;
     overflow-x: hidden;
-
+    margin-bottom: 0;
+    margin-right: 50px;
 }
 .properties{
     cursor: pointer;
@@ -717,4 +719,9 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 .animate-switch.ng-leave,
 .animate-switch.ng-enter.ng-enter-active {
     top:0;
+}
+
+.sticky {
+    position: sticky;
+    bottom: 0;
 }

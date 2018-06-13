@@ -13,7 +13,7 @@
     <table class="matrix" ng-if="dashboard.myFactory.matrixType=='find_company'" find-company></table>
     <table class="matrix" ng-if="dashboard.myFactory.matrixType=='calculationActions'" find-calculation-view></table>
     <div ng-if="dashboard.myFactory.matrixType=='HIP'" calculation-matrix ng-controller="HIP as HIP"></div>
-
-    <div ng-if="dashboard.myFactory.matrixType=='HIP' && dashboard.myFactory.totalPrice!=undefined && dashboard.myFactory.totalPrice!=0" calculation-bottom></div>
 </div>
+
+<div class="sticky" ng-if="dashboard.myFactory.matrixType=='HIP' && dashboard.myFactory.totalPrice!=undefined && dashboard.myFactory.totalPrice!=0" calculation-bottom></div>
 
