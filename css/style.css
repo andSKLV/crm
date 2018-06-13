@@ -235,8 +235,6 @@ div#tooltip_box>table>tbody>tr>td:not(.not_hover):hover, #pseudoDashboard>div:ho
 }
 .matrix.bottom{
     table-layout: fixed;
-    bottom: 0px;
-    position: fixed;
     margin-left: 50px;
 }
 input.properties{
