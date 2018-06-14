@@ -1038,6 +1038,7 @@ app.factory('myFactory', function(){
                 this.choosePark([new Process(this.process)],undefined,undefined,mode);
             }
             this.cleanProcess();
+            this.fixHeight();
 
         },
         /**
@@ -1220,8 +1221,19 @@ app.factory('myFactory', function(){
 
 
 
-        }
+        },
 
-
+        fixHeight() {
+            //andSKLV: 13.06.2018 
+            // this method made to auto change Calc matrix max-height so it can fit in one screen
+            const windowHeight = document.documentElement.clientHeight;
+            const matrix = document.querySelector(".calc");
+            const top = matrix.offsetTop;
+            const bottomMatrix = document.querySelector(".bottom");
+            //check if bottomMAtrix exist. without chech will be error throw at start
+            const bottomMatrixHeight = (bottomMatrix)? bottomMatrix.offsetHeight : 0;
+            let maxHeight = windowHeight - (top + bottomMatrixHeight+8);
+            matrix.style.maxHeight = `${maxHeight}px`;
+        },
     }
 });

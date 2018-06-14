@@ -25,7 +25,7 @@ app.controller("HIP", function ($http, myFactory, $rootScope, $scope) {
         for(let key in proc){
             if(transportProp.indexOf(key)==-1 && key!="park" && key!="totalPrice") delete proc[key];
         }
-        this.fixHeight();
+        myFactory.fixHeight();
         return proc;
     };
     for(let i=0;i<this.myFactory.currObj.length; i++){
@@ -42,27 +42,7 @@ app.controller("HIP", function ($http, myFactory, $rootScope, $scope) {
         console.log(val);
     };
 
-
-
-        //let proc1=new Process({cost:5000000,amount:120, wrapping: 0, risk: 0, limit:5000000,franchise:0});
-        //proc1.calculateBase();
-        //console.log(proc1);
-
-
     $rootScope.mode="calc";
     let scope=this;
-
-    this.fixHeight = function() {
-        //andSKLV: 13.06.2018 
-        // this method made to auto change Calc matrix max-height so it can fit in one screen
-        //TODO: this method might be in some another places when the Calc matrix changed
-        const windowHeight = document.documentElement.clientHeight;
-        const matrix = document.querySelector(".calc");
-        const top = matrix.offsetTop;
-        const bottomMatrix = document.querySelector(".bottom");
-        const bottomMatrixHeight = bottomMatrix.offsetHeight;
-        let maxHeight = windowHeight - (top + bottomMatrixHeight+8);
-        matrix.style.maxHeight = `${maxHeight}px`;
-    };
 
 });

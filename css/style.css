@@ -240,6 +240,7 @@ div#tooltip_box>table>tbody>tr>td:not(.not_hover):hover, #pseudoDashboard>div:ho
 .matrix.bottom{
     table-layout: fixed;
     margin-left: 50px;
+    border-top: 1px solid rgb(146, 167, 205);
 }
 input.properties{
     background: rgb(230, 230, 230);
@@ -332,13 +333,16 @@ div#tooltip_box>table>tbody>tr>td:not(.tooltip_span){
     border-bottom: 10px solid rgb(0, 111, 167); /* Добавляем треугольник */
 }
 
-/* фф (свойство больше не работает, других способов тоже нет)*/
-.element { overflow: -moz-scrollbars-none; }
-
 .matrix_container{
     overflow: auto;
     margin-left: 30px;
 }
+    .matrix_container::-webkit-scrollbar {
+        width:2px;
+    }
+    .matrix_container::-webkit-scrollbar-thumb {
+        background-color:rgb(0, 111, 167);
+    }
 table.matrix.park{
     border-bottom: 5px solid rgb(146, 167, 205);
 }
