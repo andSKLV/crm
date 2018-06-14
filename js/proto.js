@@ -223,6 +223,7 @@ class Multi{
         console.log(multies);
         this.show=true;
         multies.forEach(multi=>multi.getValues());
+        
     }
     close(multies, toParent){
         if(toParent){
@@ -303,6 +304,14 @@ class Process{
                 return false;
             }
         }
+        //SKLV 14.05.2018: этот блок нужен в случае, если объем перевозок в базовых рисках меньше чем в других рисках. Базовые риски должны считаться по наибольшему из объемов перевозок, поэтому перезаписываем amount на наибольшее. сохраняем значение, чтобы поменять его обратно после расчетов, чтобы в интерфейсе выводилось первоначальное число
+        const maxAmount = this.park.calculateAmount();
+        let writtenAmount;
+        if (this.risk==="Базовые риски" && maxAmount!=this.amount) {
+            writtenAmount = this.amount;
+            this.amount = maxAmount;
+        }
+        //
         this.turnover=this.cost*this.amount;
         let spline = Spline(this.cost, Points.cost, 1);
         let spline1 = Spline(totalAmount, Points.amount, 0);
@@ -344,6 +353,10 @@ class Process{
         }
         else{
             this.totalPrice+=this.riskPrice-this.basePrice;
+        }
+        // SKLV 14.05.2018: change back amount if it's базовые риски
+        if (writtenAmount) {
+            this.amount = writtenAmount;
         }
     }
     remove(){
