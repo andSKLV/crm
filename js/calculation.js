@@ -20,7 +20,7 @@ xhr.send();
  */
 xhr.onload = function() {
     //FIXME: Удалить после починки пхп
-    if (this.responseText.startsWith("<")) alert ('Проблемы с php и mySQL. Работа в тестовом режиме');
+    if (this.responseText.startsWith("<")) alert ('Проблемы с php и mySQL. Работа в тестовом режиме. Обратитесь к разработчику');
     let ar = (this.responseText.startsWith("<")) ? JSON.parse(response) : JSON.parse(this.responseText);
         for(let i=0;i<ar.length;i++){
         if(ar[i]['number']*1==1) Points.amount.push([ar[i]['x']*1,ar[i]['y']*1]);
