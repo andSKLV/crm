@@ -1,5 +1,4 @@
-changes.txt
-node_modules/
+node_modules
 .idea/Documents.iml
 .idea/misc.xml
 .idea/modules.xml
