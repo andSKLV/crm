@@ -21,6 +21,30 @@ init();
 
 function init() {
     loadDB();
+    loadRisks();
+}
+
+function loadRisks () {
+    fetch("HIP.json").then(
+        function success (resp) {
+            let currObj=[];
+            resp.json().then((data)=>{
+                currObj=data;
+                if(risks.length==0){
+                    for(let i=0;i<currObj.length; i++){
+                        for(let j=0; j<currObj[i].values.length;j++){
+                            if(currObj[i].values[j].type=="risk") risks[currObj[i].values[j].name]=currObj[i].values[j].value;
+                        }
+                    }
+                }
+            });
+            
+        },
+        function error (resp){
+                console.error(`Risks loading failed: ${resp}`);
+
+        }
+    );
 }
 
 function loadDB () {

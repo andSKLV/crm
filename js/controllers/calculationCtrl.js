@@ -25,27 +25,19 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             scope.selectParam(0);
             scope.karetka.mode="making new process";
         }
-
-        
-
         scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
             return obj["name"]!=undefined;
         }).length;
         scope.navStyle="width:" + 100 / scope.currObj.length + "%;";
-
         scope.config="HIP.json";
-
         scope.myFactory.matrixType="HIP";
-        
 
         if(myFactory.loadProcess!==undefined){
             scope.matrix.loadProcess(scope.myFactory.loadProcess.process, scope.myFactory.loadProcess.key);
             delete scope.myFactory.loadProcess;
         }
-
-        },function error (response){
+    },function error (response){
             console.log(response);
-
         }
     );
     /**
@@ -137,7 +129,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
 
             let isTitle=false;
             if(typeof title === "object"){
-                // DONE: no more ['...'] if it is array
+                // DONE SKLV: no more ['...'] if it is array
                 title=title.join(`; `);
                 isTitle=true;
             }
@@ -644,8 +636,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             // array.splice(0,1);
             // myFactory.choosePark(array, newPark, 0);
             myFactory.finalCalc();
-
-
         },
         /**
          * удаляем мультиузел

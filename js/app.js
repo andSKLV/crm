@@ -1038,7 +1038,6 @@ app.factory('myFactory', function(){
                 this.choosePark([new Process(this.process)],undefined,undefined,mode);
             }
             this.cleanProcess();
-            this.fixHeight();
 
         },
         /**
@@ -1212,16 +1211,13 @@ app.factory('myFactory', function(){
             this.payment.makeArray(this.totalPrice);
             console.log(this.parks, this.multi.multies);
             console.log(myFactory.totalPrice);
+            this.fixHeight();
             //риски
             //базовую премию
             //коэффициент риска
 
             //заполняем массив с рисками и отключаем повторяющиеся     +
             //если риск не повторяющийся - считаем коэффициент     +
-
-
-
-
         },
 
         fixHeight() {
@@ -1232,7 +1228,7 @@ app.factory('myFactory', function(){
             const top = matrix.offsetTop;
             const bottomMatrix = document.querySelector(".bottom");
             //check if bottomMAtrix exist. without chech will be error throw at start
-            const bottomMatrixHeight = (bottomMatrix)? bottomMatrix.offsetHeight : 0;
+            const bottomMatrixHeight = (bottomMatrix)? bottomMatrix.offsetHeight : 80;
             let maxHeight = windowHeight - (top + bottomMatrixHeight+8);
             matrix.style.maxHeight = `${maxHeight}px`;
         },

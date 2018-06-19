@@ -7,13 +7,7 @@ const qwerty=["Q","W","E","R","T","Y","U","I","O","P"];
 const TRACTOR=24;
 let LimKoef=1;
 let totalAmount=0;
-//TODO: SKLV check if it's right, this is for fix problem with db loading caused HIP.json pending
-const risksK = [0,1.2,3.5,5,4,0,0.1,2,3.5,2,0.15,4,2,1.5,2,undefined,undefined,undefined]
-const risksN = ["Контейнер/Фургон/Реф","Тент","Автовоз","Цистерна/Танк","Открытый","Базовые риски","Таможенные платежи","Повреждение контейнера","Погрузка, разгрузка","Поломка реф. установки","Стихийные бедствия","Повреждение товарных автомобилей","Противоправные действия третьих лиц","Промежуточное хранение","Неохраняемая стоянка","Международные","Внутренние","Автомотив"]
-risks = [];
-risksN.forEach((v,i)=>{
-    risks[v] = risksK[i];
-})
+
 class Multi{
     constructor(array, packName, template){
         let mult=this;
