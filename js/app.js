@@ -1198,7 +1198,8 @@ app.factory('myFactory', function(){
                     park.applyPracticalPriceKoef();
                 });
                 let val=this.getTotal();
-                this.practicalPrice.val=val-(val%1);
+                //SKLV 19.06.2018: changed round of val instead of val-(val%1)
+                this.practicalPrice.val = Math.round(val);
                 if(this.bottom.singleAmount) this.practicalPrice.val/=(this.totalAmount/this.totalAmountForSingle);
             }
             //****************
