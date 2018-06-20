@@ -24,27 +24,26 @@ function init() {
     loadRisks();
 }
 
-function loadRisks () {
-    fetch("HIP.json").then(
-        function success (resp) {
-            let currObj=[];
-            resp.json().then((data)=>{
-                currObj=data;
-                if(risks.length==0){
-                    for(let i=0;i<currObj.length; i++){
-                        for(let j=0; j<currObj[i].values.length;j++){
-                            if(currObj[i].values[j].type=="risk") risks[currObj[i].values[j].name]=currObj[i].values[j].value;
-                        }
+async function loadRisks () {
+    try {
+        let currObj=[];
+        const resp = await fetch("HIP.json");
+        try {
+            let data = await resp.json();
+            currObj=data;
+            if(risks.length==0){
+                for(let i=0;i<currObj.length; i++){
+                    for(let j=0; j<currObj[i].values.length;j++){
+                        if(currObj[i].values[j].type=="risk") risks[currObj[i].values[j].name]=currObj[i].values[j].value;
                     }
                 }
-            });
-            
-        },
-        function error (resp){
-                console.error(`Risks loading failed: ${resp}`);
-
-        }
-    );
+            }
+        } catch (error) {
+            console.error(`Parsing risks json failed: ${error}`);
+        }   
+    } catch (error){
+        console.error(`Risks loading failed: ${error}`);
+    }
 }
 
 function loadDB () {
