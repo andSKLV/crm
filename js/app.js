@@ -1225,12 +1225,14 @@ app.factory('myFactory', function(){
             // this method made to auto change Calc matrix max-height so it can fit in one screen
             const windowHeight = document.documentElement.clientHeight;
             const matrix = document.querySelector(".calc");
-            const top = matrix.offsetTop;
+            const top = (matrix) ? matrix.offsetTop:233; //there is the problem with script working before render and matrix=null, 233 is a common offsetTop value
             const bottomMatrix = document.querySelector(".bottom");
             //check if bottomMAtrix exist. without chech will be error throw at start
             const bottomMatrixHeight = (bottomMatrix)? bottomMatrix.offsetHeight : 80;
             let maxHeight = windowHeight - (top + bottomMatrixHeight+8);
-            matrix.style.maxHeight = `${maxHeight}px`;
+            if (matrix){
+                matrix.style.maxHeight = `${maxHeight}px`;
+            }
         },
     }
 });

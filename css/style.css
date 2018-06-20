@@ -29,6 +29,7 @@ div.mi_slider{
 div.matrix_container.calc{
     overflow: auto;
     height: auto;
+    max-height: 600px;
 }
 
 @media (min-width: 1800px) and (max-width: 3600px) {

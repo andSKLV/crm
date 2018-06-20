@@ -28,10 +28,12 @@ app.controller("HIP", function ($http, myFactory, $rootScope, $scope) {
         myFactory.fixHeight();
         return proc;
     };
-    for(let i=0;i<this.myFactory.currObj.length; i++){
-        let currObj=myFactory.currObj;
-        for(let j=0; j<currObj[i].values.length;j++){
-            if(currObj[i].values[j].type=="risk") risks[currObj[i].values[j].name]=currObj[i].values[j].value;
+    if (this.myFactory.currObj) {
+        for(let i=0;i<this.myFactory.currObj.length; i++){
+            let currObj=myFactory.currObj;
+            for(let j=0; j<currObj[i].values.length;j++){
+                if(currObj[i].values[j].type=="risk") risks[currObj[i].values[j].name]=currObj[i].values[j].value;
+            }
         }
     }
     $scope.$on('$destroy', function() {
