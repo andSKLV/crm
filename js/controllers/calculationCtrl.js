@@ -621,9 +621,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             multi.processes.forEach(function (process) {
                 let newProcess=new Process(process);
                 array.push(newProcess);
-                for(let key in process){
-                    if(key!="park" && key!="multi") newProcess[key]=process[key];
-                }
             });
             let newMulti=new Multi(array);
             myFactory.multi.multies.push(newMulti);

@@ -293,7 +293,11 @@ class Multi{
 class Process{
     constructor(process, multi){
         for(let key in process){
-            this[key]=process[key];
+            if (key!=='practicalPriceKoef') this[key]=process[key];
+            else {
+                this[key]=0;
+            }
+            if (key==='multi') this[key]=undefined;
         }
         if(multi) this.multi=multi;
     }
@@ -644,6 +648,7 @@ class Park{
         });
         return overall;
     }
+    //Сюда может передаваться коэффициент за агента, коэффициент из-за лимита и коэффициент из-за этапов
     applyKoef(koef){
         this.processes.forEach(function(process){
             process.totalPrice*=koef;

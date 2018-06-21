@@ -1169,9 +1169,9 @@ app.factory('myFactory', function(){
 
             //****************Агентские
             if(this.agents.val!=0){
-                let koef=this.agents.getKoef(this.totalPrice);
+                let agentKoef=this.agents.getKoef(this.totalPrice);
                 this.parks.forEach(function(park){
-                    park.applyKoef(koef);
+                    park.applyKoef(agentKoef);
                 });
             }
             //****************
