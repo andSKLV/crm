@@ -8,6 +8,16 @@ app.controller("HIP", function ($http, myFactory, $rootScope, $scope) {
     this.myFactory=myFactory;
     this.delete=function(process){
         if(process.multi) {
+            if (process.multi.parent) {
+                let parentMulti = process.multi.parent;
+                // если есть родитель, убираем у родителя ребенка
+                parentMulti.processes.splice (parentMulti.processes.indexOf(process.multi),1);
+                if (parentMulti.processes.length<2)
+                // если у родителя остался один ребенок, то убираем родителя
+                    parentMulti.processes.forEach(function (multik) {
+                    delete multik.parent;
+                });
+            }
             //удаляем процесс из мульти
             process.multi.processes.splice(process.multi.processes.indexOf(process),1); 
         }

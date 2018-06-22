@@ -669,12 +669,23 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         delete proc.package;
                     });
                 }
+                // удаляем процессы, которые были в нашем мульти из парка
                 park.processes.splice(park.processes.indexOf(process), 1);
             });
-            if(park.processes.length==0) myFactory.parks.splice(myFactory.parks.indexOf(park), 1);
+            
+            if(park.processes.length==0) {
+                // удаляем парк если больше нет строк
+                myFactory.parks.splice(myFactory.parks.indexOf(park), 1);
+            }
+
             if(multi.parent){
+                // если есть родительский мульти узел то...
                 let parentMulti=multi.parent;
-                parentMulti.processes.forEach(function (multik) {
+                // ... удаляем у родителя его ребенка
+                parentMulti.processes.splice(parentMulti.processes.indexOf(multi),1);
+                // ...если в родительском мульти узле остался один ребенок, то удаляем родительский узел
+                if (multi.parent.processes.length<2)
+                    parentMulti.processes.forEach(function (multik) {
                     delete multik.parent;
                 });
                 myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(parentMulti), 1);

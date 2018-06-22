@@ -1052,10 +1052,12 @@ app.factory('myFactory', function(){
         },
         /**
          * функция для очистки мусора
+         * сюда поступают уже измененные массивы, то есть с добавленным или удаленным узлами
          */
         cleanUpProcessesInParks(){
             let mass=[];
             let myFactory=this;
+            // создаем новые парки из имеющихся процессов
             this.parks.forEach(function (park,i) {
                 let arr=park.check();//обнуляем все значения для парка(риски, базовая премия, коэфф риска)
                 arr.forEach(function(process){

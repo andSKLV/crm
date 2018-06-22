@@ -122,6 +122,7 @@ class Multi{
         });
         this.price=total;
     }
+    // функция разворачивания мульти узла на строчки
     open(multies, key){
         if(this.risk.length>1 && this.wrapping.length>1 || this.wrapping.length>1 && this.packName || this.packName!==undefined && this.risk.length>1){
             let mass=this.processes;
@@ -226,6 +227,7 @@ class Multi{
         multies.forEach(multi=>multi.getValues());
         
     }
+    // функция сворачивания мультиузла в одну строку
     close(multies, toParent){
         if(toParent){
             let mass=[];
