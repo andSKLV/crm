@@ -7,15 +7,15 @@ app.controller("HIP", function ($http, myFactory, $rootScope, $scope) {
 
     this.myFactory=myFactory;
     this.delete=function(process){
-        if(process.multi && process.multi!="deleted"){
-            myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(process.multi), 1);
-            process.multi.processes.forEach(function (proc) {
-                if(process.multi.packName) delete proc.package; 
-                if(proc!==process) proc.multi="deleted";
-            });
-            
+        if(process.multi) {
+            //удаляем процесс из мульти
+            process.multi.processes.splice(process.multi.processes.indexOf(process),1); 
         }
-        if(process.park.processes.length>1) process.park.processes.splice(process.park.processes.indexOf(process),1);
+        if(process.park.processes.length>1) {
+            //удаляем процесс из парка
+            process.park.processes.splice(process.park.processes.indexOf(process),1);
+        }
+        // если процесс единственный в парке, удаляем парк
         else myFactory.parks.splice(myFactory.parks.indexOf(process.park), 1);
         myFactory.finalCalc();
     };
