@@ -630,17 +630,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             for(let key in multi){
                 if(key!="processes") newMulti[key]=multi[key];
             }
-            const thisPark = multi.processes[0].park;
-            //вся загвоздкаFIXME: 
+            const thisPark = multi.processes[0].park; 
             if (isMultiRisk(multi)) {
                 copyMultiRisk();
             }
             else copyMultiWrap();
-            // array.splice(0,1);
-            // myFactory.choosePark(array, newPark, 0);
-            // переводим каретку в режим выбора рисков для скопированного мульти узла
-            this.loadMulti(array[0],"risk");
-            myFactory.finalCalc();
             function isMultiRisk(multi){
                 let flag = true;
                 if (multi.risk.length===1 && multi.wrapping.length > 1) flag = false;
@@ -648,7 +642,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             }
             function copyMultiRisk(){
                 let newPark=new Park(array);
-                //добавляется новый парк
+                    //добавляется новый парк
                 myFactory.parks.splice(myFactory.parks.indexOf(thisPark)+1, 0, newPark);
             }
             function copyMultiWrap(){
@@ -656,6 +650,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     thisPark.processes.push(proc);
                 })
             }
+                // переводим каретку в режим выбора рисков для скопированного мульти узла
+            this.loadMulti(array[0],"risk");
+            myFactory.finalCalc();
+
         },
        
         /**
