@@ -321,7 +321,6 @@ class Process{
         let spline = Spline(this.cost, Points.cost, 1);
         let spline1 = Spline(totalAmount, Points.amount, 0);
         let price = spline*(1+spline1/100);
-        console.log(this.park);
         price *= Franchise(this.cost, this.franchise);
 
         /**

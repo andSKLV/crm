@@ -618,22 +618,46 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             scope.clean();
             console.log(multi);
             let array=[];
+            //создаем массив с копиями объектов процессов 
             multi.processes.forEach(function (process) {
                 let newProcess=new Process(process);
                 array.push(newProcess);
             });
+            //создаем копию объекта мульти
             let newMulti=new Multi(array);
             myFactory.multi.multies.push(newMulti);
+            //проверить этот бред, вроде как не нужен
             for(let key in multi){
                 if(key!="processes") newMulti[key]=multi[key];
             }
-            let park=multi.processes[0].park;
-            let newPark=new Park(array);
-            myFactory.parks.splice(myFactory.parks.indexOf(park)+1, 0, newPark);
+            const thisPark = multi.processes[0].park;
+            //вся загвоздкаFIXME: 
+            if (isMultiRisk(multi)) {
+                copyMultiRisk();
+            }
+            else copyMultiWrap();
             // array.splice(0,1);
             // myFactory.choosePark(array, newPark, 0);
+            // переводим каретку в режим выбора рисков для скопированного мульти узла
+            this.loadMulti(array[0],"risk");
             myFactory.finalCalc();
+            function isMultiRisk(multi){
+                let flag = true;
+                if (multi.risk.length===1 && multi.wrapping.length > 1) flag = false;
+                return flag;
+            }
+            function copyMultiRisk(){
+                let newPark=new Park(array);
+                //добавляется новый парк
+                myFactory.parks.splice(myFactory.parks.indexOf(thisPark)+1, 0, newPark);
+            }
+            function copyMultiWrap(){
+                array.forEach((proc)=>{
+                    thisPark.processes.push(proc);
+                })
+            }
         },
+       
         /**
          * удаляем мультиузел
          * @param {multi} multi 
@@ -699,7 +723,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         },
         /**
          * функция загрузки процесса из матрицы в каретку
-         * @param {process} process процесс
+         * @param {process} process новый процесс, который был создан при копировании
          * @param {string} prop значение процесса
          */
         loadProcess(process, prop) {

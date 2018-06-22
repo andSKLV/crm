@@ -1114,6 +1114,7 @@ app.factory('myFactory', function(){
                     myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi), 1);
                 }
             });
+            // это какой то бред который удаляет парки если они пустые, кажется вижу уже второй раз
             this.parks.forEach(function(park,i){//
                 if(park.processes.length==0) myFactory.parks.splice(myFactory.parks.indexOf(park), 1);
                 else park.calculate();//считаем каждую строку парка
