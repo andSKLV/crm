@@ -315,14 +315,17 @@ class Process{
         const maxAmount = this.park.calculateAmount();
         let writtenAmount;
         if (this.risk==="Базовые риски" && maxAmount!=this.amount) {
+            // если у базовых рисков не самое большое кол-во груза в парке, то запоминаем самое большое кол-во для учета в расчетах базового риска
             writtenAmount = this.amount;
             this.amount = maxAmount;
         }
-        //
+        //грузооборот = цена груза х кол-во груза
         this.turnover=this.cost*this.amount;
         let spline = Spline(this.cost, Points.cost, 1);
         let spline1 = Spline(totalAmount, Points.amount, 0);
+        // базовая ставка price
         let price = spline*(1+spline1/100);
+        // учет франшизы
         price *= Franchise(this.cost, this.franchise);
 
         /**
@@ -555,13 +558,17 @@ class Park{
         });
         let park=this;
         array.forEach(function(process){
+            //добавляем название риска процесса в массив "риски" у парка
             if(park.risks.indexOf(process.risk)==-1) park.risks.push(process.risk);
             if(!wraps.hasOwnProperty(process.wrapping)) wraps[process.wrapping]=process.amount;
+            // создаем массив wraps: тип отсека - количество
             else if(wraps.hasOwnProperty(process.wrapping) && wraps[process.wrapping]<process.amount) wraps[process.wrapping]=process.amount;
+            // сумма = кол-во грузов * коэф. отсека
             sum+=process.amount*risks[process.wrapping];
             amount+=process.amount;
+            // сумма коэф. отсека ЗАЧЕМ?
             risksum+=risks[process.wrapping];
-
+            // добавляем в типы отсека парка тип отсека данного процесса
             if(park.wrappings.indexOf(process.wrapping)==-1) park.wrappings.push(process.wrapping);
         });
         for(let i=0;i<this.processes.length;i++){
@@ -587,7 +594,7 @@ class Park{
             }
 
         }
-
+        
         for(let key in wraps){
          /*   risksum+=risks[key];
             amount+=wraps[key];
