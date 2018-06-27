@@ -352,7 +352,12 @@ class Process{
         //**************
 
         //*******************считаем надбавку за риск
-        let spline2 = Spline((risks[this.wrapping]*this.park.riskKoef+risks[this.risk])/2, Points.risk, 2);//риски надо еще обработать
+        const procWrapKoef = calcKoef(this);
+            // считаем коэф. надбавки по типу отсека для этого процесса 
+        const wrapRisk = risks[this.wrapping]*this.park.riskKoef*procWrapKoef;
+        // const wrapRisk = this.park.newRiskKoef*procWrapKoef;
+            // ищем по груфику соответствующее значение по среднему между риском и надбавкой за тип отсека
+        const spline2 = Spline((wrapRisk+risks[this.risk])/2, Points.risk, 2);//риски надо еще обработать
         price *= 1 + spline2 / 100;
         this.riskRate=price;
         this.riskPrice=this.turnover*price/100;
@@ -366,6 +371,25 @@ class Process{
         // SKLV 14.05.2018: change back amount if it's базовые риски
         if (writtenAmount) {
             this.amount = writtenAmount;
+        }
+        // найти коэф. по объему перевозок, лимитам и франшизам,по типу груза
+        function calcKoef (that){
+            const numOfProccesses = that.park.processes.length;
+            const sumParkLimits = that.park.processes.reduce ((sum, val)=>{return sum+val.limit;},0);
+                const procLimitKoef = numOfProccesses*(that.limit/sumParkLimits);
+            const sumParkFranch = that.park.processes.reduce ((sum, val)=>{return sum+val.franchise;},0);
+            // FIXME:неправльно считает
+                const procFranchKoef = (sumParkFranch===0) ? 1 : numOfProccesses*(1-that.franchise/sumParkFranch);
+            const sumParkTurnover = that.park.processes.reduce ((sum, val)=>{return sum+(val.amount*val.cost);},0);
+                const procTurnoverKoef = numOfProccesses*(that.turnover/sumParkTurnover);
+            const sumParWrapKoef = that.park.processes.reduce ((sum, val)=>{
+                const wRisk = (risks[val.wrapping]===0) ? 1 : risks[val.wrapping];
+                return sum+wRisk;
+            },0);
+                let procWrapKoef = (risks[that.wrapping]===0) ? 1 : risks[that.wrapping];
+                procWrapKoef = numOfProccesses*procWrapKoef/sumParWrapKoef;
+            return (procLimitKoef*procFranchKoef*procTurnoverKoef*procWrapKoef)/4;
+            // return procLimitKoef*procTurnoverKoef*procWrapKoef;
         }
     }
     remove(){
@@ -612,6 +636,17 @@ class Park{
         }
         if(amount==0 || risksum==0) this.riskKoef=0;
         else this.riskKoef=sum/(amount*risksum);
+        const newAmount = this.processes.reduce((sum,proc)=>sum+proc.amount,0);
+        const newWrapRisk = this.processes.reduce((sum,proc)=>{
+            const wrapRisk = risks[proc.wrapping];
+            return sum+wrapRisk;
+        },0);
+        const newSum = this.processes.reduce((sum,proc)=>{
+            const wrapRisk = risks[proc.wrapping];
+            return sum+(proc.amount*wrapRisk);
+        },0);
+        this.newRiskKoef = (newWrapRisk===0) ? 0 : (newSum)/(newAmount*this.risks.length);
+
         //this.riskSum=risksum;
         if(NO===undefined && this.risks.indexOf("Базовые риски")==-1 && this.processes.length==1){
             mass=this.processes;
