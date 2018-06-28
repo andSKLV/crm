@@ -124,7 +124,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                         myFactory.bottom.priceMode="practicalPrice";
                         myFactory.finalCalc();
                     }
-                    //лимиты/платежи/хуета остальная
+                    //лимиты/платежи/остальное
                 }
                 else{
                     let processes={};

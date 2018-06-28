@@ -33,7 +33,7 @@
             <div ng-repeat="value in param.values">{{value.name}}</div>
         </div>
 
-        <!-- Даты, эту хуйню пока не придумал -->
+        <!-- Даты, пока не придумал -->
         <div id="horizontal-container"  ng-if="param.type=='dates'" class="sortable-row" as-sortable="sortableOptions" data-ng-model="itemsList.items1">
           
                 <div ng-repeat="item in itemsList.items1" as-sortable-item>

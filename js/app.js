@@ -903,7 +903,7 @@ app.factory('myFactory', function(){
             if(this.multi.arrays.wrapping.length==0){
                 this.multi.arrays.wrapping.push(this.process.wrapping);
             }
-            if(this.multi.arrays.wrapping.length==1 && this.multi.arrays.risk.length==1){
+            if(this.multi.arrays.wrapping.length===1 && this.multi.arrays.risk.length===1){
                 this.process.risk=this.multi.arrays.risk[0];
                 this.process.wrapping=this.multi.arrays.wrapping[0];
                 let risk=this.multi.arrays.risk[0];
@@ -990,7 +990,7 @@ app.factory('myFactory', function(){
             //если мульти
             if(mode=="changing"){
                 let park=this.process.park;
-                let process=this.process;//проверить эту хуйню, здесь помойму ссылка на объект, нахуй такая сложность!?!?!??!
+                let process=this.process;
                 this.cleanProcess();
                 for(let key in process){
                     if(transportProp.indexOf(key)!=-1) this.process[key]=process[key];

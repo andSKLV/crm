@@ -108,9 +108,9 @@ function SplineKoeff(index, mass)
     {
         D[0]=mass[1][0]-mass[0][0];
         C[1] = (mass[1][1] - mass[0][1]) / D[0];
-        for (let i = 1; i < NM1+1; i++) {//цикл ебашит на ура
-            D[i] = mass[i + 1][0] - mass[i][0]; //охуенно работает
-            B[i]=2*(D[i-1]+D[i]);//охуенно работает
+        for (let i = 1; i < NM1+1; i++) {
+            D[i] = mass[i + 1][0] - mass[i][0]; 
+            B[i]=2*(D[i-1]+D[i]);
             C[i + 1] = (mass[i + 1][1] - mass[i][1]) / D[i];
             C[i] = C[i + 1] - C[i];
         };
