@@ -352,9 +352,9 @@ class Process{
         //**************
 
         //*******************считаем надбавку за риск
-        const procWrapKoef = calcKoef(this);
             // считаем коэф. надбавки по типу отсека для этого процесса 
-        const wrapRisk = risks[this.wrapping]*this.park.riskKoef*procWrapKoef;
+            // calcKoef() - метод определения значимости доли этого процесса во всем парке, то есть если у него меньший лимит, то и по распределению на него должно приходиться меньше нагрузка
+        const wrapRisk = risks[this.wrapping]*this.park.riskKoef*calcKoef(this);
         // const wrapRisk = this.park.newRiskKoef*procWrapKoef;
             // ищем по груфику соответствующее значение по среднему между риском и надбавкой за тип отсека
         const spline2 = Spline((wrapRisk+risks[this.risk])/2, Points.risk, 2);//риски надо еще обработать
@@ -382,12 +382,12 @@ class Process{
             function wrapKoefCalc(that) {
                 const sumParWrapKoef = that.park.processes.reduce ((sum, val)=>{
                     // "контейнеру" присвоена 1 с целью придать ему весомости в доле
-                    const wRisk = (risks[val.wrapping]===0) ? 1 : risks[val.wrapping];
+                    const wRisk = (risks[val.wrapping]===0) ? 0 : risks[val.wrapping];
                     return sum+wRisk;
                 },0);
-                // "контейнеру" присвоена 1 с целью придать ему весомости в доле
-                let procWrapKoef = (risks[that.wrapping]===0) ? 1 : risks[that.wrapping];
-                return numOfProccesses*procWrapKoef/sumParWrapKoef;
+                // если сумма=0, значит у всех Контейнеры, значит мы можем вернуть всем коэф. =1 
+                if (sumParWrapKoef===0) return 1;
+                return numOfProccesses*risks[that.wrapping]/sumParWrapKoef;
             }
             function limitKoefCalc(that) {
                 const sumParkLimits = that.park.processes.reduce ((sum, val)=>{return sum+val.limit;},0);
