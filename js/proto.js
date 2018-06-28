@@ -349,13 +349,52 @@ class Process{
                 this.totalPrice+=this.turnover*(this.baseRate*spline2/100)/100;
             }
         }
-        //**************
-
+        //************** метод определения значимости доли этого процесса во всем парке, то есть если у него меньший лимит, то и по распределению на него должно приходиться меньше нагрузка 
+        const calcKoef = ()=> {
+            const numOfProccesses = this.park.processes.length;
+            // если процесс в парке один, то нечего считать, распределение в парке приходится только на него
+            if (this.park.processes.length===1) return 1;
+            
+            const wrapKoefCalc = () => {
+                const sumParWrapKoef = this.park.processes.reduce ((sum, val)=>{
+                    // "контейнеру" присвоена 1 с целью придать ему весомости в доле
+                    const wRisk = (risks[val.wrapping]===0) ? 0 : risks[val.wrapping];
+                    return sum+wRisk;
+                },0);
+                // если сумма=0, значит у всех Контейнеры, значит мы можем вернуть всем коэф. =1 
+                if (sumParWrapKoef===0) return 1;
+                return numOfProccesses*risks[this.wrapping]/sumParWrapKoef;
+            }
+            const limitKoefCalc = () => {
+                const sumParkLimits = this.park.processes.reduce ((sum, val)=>{return sum+val.limit;},0);
+                const procLimitKoef = numOfProccesses*(this.limit/sumParkLimits);
+                return procLimitKoef;
+            }
+            const turnoverKoefCalc = () => {
+                const sumParkTurnover = this.park.processes.reduce ((sum, val)=>{return sum+(val.amount*val.cost);},0);
+                return numOfProccesses*(this.turnover/sumParkTurnover);
+            }
+            //  рассчет коэф. за франшизу
+            //  зависимость от франшизы обратная, чем больше франшиза у процесса, тем меньшую долю он должен занимать в общем распределнии
+            // знаменатель (1-франшиза/сумму франшиз парка)
+            // числитель сумма по всем процессам в парке (1-франшиза/сумму франшиз парка) 
+            const franchKoefCalc = () => {
+                const sumParkFranch = this.park.processes.reduce ((sum, val)=>{return sum+val.franchise;},0);
+                // если у всех процессов франшиза ноль, то коэф у всех 1, то есть без распределения
+                if (sumParkFranch===0) return 1;
+                const upper = 1-(this.franchise/sumParkFranch);
+                const lower =  this.park.processes.reduce ((sum, val)=>{
+                    return sum+(1-val.franchise/sumParkFranch);
+                },0);
+                return numOfProccesses*upper/lower;
+            }
+            return limitKoefCalc()*franchKoefCalc()*turnoverKoefCalc()*wrapKoefCalc();
+        }
         //*******************считаем надбавку за риск
             // считаем коэф. надбавки по типу отсека для этого процесса 
             // calcKoef() - метод определения значимости доли этого процесса во всем парке, то есть если у него меньший лимит, то и по распределению на него должно приходиться меньше нагрузка
-        const wrapRisk = risks[this.wrapping]*this.park.riskKoef*calcKoef(this);
-        // const wrapRisk = this.park.newRiskKoef*procWrapKoef;
+        const wrapRisk = risks[this.wrapping]*this.park.riskKoef*calcKoef();
+        // const wrapRisk = risks[this.wrapping]*this.park.newRiskKoef*calcKoef(this);
             // ищем по груфику соответствующее значение по среднему между риском и надбавкой за тип отсека
         const spline2 = Spline((wrapRisk+risks[this.risk])/2, Points.risk, 2);//риски надо еще обработать
         price *= 1 + spline2 / 100;
@@ -373,46 +412,7 @@ class Process{
             this.amount = writtenAmount;
         }
         // найти коэф. по объему перевозок, лимитам и франшизам,по типу груза
-        function calcKoef (that){
-            const numOfProccesses = that.park.processes.length;
-            // если процесс в парке один, то нечего считать, распределение в парке приходится только на него
-            if (that.park.processes.length===1) return 1;
-            return limitKoefCalc(that)*franchKoefCalc(that)*turnoverKoefCalc(that)*wrapKoefCalc(that);
-            
-            function wrapKoefCalc(that) {
-                const sumParWrapKoef = that.park.processes.reduce ((sum, val)=>{
-                    // "контейнеру" присвоена 1 с целью придать ему весомости в доле
-                    const wRisk = (risks[val.wrapping]===0) ? 0 : risks[val.wrapping];
-                    return sum+wRisk;
-                },0);
-                // если сумма=0, значит у всех Контейнеры, значит мы можем вернуть всем коэф. =1 
-                if (sumParWrapKoef===0) return 1;
-                return numOfProccesses*risks[that.wrapping]/sumParWrapKoef;
-            }
-            function limitKoefCalc(that) {
-                const sumParkLimits = that.park.processes.reduce ((sum, val)=>{return sum+val.limit;},0);
-                const procLimitKoef = numOfProccesses*(that.limit/sumParkLimits);
-                return procLimitKoef;
-            }
-            function turnoverKoefCalc (that) {
-                const sumParkTurnover = that.park.processes.reduce ((sum, val)=>{return sum+(val.amount*val.cost);},0);
-                return numOfProccesses*(that.turnover/sumParkTurnover);
-            }
-            //  рассчет коэф. за франшизу
-            //  зависимость от франшизы обратная, чем больше франшиза у процесса, тем меньшую долю он должен занимать в общем распределнии
-            // знаменатель (1-франшиза/сумму франшиз парка)
-            // числитель сумма по всем процессам в парке (1-франшиза/сумму франшиз парка) 
-            function franchKoefCalc (that) {
-                const sumParkFranch = that.park.processes.reduce ((sum, val)=>{return sum+val.franchise;},0);
-                // если у всех процессов франшиза ноль, то коэф у всех 1, то есть без распределения
-                if (sumParkFranch===0) return 1;
-                const upper = 1-(that.franchise/sumParkFranch);
-                const lower =  that.park.processes.reduce ((sum, val)=>{
-                    return sum+(1-val.franchise/sumParkFranch);
-                },0);
-                return numOfProccesses*upper/lower;
-            }
-        }
+        
     }
     remove(){
         if(this.multi && this.multi!=="deleted"){
