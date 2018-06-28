@@ -658,6 +658,7 @@ class Park{
         }
         if(amount==0 || risksum==0) this.riskKoef=0;
         else this.riskKoef=sum/(amount*risksum);
+        // эксперементальная функция расчета средневзвешенного коэф. по правильному, пока коэф нигде не используется
         const newAmount = this.processes.reduce((sum,proc)=>sum+proc.amount,0);
         const newWrapRisk = this.processes.reduce((sum,proc)=>{
             const wrapRisk = risks[proc.wrapping];
