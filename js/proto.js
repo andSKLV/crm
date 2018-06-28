@@ -375,21 +375,43 @@ class Process{
         // найти коэф. по объему перевозок, лимитам и франшизам,по типу груза
         function calcKoef (that){
             const numOfProccesses = that.park.processes.length;
-            const sumParkLimits = that.park.processes.reduce ((sum, val)=>{return sum+val.limit;},0);
-                const procLimitKoef = numOfProccesses*(that.limit/sumParkLimits);
-            const sumParkFranch = that.park.processes.reduce ((sum, val)=>{return sum+val.franchise;},0);
-            // FIXME:неправльно считает
-                const procFranchKoef = (sumParkFranch===0) ? 1 : numOfProccesses*(1-that.franchise/sumParkFranch);
-            const sumParkTurnover = that.park.processes.reduce ((sum, val)=>{return sum+(val.amount*val.cost);},0);
-                const procTurnoverKoef = numOfProccesses*(that.turnover/sumParkTurnover);
-            const sumParWrapKoef = that.park.processes.reduce ((sum, val)=>{
-                const wRisk = (risks[val.wrapping]===0) ? 1 : risks[val.wrapping];
-                return sum+wRisk;
-            },0);
+            // если процесс в парке один, то нечего считать, распределение в парке приходится только на него
+            if (that.park.processes.length===1) return 1;
+            return limitKoefCalc(that)*franchKoefCalc(that)*turnoverKoefCalc(that)*wrapKoefCalc(that);
+            
+            function wrapKoefCalc(that) {
+                const sumParWrapKoef = that.park.processes.reduce ((sum, val)=>{
+                    // "контейнеру" присвоена 1 с целью придать ему весомости в доле
+                    const wRisk = (risks[val.wrapping]===0) ? 1 : risks[val.wrapping];
+                    return sum+wRisk;
+                },0);
+                // "контейнеру" присвоена 1 с целью придать ему весомости в доле
                 let procWrapKoef = (risks[that.wrapping]===0) ? 1 : risks[that.wrapping];
-                procWrapKoef = numOfProccesses*procWrapKoef/sumParWrapKoef;
-            return (procLimitKoef*procFranchKoef*procTurnoverKoef*procWrapKoef)/4;
-            // return procLimitKoef*procTurnoverKoef*procWrapKoef;
+                return numOfProccesses*procWrapKoef/sumParWrapKoef;
+            }
+            function limitKoefCalc(that) {
+                const sumParkLimits = that.park.processes.reduce ((sum, val)=>{return sum+val.limit;},0);
+                const procLimitKoef = numOfProccesses*(that.limit/sumParkLimits);
+                return procLimitKoef;
+            }
+            function turnoverKoefCalc (that) {
+                const sumParkTurnover = that.park.processes.reduce ((sum, val)=>{return sum+(val.amount*val.cost);},0);
+                return numOfProccesses*(that.turnover/sumParkTurnover);
+            }
+            //  рассчет коэф. за франшизу
+            //  зависимость от франшизы обратная, чем больше франшиза у процесса, тем меньшую долю он должен занимать в общем распределнии
+            // знаменатель (1-франшиза/сумму франшиз парка)
+            // числитель сумма по всем процессам в парке (1-франшиза/сумму франшиз парка) 
+            function franchKoefCalc (that) {
+                const sumParkFranch = that.park.processes.reduce ((sum, val)=>{return sum+val.franchise;},0);
+                // если у всех процессов франшиза ноль, то коэф у всех 1, то есть без распределения
+                if (sumParkFranch===0) return 1;
+                const upper = 1-(that.franchise/sumParkFranch);
+                const lower =  that.park.processes.reduce ((sum, val)=>{
+                    return sum+(1-val.franchise/sumParkFranch);
+                },0);
+                return numOfProccesses*upper/lower;
+            }
         }
     }
     remove(){
