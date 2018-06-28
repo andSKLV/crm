@@ -955,6 +955,7 @@ app.factory('myFactory', function(){
                     }
                 }
             }
+        // перемещение базовых рисков на первую строчку если они есть
             let flag=false;
             array.forEach(process=>{
                 if(process.risk=="Базовые риски") flag=true;
@@ -965,6 +966,7 @@ app.factory('myFactory', function(){
 
                 }
             }
+        // 
             let multi;
             if(bindMulti){
                 multi=this.bindMulti(array, bindMulti);
