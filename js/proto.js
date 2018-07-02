@@ -379,22 +379,25 @@ class Process{
             // знаменатель (1-франшиза/сумму франшиз парка)
             // числитель сумма по всем процессам в парке (1-франшиза/сумму франшиз парка) 
             const franchKoefCalc = () => {
-                const sumParkFranch = this.park.processes.reduce ((sum, val)=>{return sum+val.franchise;},0);
-                // если у всех процессов франшиза ноль, то коэф у всех 1, то есть без распределения
-                if (sumParkFranch===0) return 1;
+                // если есть нет ни одной не нулевой франшизы, другими словами если все равны 0 тогда коэф одинаковый 
+                if (!(this.park.processes.filter(proc=>proc.franchise>0).includes(true))) return 1;
+                // суммируем все франшизы в парке
+                const sumParkFranch = this.park.processes.reduce ((sum, val)=>{
+                    const fr = (val.franchise===0) ? 1 : val.franchise;
+                    return sum+val.franchise;
+                },0);
                 const upper = 1-(this.franchise/sumParkFranch);
                 const lower =  this.park.processes.reduce ((sum, val)=>{
                     return sum+(1-val.franchise/sumParkFranch);
                 },0);
                 return numOfProccesses*upper/lower;
             }
-            return limitKoefCalc()*franchKoefCalc()*turnoverKoefCalc()*wrapKoefCalc();
+            return limitKoefCalc()*franchKoefCalc()*turnoverKoefCalc();
         }
         //*******************считаем надбавку за риск
             // считаем коэф. надбавки по типу отсека для этого процесса 
             // calcKoef() - метод определения значимости доли этого процесса во всем парке, то есть если у него меньший лимит, то и по распределению на него должно приходиться меньше нагрузка
         const wrapRisk = risks[this.wrapping]*this.park.riskKoef*calcKoef();
-        // const wrapRisk = risks[this.wrapping]*this.park.newRiskKoef*calcKoef(this);
             // ищем по груфику соответствующее значение по среднему между риском и надбавкой за тип отсека
         const spline2 = Spline((wrapRisk+risks[this.risk])/2, Points.risk, 2);//риски надо еще обработать
         price *= 1 + spline2 / 100;
