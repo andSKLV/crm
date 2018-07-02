@@ -380,10 +380,11 @@ class Process{
             // числитель сумма по всем процессам в парке (1-франшиза/сумму франшиз парка) 
             const franchKoefCalc = () => {
                 // если есть нет ни одной не нулевой франшизы, другими словами если все равны 0 тогда коэф одинаковый 
-                if (!(this.park.processes.filter(proc=>proc.franchise>0).includes(true))) return 1;
+                let flag = true;
+                this.park.processes.forEach(proc=>{if (proc.franchise!==this.park.processes[0].franchise) flag=false})
+                if (flag) return 1;
                 // суммируем все франшизы в парке
                 const sumParkFranch = this.park.processes.reduce ((sum, val)=>{
-                    const fr = (val.franchise===0) ? 1 : val.franchise;
                     return sum+val.franchise;
                 },0);
                 const upper = 1-(this.franchise/sumParkFranch);
@@ -392,7 +393,10 @@ class Process{
                 },0);
                 return numOfProccesses*upper/lower;
             }
-            return limitKoefCalc()*franchKoefCalc()*turnoverKoefCalc();
+            const limK = limitKoefCalc();
+            const limF = franchKoefCalc();
+            if (limK===1||limF===1) return limK*limF;
+            else return (limK*limF)/2;
         }
         //*******************считаем надбавку за риск
             // считаем коэф. надбавки по типу отсека для этого процесса 
