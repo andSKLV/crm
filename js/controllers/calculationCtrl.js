@@ -481,7 +481,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.clickedOnMulti=function(param, value){//при нажатии на верх каретки в мульти параметры при режиме мульти
         if(scope.karetka.mode=="changing process" && (myFactory.process.constructor.name=="Multi"||myFactory.process.multi)){
             // мульти-узел на котором кликнули
-            let multi=myFactory.process;
+            let multi = (myFactory.process.constructor.name=="Multi") ? myFactory.process :  myFactory.process.multi;
             // первый проц из этого мультиузла
             let process=multi.processes[0];
             // если он мульти, то берем из него первый проц. ...интересно, а если там 3 уровня?
