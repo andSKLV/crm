@@ -739,6 +739,7 @@ app.factory('myFactory', function(){
          * @param {park} oldPark
          */
         choosePark(array, park, index, oldPark) {
+            // проверяем если передали список мультиузлов
             for(let j=0;j<array.length; j++){
                 let process=array[j];
                 if(process.constructor.name=="Multi"){
@@ -755,8 +756,11 @@ app.factory('myFactory', function(){
                 // вторая исчезнет.
                 // Эксперементально закомиченно
                 // park.check();
+                // присваиваем новым процам старый парк
                 array.forEach(function (process) {
+                    // назначаем каждому новому процессу этот парк
                     process.park=park;
+                    // если этого проца нет в парке то ставим его на место инжекс в этом парке
                     if(park.processes.indexOf(process)===-1) park.processes.splice(index, 0,process);
                 });
             }
@@ -874,18 +878,27 @@ app.factory('myFactory', function(){
             return obj;
 
         },
+        /**
+         * @function функция для того чтобы совместить старый мульти узел и новый создаваемый
+         * @param {array} array массив с новыми процами
+         * @param {object} старый объект мульти
+         * @return
+         */
         bindMulti:function(array, multi){
             if(multi.packName) delete multi.packName;
             if(multi.template) delete multi.template;
             let myFactory=this;
             let mass=[];
+            // копируем все процы из старого мульти в массив
             multi.processes.forEach(proc=>mass.push(proc));
-            //mass.forEach(process=>process.remove());
+            // удаляем все эти процы которые были в массиве
             for(let i=0;i<mass.length;i++){
                 let process=mass[i];
                 process.remove();
             }
+            // ставим новые процы на место старых
             multi.processes=array;
+            // привязываем процам мульти объект
             multi.processes.forEach(function (process) {
                 process.multi=multi;
             });
@@ -932,10 +945,13 @@ app.factory('myFactory', function(){
                     else return [new Process(this.process)];
                 }
             }
-
+            //  массив который потом возвращаем как новый мульти объект
             let array=[];
             let obj;
+            // блок для поштучного создания процев из данных
+            // для каждого пункта "тип отсека" в коллекторе мульти 
             for(let i=0; i<this.multi.arrays.wrapping.length; i++){
+            // для каждого пункта "риск" в коллекторе мульти
                 for(let j=0; j<this.multi.arrays.risk.length; j++){
                     this.process.wrapping=this.multi.arrays.wrapping[i];
                     this.process.risk=this.multi.arrays.risk[j];
@@ -951,6 +967,7 @@ app.factory('myFactory', function(){
                         })
                     }
                     else{
+                        // получаем объект голых процев
                         array.push(new Process(this.process));
                     }
                 }
@@ -968,14 +985,16 @@ app.factory('myFactory', function(){
             }
         // 
             let multi;
+            // если уже есть мульти с которым связываем
+            // bindMulti старый мульти узел по которому кликнули
             if(bindMulti){
                 multi=this.bindMulti(array, bindMulti);
             }
+            // если новый мульти
             else{
                 multi=new Multi(array);
                 this.multi.multies.push(multi);
             }
-
 
             if(obj){
                 multi.packName=obj.packName;
@@ -993,7 +1012,10 @@ app.factory('myFactory', function(){
             if(mode=="changing"){
                 let park=this.process.park;
                 let process=this.process;
+                // очищаем myFActory.process на котором нажали
                 this.cleanProcess();
+                // создаем тот же проц с ключевыми параметрами, но без всех атрибутов типа мульти, парк и расчеты
+                // потом будем им заменять старый
                 for(let key in process){
                     if(transportProp.indexOf(key)!=-1) this.process[key]=process[key];
                 }
@@ -1019,7 +1041,9 @@ app.factory('myFactory', function(){
                     this.choosePark(array, park, index);
                 }
                 else if(this.multi.arrays.risk.length>0 || this.multi.arrays.wrapping.length>0){//если меняем на комплекс
+                    // создаем новый мульти узел из старого объекта на основании того, что у него записано в рисках и типах отсека
                     let array=this.makeMulti(multiChanging);
+                    // новый мульти узел, парк, индекс для вставки
                     this.choosePark(array, park, index);
                     this.multi.template=[];
                 }
