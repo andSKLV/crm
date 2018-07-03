@@ -478,10 +478,13 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         console.log(scope.myFactory.multi);
         //this.addPropertyToProcess(param, "multi");
     };
+// ----------------------------------------------
     this.clickedOnMulti=function(param, value){//при нажатии на верх каретки в мульти параметры при режиме мульти
         if (scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Process" && myFactory.process.multi) {
             let multi = myFactory.process.multi;
             let process = myFactory.process;
+            const park = myFactory.process.park;
+            const index = park.processes.indexOf(process);
             let newMultiArray = {
                 risk: [],
                 wrapping: [],
@@ -489,12 +492,14 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             // если того что мы хотим добавить еще нет в нашем мульти
             if(multi[param.model].indexOf(value.name)==-1 ||  multi[param.model].length>1) {
                 // делаем массив данных для создания нового мульти узла
-                newMultiArray.risk.push(process.risk);
-                newMultiArray.wrapping.push(process.wrapping);
-                newMultiArray[param.model].push(value.name);
+                // newMultiArray.risk.push(process.risk);
+                // newMultiArray.wrapping.push(process.wrapping);
+                // newMultiArray[param.model].push(value.name);
                 myFactory.multi.arrays[param.model].push(value.name);
                 // создаем новый мульти узел
-                let newMulti = myFactory.addNewProcess("changing",newMultiArray);
+                // let newMulti = myFactory.addNewProcess("changing");
+                const newMulti = myFactory.makeMulti();
+                myFactory.choosePark(newMulti, process.park, index);
 
                 // создание родителя
                 let parent = [];
@@ -504,7 +509,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 myFactory.multi.multies.push(newMulti);
                 
                 value.selected=true;
-                m
+                myFactory.finalCalc();
             }
         }
         
