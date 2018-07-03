@@ -479,15 +479,21 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         //this.addPropertyToProcess(param, "multi");
     };
     this.clickedOnMulti=function(param, value){//при нажатии на верх каретки в мульти параметры при режиме мульти
-        if(scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Multi"){
+        if(scope.karetka.mode=="changing process" && (myFactory.process.constructor.name=="Multi"||myFactory.process.multi)){
+            // мульти-узел на котором кликнули
             let multi=myFactory.process;
+            // первый проц из этого мультиузла
             let process=multi.processes[0];
+            // если он мульти, то берем из него первый проц. ...интересно, а если там 3 уровня?
             if(process.constructor.name=="Multi") process=process.processes[0];
+            // если того что мы хотим добавить еще нет в нашем мульти
             if(multi[param.model].indexOf(value.name)==-1 ||  multi[param.model].length>1) {
                 myFactory.process = process;
+                // добавляем новые данные в учет в коллектор "мульти"
                 myFactory.multi.arrays.risk = multi.risk;
                 myFactory.multi.arrays.wrapping = multi.wrapping;
 
+                // кажется тут  FIXME: проблема по удалению рисков из мульти через каретку
                 //если мы отжимаем(т.е. такой процесс уже есть)
                 if (myFactory.multi.arrays[param.model].indexOf(value.name) != -1) {
                     myFactory.multi.arrays[param.model].splice(myFactory.multi.arrays[param.model].indexOf(value.name), 1);
@@ -496,6 +502,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 //если такого процесса нету
                 else{
                     console.log(param, value);
+                    // если нажали "выбрать все"
                     if(value.action=="selectAll"){
                         if(multi.packName===undefined) this.clickedSelectAll(param, value);
                         else{
@@ -515,7 +522,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                             }
                         }
                     }
+                    
                     else{
+                        // если выбрали пакеты
                         if(value.action=="package"){
                             multi.template=value.values;
                             if(multi.packName!==undefined){
@@ -545,10 +554,13 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                                 return false;
                             }
                         }
+                        // добавляем новый параметр в учет в коллектор мульти
                         myFactory.multi.arrays[param.model].push(value.name);
                         value.selected=true;
                     }
                 }
+                // проходим по массиву объекта мульти на котором нажали
+                // если вложенные процы тоже мульти то...
                 multi.processes.forEach(function (multik) {
                     if(multik.constructor.name=="Multi"){
                         myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multik), 1);
@@ -1014,7 +1026,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         scope.clean();
                     }
                 }
-                else if(myFactory.process.constructor.name=="Multi"){
+                // FIXME:
+                else if(myFactory.process.constructor.name=="Multi"||myFactory.process.multi){
                     myFactory.finalCalc();
                     let multi=myFactory.process;
                     //если включен режим мульти
