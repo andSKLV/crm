@@ -479,9 +479,38 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         //this.addPropertyToProcess(param, "multi");
     };
     this.clickedOnMulti=function(param, value){//при нажатии на верх каретки в мульти параметры при режиме мульти
-        if(scope.karetka.mode=="changing process" && (myFactory.process.constructor.name=="Multi"||myFactory.process.multi)){
+        if (scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Process" && myFactory.process.multi) {
+            let multi = myFactory.process.multi;
+            let process = myFactory.process;
+            let newMultiArray = {
+                risk: [],
+                wrapping: [],
+            };
+            // если того что мы хотим добавить еще нет в нашем мульти
+            if(multi[param.model].indexOf(value.name)==-1 ||  multi[param.model].length>1) {
+                // делаем массив данных для создания нового мульти узла
+                newMultiArray.risk.push(process.risk);
+                newMultiArray.wrapping.push(process.wrapping);
+                newMultiArray[param.model].push(value.name);
+                myFactory.multi.arrays[param.model].push(value.name);
+                // создаем новый мульти узел
+                let newMulti = myFactory.addNewProcess("changing",newMultiArray);
+
+                // создание родителя
+                let parent = [];
+                parent.push(multi);
+                parent.push(newMulti);
+                myFactory.multi.multies.push(parent);
+                myFactory.multi.multies.push(newMulti);
+                
+                value.selected=true;
+                m
+            }
+        }
+        
+        if(scope.karetka.mode=="changing process" && (myFactory.process.constructor.name=="Multi")){
             // мульти-узел на котором кликнули
-            let multi = (myFactory.process.constructor.name=="Multi") ? myFactory.process :  myFactory.process.multi;
+            let multi = myFactory.process;
             // первый проц из этого мультиузла
             let process=multi.processes[0];
             // если он мульти, то берем из него первый проц. ...интересно, а если там 3 уровня?
@@ -573,6 +602,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             }
             return;
         }
+// ---------------------------------------------------------
         let multi=scope.myFactory.multi;
         if(value.action=="selectAll"){
             scope.myFactory.multiChangeMode(true);
