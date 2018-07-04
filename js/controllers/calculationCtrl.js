@@ -491,20 +491,26 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             };
             // если того что мы хотим добавить еще нет в нашем мульти
             if(multi[param.model].indexOf(value.name)==-1 ||  multi[param.model].length>1) {
-                // делаем массив данных для создания нового мульти узла
-                // newMultiArray.risk.push(process.risk);
-                // newMultiArray.wrapping.push(process.wrapping);
-                // newMultiArray[param.model].push(value.name);
+                // myFactory.multi.arrays[param.model] = [];
                 myFactory.multi.arrays[param.model].push(value.name);
                 // создаем новый мульти узел
-                // let newMulti = myFactory.addNewProcess("changing");
-                const newMulti = myFactory.makeMulti();
-                myFactory.choosePark(newMulti, process.park, index);
+               
+                let newMulti = myFactory.makeMulti();
+                // меняем новый сгенерированный проц, на старый так как теперь они дублируются
+                newMulti.map((proc,i)=>{
+                    if (proc.risk===process.risk && proc.wrapping===process.wrapping) newMulti.splice(i,1,process);
+                })
+                // добавляем в парк новый проц
+                
+                // 
+                newMulti = new Multi(newMulti);
+                
 
                 // создание родителя
                 let parent = [];
                 parent.push(multi);
                 parent.push(newMulti);
+                parent = new Multi(parent);
                 myFactory.multi.multies.push(parent);
                 myFactory.multi.multies.push(newMulti);
                 
