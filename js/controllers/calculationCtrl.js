@@ -482,40 +482,54 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.clickedOnMulti=function(param, value){//при нажатии на верх каретки в мульти параметры при режиме мульти
         if (scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Process" && myFactory.process.multi) {
             let multi = myFactory.process.multi;
-            let process = myFactory.process;
-            const park = myFactory.process.park;
-            const index = park.processes.indexOf(process);
-            let newMultiArray = {
-                risk: [],
-                wrapping: [],
-            };
+            let process=multi.processes[multi.processes.indexOf(myFactory.process)];
+            // saving
+            const park = process.park;
+            const oldProcesses = [];
+            park.processes.forEach(proc=>{
+                if (oldProcesses[proc.risk]) oldProcesses[proc.risk].push(proc.wrapping);
+                else {
+                    oldProcesses[proc.risk] = [];
+                    oldProcesses[proc.risk].push(proc.wrapping);
+                };
+            });
+            const clickedProcParams = [process.risk, process.wrapping, value.name];
+            
+            // const index = park.processes.indexOf(process);
+
             // если того что мы хотим добавить еще нет в нашем мульти
             if(multi[param.model].indexOf(value.name)==-1 ||  multi[param.model].length>1) {
-                // myFactory.multi.arrays[param.model] = [];
-                myFactory.multi.arrays[param.model].push(value.name);
-                // создаем новый мульти узел
-               
-                let newMulti = myFactory.makeMulti();
-                // меняем новый сгенерированный проц, на старый так как теперь они дублируются
-                newMulti.map((proc,i)=>{
-                    if (proc.risk===process.risk && proc.wrapping===process.wrapping) newMulti.splice(i,1,process);
-                })
-                // добавляем в парк новый проц
-                
-                // 
-                newMulti = new Multi(newMulti);
-                
+                myFactory.process = process;
+                // добавляем новые данные в учет в коллектор "мульти"
+                myFactory.multi.arrays.risk = multi.risk;
+                myFactory.multi.arrays.wrapping = multi.wrapping;
 
-                // создание родителя
-                let parent = [];
-                parent.push(multi);
-                parent.push(newMulti);
-                parent = new Multi(parent);
-                myFactory.multi.multies.push(parent);
-                myFactory.multi.multies.push(newMulti);
                 
+                myFactory.multi.arrays[param.model].push(value.name);
+                value.selected=true;
+
+
+                myFactory.addNewProcess("changing", multi);
+
+                // 
+                const i = myFactory.parks.indexOf(park);
+                const removeList = [];
+                myFactory.parks[i].processes.forEach (proc=> {
+                    if (oldProcesses[proc.risk].includes(proc.wrapping)) return;
+                    if (clickedProcParams.includes(proc.risk) && clickedProcParams.includes(proc.wrapping)) return;
+                    removeList.push(proc);
+                });
+                removeList.forEach(proc=>proc.remove());
+                // 
+                const key = (param.mode==="risk") ? "wrapping" : "risk";
+                myFactory.multi.multies[0].open(myFactory.multi.multies, key);
+
                 value.selected=true;
                 myFactory.finalCalc();
+
+                
+
+
             }
         }
         
