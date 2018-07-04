@@ -493,6 +493,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     oldProcesses[proc.risk].push(proc.wrapping);
                 };
             });
+            const oldMulties = []
+            process.multi.processes.forEach(proc=>{
+                oldMulties.push({[proc.risk]: proc.wrapping});
+            });
             const clickedProcParams = [process.risk, process.wrapping, value.name];
             
             // const index = park.processes.indexOf(process);
@@ -515,15 +519,20 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 const i = myFactory.parks.indexOf(park);
                 const removeList = [];
                 myFactory.parks[i].processes.forEach (proc=> {
-                    if (oldProcesses[proc.risk].includes(proc.wrapping)) return;
+                    if (oldProcesses[proc.risk]) {
+                        if (oldProcesses[proc.risk].includes(proc.wrapping)) return;
+                    }
                     if (clickedProcParams.includes(proc.risk) && clickedProcParams.includes(proc.wrapping)) return;
                     removeList.push(proc);
                 });
                 removeList.forEach(proc=>proc.remove());
                 // 
-                const key = (param.mode==="risk") ? "wrapping" : "risk";
+                const key = (param.model==="risk") ? "wrapping" : "risk";
                 myFactory.multi.multies[0].open(myFactory.multi.multies, key);
+                // return multi
 
+                // change place like it was
+                //  
                 value.selected=true;
                 myFactory.finalCalc();
 
