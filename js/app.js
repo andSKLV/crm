@@ -1238,8 +1238,7 @@ app.factory('myFactory', function(){
                 park.getValues();
             });
             this.payment.makeArray(this.totalPrice);
-            console.log(this.parks, this.multi.multies);
-            console.log(myFactory.totalPrice);
+            // if (this.loadedPrice) this.applyLoadedPrice();
             this.fixHeight();
             //риски
             //базовую премию
@@ -1247,6 +1246,15 @@ app.factory('myFactory', function(){
 
             //заполняем массив с рисками и отключаем повторяющиеся     +
             //если риск не повторяющийся - считаем коэффициент     +
+        },
+        applyLoadedPrice () {
+            this.practicalPrice.val = this.loadedPrice;
+            this.parks.forEach(park=>{
+                park.processes.forEach(proc=>{
+                    proc.totalPrice = proc.loadedPrice;
+                })
+            })
+            debugger;
         },
 
         fixHeight() {

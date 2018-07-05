@@ -729,7 +729,12 @@ class Park{
     }
     applyPracticalPriceKoef(){
         this.processes.forEach(function(process){
+            if (process.loadedPrice) {
+                process.practicalPriceKoef = process.loadedPrice/process.totalPrice;
+                delete process.loadedPrice;
+            }
             if(process.practicalPriceKoef) process.totalPrice*=process.practicalPriceKoef;
+            
         })
     }
     calculate(){
