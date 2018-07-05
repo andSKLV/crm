@@ -479,9 +479,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         //this.addPropertyToProcess(param, "multi");
     };
     this.clickedOnMulti=function(param, value){//при нажатии на верх каретки в мульти параметры при режиме мульти
-        if(scope.karetka.mode=="changing process" && (myFactory.process.constructor.name=="Multi"||myFactory.process.multi)){
+        if(scope.karetka.mode=="changing process" && (myFactory.process.constructor.name=="Multi")){
             // мульти-узел на котором кликнули
-            let multi = (myFactory.process.constructor.name=="Multi") ? myFactory.process :  myFactory.process.multi;
+            let multi = myFactory.process;
             // первый проц из этого мультиузла
             let process=multi.processes[0];
             // если он мульти, то берем из него первый проц. ...интересно, а если там 3 уровня?
@@ -1027,7 +1027,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     }
                 }
                 // FIXME:
-                else if(myFactory.process.constructor.name=="Multi"||myFactory.process.multi){
+                else if(myFactory.process.constructor.name=="Multi"){
                     myFactory.finalCalc();
                     let multi=myFactory.process;
                     //если включен режим мульти

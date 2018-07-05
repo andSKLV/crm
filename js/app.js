@@ -1247,16 +1247,6 @@ app.factory('myFactory', function(){
             //заполняем массив с рисками и отключаем повторяющиеся     +
             //если риск не повторяющийся - считаем коэффициент     +
         },
-        applyLoadedPrice () {
-            this.practicalPrice.val = this.loadedPrice;
-            this.parks.forEach(park=>{
-                park.processes.forEach(proc=>{
-                    proc.totalPrice = proc.loadedPrice;
-                })
-            })
-            debugger;
-        },
-
         fixHeight() {
             //andSKLV: 13.06.2018 
             // this method made to auto change Calc matrix max-height so it can fit in one screen
