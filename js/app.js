@@ -1238,7 +1238,6 @@ app.factory('myFactory', function(){
                 park.getValues();
             });
             this.payment.makeArray(this.totalPrice);
-            // if (this.loadedPrice) this.applyLoadedPrice();
             this.fixHeight();
             //риски
             //базовую премию
