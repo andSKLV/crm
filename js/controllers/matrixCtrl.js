@@ -51,6 +51,8 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                             for(let key in process){
                                 proc[key]=process[key];
                             }
+                            // сохраняем загруженную цену
+                            proc.loadedPrice = proc.totalPrice;
                             array.push(proc);
                             if(process.multi!==undefined && multi.indexOf(process.multi)==-1) multi.push(process.multi);
                         });
@@ -110,7 +112,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                         myFactory.practicalPrice.val=price[0]*1;
                         myFactory.practicalPrice.koef=price[1]*1;
                         myFactory.parks.forEach(function(park){
-                            park.applyPracticalPriceKoef();
+                            park.applyPracticalPriceKoef("load");
                         });
                         let val=myFactory.getTotal();
                         myFactory.practicalPrice.val=val-(val%1);
