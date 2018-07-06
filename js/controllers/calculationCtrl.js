@@ -629,9 +629,49 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     }
                 });
                 if(multi.risk.length==1 && multi.risk[0]==multi.packName) myFactory.process.risk=multi.risk[0];
-                myFactory.addNewProcess("changing", multi);
-                myFactory.finalCalc();
-                myFactory.process=multi;
+                const isNotMulti = () => {
+                    // если в параметрах мульти коллектора теперь осталось по одному аргументу =
+                    return Object.values(myFactory.multi.arrays).every(el => el.length===1)
+                };
+                // если произошло отжатие предпоследнего аргумента в мульти, то мульти должен превратиться в проц
+                if (isNotMulti()) {
+                    // определяем проц, который надо удалить
+                    const deletingProc = process.park.processes.find(proc=>proc[param.model]===value.name);
+                    deleteProcFromMulti(deletingProc);
+                    myFactory.finalCalc();
+                    // блок удаления этого проца
+                    function deleteProcFromMulti(deletingProc) {
+                        if(deletingProc.multi) {
+                            if (deletingProc.multi.parent) {
+                                let parentMulti = deletingProc.multi.parent;
+                                // если есть родитель, убираем у родителя ребенка
+                                parentMulti.processes.splice (parentMulti.processes.indexOf(deletingProc.multi),1);
+                                if (parentMulti.processes.length<2)
+                                // если у родителя остался один ребенок, то убираем родителя
+                                    parentMulti.processes.forEach(function (multik) {
+                                    delete multik.parent;
+                                });
+                            }
+                            //удаляем процесс из мульти
+                            deletingProc.multi.processes.splice(deletingProc.multi.processes.indexOf(deletingProc),1); 
+                        }
+                        if(deletingProc.park.processes.length>1) {
+                            //удаляем процесс из парка
+                            deletingProc.park.processes.splice(deletingProc.park.processes.indexOf(deletingProc),1);
+                        }
+                        // если процесс единственный в парке, удаляем парк
+                        else myFactory.parks.splice(myFactory.parks.indexOf(deletingProc.park), 1);
+                        scope.clean();
+                    }
+                }
+                else{
+                    myFactory.addNewProcess("changing", multi);
+                    myFactory.finalCalc();
+                    myFactory.process=multi;
+                    // если выделили последний элемент, то процесс выбора окончен
+                    if (myFactory.multi.arrays[param.model].length===1) scope.clean();
+                }
+
             }
             return;
         }
@@ -1228,7 +1268,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     scope.clean();
                     process=myFactory.multi.multies[myFactory.multi.multies.length-1].processes[0];
                     scope.matrix.loadMulti(process, param.model);
-/*scope.clickedOnMulti(param, value);*/
                 }
             }
         },
