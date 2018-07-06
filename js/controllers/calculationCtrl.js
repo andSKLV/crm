@@ -503,11 +503,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
 
             // если того что мы хотим добавить еще нет в нашем мульти
             if(multi[param.model].indexOf(value.name)==-1 ||  multi[param.model].length>1) {
+                
                 myFactory.process = process;
                 // добавляем новые данные в учет в коллектор "мульти"
                 myFactory.multi.arrays.risk = multi.risk;
                 myFactory.multi.arrays.wrapping = multi.wrapping;
-
                 
                 myFactory.multi.arrays[param.model].push(value.name);
                 value.selected=true;
@@ -658,7 +658,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             value.selected=true;
             multi.arrays[param.model].push(value.name);
         }
-        else{
+        else if (multi.arrays[param.model].length===1) {
+            delete value.selected;
+            return false;
+        }
+        else {
             delete value.selected;
             multi.arrays[param.model].splice(multi.arrays[param.model].indexOf(value.name),1);
         }
