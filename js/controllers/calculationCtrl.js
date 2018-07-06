@@ -480,7 +480,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     };
 // ----------------------------------------------
     this.clickedOnMulti=function(param, value){//при нажатии на верх каретки в мульти параметры при режиме мульти
-        if (scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Process" && myFactory.process.multi) {
+        if (scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Process" && myFactory.multi.mode) {
             let multi = myFactory.process.multi;
             let process=multi.processes[multi.processes.indexOf(myFactory.process)];
             // saving
@@ -1091,7 +1091,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     }
                 }
                 // FIXME:
-                else if(myFactory.process.constructor.name=="Multi"||myFactory.process.multi){
+                else if(myFactory.process.constructor.name=="Multi"||(myFactory.process.multi&&myFactory.multi.mode)){
                     myFactory.finalCalc();
                     let multi=myFactory.process;
                     //если включен режим мульти
