@@ -480,6 +480,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     };
 // ----------------------------------------------
     this.clickedOnMulti=function(param, value){//при нажатии на верх каретки в мульти параметры при режиме мульти
+    // изменение открытого мульти узла
         if (scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Process" && myFactory.multi.mode) {
             let multi = myFactory.process.multi;
             let process=multi.processes[multi.processes.indexOf(myFactory.process)];
@@ -535,13 +536,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 //  
                 value.selected=true;
                 myFactory.finalCalc();
-
                 
-
-
+                return;
             }
         }
-        
+    // изменение закрытого мульти узла
         if(scope.karetka.mode=="changing process" && (myFactory.process.constructor.name=="Multi")){
             // мульти-узел на котором кликнули
             let multi = myFactory.process;
@@ -636,8 +635,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             }
             return;
         }
-// ---------------------------------------------------------
         let multi=scope.myFactory.multi;
+    // выбрать все
         if(value.action=="selectAll"){
             scope.myFactory.multiChangeMode(true);
             param.values.forEach(function(val){
@@ -658,6 +657,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             value.selected=true;
             multi.arrays[param.model].push(value.name);
         }
+        // если отжали в мульти 
         else if (multi.arrays[param.model].length===1) {
             delete value.selected;
             return false;
