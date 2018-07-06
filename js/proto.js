@@ -727,9 +727,15 @@ class Park{
             process.totalPrice*=koef;
         })
     }
-    applyPracticalPriceKoef(){
+    applyPracticalPriceKoef(mode){
         this.processes.forEach(function(process){
+            // если расчеты были загружены из БД с назначенной фактической премией, то назначаем старую цену и удаляем ее из памяти
+            if (typeof (process.loadedPrice) === "number" && mode==="load") {
+                process.practicalPriceKoef = process.loadedPrice/process.totalPrice;
+                delete process.loadedPrice;
+            }
             if(process.practicalPriceKoef) process.totalPrice*=process.practicalPriceKoef;
+            
         })
     }
     calculate(){
