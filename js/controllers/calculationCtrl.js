@@ -485,7 +485,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             let multi = myFactory.process.multi;
             let process=multi.processes[multi.processes.indexOf(myFactory.process)];
             // сохраняем индекс чтобы потом поставить поц на нужное место
-            const indexProc = multi.processes.indexOf(process);
+            const indexProc = process.park.processes.indexOf(process);
             // saving
             const park = process.park;
             const oldProcesses = [];
@@ -517,7 +517,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 myFactory.addNewProcess("changing",null,indexProc);
 
                 multi.processes[indexProc] = park.processes[indexProc].multi;
-
+                const key = (param.model==="risk") ? "wrapping" : "risk";
+                myFactory.multi.multies[0].open(myFactory.multi.multies, key);
                 value.selected=true;
                 myFactory.finalCalc();
                 return;
