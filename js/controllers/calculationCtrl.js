@@ -494,13 +494,13 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     oldProcesses[proc.risk].push(proc.wrapping);
                 };
             });
+            // копируем старые значения мульти узлов (отсек - риск)
             const oldMulties = []
             process.multi.processes.forEach(proc=>{
                 oldMulties.push({[proc.risk]: proc.wrapping});
             });
+            // проц на котором нажали
             const clickedProcParams = [process.risk, process.wrapping, value.name];
-            
-            // const index = park.processes.indexOf(process);
 
             // если того что мы хотим добавить еще нет в нашем мульти
             if(multi[param.model].indexOf(value.name)==-1 ||  multi[param.model].length>1) {
@@ -511,14 +511,14 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 myFactory.multi.arrays.wrapping = multi.wrapping;
                 
                 myFactory.multi.arrays[param.model].push(value.name);
-                value.selected=true;
 
-
+                // меняем существующий млуьти узел на новый, но с лишними деталями, так ка создается по всем новым ключам мульти
                 myFactory.addNewProcess("changing", multi);
 
                 // 
                 const i = myFactory.parks.indexOf(park);
                 const removeList = [];
+                // определяем какие лишние процы из созданных должны быть удалены
                 myFactory.parks[i].processes.forEach (proc=> {
                     if (oldProcesses[proc.risk]) {
                         if (oldProcesses[proc.risk].includes(proc.wrapping)) return;
@@ -526,17 +526,19 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     if (clickedProcParams.includes(proc.risk) && clickedProcParams.includes(proc.wrapping)) return;
                     removeList.push(proc);
                 });
+                // удаляем лишние процы
                 removeList.forEach(proc=>proc.remove());
                 // 
                 const key = (param.model==="risk") ? "wrapping" : "risk";
                 myFactory.multi.multies[0].open(myFactory.multi.multies, key);
+
+                
                 // return multi
 
                 // change place like it was
                 //  
                 value.selected=true;
                 myFactory.finalCalc();
-                
                 return;
             }
         }
