@@ -1007,7 +1007,7 @@ app.factory('myFactory', function(){
          * @param {string} mode режим
          * @param {array} multiChanging массив с процессами для мультиузла
          */
-        addNewProcess(mode, multiChanging){
+        addNewProcess(mode, multiChanging, indexToPaste){
             //если мульти
             if(mode=="changing"){
                 let park=this.process.park;
@@ -1044,6 +1044,7 @@ app.factory('myFactory', function(){
                     // создаем новый мульти узел из старого объекта на основании того, что у него записано в рисках и типах отсека
                     let array=this.makeMulti(multiChanging);
                     // новый мульти узел, парк, индекс для вставки
+                    if (indexToPaste) index = indexToPaste;
                     this.choosePark(array, park, index);
                     this.multi.template=[];
                 }

@@ -484,6 +484,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         if (scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Process" && myFactory.multi.mode) {
             let multi = myFactory.process.multi;
             let process=multi.processes[multi.processes.indexOf(myFactory.process)];
+            // сохраняем индекс чтобы потом поставить поц на нужное место
+            const indexProc = multi.processes.indexOf(process);
             // saving
             const park = process.park;
             const oldProcesses = [];
@@ -507,36 +509,15 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 
                 myFactory.process = process;
                 // добавляем новые данные в учет в коллектор "мульти"
-                myFactory.multi.arrays.risk = multi.risk;
-                myFactory.multi.arrays.wrapping = multi.wrapping;
-                
+
                 myFactory.multi.arrays[param.model].push(value.name);
-
-                // меняем существующий млуьти узел на новый, но с лишними деталями, так ка создается по всем новым ключам мульти
-                myFactory.addNewProcess("changing", multi);
-
-                // 
-                const i = myFactory.parks.indexOf(park);
-                const removeList = [];
-                // определяем какие лишние процы из созданных должны быть удалены
-                myFactory.parks[i].processes.forEach (proc=> {
-                    if (oldProcesses[proc.risk]) {
-                        if (oldProcesses[proc.risk].includes(proc.wrapping)) return;
-                    }
-                    if (clickedProcParams.includes(proc.risk) && clickedProcParams.includes(proc.wrapping)) return;
-                    removeList.push(proc);
-                });
-                // удаляем лишние процы
-                removeList.forEach(proc=>proc.remove());
-                // 
-                const key = (param.model==="risk") ? "wrapping" : "risk";
-                myFactory.multi.multies[0].open(myFactory.multi.multies, key);
-
                 
-                // return multi
+                park.processes.splice(indexProc,1);
 
-                // change place like it was
-                //  
+                myFactory.addNewProcess("changing",null,indexProc);
+
+                multi.processes[indexProc] = park.processes[indexProc].multi;
+
                 value.selected=true;
                 myFactory.finalCalc();
                 return;
