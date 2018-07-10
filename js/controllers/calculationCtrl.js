@@ -485,7 +485,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             let multi = myFactory.process.multi;
             let process=multi.processes[multi.processes.indexOf(myFactory.process)];
             // сохраняем индекс чтобы потом поставить поц на нужное место
-            const indexProc = process.park.processes.indexOf(process);
+            const indexProcInPark = process.park.processes.indexOf(process);
+            const indexProcInMulti = multi.processes.indexOf(process);
             // saving
             const park = process.park;
             const oldProcesses = [];
@@ -509,16 +510,21 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 
                 myFactory.process = process;
                 // добавляем новые данные в учет в коллектор "мульти"
-
+                myFactory.multi.arrays.risk = [process.risk];
+                myFactory.multi.arrays.wrapping = [process.wrapping];
                 myFactory.multi.arrays[param.model].push(value.name);
                 
-                park.processes.splice(indexProc,1);
+                park.processes.splice(indexProcInPark,1);
+                // меняем проц на мульти узел
+                myFactory.addNewProcess("changing",null,indexProcInPark);
+                multi.processes[indexProcInMulti] = park.processes[indexProcInPark].multi;
+                // создаем родителя из нового и старого процев
+                const parentArr = new Multi ([multi,multi.processes[indexProcInMulti]]);
+                // присваиваем родителя
+                parentArr.processes.forEach (el=>el.parent=parentArr);
+                // добавляем родителя в списокмультиузлов
+                myFactory.multi.multies.unshift(parentArr);
 
-                myFactory.addNewProcess("changing",null,indexProc);
-
-                multi.processes[indexProc] = park.processes[indexProc].multi;
-                const key = (param.model==="risk") ? "wrapping" : "risk";
-                myFactory.multi.multies[0].open(myFactory.multi.multies, key);
                 value.selected=true;
                 myFactory.finalCalc();
                 return;
