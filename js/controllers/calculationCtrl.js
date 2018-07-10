@@ -518,8 +518,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 // меняем проц на мульти узел
                 myFactory.addNewProcess("changing",null,indexProcInPark);
                 multi.processes[indexProcInMulti] = park.processes[indexProcInPark].multi;
+                const newMulti = multi.processes[indexProcInMulti];
                 // создаем родителя из нового и старого процев
-                const parentArr = new Multi ([multi,multi.processes[indexProcInMulti]]);
+                const parentArr = new Multi ([multi,newMulti]);
                 // присваиваем родителя
                 parentArr.processes.forEach (el=>el.parent=parentArr);
                 // добавляем родителя в списокмультиузлов
@@ -527,6 +528,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
 
                 value.selected=true;
                 myFactory.finalCalc();
+                // выдедилть ту ячейку которую сейчас изменяем
+                scope.matrix.loadMulti(newMulti.processes[0],param.model);
                 return;
             }
         }
@@ -1124,7 +1127,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         scope.clean();
                     }
                 }
-                // FIXME:
+                
                 else if(myFactory.process.constructor.name=="Multi"||(myFactory.process.multi&&myFactory.multi.mode)){
                     myFactory.finalCalc();
                     let multi=myFactory.process;
