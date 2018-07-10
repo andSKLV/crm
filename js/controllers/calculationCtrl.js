@@ -484,61 +484,43 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         if (scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Process" && myFactory.multi.mode) {
             let multi = myFactory.process.multi;
             let process=multi.processes[multi.processes.indexOf(myFactory.process)];
-            // saving
             const park = process.park;
-            const oldProcesses = [];
-            park.processes.forEach(proc=>{
-                if (oldProcesses[proc.risk]) oldProcesses[proc.risk].push(proc.wrapping);
-                else {
-                    oldProcesses[proc.risk] = [];
-                    oldProcesses[proc.risk].push(proc.wrapping);
-                };
-            });
-            // копируем старые значения мульти узлов (отсек - риск)
-            const oldMulties = []
-            process.multi.processes.forEach(proc=>{
-                oldMulties.push({[proc.risk]: proc.wrapping});
-            });
-            // проц на котором нажали
-            const clickedProcParams = [process.risk, process.wrapping, value.name];
+            // сохраняем индекс чтобы потом поставить поц на нужное место
+            const indexProcInPark = process.park.processes.indexOf(process);
+            const indexProcInMulti = multi.processes.indexOf(process);
 
             // если того что мы хотим добавить еще нет в нашем мульти
             if(multi[param.model].indexOf(value.name)==-1 ||  multi[param.model].length>1) {
                 
                 myFactory.process = process;
                 // добавляем новые данные в учет в коллектор "мульти"
-                myFactory.multi.arrays.risk = multi.risk;
-                myFactory.multi.arrays.wrapping = multi.wrapping;
-                
+                myFactory.multi.arrays.risk = [process.risk];
+                myFactory.multi.arrays.wrapping = [process.wrapping];
                 myFactory.multi.arrays[param.model].push(value.name);
-
-                // меняем существующий млуьти узел на новый, но с лишними деталями, так ка создается по всем новым ключам мульти
-                myFactory.addNewProcess("changing", multi);
-
-                // 
-                const i = myFactory.parks.indexOf(park);
-                const removeList = [];
-                // определяем какие лишние процы из созданных должны быть удалены
-                myFactory.parks[i].processes.forEach (proc=> {
-                    if (oldProcesses[proc.risk]) {
-                        if (oldProcesses[proc.risk].includes(proc.wrapping)) return;
-                    }
-                    if (clickedProcParams.includes(proc.risk) && clickedProcParams.includes(proc.wrapping)) return;
-                    removeList.push(proc);
-                });
-                // удаляем лишние процы
-                removeList.forEach(proc=>proc.remove());
-                // 
-                const key = (param.model==="risk") ? "wrapping" : "risk";
-                myFactory.multi.multies[0].open(myFactory.multi.multies, key);
-
                 
-                // return multi
+                park.processes.splice(indexProcInPark,1);
+                // меняем проц на мульти узел
+                myFactory.addNewProcess("changing",null,indexProcInPark);
+                multi.processes[indexProcInMulti] = park.processes[indexProcInPark].multi;
+                const newMulti = multi.processes[indexProcInMulti];
+                if (multi.parent) {
+                    multi.parent.processes.push(newMulti);
+                    newMulti.parent = multi.parent;
+                }
+                else {
+                    // создаем родителя из нового и старого процев
+                    const parentArr = new Multi ([multi,newMulti]);
+                    // присваиваем родителя
+                    parentArr.processes.forEach (el=>el.parent=parentArr);
+                    // добавляем родителя в списокмультиузлов
+                    myFactory.multi.multies.unshift(parentArr);
+                }
 
-                // change place like it was
-                //  
+
                 value.selected=true;
                 myFactory.finalCalc();
+                // выдедилть ту ячейку которую сейчас изменяем
+                scope.matrix.loadMulti(newMulti.processes[0],param.model);
                 return;
             }
         }
@@ -1136,7 +1118,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         scope.clean();
                     }
                 }
-                // FIXME:
+                
                 else if(myFactory.process.constructor.name=="Multi"||(myFactory.process.multi&&myFactory.multi.mode)){
                     myFactory.finalCalc();
                     let multi=myFactory.process;
