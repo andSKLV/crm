@@ -484,26 +484,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         if (scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Process" && myFactory.multi.mode) {
             let multi = myFactory.process.multi;
             let process=multi.processes[multi.processes.indexOf(myFactory.process)];
+            const park = process.park;
             // сохраняем индекс чтобы потом поставить поц на нужное место
             const indexProcInPark = process.park.processes.indexOf(process);
             const indexProcInMulti = multi.processes.indexOf(process);
-            // saving
-            const park = process.park;
-            const oldProcesses = [];
-            park.processes.forEach(proc=>{
-                if (oldProcesses[proc.risk]) oldProcesses[proc.risk].push(proc.wrapping);
-                else {
-                    oldProcesses[proc.risk] = [];
-                    oldProcesses[proc.risk].push(proc.wrapping);
-                };
-            });
-            // копируем старые значения мульти узлов (отсек - риск)
-            const oldMulties = []
-            process.multi.processes.forEach(proc=>{
-                oldMulties.push({[proc.risk]: proc.wrapping});
-            });
-            // проц на котором нажали
-            const clickedProcParams = [process.risk, process.wrapping, value.name];
 
             // если того что мы хотим добавить еще нет в нашем мульти
             if(multi[param.model].indexOf(value.name)==-1 ||  multi[param.model].length>1) {
@@ -519,12 +503,19 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 myFactory.addNewProcess("changing",null,indexProcInPark);
                 multi.processes[indexProcInMulti] = park.processes[indexProcInPark].multi;
                 const newMulti = multi.processes[indexProcInMulti];
-                // создаем родителя из нового и старого процев
-                const parentArr = new Multi ([multi,newMulti]);
-                // присваиваем родителя
-                parentArr.processes.forEach (el=>el.parent=parentArr);
-                // добавляем родителя в списокмультиузлов
-                myFactory.multi.multies.unshift(parentArr);
+                if (multi.parent) {
+                    multi.parent.processes.push(newMulti);
+                    newMulti.parent = multi.parent;
+                }
+                else {
+                    // создаем родителя из нового и старого процев
+                    const parentArr = new Multi ([multi,newMulti]);
+                    // присваиваем родителя
+                    parentArr.processes.forEach (el=>el.parent=parentArr);
+                    // добавляем родителя в списокмультиузлов
+                    myFactory.multi.multies.unshift(parentArr);
+                }
+
 
                 value.selected=true;
                 myFactory.finalCalc();
