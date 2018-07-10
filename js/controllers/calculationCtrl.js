@@ -478,7 +478,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         console.log(scope.myFactory.multi);
         //this.addPropertyToProcess(param, "multi");
     };
-// ----------------------------------------------
+
     this.clickedOnMulti=function(param, value){//при нажатии на верх каретки в мульти параметры при режиме мульти
     // изменение открытого мульти узла
         if (scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Process" && myFactory.multi.mode) {
@@ -539,7 +539,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 myFactory.multi.arrays.risk = multi.risk;
                 myFactory.multi.arrays.wrapping = multi.wrapping;
 
-                // кажется тут  FIXME: проблема по удалению рисков из мульти через каретку
                 //если мы отжимаем(т.е. такой процесс уже есть)
                 if (myFactory.multi.arrays[param.model].indexOf(value.name) != -1) {
                     myFactory.multi.arrays[param.model].splice(myFactory.multi.arrays[param.model].indexOf(value.name), 1);

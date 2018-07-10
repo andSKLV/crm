@@ -34,7 +34,7 @@ div.matrix_container.calc{
 
 @media (min-width: 1800px) and (max-width: 3600px) {
     .tooltip_span{
-        font-size: 12pt;
+        font-size: 1.2em;
     }
     div.mi_slider {
         width:1650px;
@@ -85,7 +85,7 @@ div.matrix_container.calc{
 }
 @media (min-width: 1300px) and (max-width: 1800px) {
     .tooltip_span{
-        font-size: 12pt;
+        font-size: 1.1em;
       }
     div.mi_slider{
         width:1200px;
@@ -135,7 +135,7 @@ div.matrix_container.calc{
 }
 @media (min-width: 400px) and (max-width: 1300px){
     .tooltip_span{
-        font-size: 12pt;
+        font-size: 1em;
     }
     div.mi_slider{
         width:1050px;
