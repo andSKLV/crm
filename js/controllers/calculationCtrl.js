@@ -1228,7 +1228,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         let myEl = angular.element(document.querySelector('td.mi_selected'));
                         myEl.addClass('alreadySelected');
 
-                        if(myFactory.process.package && myFactory.process.multi!="deleted"){
+                        if(myFactory.process.package && myFactory.process.multi && myFactory.process.multi!="deleted"){
                             delete myFactory.process.multi.template;
                             delete myFactory.process.multi.packName;
                             let pack=myFactory.process.package;
