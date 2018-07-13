@@ -744,6 +744,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             function isMultiRisk(multi){
                 let flag = true;
                 if (multi.risk.length===1 && multi.wrapping.length > 1) flag = false;
+                if (multi.packName) flag=true;
                 return flag;
             }
             function copyMultiRisk(){
