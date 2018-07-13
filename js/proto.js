@@ -621,6 +621,25 @@ class Park{
             return process.multi!==undefined
         });
         let park=this;
+        const maxAmount = park.calculateAmount();
+        const amountOfBaseToMax = () => {
+            park.processes.map(proc=>{
+                if (proc.risk==="Базовые риски") {
+                    proc.writtenAmount = proc.amount;
+                    proc.amount = maxAmount;
+                }
+            })
+        }
+        const amountOfBaseChangeBack = () => {
+            park.processes.map(proc=>{
+                if (proc.risk==="Базовые риски") {
+                    proc.amount = proc.writtenAmount;
+                    delete proc.writtenAmount;
+                }
+            })
+        }
+        amountOfBaseToMax();
+
         array.forEach(function(process){
             //добавляем название риска процесса в массив "риски" у парка
             if(park.risks.indexOf(process.risk)==-1) park.risks.push(process.risk);
@@ -635,6 +654,7 @@ class Park{
             // добавляем в типы отсека парка тип отсека данного процесса
             if(park.wrappings.indexOf(process.wrapping)==-1) park.wrappings.push(process.wrapping);
         });
+
         for(let i=0;i<this.processes.length;i++){
             delete this.processes[i].changing;//на всякий случай убираем выделение строки
             if(this.processes[i].multi===undefined) {
@@ -660,11 +680,8 @@ class Park{
         }
         
         for(let key in wraps){
-         /*   risksum+=risks[key];
-            amount+=wraps[key];
-          sum+=risks[key]*wraps[key];
-          */
             let flag=true;
+            // если в парке нет мульти узла, то надо посчитать и за него учет коэф.
             this.processes.forEach(function(process){
                 if(process.wrapping==key && process.risk=="Базовые риски") flag=false;
             });
@@ -693,6 +710,7 @@ class Park{
             mass=this.processes;
             this.processes=[];
         }
+        amountOfBaseChangeBack ();
         return mass;
     }
     cutDownLimits(a_limit){
