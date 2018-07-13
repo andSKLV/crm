@@ -265,7 +265,6 @@ class Multi{
             multies.splice(multies.indexOf(multi), 1);
         });
         this.show=false;
-        debugger;
         this.calculatePrice();
 
     }
