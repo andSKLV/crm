@@ -229,6 +229,16 @@ class Multi{
     }
     // функция сворачивания мультиузла в одну строку
     close(multies, toParent){
+        // проверка на то, родитель ли это
+        const isParent = () => {
+            const supposedParent = multies[0];
+            const allChilds = supposedParent.processes.every((proc,i)=>{
+                // условия: все дети мульти узлы, у всех родитель один узел, все они находятся в переданном выше параметре multies
+                return (proc.constructor.name==="Multi") && (proc.parent===supposedParent) && (proc===multies[i+1]);
+            });
+            return allChilds;
+        } 
+        if (isParent()) toParent = true;
         if(toParent){
             let mass=[];
             let multi=this;
@@ -255,6 +265,7 @@ class Multi{
             multies.splice(multies.indexOf(multi), 1);
         });
         this.show=false;
+        debugger;
         this.calculatePrice();
 
     }
