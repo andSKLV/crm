@@ -231,6 +231,7 @@ class Multi{
     close(multies, toParent){
         // проверка на то, родитель ли это
         const isParent = () => {
+            if (multies==0) return false;
             const supposedParent = multies[0];
             const allChilds = supposedParent.processes.every((proc,i)=>{
                 // условия: все дети мульти узлы, у всех родитель один узел, все они находятся в переданном выше параметре multies

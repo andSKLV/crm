@@ -618,8 +618,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 };
                 // если произошло отжатие предпоследнего аргумента в мульти, то мульти должен превратиться в проц
                 if (isNotMulti()) {
+                    const key = (param.model==="risk") ? "wrapping" : "risk";
                     // определяем проц, который надо удалить
-                    const deletingProc = process.park.processes.find(proc=>proc[param.model]===value.name);
+                    const deletingProc = process.park.processes.find(proc=>{
+                        return (proc[param.model]===value.name)&&(proc[key]===process[key]);
+                    });
                     deleteProcFromMulti(deletingProc);
                     myFactory.finalCalc();
                     // блок удаления этого проца
