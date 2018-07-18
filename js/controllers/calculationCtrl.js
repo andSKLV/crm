@@ -403,8 +403,23 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             else{
                 if(key=="cost" || key =="limit" || key=="franchise") return $filter("currency")(value, '', 0) + " Р";
                 else if(key=="amount"){
-                    if(this.myFactory.amountType=="Тягачей") return $filter("currency")(value/TRACTOR, '', 0)+" "+myFactory.amountType;
-                    else if(this.myFactory.amountType=="Рейсов") return $filter("currency")(value, '', 0)+" "+myFactory.amountType;
+                    // склоняем существительные
+                    if(this.myFactory.amountType=="Тягачей") {
+                        const val = value/TRACTOR;
+                        let ending;
+                        if (val===1 || (val>20 && val%10===1)) ending = "Тягач";
+                        else if ((2<=val&&val<=4) || (val>20 && 2<=val%10&& val%10<=4)) ending = "Тягача";
+                        else ending = myFactory.amountType;
+                        return $filter("currency")(value/TRACTOR, '', 0)+" "+ending;
+                    }
+                    // склоняем существительные
+                    else if(this.myFactory.amountType=="Рейсов") {
+                        let ending;
+                        if (value===1 || (value>20 && value%10===1)) ending = "Рейс";
+                        else if ((2<=value&&value<=4) || (value>20 && 2<=value%10&& value%10<=4)) ending = "Рейса";
+                        else ending = myFactory.amountType;
+                        return $filter("currency")(value, '', 0)+" "+ending;
+                    }
                 }
                 return value;
             }
@@ -420,10 +435,42 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         else{
             if(key=="cost" || key =="limit" || key=="franchise") return $filter("currency")(value, '', 0) + " Р";
             else if(key=="amount"){
-                if(this.myFactory.amountType=="Тягачей") return $filter("currency")(value/TRACTOR, '', 0)+" "+myFactory.amountType;
-                else if(this.myFactory.amountType=="Рейсов") return $filter("currency")(value, '', 0)+" "+myFactory.amountType;
+                // склоняем существительные
+                if(this.myFactory.amountType=="Тягачей") {
+                    const val = value/TRACTOR;
+                    let ending;
+                    if (val===1 || (val>20 && val%10===1)) ending = "Тягач";
+                    else if ((2<=val&&val<=4) || (val>20 && 2<=val%10&& val%10<=4)) ending = "Тягача";
+                    else ending = myFactory.amountType;
+                    return $filter("currency")(value/TRACTOR, '', 0)+" "+ending;
+                }
+                // склоняем существительные
+                else if(this.myFactory.amountType=="Рейсов") {
+                    let ending;
+                    if (value===1 || (value>20 && value%10===1)) ending = "Рейс";
+                    else if ((2<=value&&value<=4) || (value>20 && 2<=value%10&& value%10<=4)) ending = "Рейса";
+                    else ending = myFactory.amountType;
+                    return $filter("currency")(value, '', 0)+" "+ending;
+                }
             }
-            else if(key=="badAssAmount") return $filter("currency")(value, '', 0)+" "+myFactory.amountType;
+            // это вообще что такое???
+            else if(key=="badAssAmount") {
+                if(this.myFactory.amountType=="Тягачей") {
+                    let ending;
+                    if (value===1 || (value>20 && value%10===1)) ending = "Тягач";
+                    else if ((2<=value&&value<=4) || (value>20 && 2<=value%10&& value%10<=4)) ending = "Тягача";
+                    else ending = myFactory.amountType;
+                    return $filter("currency")(value, '', 0)+" "+ending;
+                }
+                else if(this.myFactory.amountType=="Рейсов") {
+                    let ending;
+                    if (value===1 || (value>20 && value%10===1)) ending = "Рейс";
+                    else if ((2<=value&&value<=4) || (value>20 && 2<=value%10&& value%10<=4)) ending = "Рейса";
+                    else ending = myFactory.amountType;
+                    return $filter("currency")(value, '', 0)+" "+ending;
+                }
+                else return $filter("currency")(value, '', 0)+" "+myFactory.amountType;
+            }
             else if(Array.isArray(value)&&value.length===1) return value[0]; 
             else return value;
         }
