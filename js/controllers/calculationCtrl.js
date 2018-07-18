@@ -396,30 +396,19 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 value=value.split("-");
                 if(key=="cost" || key =="limit" || key=="franchise") return $filter("currency")(value[0], '', 0) + " Р"+" - "+$filter("currency")(value[1], '', 0) + " Р";
                 else if(key=="amount"){
-                    if(this.myFactory.amountType=="Тягачей") return $filter("currency")(value[0]/TRACTOR, '', 0)+" "+myFactory.amountType+" - "+$filter("currency")(value[1]/TRACTOR, '', 0)+" "+myFactory.amountType;
-                    else if(this.myFactory.amountType=="Рейсов") return $filter("currency")(value[0], '', 0)+" "+myFactory.amountType +" - "+$filter("currency")(value[1], '', 0)+" "+myFactory.amountType;
+                    if(this.myFactory.amountType=="Тягачей") {
+                        return $filter("currency")(value[0]/TRACTOR, '', 0)+" "+chooseEnd(value[0]/TRACTOR,myFactory.amountType)+" - "+$filter("currency")(value[1]/TRACTOR, '', 0)+" "+chooseEnd(value[1]/TRACTOR,myFactory.amountType);
+                    }
+                    else if(this.myFactory.amountType=="Рейсов") {
+                        return $filter("currency")(value[0], '', 0)+" "+chooseEnd(value[0],myFactory.amountType)+" - "+$filter("currency")(value[1], '', 0)+" "+chooseEnd(value[1],myFactory.amountType);
+                    }
                 }
             }
             else{
                 if(key=="cost" || key =="limit" || key=="franchise") return $filter("currency")(value, '', 0) + " Р";
                 else if(key=="amount"){
-                    // склоняем существительные
-                    if(this.myFactory.amountType=="Тягачей") {
-                        const val = value/TRACTOR;
-                        let ending;
-                        if (val===1 || (val>20 && val%10===1)) ending = "Тягач";
-                        else if ((2<=val&&val<=4) || (val>20 && 2<=val%10&& val%10<=4)) ending = "Тягача";
-                        else ending = myFactory.amountType;
-                        return $filter("currency")(value/TRACTOR, '', 0)+" "+ending;
-                    }
-                    // склоняем существительные
-                    else if(this.myFactory.amountType=="Рейсов") {
-                        let ending;
-                        if (value===1 || (value>20 && value%10===1)) ending = "Рейс";
-                        else if ((2<=value&&value<=4) || (value>20 && 2<=value%10&& value%10<=4)) ending = "Рейса";
-                        else ending = myFactory.amountType;
-                        return $filter("currency")(value, '', 0)+" "+ending;
-                    }
+                    if(this.myFactory.amountType=="Тягачей") return $filter("currency")(value/TRACTOR, '', 0)+" "+chooseEnd(value/TRACTOR,myFactory.amountType);
+                    else if(this.myFactory.amountType=="Рейсов") return $filter("currency")(value, '', 0)+" "+chooseEnd(value,myFactory.amountType);
                 }
                 return value;
             }
@@ -435,46 +424,26 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         else{
             if(key=="cost" || key =="limit" || key=="franchise") return $filter("currency")(value, '', 0) + " Р";
             else if(key=="amount"){
-                // склоняем существительные
-                if(this.myFactory.amountType=="Тягачей") {
-                    const val = value/TRACTOR;
-                    let ending;
-                    if (val===1 || (val>20 && val%10===1)) ending = "Тягач";
-                    else if ((2<=val&&val<=4) || (val>20 && 2<=val%10&& val%10<=4)) ending = "Тягача";
-                    else ending = myFactory.amountType;
-                    return $filter("currency")(value/TRACTOR, '', 0)+" "+ending;
-                }
-                // склоняем существительные
-                else if(this.myFactory.amountType=="Рейсов") {
-                    let ending;
-                    if (value===1 || (value>20 && value%10===1)) ending = "Рейс";
-                    else if ((2<=value&&value<=4) || (value>20 && 2<=value%10&& value%10<=4)) ending = "Рейса";
-                    else ending = myFactory.amountType;
-                    return $filter("currency")(value, '', 0)+" "+ending;
-                }
+                if(this.myFactory.amountType=="Тягачей") return $filter("currency")(value/TRACTOR, '', 0)+" "+chooseEnd(value/TRACTOR,myFactory.amountType);
+                else if(this.myFactory.amountType=="Рейсов") return $filter("currency")(value, '', 0)+" "+chooseEnd(value,myFactory.amountType);
             }
             // это вообще что такое???
             else if(key=="badAssAmount") {
-                if(this.myFactory.amountType=="Тягачей") {
-                    let ending;
-                    if (value===1 || (value>20 && value%10===1)) ending = "Тягач";
-                    else if ((2<=value&&value<=4) || (value>20 && 2<=value%10&& value%10<=4)) ending = "Тягача";
-                    else ending = myFactory.amountType;
-                    return $filter("currency")(value, '', 0)+" "+ending;
-                }
-                else if(this.myFactory.amountType=="Рейсов") {
-                    let ending;
-                    if (value===1 || (value>20 && value%10===1)) ending = "Рейс";
-                    else if ((2<=value&&value<=4) || (value>20 && 2<=value%10&& value%10<=4)) ending = "Рейса";
-                    else ending = myFactory.amountType;
-                    return $filter("currency")(value, '', 0)+" "+ending;
-                }
-                else return $filter("currency")(value, '', 0)+" "+myFactory.amountType;
+                if(this.myFactory.amountType=="Тягачей")return $filter("currency")(value, '', 0)+" "+chooseEnd(value,myFactory.amountType);
+                else if(this.myFactory.amountType=="Рейсов") return $filter("currency")(value, '', 0)+" "+chooseEnd(value,myFactory.amountType);
             }
             else if(Array.isArray(value)&&value.length===1) return value[0]; 
             else return value;
         }
-
+        // склоняем существительные
+        function chooseEnd(value,type) {
+            value= +value;
+            const typeN = (type==="Тягачей") ? 0 : 1;
+            const endings = [["Тягач","Тягача"],["Рейс","Рейса"]];
+            if (value===1 || (value>20 && value%10===1)) return endings[typeN][0];
+            else if ((2<=value&&value<=4) || (value>20 && 2<=value%10&& value%10<=4)) return endings[typeN][1];
+            else return type;
+        }
     };
 
     this.alreadySelected = function(model){
