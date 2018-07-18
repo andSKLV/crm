@@ -701,7 +701,7 @@ app.factory('myFactory', function(){
                     return newPrice/totalPrice;
                 }
             },
-            mode:"Р",
+            mode:"%",
             changeMode: function(){
                 if(this.mode=="Р") this.mode="%";
                 else this.mode="Р";
