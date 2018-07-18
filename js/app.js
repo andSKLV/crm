@@ -354,6 +354,10 @@ app.directive('currencyInput', function ($filter, myFactory) {
                 }
                 else if($attrs.currencyInput=="agents"){
                     if(key==13){
+                        const val = myFactory.agents.val;
+                        const mode = myFactory.agents.mode;
+                        //  ограничиваем агентский процент на 50
+                        if (mode==="%"&&val>50) myFactory.agents.val = 50;
                         myFactory.finalCalc();
                         $scope.$apply()
                     }
