@@ -424,6 +424,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 else if(this.myFactory.amountType=="Рейсов") return $filter("currency")(value, '', 0)+" "+myFactory.amountType;
             }
             else if(key=="badAssAmount") return $filter("currency")(value, '', 0)+" "+myFactory.amountType;
+            else if(Array.isArray(value)&&value.length===1) return value[0]; 
             else return value;
         }
 

@@ -2,6 +2,7 @@
     <tbody ng-if="park.show">
         <tr class="matrix_rowg" ng-repeat="process in park.processes track by $index"
             ng-if="process.multi!==undefined && !process.multi.show && process.multi.processes.indexOf(process)==0 || process.multi===undefined || process.multi!==undefined && process.multi.show || process.multi=='deleted'">
+            <!-- Обычные процы -->
             <td class="properties btns" width="20px" ng-if="process.multi===undefined || process.multi.show || process.multi=='deleted'">
                 <input type="button" class="btnCopy" ng-click="calculation.matrix.loadProcess(HIP.copy(process), 'risk')" value="+">
                 <input type="button" class="btnDelete" ng-click="HIP.delete(process); scope.clean();" value="-">
@@ -12,7 +13,7 @@
                  class="properties" ng-class="[{mi_selected : process.changing && calculation.myFactory.document.selectedParam==calculation.checkTransportProp(key)},{repeated: calculation.isRepeated(process,key)}]"
                 ng-repeat="(key,value) in process track by $index" ng-if="calculation.checkTransportProp(key)!=-1 && (process.multi===undefined || process.multi.show || process.multi=='deleted')"
                 ng-right-click="calculation.setParamToAllProcess(value, key, process)"  ng-click="!process.unselectable ? calculation.matrix.loadProcess(process, key) : ''">
-                {{key=="wrapping" || key=="risk" ? value : calculation.applyFilter(value, key) }}
+                {{(key=="wrapping" || key=="risk") ? value : calculation.applyFilter(value, key) }}
                 <div class="arrow_up"
                      ng-click="process.multi.close(calculation.myFactory.multi.multies); calculation.clean()"
                      ng-if="process.showRows==key && process.multi!==undefined && process.multi!=='deleted'"
