@@ -923,13 +923,12 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             // если это поле с инпутами и инпут был нестандартный, то при загрузке проца курсор сразу в инпут
             if (prop=='cost'|| prop=='amount'||prop=='limit'||prop=='franchise') {
                 const clickedParam = scope.currObj.find(obj => obj['model']==prop);
-                // для поиска конкретного инпута потом в нодлисте
-                const typeN = {"cost":0,"amount":1,"limit":2,"franchise":3};
                 // является ли стандартным значением
                 const isCommon = clickedParam.values.some(val=>val.name===process[prop]);
                 // ставим фокус на конкретный инпут
+                const name = `#inputForCurrency-${prop}`;
                 // таймаут для того чтобы успела пройти анимация
-                if (!isCommon) setTimeout(function(){document.querySelectorAll('#inputForCurrency')[typeN[prop]].focus();},700);
+                if (!isCommon) setTimeout(()=> document.querySelector(name).focus(),700);
             }
         },
         /**
