@@ -872,26 +872,34 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             });
             process.changing=true;//для выделения строки которую меняем
             scope.karetka.mode="changing process";
-            for(let i=0;i<scope.currObj.length;i++) for(let j=0;j<scope.currObj[i].values.length;j++) delete scope.currObj[i].values[j].selected;//selected параметр позволяет подсветить то значение, которое выбрано в процессе
-
+            // делаем все прошлые выделенные ячейки невыделенными, т.е. убираем выделения
+            for(let i=0;i<scope.currObj.length;i++) {
+                for(let j=0;j<scope.currObj[i].values.length;j++) delete scope.currObj[i].values[j].selected;//selected параметр позволяет подсветить то значение, которое выбрано в процессе
+            }
 
             scope.myFactory.document.currParam = transportProp.indexOf(prop);
             scope.myFactory.document.selectedParam = transportProp.indexOf(prop);
+            // заменяем проц с которым работаем
             myFactory.process=process;
+            // проходим по всем параметрам в проце
             for(let key in process){
+                // если параметр входит в транспортные пропсы, а не является чем то вспомогательным для расчетов типа multi, baseRate и тд
                 if(transportProp.indexOf(key)!=-1){
                     if(key=='cost'|| key=='amount'||key=='limit'||key=='franchise'){
-                        let karetkaParam=scope.currObj.filter(function(obj){
-                            return obj['model']==key;
-                        });
-                        karetkaParam=karetkaParam[0];
+                        // если это один из перечисленных, то выбираем выбираем его в скоупе
+                        const karetkaParam=scope.currObj.find(obj => obj['model']==key);
+                        debugger;
+                        // перебираем все возможные значения каретки, чтобы выделить подходящее
                         for(let i=0;i<karetkaParam.values.length;i++){
+                            // если это инпут у количества груза и еще и тягачи, то пересчитываем рейсы в тягачи
                             if(karetkaParam.values[i].name=="input"){
                                 if(key=='amount' && scope.myFactory.amountType=="Тягачей"){
                                     karetkaParam.selected=process[key] / TRACTOR;
                                 }
+                                // а если цена или рейсы, то просто вставляем цену проца
                                 else karetkaParam.selected=process[key];
                             }
+                            // если значение скоупа соответсвует значению в проце, то выбираем его
                             if(karetkaParam.values[i].name==process[key]){
                                 karetkaParam.values[i].selected=true;
                                 break;
