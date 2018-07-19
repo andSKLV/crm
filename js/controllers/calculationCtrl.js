@@ -888,7 +888,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     if(key=='cost'|| key=='amount'||key=='limit'||key=='franchise'){
                         // если это один из перечисленных, то выбираем выбираем его в скоупе
                         const karetkaParam=scope.currObj.find(obj => obj['model']==key);
-                        debugger;
                         // перебираем все возможные значения каретки, чтобы выделить подходящее
                         for(let i=0;i<karetkaParam.values.length;i++){
                             // если это инпут у количества груза и еще и тягачи, то пересчитываем рейсы в тягачи
@@ -920,6 +919,17 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         }
                     }
                 }
+            }
+            // если это поле с инпутами и инпут был нестандартный, то при загрузке проца курсор сразу в инпут
+            if (prop=='cost'|| prop=='amount'||prop=='limit'||prop=='franchise') {
+                const clickedParam = scope.currObj.find(obj => obj['model']==prop);
+                // для поиска конкретного инпута потом в нодлисте
+                const typeN = {"cost":0,"amount":1,"limit":2,"franchise":3};
+                // является ли стандартным значением
+                const isCommon = clickedParam.values.some(val=>val.name===process[prop]);
+                // ставим фокус на конкретный инпут
+                // таймаут для того чтобы успела пройти анимация
+                if (!isCommon) setTimeout(function(){document.querySelectorAll('#inputForCurrency')[typeN[prop]].focus();},700);
             }
         },
         /**
