@@ -1282,9 +1282,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     }
                 }
                 else{
+                    //  меняем проц на мульти
                     let process=myFactory.process;
-                    if(myFactory.multi.arrays.wrapping.indexOf(myFactory.process.wrapping)==-1) myFactory.multi.arrays.wrapping.push(process.wrapping);
-                    if(myFactory.multi.arrays.risk.indexOf(myFactory.process.risk)==-1) myFactory.multi.arrays.risk.push(process.risk);
+                    myFactory.multi.arrays.wrapping=[process.wrapping];
+                    myFactory.multi.arrays.risk=[process.risk];
                     if(myFactory.multi.arrays[param.model].indexOf(value.name)==-1) myFactory.multi.arrays[param.model].push(value.name);
                     myFactory.addNewProcess("changing");
                     scope.clean();
