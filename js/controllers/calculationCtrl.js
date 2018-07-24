@@ -50,12 +50,18 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         const park = process.park;
         const index = park.processes.indexOf(process);
         let multies = [];
-        const processes = park.processes.filter((process, i) => {
-            if (i>index&&(!process.multi)) return true;
-            if (i>index&&process.multi&&!multies.includes(process.multi)) {
-                multies.push(process.multi);
+        const multiLikeProc = [];
+        const processes = park.processes.filter((proc, i) => {
+            if (i>index&&!proc.multi) return true;
+            if (i>index&&proc.multi===process.multi) {
+                multiLikeProc.push(proc);
                 return false;
             }
+            if (i>index&&proc.multi&&!multies.includes(proc.multi)) {
+                multies.push(proc.multi);
+                return false;
+            }
+            return false;
         });
         
         if (Array.isArray(value)) copyMultiWrapParams.call(this);
@@ -115,6 +121,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         }
         function copySingleParam () {
             const karetkaState = this.karetka.mode;
+            const multiModeState = myFactory.multi.mode;
             processes.forEach(process => {
                 process[key]=value;
                 if(key==="limit" && process.package!==undefined){
@@ -141,6 +148,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 })
             })
             this.karetka.mode = karetkaState;
+            myFactory.multi.mode = multiModeState;
         }
     };
     /**
