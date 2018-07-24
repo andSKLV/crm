@@ -52,11 +52,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         let multies = [];
         const multiLikeProc = [];
         const processes = park.processes.filter((proc, i) => {
-            if (i>index&&!proc.multi) return true;
-            if (i>index&&proc.multi===process.multi) {
-                multiLikeProc.push(proc);
-                return false;
-            }
+            if (i>index&&(!proc.multi||proc.multi===process.multi)) return true;
             if (i>index&&proc.multi&&!multies.includes(proc.multi)) {
                 multies.push(proc.multi);
                 return false;
