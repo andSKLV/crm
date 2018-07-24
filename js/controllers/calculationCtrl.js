@@ -49,17 +49,99 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.setParamToAllProcess=function(value,key,process){
         const park = process.park;
         const index = park.processes.indexOf(process);
-        const processes = park.processes.filter((process, i) => i>index);
-        processes.forEach(process => {
-            process[key]=value;
-            if(key==="limit" && process.package!==undefined){
-                delete process.multi.packName;
-                delete process.multi.template;
-                let mass=process.multi.processes.filter(proc=>proc.package==process.package);
-                mass.forEach(proc=>delete proc.package);
+        let multies = [];
+        const processes = park.processes.filter((process, i) => {
+            if (i>index&&(!process.multi)) return true;
+            if (i>index&&process.multi&&!multies.includes(process.multi)) {
+                multies.push(process.multi);
+                return false;
             }
         });
+        
+        if (Array.isArray(value)) copyMultiWrapParams.call(this);
+        else copySingleParam.call(this);
+        
         myFactory.finalCalc();
+
+        function copyMultiWrapParams () {
+            
+            // создаем параметр и значене клика
+            const param = {model:"wrapping"};
+            let values = [];
+            value.forEach(val=>{
+                values.push({
+                    name: val,
+                    type:"risk",
+                    value: risks[val],
+                })
+            })
+            const clickParamOnProc = (proc,val) => {
+                myFactory.process = proc;
+                //  нажимаем на проц с новым параметром
+                this.karetka.clicked(param,val);
+            }
+
+            const multipleCopy = (node, thisValues) =>{
+                debugger;
+                // TODO: продолжение возможно только после устраниния бага с созданием разных комплексных отсеков в парке
+                // switch (node.constructor.name) {
+                //     case "
+                // }
+
+                // 1. берем мульти узел
+                // 2 кликаем на него один раз
+            }
+
+            // копируем только для обычных процев, которые не в мульти
+            processes.forEach(proc=>{
+                // делаем личный вальюс с вычитанием существующего
+                let thisValues = [...values];
+                thisValues.forEach(val=>{
+                    if(val.name===proc.wrapping) thisValues.splice(thisValues.indexOf(val),1);
+                });
+                // кликаем по нему изменяя на первое значение, которого нет у проца
+                clickParamOnProc(proc,thisValues[0]);
+                // удаляем примененное значение
+                thisValues.splice(0,1);
+                // если после этого у нас в thisValues еще есть аргументы, значит мы работаем дальше с мультиузлом
+                if (thisValues.length>0) 
+                multipleCopy(proc,thisValues);
+                
+                // делаем один клик на обычных процах
+                // если личный вал для проца больше одного, то теперь копиМульти
+
+            })
+
+        }
+        function copySingleParam () {
+            const karetkaState = this.karetka.mode;
+            processes.forEach(process => {
+                process[key]=value;
+                if(key==="limit" && process.package!==undefined){
+                    delete process.multi.packName;
+                    delete process.multi.template;
+                    let mass=process.multi.processes.filter(proc=>proc.package==process.package);
+                    mass.forEach(proc=>delete proc.package);
+                }
+            });
+            multies.forEach(multi=>{
+                let excessValues = multi.wrapping.filter(wrap=>wrap!==value);
+                const param = {model:"wrapping"};
+                myFactory.process = multi;
+                myFactory.multi.mode = true;
+                excessValues.forEach(val=>{
+                    const pseudoValue = {
+                        name: val,
+                        type:"risk",
+                        value: risks[val],
+                        selected : true
+                    }
+                    this.karetka.mode = "changing process";
+                    this.karetka.clicked(param,pseudoValue);
+                })
+            })
+            this.karetka.mode = karetkaState;
+        }
     };
     /**
      * это вспомогательная функция для angularJS
