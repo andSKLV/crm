@@ -51,7 +51,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         const index = park.processes.indexOf(process);
         let processes;
         const multies = [];
-        const multiLikeProc = [];
         chooseCase.call (this);
         myFactory.finalCalc();
 
@@ -133,53 +132,39 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             myFactory.multi.mode = multiModeState;
         }
         function copyMultiWrapParams () {
-            // создаем параметр и значене клика
+            // запоминаем состояния для дальнейшего изменения
+            const karetkaState = this.karetka.mode;
+            const multiModeState = myFactory.multi.mode;
+// ------------------------
             const param = {model:"wrapping"};
-            let values = [];
-            value.forEach(val=>{
-                values.push({
-                    name: val,
-                    type:"risk",
-                    value: risks[val],
-                })
-            })
-            const clickParamOnProc = (proc,val) => {
-                myFactory.process = proc;
-                //  нажимаем на проц с новым параметром
-                this.karetka.clicked(param,val);
-            }
-
-            const multipleCopy = (node, thisValues) =>{
-                debugger;
-                // TODO: продолжение возможно только после устраниния бага с созданием разных комплексных отсеков в парке
-                // switch (node.constructor.name) {
-                //     case "
-                // }
-
-                // 1. берем мульти узел
-                // 2 кликаем на него один раз
-            }
-
-            // копируем только для обычных процев, которые не в мульти
+            myFactory.multi.mode = true;
+            this.karetka.mode = "changing process";
+            // изменяем процы на +1 параметр, делая их теперь мульти узлами
             processes.forEach(proc=>{
-                // делаем личный вальюс с вычитанием существующего
-                let thisValues = [...values];
-                thisValues.forEach(val=>{
-                    if(val.name===proc.wrapping) thisValues.splice(thisValues.indexOf(val),1);
-                });
-                // кликаем по нему изменяя на первое значение, которого нет у проца
-                clickParamOnProc(proc,thisValues[0]);
-                // удаляем примененное значение
-                thisValues.splice(0,1);
-                // если после этого у нас в thisValues еще есть аргументы, значит мы работаем дальше с мультиузлом
-                if (thisValues.length>0) 
-                multipleCopy(proc,thisValues);
-                
-                // делаем один клик на обычных процах
-                // если личный вал для проца больше одного, то теперь копиМульти
-
+                myFactory.process = proc;
+                const clickValues = [];
+                // проверяем какие параметры нужно нажать
+                value.forEach(val => {
+                    if (val!==proc.wrapping) clickValues.push(val);
+                })
+                // генерация искуственных оберток
+                const pseudoValue = {
+                    name: clickValues[0],
+                    type:"risk",
+                    value: risks[clickValues[0]],
+                    selected : true
+                }
+                this.karetka.clicked(param,pseudoValue);
+                // находим измененный проц в измененном парке
+                const changedProc = proc.park.processes.find(newProc=>(newProc.wrapping===proc.wrapping)&&(newProc.risk===proc.risk));
+                // теперь он стал мульти узлом, поэтому добавлем его в коллектор мультиузлов
+                multies.push(changedProc.multi);
             })
-
+// ------------------------
+// TODO: make multi changing
+            debugger;
+            this.karetka.mode = karetkaState;
+            myFactory.multi.mode = multiModeState;
         }
     };
     /**
