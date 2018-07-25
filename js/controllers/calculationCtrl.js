@@ -106,8 +106,14 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             });
             // TODO: добавить нажатие параметра если его не было в списке
             multies.forEach(multi=>{
-                // выбираем лишние параметры, которые надо отжать
-                let excessValues = multi.wrapping.filter(wrap=>wrap!==value);
+                const excessValues =  [];
+                let isValueExist = false;
+                // выбираем лишние параметры, которые надо отжать, а также проверяем, есть ли в мульти узле копируемый параметр
+                multi.wrapping.forEach(wrap=>{
+                    if (wrap!==value) excessValues.push(wrap);
+                    else isValueExist=true;
+                })
+                if (!isValueExist) excessValues.unshift(value);
                 // генерация искуственных оберток
                 const param = {model:"wrapping"};
                 myFactory.process = multi;
