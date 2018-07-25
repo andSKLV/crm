@@ -49,26 +49,84 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.setParamToAllProcess=function(value,key,process){
         const park = process.park;
         const index = park.processes.indexOf(process);
-        let multies = [];
+        let processes;
+        const multies = [];
         const multiLikeProc = [];
-        // сортируем на процесы и мульти узлы
-        const processes = park.processes.filter((proc, i) => {
-            // если проц не мульти или относится к тому же мульти узлу (то они вложены в один мульти)
-            if (i>index&&(!proc.multi||proc.multi===process.multi)) return true;
-            if (i>index&&proc.multi&&!multies.includes(proc.multi)) {
-                multies.push(proc.multi);
-                return false;
-            }
-            return false;
-        });
-        
-        if (Array.isArray(value)) copyMultiWrapParams.call(this);
-        else copySingleParam.call(this);
-        
+        chooseCase.call (this);
         myFactory.finalCalc();
 
+        function chooseCase () {
+            const caseWrap = () => {
+                // сортируем на процесы и мульти узлы
+                processes = park.processes.filter((proc, i) => {
+                    // если проц не мульти или относится к тому же мульти узлу (то они вложены в один мульти)
+                    if (i>index&&(!proc.multi||proc.multi===process.multi)) return true;
+                    if (i>index&&proc.multi&&!multies.includes(proc.multi)) {
+                        multies.push(proc.multi);
+                        return false;
+                    }
+                    return false;
+                });
+                
+                if (Array.isArray(value)) copyMultiWrapParams.call(this);
+                else copySingleWrapParam.call(this);
+            }
+            const caseNonWrap = () => {
+                processes = park.processes.filter((proc, i) => i>index);
+                copySingleParam.call(this);
+            }
+            (key==="wrapping") ? caseWrap() : caseNonWrap();
+        }
+
+        function copySingleParam () {
+            // меняем процы
+            processes.forEach(process => {
+                process[key]=value;
+                if(key==="limit" && process.package!==undefined){
+                    delete process.multi.packName;
+                    delete process.multi.template;
+                    let mass=process.multi.processes.filter(proc=>proc.package==process.package);
+                    mass.forEach(proc=>delete proc.package);
+                }
+            });
+        }
+        function copySingleWrapParam() {
+            // запоминаем состояния для дальнейшего изменения
+            const karetkaState = this.karetka.mode;
+            const multiModeState = myFactory.multi.mode;
+            // меняем процы
+            processes.forEach(process => {
+                process[key]=value;
+                if(key==="limit" && process.package!==undefined){
+                    delete process.multi.packName;
+                    delete process.multi.template;
+                    let mass=process.multi.processes.filter(proc=>proc.package==process.package);
+                    mass.forEach(proc=>delete proc.package);
+                }
+            });
+            // TODO: добавить нажатие параметра если его не было в списке
+            multies.forEach(multi=>{
+                // выбираем лишние параметры, которые надо отжать
+                let excessValues = multi.wrapping.filter(wrap=>wrap!==value);
+                // генерация искуственных оберток
+                const param = {model:"wrapping"};
+                myFactory.process = multi;
+                myFactory.multi.mode = true;
+                excessValues.forEach(val=>{
+                    const pseudoValue = {
+                        name: val,
+                        type:"risk",
+                        value: risks[val],
+                        selected : true
+                    }
+                    this.karetka.mode = "changing process";
+                    this.karetka.clicked(param,pseudoValue);
+                })
+            })
+            this.karetka.mode = karetkaState;
+            myFactory.multi.mode = multiModeState;
+        }
         function copyMultiWrapParams () {
-            
             // создаем параметр и значене клика
             const param = {model:"wrapping"};
             let values = [];
@@ -116,37 +174,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
 
             })
 
-        }
-        function copySingleParam () {
-            const karetkaState = this.karetka.mode;
-            const multiModeState = myFactory.multi.mode;
-            processes.forEach(process => {
-                process[key]=value;
-                if(key==="limit" && process.package!==undefined){
-                    delete process.multi.packName;
-                    delete process.multi.template;
-                    let mass=process.multi.processes.filter(proc=>proc.package==process.package);
-                    mass.forEach(proc=>delete proc.package);
-                }
-            });
-            multies.forEach(multi=>{
-                let excessValues = multi.wrapping.filter(wrap=>wrap!==value);
-                const param = {model:"wrapping"};
-                myFactory.process = multi;
-                myFactory.multi.mode = true;
-                excessValues.forEach(val=>{
-                    const pseudoValue = {
-                        name: val,
-                        type:"risk",
-                        value: risks[val],
-                        selected : true
-                    }
-                    this.karetka.mode = "changing process";
-                    this.karetka.clicked(param,pseudoValue);
-                })
-            })
-            this.karetka.mode = karetkaState;
-            myFactory.multi.mode = multiModeState;
         }
     };
     /**
@@ -771,7 +798,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         }
                         // если процесс единственный в парке, удаляем парк
                         else myFactory.parks.splice(myFactory.parks.indexOf(deletingProc.park), 1);
-                        debugger;
                         scope.clean();
                     }
                 }
