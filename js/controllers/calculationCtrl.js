@@ -67,7 +67,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     }
                     return false;
                 });
-                
+                // выбираем подрежим
                 if (Array.isArray(value)) copyMultiWrapParams.call(this);
                 else copySingleWrapParam.call(this);
             }
@@ -75,9 +75,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 processes = park.processes.filter((proc, i) => i>index);
                 copySingleParam.call(this);
             }
+            // выбираем режим
             (key==="wrapping") ? caseWrap() : caseNonWrap();
         }
-
         function copySingleParam () {
             // меняем процы
             processes.forEach(process => {
