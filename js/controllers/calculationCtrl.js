@@ -739,6 +739,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                             deletingProc.multi.processes.splice(deletingProc.multi.processes.indexOf(deletingProc),1);
                             if (deletingProc.multi.parent) {
                                 let parentMulti = deletingProc.multi.parent;
+                                //  структура родителя может быть разная, поэтому в зависимости от случая меняем путь к его детям
                                 const pathToChild = (parentMulti.processes) ? parentMulti.processes : parentMulti;
                                 // если есть родитель, убираем у родителя ребенка
                                 pathToChild.splice (pathToChild.indexOf(deletingProc.multi),1);
@@ -747,12 +748,12 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                                     pathToChild.forEach(proc=>{
                                         if (parentMulti.parent) proc.parent = parentMulti.parent;
                                     });
+                                    // убираем родителя из перечня мульти
                                     myFactory.multi.multies.splice (myFactory.multi.multies.indexOf(parentMulti),1);
                                 }
                             }
                             if (deletingProc.multi.processes.length<2) {
                                 // если это теперь не мульти узел, то у оставшегося проца убираем ссылку на мульти узел
-
                                 if (deletingProc.multi.prevMulti) {
                                     deletingProc.multi.processes[0].multi = deletingProc.multi.prevMulti;
                                     deletingProc.multi.prevMulti.processes.splice(deletingProc.multi.prevMulti.processes.indexOf(deletingProc.multi),1,deletingProc.multi.processes[0]);
