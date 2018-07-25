@@ -141,13 +141,14 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             this.karetka.mode = "changing process";
             // изменяем процы на +1 параметр, делая их теперь мульти узлами
             processes.forEach(proc=>{
+                // переназначаем изменяемый объект
                 myFactory.process = proc;
                 const clickValues = [];
                 // проверяем какие параметры нужно нажать
                 value.forEach(val => {
                     if (val!==proc.wrapping) clickValues.push(val);
                 })
-                // генерация искуственных оберток
+                // генерация искуственной обертки
                 const pseudoValue = {
                     name: clickValues[0],
                     type:"risk",
@@ -161,7 +162,30 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 multies.push(changedProc.multi);
             })
 // ------------------------
-// TODO: make multi changing
+            multies.forEach(multi=>{
+                // переназначаем изменяемый объект
+                const clickValues = [];
+                // проверяем какие параметры нужно нажать
+                value.forEach(val => {
+                    if (!multi.wrapping.includes(val)) clickValues.push(val);
+                })
+                // проверяем какие параметры нужно отжать
+                multi.wrapping.forEach(val=>{
+                    if (!value.includes(val)) clickValues.push(val);
+                })
+                // нажимаем на нужные параметры
+                clickValues.forEach(val=>{
+                    myFactory.process = multi;
+                    const pseudoValue = {
+                        name: val,
+                        type:"risk",
+                        value: risks[val],
+                        selected : true
+                    }
+                    this.karetka.clicked(param,pseudoValue);
+                })
+            })
+// ------------------------
             debugger;
             this.karetka.mode = karetkaState;
             myFactory.multi.mode = multiModeState;
