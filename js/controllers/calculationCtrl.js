@@ -104,7 +104,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     mass.forEach(proc=>delete proc.package);
                 }
             });
-            // TODO: добавить нажатие параметра если его не было в списке
             multies.forEach(multi=>{
                 const excessValues =  [];
                 let isValueExist = false;
@@ -113,6 +112,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     if (wrap!==value) excessValues.push(wrap);
                     else isValueExist=true;
                 })
+                // если копируемого проца еще нет, то сначала нажиамем на него, чтобы добавить
                 if (!isValueExist) excessValues.unshift(value);
                 // генерация искуственных оберток
                 const param = {model:"wrapping"};
