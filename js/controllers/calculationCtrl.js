@@ -51,7 +51,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         const index = park.processes.indexOf(process);
         let multies = [];
         const multiLikeProc = [];
+        // сортируем на процесы и мульти узлы
         const processes = park.processes.filter((proc, i) => {
+            // если проц не мульти или относится к тому же мульти узлу (то они вложены в один мульти)
             if (i>index&&(!proc.multi||proc.multi===process.multi)) return true;
             if (i>index&&proc.multi&&!multies.includes(proc.multi)) {
                 multies.push(proc.multi);
@@ -594,7 +596,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
 
             // если того что мы хотим добавить еще нет в нашем мульти
             if(multi[param.model].indexOf(value.name)==-1 ||  multi[param.model].length>1) {
-                
                 myFactory.process = process;
                 // добавляем новые данные в учет в коллектор "мульти"
                 myFactory.multi.arrays.risk = [process.risk];
@@ -606,8 +607,12 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 myFactory.addNewProcess("changing",null,indexProcInPark);
                 multi.processes[indexProcInMulti] = park.processes[indexProcInPark].multi;
                 const newMulti = multi.processes[indexProcInMulti];
+                // запоминаем прошлый мульти
+                newMulti.prevMulti = multi;
+                // назначаем родителя
                 if (multi.parent) {
-                    multi.parent.processes.push(newMulti);
+                    if (multi.parent.processes) multi.parent.processes.push(newMulti);
+                    else multi.parent.push(newMulti);
                     newMulti.parent = multi.parent;
                 }
                 else {
@@ -617,9 +622,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     parentArr.processes.forEach (el=>el.parent=parentArr);
                     // добавляем родителя в списокмультиузлов
                     myFactory.multi.multies.unshift(parentArr);
+                    parentArr.parent = myFactory.multi.multies;
                 }
-
-
                 value.selected=true;
                 myFactory.finalCalc();
                 // выдедилть ту ячейку которую сейчас изменяем
@@ -731,25 +735,42 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     // блок удаления этого проца
                     function deleteProcFromMulti(deletingProc) {
                         if(deletingProc.multi) {
+                            //удаляем процесс из мульти
+                            deletingProc.multi.processes.splice(deletingProc.multi.processes.indexOf(deletingProc),1);
                             if (deletingProc.multi.parent) {
                                 let parentMulti = deletingProc.multi.parent;
+                                const pathToChild = (parentMulti.processes) ? parentMulti.processes : parentMulti;
                                 // если есть родитель, убираем у родителя ребенка
-                                parentMulti.processes.splice (parentMulti.processes.indexOf(deletingProc.multi),1);
-                                if (parentMulti.processes.length<2)
-                                // если у родителя остался один ребенок, то убираем родителя
-                                    parentMulti.processes.forEach(function (multik) {
-                                    delete multik.parent;
-                                });
+                                pathToChild.splice (pathToChild.indexOf(deletingProc.multi),1);
+                                // если у родителя остался один ребенок, то убираем у ребенка родителя
+                                if (pathToChild.length<2) {
+                                    pathToChild.forEach(proc=>{
+                                        if (parentMulti.parent) proc.parent = parentMulti.parent;
+                                    });
+                                    myFactory.multi.multies.splice (myFactory.multi.multies.indexOf(parentMulti),1);
+                                }
                             }
-                            //удаляем процесс из мульти
-                            deletingProc.multi.processes.splice(deletingProc.multi.processes.indexOf(deletingProc),1); 
+                            if (deletingProc.multi.processes.length<2) {
+                                // если это теперь не мульти узел, то у оставшегося проца убираем ссылку на мульти узел
+
+                                if (deletingProc.multi.prevMulti) {
+                                    deletingProc.multi.processes[0].multi = deletingProc.multi.prevMulti;
+                                    deletingProc.multi.prevMulti.processes.splice(deletingProc.multi.prevMulti.processes.indexOf(deletingProc.multi),1,deletingProc.multi.processes[0]);
+                                }
+                                else if (deletingProc.multi.parent) deletingProc.multi.processes[0].multi = deletingProc.multi.parent;
+                                else delete deletingProc.multi.processes[0].multi;
+                                 // из коллектора мульти-узлов убираем этот мульти узел
+                                myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(deletingProc.multi),1);
+                            }
                         }
+                        
                         if(deletingProc.park.processes.length>1) {
                             //удаляем процесс из парка
                             deletingProc.park.processes.splice(deletingProc.park.processes.indexOf(deletingProc),1);
                         }
                         // если процесс единственный в парке, удаляем парк
                         else myFactory.parks.splice(myFactory.parks.indexOf(deletingProc.park), 1);
+                        debugger;
                         scope.clean();
                     }
                 }
