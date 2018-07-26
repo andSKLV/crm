@@ -49,17 +49,150 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.setParamToAllProcess=function(value,key,process){
         const park = process.park;
         const index = park.processes.indexOf(process);
-        const processes = park.processes.filter((process, i) => i>index);
-        processes.forEach(process => {
-            process[key]=value;
-            if(key==="limit" && process.package!==undefined){
-                delete process.multi.packName;
-                delete process.multi.template;
-                let mass=process.multi.processes.filter(proc=>proc.package==process.package);
-                mass.forEach(proc=>delete proc.package);
-            }
-        });
+        let processes;
+        const multies = [];
+        chooseCase.call (this);
         myFactory.finalCalc();
+
+        function chooseCase () {
+            const caseWrap = () => {
+                // сортируем на процесы и мульти узлы
+                processes = park.processes.filter((proc, i) => {
+                    // если проц не мульти +
+                    // отсекаем процы в этом мульти узле
+                    if (i>index&&(!proc.multi||(proc.multi!==process.multi||process.multi.show===true))) {
+                        // проверяем есть ли еще процы с таким мульти, если есть, то это не проц, а мульти
+                        if (!proc.multi||(!(proc.multi.show===false&&park.processes.filter(pr=>pr.multi===proc.multi).length>1))) return true;
+                    }
+                    if (i>index&&proc.multi&&!multies.includes(proc.multi)) {
+                        multies.push(proc.multi);
+                        return false;
+                    }
+                    return false;
+                });
+
+                // выбираем подрежим
+                if (Array.isArray(value)) copyMultiWrapParams.call(this);
+                else copySingleWrapParam.call(this);
+            }
+            const caseNonWrap = () => {
+                processes = park.processes.filter((proc, i) => i>index);
+                copySingleParam.call(this);
+            }
+            // выбираем режим
+            (key==="wrapping") ? caseWrap() : caseNonWrap();
+        }
+        function copySingleParam () {
+            // меняем процы
+            processes.forEach(process => {
+                process[key]=value;
+                if(key==="limit" && process.package!==undefined){
+                    delete process.multi.packName;
+                    delete process.multi.template;
+                    let mass=process.multi.processes.filter(proc=>proc.package==process.package);
+                    mass.forEach(proc=>delete proc.package);
+                }
+            });
+        }
+        function copySingleWrapParam() {
+            // запоминаем состояния для дальнейшего изменения
+            const karetkaState = this.karetka.mode;
+            const multiModeState = myFactory.multi.mode;
+            // меняем процы
+            processes.forEach(process => {
+                process[key]=value;
+                if(key==="limit" && process.package!==undefined){
+                    delete process.multi.packName;
+                    delete process.multi.template;
+                    let mass=process.multi.processes.filter(proc=>proc.package==process.package);
+                    mass.forEach(proc=>delete proc.package);
+                }
+            });
+            multies.forEach(multi=>{
+                const excessValues =  [];
+                let isValueExist = false;
+                // выбираем лишние параметры, которые надо отжать, а также проверяем, есть ли в мульти узле копируемый параметр
+                multi.wrapping.forEach(wrap=>{
+                    if (wrap!==value) excessValues.push(wrap);
+                    else isValueExist=true;
+                })
+                // если копируемого проца еще нет, то сначала нажиамем на него, чтобы добавить
+                if (!isValueExist) excessValues.unshift(value);
+                // генерация искуственных оберток
+                const param = {model:"wrapping"};
+                myFactory.process = multi;
+                myFactory.multi.mode = true;
+                excessValues.forEach(val=>{
+                    const pseudoValue = {
+                        name: val,
+                        type:"risk",
+                        value: risks[val],
+                        selected : true
+                    }
+                    this.karetka.mode = "changing process";
+                    this.karetka.clicked(param,pseudoValue);
+                })
+            })
+            this.karetka.mode = karetkaState;
+            myFactory.multi.mode = multiModeState;
+        }
+        function copyMultiWrapParams () {
+            // запоминаем состояния для дальнейшего изменения
+            const karetkaState = this.karetka.mode;
+            const multiModeState = myFactory.multi.mode;
+            const param = {model:"wrapping"};
+            myFactory.multi.mode = true;
+            this.karetka.mode = "changing process";
+            
+            // изменяем процы на +1 параметр, делая их теперь мульти узлами
+            processes.forEach(proc=>{
+                // переназначаем изменяемый объект
+                myFactory.process = proc;
+                const clickValues = [];
+                // проверяем какие параметры нужно нажать
+                value.forEach(val => {
+                    if (val!==proc.wrapping) clickValues.push(val);
+                })
+                // генерация искуственной обертки
+                const pseudoValue = {
+                    name: clickValues[0],
+                    type:"risk",
+                    value: risks[clickValues[0]],
+                    selected : true
+                }
+                this.karetka.clicked(param,pseudoValue);
+                // находим измененный проц в измененном парке
+                const changedProc = proc.park.processes.find(newProc=>(newProc.wrapping===proc.wrapping)&&(newProc.risk===proc.risk));
+                // теперь он стал мульти узлом, поэтому добавлем его в коллектор мультиузлов
+                multies.push(changedProc.multi);
+            })
+            // изменяем мульти узлы
+            multies.forEach(multi=>{
+                // переназначаем изменяемый объект
+                const clickValues = [];
+                // проверяем какие параметры нужно нажать
+                value.forEach(val => {
+                    if (!multi.wrapping.includes(val)) clickValues.push(val);
+                })
+                // проверяем какие параметры нужно отжать
+                multi.wrapping.forEach(val=>{
+                    if (!value.includes(val)) clickValues.push(val);
+                })
+                // нажимаем на нужные параметры
+                clickValues.forEach(val=>{
+                    myFactory.process = multi;
+                    const pseudoValue = {
+                        name: val,
+                        type:"risk",
+                        value: risks[val],
+                        selected : true
+                    }
+                    this.karetka.clicked(param,pseudoValue);
+                })
+            })
+            this.karetka.mode = karetkaState;
+            myFactory.multi.mode = multiModeState;
+        }
     };
     /**
      * это вспомогательная функция для angularJS
@@ -508,7 +641,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
 
             // если того что мы хотим добавить еще нет в нашем мульти
             if(multi[param.model].indexOf(value.name)==-1 ||  multi[param.model].length>1) {
-                
                 myFactory.process = process;
                 // добавляем новые данные в учет в коллектор "мульти"
                 myFactory.multi.arrays.risk = [process.risk];
@@ -520,8 +652,12 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 myFactory.addNewProcess("changing",null,indexProcInPark);
                 multi.processes[indexProcInMulti] = park.processes[indexProcInPark].multi;
                 const newMulti = multi.processes[indexProcInMulti];
+                // запоминаем прошлый мульти
+                newMulti.prevMulti = multi;
+                // назначаем родителя
                 if (multi.parent) {
-                    multi.parent.processes.push(newMulti);
+                    if (multi.parent.processes) multi.parent.processes.push(newMulti);
+                    else multi.parent.push(newMulti);
                     newMulti.parent = multi.parent;
                 }
                 else {
@@ -531,9 +667,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     parentArr.processes.forEach (el=>el.parent=parentArr);
                     // добавляем родителя в списокмультиузлов
                     myFactory.multi.multies.unshift(parentArr);
+                    parentArr.parent = myFactory.multi.multies;
                 }
-
-
                 value.selected=true;
                 myFactory.finalCalc();
                 // выдедилть ту ячейку которую сейчас изменяем
@@ -645,19 +780,36 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     // блок удаления этого проца
                     function deleteProcFromMulti(deletingProc) {
                         if(deletingProc.multi) {
+                            //удаляем процесс из мульти
+                            deletingProc.multi.processes.splice(deletingProc.multi.processes.indexOf(deletingProc),1);
                             if (deletingProc.multi.parent) {
                                 let parentMulti = deletingProc.multi.parent;
+                                //  структура родителя может быть разная, поэтому в зависимости от случая меняем путь к его детям
+                                const pathToChild = (parentMulti.processes) ? parentMulti.processes : parentMulti;
                                 // если есть родитель, убираем у родителя ребенка
-                                parentMulti.processes.splice (parentMulti.processes.indexOf(deletingProc.multi),1);
-                                if (parentMulti.processes.length<2)
-                                // если у родителя остался один ребенок, то убираем родителя
-                                    parentMulti.processes.forEach(function (multik) {
-                                    delete multik.parent;
-                                });
+                                pathToChild.splice (pathToChild.indexOf(deletingProc.multi),1);
+                                // если у родителя остался один ребенок, то убираем у ребенка родителя
+                                if (pathToChild.length<2) {
+                                    pathToChild.forEach(proc=>{
+                                        if (parentMulti.parent) proc.parent = parentMulti.parent;
+                                    });
+                                    // убираем родителя из перечня мульти
+                                    myFactory.multi.multies.splice (myFactory.multi.multies.indexOf(parentMulti),1);
+                                }
                             }
-                            //удаляем процесс из мульти
-                            deletingProc.multi.processes.splice(deletingProc.multi.processes.indexOf(deletingProc),1); 
+                            if (deletingProc.multi.processes.length<2) {
+                                // если это теперь не мульти узел, то у оставшегося проца убираем ссылку на мульти узел
+                                if (deletingProc.multi.prevMulti) {
+                                    deletingProc.multi.processes[0].multi = deletingProc.multi.prevMulti;
+                                    deletingProc.multi.prevMulti.processes.splice(deletingProc.multi.prevMulti.processes.indexOf(deletingProc.multi),1,deletingProc.multi.processes[0]);
+                                }
+                                else if (deletingProc.multi.parent) deletingProc.multi.processes[0].multi = deletingProc.multi.parent;
+                                else delete deletingProc.multi.processes[0].multi;
+                                 // из коллектора мульти-узлов убираем этот мульти узел
+                                myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(deletingProc.multi),1);
+                            }
                         }
+                        
                         if(deletingProc.park.processes.length>1) {
                             //удаляем процесс из парка
                             deletingProc.park.processes.splice(deletingProc.park.processes.indexOf(deletingProc),1);
@@ -802,22 +954,29 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 // удаляем парк если больше нет строк
                 myFactory.parks.splice(myFactory.parks.indexOf(park), 1);
             }
-
-            if(multi.parent){
-                // если есть родительский мульти узел то...
-                let parentMulti=multi.parent;
-                // ... удаляем у родителя его ребенка
-                parentMulti.processes.splice(parentMulti.processes.indexOf(multi),1);
-                // ...если в родительском мульти узле остался один ребенок, то удаляем родительский узел
-                if (multi.parent.processes.length<2)
-                    parentMulti.processes.forEach(function (multik) {
-                    delete multik.parent;
-                });
-                myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(parentMulti), 1);
-            }
+            // удаляем мульти у родителя, если у него есть родитель
+            if(multi.parent) this.deleteMultiFromParent(multi);
             myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi), 1);
             scope.clean();
             console.log(myFactory.parks, myFactory.multi.multies);
+        },
+        // удаление мульти из всех родителей и их родителей, проверка всех родителей на наличие детей
+        deleteMultiFromParent (multi) {
+            // если есть родительский мульти узел то...
+            let parentMulti=multi.parent;
+            // ... удаляем у родителя его ребенка
+            parentMulti.processes.splice(parentMulti.processes.indexOf(multi),1);
+            // удаляем проц у родителя родителя 
+            if (parentMulti.parent) {
+                parentMulti.parent.forEach(child=>{
+                    if (child.processes.includes(multi)) child.processes.splice(child.processes.indexOf(multi),1);
+                })
+            }
+            // ...если в родительском мульти узле остался один ребенок, то удаляем родительский узел
+            if (multi.parent.processes.length<2){
+                parentMulti.processes.forEach(multik => delete multik.parent);
+                myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(parentMulti), 1);
+            }
         },
         /**
          * функция копирования парка

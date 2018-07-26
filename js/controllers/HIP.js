@@ -9,12 +9,14 @@ app.controller("HIP", function ($http, myFactory, $rootScope, $scope) {
     this.delete=function(process){
         if(process.multi) {
             if (process.multi.parent) {
+                // структура родителя может отличаться, поэтому делаем путь к детям аддаптивным
                 let parentMulti = process.multi.parent;
+                const pathToChild = (parentMulti.processes) ? parentMulti.processes : parentMulti;
                 // если есть родитель, убираем у родителя ребенка
-                parentMulti.processes.splice (parentMulti.processes.indexOf(process.multi),1);
-                if (parentMulti.processes.length<2)
+                pathToChild.splice (pathToChild.indexOf(process.multi),1);
+                if (pathToChild.length<2)
                 // если у родителя остался один ребенок, то убираем родителя
-                    parentMulti.processes.forEach(function (multik) {
+                    pathToChild.forEach(function (multik) {
                     delete multik.parent;
                 });
             }
