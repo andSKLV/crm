@@ -59,7 +59,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 // сортируем на процесы и мульти узлы
                 processes = park.processes.filter((proc, i) => {
                     // если проц не мульти или относится к тому же мульти узлу (то они вложены в один мульти)
-                    if (i>index&&(!proc.multi||proc.multi===process.multi)) return true;
+                    if (i>index&&(!proc.multi||proc.multi!==process.multi)) return true;
                     if (i>index&&proc.multi&&!multies.includes(proc.multi)) {
                         multies.push(proc.multi);
                         return false;
