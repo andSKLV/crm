@@ -64,10 +64,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         // проверяем есть ли еще процы с таким мульти, если есть, то это не проц, а мульти
                         if (!proc.multi||(!(proc.multi.show===false&&park.processes.filter(pr=>pr.multi===proc.multi).length>1))) return true;
                     }
-                    if (i>index&&proc.multi&&!multies.includes(proc.multi)) {
+                    if (i>index&&proc.multi&&!multies.includes(proc.multi)&&(proc.multi!==process.multi||proc.multi.show===true)) {
                         multies.push(proc.multi);
                         return false;
                     }
+
                     return false;
                 });
 
@@ -637,7 +638,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             let process=multi.processes[multi.processes.indexOf(myFactory.process)];
             const park = process.park;
             // сохраняем индекс чтобы потом поставить поц на нужное место
-            const indexProcInPark = process.park.processes.indexOf(process);
+            let indexProcInPark = process.park.processes.indexOf(process);
             const indexProcInMulti = multi.processes.indexOf(process);
 
             // если того что мы хотим добавить еще нет в нашем мульти
@@ -651,6 +652,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 park.processes.splice(indexProcInPark,1);
                 // меняем проц на мульти узел
                 myFactory.addNewProcess("changing",null,indexProcInPark);
+                // переопределяем индекс проца в парке, так как он может сползти
+                let newProc = park.processes.find(pr=>(pr.risk===process.risk)&&(pr.wrapping===process.wrapping));
+                indexProcInPark = park.processes.indexOf(newProc);
                 multi.processes[indexProcInMulti] = park.processes[indexProcInPark].multi;
                 const newMulti = multi.processes[indexProcInMulti];
                 // запоминаем прошлый мульти
