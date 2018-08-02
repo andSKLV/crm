@@ -8,25 +8,13 @@ app.controller("HIP", function ($http, myFactory, $rootScope, $scope) {
     this.myFactory=myFactory;
     this.delete=function(process){
         if(process.multi) {
-            // if (process.multi.parent) {
-            //     // структура родителя может отличаться, поэтому делаем путь к детям аддаптивным
-            //     let parentMulti = process.multi.parent;
-            //     const pathToChild = (parentMulti.processes) ? parentMulti.processes : parentMulti;
-            //     // если есть родитель, убираем у родителя ребенка
-            //     pathToChild.splice (pathToChild.indexOf(process.multi),1);
-            //     if (pathToChild.length<2)
-            //     // если у родителя остался один ребенок, то убираем родителя
-            //         pathToChild.forEach(function (multik) {
-            //         delete multik.parent;
-            //     });
-            // }
-            //удаляем процесс из мульти
             if (process.multi.multi) {
                 process.multi.multi.processes.splice(process.multi.multi.processes.indexOf(process.multi),1);
             }
             process.multi.processes.splice(process.multi.processes.indexOf(process),1); 
             if (process.multi.processes.length<2 && process.multi.prevMulti) {
-                // если в мульти узле остался только один проц, то удаляем этот мульти, а оставшемуся процу присваиваем предыдущим мульти узел
+                // если в мульти узле остался только один проц
+                // то удаляем этот мульти, а оставшемуся процу присваиваем предыдущим мульти узел
                 process.multi.processes[0].multi = process.multi.prevMulti;
                 process.multi.prevMulti.processes.push(process.multi.processes[0]);
                 myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(process.multi),1);
