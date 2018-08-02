@@ -636,6 +636,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         if (scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Process" && myFactory.multi.mode) {
             let multi = myFactory.process.multi;
             let process=multi.processes[multi.processes.indexOf(myFactory.process)];
+            // if (!process) process = myFactory.process;
             const park = process.park;
             // сохраняем индекс чтобы потом поставить поц на нужное место
             let indexProcInPark = process.park.processes.indexOf(process);
