@@ -667,6 +667,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 }
                 else {
                     newMulti.parent = multi;
+                    newMulti.multi = multi;
                     // // создаем родителя из нового и старого процев
                     // const parentArr = new Multi ([multi,newMulti]);
                     // // присваиваем родителя

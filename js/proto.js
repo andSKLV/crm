@@ -132,6 +132,7 @@ class Multi{
     }
     // функция сворачивания мультиузла в одну строку
     close(multies, toParent){
+        debugger;
         if (toParent) this.processes.forEach(proc=>{
             if (proc.constructor.name==='Multi') proc.show = false;
         })
