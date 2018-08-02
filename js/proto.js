@@ -124,8 +124,6 @@ class Multi{
     }
     // функция разворачивания мульти узла на строчки
     open(multies, key) {
-        // TODO: использовать ключ
-
         const isDestructed = destructuringPairs.call(this, key);
         if (!isDestructed) destructuringOldMulties.call(this);
         this.show = true;
@@ -154,7 +152,7 @@ class Multi{
         // если новый мульти-в-мульти узел то структурируем его сами
         function destructuringPairs(key) {
             const isPairs = () => {
-                if (!(this.risk.length > 1 && this.wrapping.length > 1 && this.processes.length % 2 === 0) && (this.processes.length===this.risk.length*this.wrapping.length)) return false;
+                if (!(this.risk.length > 1 && this.wrapping.length > 1 && this.processes.length % 2 === 0 && this.processes.length===this.risk.length*this.wrapping.length)) return false;
                 this.risk.forEach(risk=> {
                     if ((typeof risk)!=='string') return false
                     const counter = this.processes.filter(pr=>pr[key]===risk);
@@ -182,7 +180,7 @@ class Multi{
                     })
                     newMulti.multi = this;
                     newMulti.parent = this;
-                    newMulti.destructed = true;
+                    // newMulti.processes.forEach(pr=>pr.oldMulti=this);
                     newMulti.show = false;
                     this.processes.push(newMulti);
                     multies.push(newMulti);
@@ -205,7 +203,7 @@ class Multi{
                 if (multi.constructor.name === 'Multi') {
                     multi.show = false;
                     multi.processes.map((pr, i) => {
-                        if (!multi.destructed) pr.oldMulti = multi;
+                        pr.oldMulti = multi;
                         pr.multi = this;
                         newProcesses.push(pr);
                     })
