@@ -124,17 +124,46 @@ class Multi{
     }
     // функция разворачивания мульти узла на строчки
     open(multies, key){
-
-        console.log(multies);
+        // архив для удаления проца
+        const arr = [];
+        // смотрим есть ли внутри мульти узла процы, которые до сворачивания были мультиузлами
+        this.processes.forEach(pr=>{
+            if (pr.oldMulti) {
+                pr.oldMulti.processes.push(pr);
+                arr.push(pr);
+                pr.multi = pr.oldMulti;
+                delete pr.oldMulti; 
+            }
+        })
+        // удаляем процы которые превратились в мульти узлы, добавляем их мульти узлы
+        arr.forEach(pr=>{
+            const ind = this.processes.indexOf(pr);
+            this.processes.splice(ind,1);
+            if (!this.processes.includes(pr.multi)) this.processes.splice(ind,0,pr.multi);
+        })
         this.show=true;
         multies.forEach(multi=>multi.getValues());
         
     }
     // функция сворачивания мультиузла в одну строку
-    close(multies, toParent){
-        debugger;
-        if (toParent) this.processes.forEach(proc=>{
-            if (proc.constructor.name==='Multi') proc.show = false;
+    close(multies, toParent, process){
+
+        if (toParent) this.processes.forEach((multi,i)=>{
+            if (multi.constructor.name==='Multi') {
+                multi.show = false;
+                const arr = [];
+                // for (let i = 0;i<multi.processes.length;i++) {
+                //     arr.push(multi.processes[i]);
+
+                // }
+                multi.processes.map((pr,i)=>{
+                    arr.push(pr);
+                    pr.oldMulti = multi;
+                    pr.multi = this;
+                })
+                multi.processes.splice(0,multi.processes.length);
+                this.processes.splice(i,1,...arr);
+            }
         })
         this.show=false;
         this.calculatePrice();
