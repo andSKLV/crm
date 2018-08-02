@@ -795,20 +795,12 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                                 const pathToChild = (parentMulti.processes) ? parentMulti.processes : parentMulti;
                                 // если есть родитель, убираем у родителя ребенка
                                 pathToChild.splice (pathToChild.indexOf(deletingProc.multi),1);
-                                // если у родителя остался один ребенок, то убираем у ребенка родителя
-                                if (pathToChild.length<2) {
-                                    pathToChild.forEach(proc=>{
-                                        if (parentMulti.parent) proc.parent = parentMulti.parent;
-                                    });
-                                    // убираем родителя из перечня мульти
-                                    myFactory.multi.multies.splice (myFactory.multi.multies.indexOf(parentMulti),1);
-                                }
                             }
                             if (deletingProc.multi.processes.length<2) {
                                 // если это теперь не мульти узел, то у оставшегося проца убираем ссылку на мульти узел
                                 if (deletingProc.multi.prevMulti) {
                                     deletingProc.multi.processes[0].multi = deletingProc.multi.prevMulti;
-                                    deletingProc.multi.prevMulti.processes.splice(deletingProc.multi.prevMulti.processes.indexOf(deletingProc.multi),1,deletingProc.multi.processes[0]);
+                                    deletingProc.multi.prevMulti.processes.push(deletingProc.multi.processes[0]);
                                 }
                                 else if (deletingProc.multi.parent) deletingProc.multi.processes[0].multi = deletingProc.multi.parent;
                                 else delete deletingProc.multi.processes[0].multi;
