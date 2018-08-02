@@ -20,7 +20,10 @@ app.controller("HIP", function ($http, myFactory, $rootScope, $scope) {
                     // если в мульти узле остался только один проц
                     // то удаляем этот мульти, а оставшемуся процу присваиваем предыдущим мульти узел
                     process.multi.processes[0].multi = newMulti;
-                    if (!newMulti.processes) debugger;
+                    if (!newMulti.processes) {
+                        throw new Error('Верхний мульти с другой структурой. Нет .processes');
+                        debugger;
+                    }
                     newMulti.processes.push(process.multi.processes[0]);
                 }
                 myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(process.multi),1);

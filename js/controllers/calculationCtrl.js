@@ -798,9 +798,20 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                             }
                             if (deletingProc.multi.processes.length<2) {
                                 // если это теперь не мульти узел, то у оставшегося проца убираем ссылку на мульти узел
-                                if (deletingProc.multi.prevMulti) {
-                                    deletingProc.multi.processes[0].multi = deletingProc.multi.prevMulti;
-                                    deletingProc.multi.prevMulti.processes.push(deletingProc.multi.processes[0]);
+                                let newMulti;
+                                // выбираем куда вставить оставшийся проц
+                                // если был записан предыдущий мульти, то туда
+                                if (deletingProc.multi.prevMulti) newMulti = deletingProc.multi.prevMulti;
+                                // если его не было, то в мульти уровнем выше
+                                else if (deletingProc.multi.multi) newMulti = deletingProc.multi.multi;
+                                if (newMulti) {
+                                    deletingProc.multi.processes[0].multi = newMulti;
+                                    // на всякий случай пост
+                                    if (!newMulti.processes) {
+                                        throw new Error('Верхний мульти с другой структурой. Нет .processes');
+                                        debugger;
+                                    }
+                                    newMulti.processes.push(deletingProc.multi.processes[0]);
                                 }
                                 else if (deletingProc.multi.parent) deletingProc.multi.processes[0].multi = deletingProc.multi.parent;
                                 else delete deletingProc.multi.processes[0].multi;
