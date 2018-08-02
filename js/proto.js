@@ -126,8 +126,8 @@ class Multi{
     open(multies, key) {
         // TODO: использовать ключ
 
-        destructuringOldMulties.call(this);
-        destructuringNew.call(this,key);
+        const isDestructed = destructuringPairs.call(this, key);
+        if (!isDestructed) destructuringOldMulties.call(this);
         this.show = true;
         multies.forEach(multi => multi.getValues());
 
@@ -152,27 +152,33 @@ class Multi{
             })
         }
         // если новый мульти-в-мульти узел то структурируем его сами
-        function destructuringNew(key) {
-            const isNewMulti = () => {
-                if (!(this.risk.length > 1 && this.wrapping.length > 1 && this.processes.length % 2 === 0)) return false;
-                let isNew = true;
-                this.processes.forEach(pr => {
-                    if (pr.oldMulti || pr.constructor.name === 'Multi') isNew = false;
-                })
-                return isNew;
+        function destructuringPairs(key) {
+            const isPairs = () => {
+                if (!(this.risk.length > 1 && this.wrapping.length > 1 && this.processes.length % 2 === 0) && (this.processes.length===this.risk.length*this.wrapping.length)) return false;
+                this.risk.forEach(risk=> {
+                    if ((typeof risk)!=='string') return false
+                    const counter = this.processes.filter(pr=>pr[key]===risk);
+                    if (counter.lenght!==this.risk.lenght) return false;
+                });
+                this.wrapping.forEach(wrap=> {
+                    if ((typeof wrap)!=='string') return false;
+                    const counter = this.processes.filter(pr=>pr[key]===wrap);
+                    if (counter.lenght!==this.wrapping.lenght) return false;
+                });
+                return true;
             }
-            if (isNewMulti()) {
+            if (isPairs()) {
                 debugger;
                 const keysInMulti = [];
                 this.processes.forEach(pr => {
                     if (!keysInMulti.includes(pr[key])) keysInMulti.push(pr[key]);
                 })
-                keysInMulti.forEach(k=>{
+                keysInMulti.forEach(k => {
                     // собираем процессы с одинаковым ключем, чтобы создать из них мульти
                     const creatingMulti = this.processes.filter(pr => pr[key] === k)
                     const newMulti = new Multi(creatingMulti);
-                    creatingMulti.forEach(pr=>{
-                        this.processes.splice(this.processes.indexOf(pr),1);
+                    creatingMulti.forEach(pr => {
+                        this.processes.splice(this.processes.indexOf(pr), 1);
                     })
                     newMulti.multi = this;
                     newMulti.parent = this;
@@ -180,7 +186,9 @@ class Multi{
                     this.processes.push(newMulti);
                     multies.push(newMulti);
                 })
+                return true;
             }
+            return false;
         }
     }
     // функция сворачивания мультиузла в одну строку
