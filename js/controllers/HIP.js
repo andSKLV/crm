@@ -12,11 +12,17 @@ app.controller("HIP", function ($http, myFactory, $rootScope, $scope) {
                 process.multi.multi.processes.splice(process.multi.multi.processes.indexOf(process.multi),1);
             }
             process.multi.processes.splice(process.multi.processes.indexOf(process),1); 
-            if (process.multi.processes.length<2 && process.multi.prevMulti) {
-                // если в мульти узле остался только один проц
-                // то удаляем этот мульти, а оставшемуся процу присваиваем предыдущим мульти узел
-                process.multi.processes[0].multi = process.multi.prevMulti;
-                process.multi.prevMulti.processes.push(process.multi.processes[0]);
+            if (process.multi.processes.length<2) {
+                let newMulti;
+                if (process.multi.prevMulti) newMulti = process.multi.prevMulti;
+                else if (process.multi.multi) newMulti = process.multi.multi;
+                if (newMulti) {
+                    // если в мульти узле остался только один проц
+                    // то удаляем этот мульти, а оставшемуся процу присваиваем предыдущим мульти узел
+                    process.multi.processes[0].multi = newMulti;
+                    if (!newMulti.processes) debugger;
+                    newMulti.processes.push(process.multi.processes[0]);
+                }
                 myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(process.multi),1);
             }
         }
