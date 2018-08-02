@@ -124,103 +124,6 @@ class Multi{
     }
     // функция разворачивания мульти узла на строчки
     open(multies, key){
-        if(this.risk.length>1 && this.wrapping.length>1 || this.wrapping.length>1 && this.packName || this.packName!==undefined && this.risk.length>1){
-            let mass=this.processes;
-            this.processes=[];
-            let multi=this;
-            let massive=[];
-            if(key=="risk" && this[key].length==1 && this.packName){
-                massive.push("Базовые риски");
-                this.template.forEach(function (templateProcess) {
-                    massive.push(templateProcess.risk);
-                });
-                massive.forEach(function (val) {
-                    let array=mass.filter(process=>process[key]==val);
-                    replaceProcessesInParkForMulti(array);
-                    let newMulti=new Multi(array);
-                    multies.push(newMulti);
-                    multi.processes.push(newMulti);
-                    array.forEach(function (process) {
-                        process.multi=multi.processes[multi.processes.length-1];
-                    });
-                });
-                this.processes.forEach(function (multik) {
-                    multik.calculatePrice();
-                    multik.parent=multi;
-                })
-            }
-            else if(this.risk.length>1 && this.packName && this.wrapping.length==1){
-                let array=mass.filter(process=>process.package==this.packName);
-                replaceProcessesInParkForMulti(array);
-                let newMulti=new Multi(array);
-                multies.push(newMulti);
-                multi.processes.push(newMulti);
-                array.forEach(function (process) {
-                    process.multi=newMulti;
-                });
-                newMulti.calculatePrice();
-                newMulti.parent=this;
-                newMulti.template=this.template;
-                newMulti.packName=this.packName;
-                newMulti.risk=[this.packName];
-                mass.forEach(process=>{
-                    if(process.package===undefined) this.processes.push(process);
-                })
-
-            }
-            else {
-                this[key].forEach(function (val) {
-                    if(val==multi.packName){
-                        let array=mass.filter(function (process) {
-                            return process["package"]==val;
-                        });
-                        let newMulti=new Multi(array);
-                        multies.push(newMulti);
-                        multi.processes.push(newMulti);
-                        array.forEach(function (process) {
-                            process.multi=multi.processes[multi.processes.length-1];
-                        });
-                        multi.processes[multi.processes.length-1].packName=multi.packName;
-                        multi.processes[multi.processes.length-1].template=multi.template;
-
-                    }
-                    else{
-
-                        let pack=true;
-                        let array=mass.filter(process=>process[key]==val);
-                        replaceProcessesInParkForMulti(array);
-                        let newMulti=new Multi(array);
-                        multies.push(newMulti);
-                        multi.processes.push(newMulti);
-                        if(multi.packName){
-                            let flag=false;
-                            array.forEach(process=>process.package===multi.packName ? flag=true : flag=false);
-                            if(flag){
-                                newMulti.packName=multi.packName;
-                                newMulti.template=multi.template;
-                            }
-
-                        }
-                        array.forEach(process=>{
-                            if(!process.package) pack=false;
-                            process.multi=multi.processes[multi.processes.length-1];
-                        });
-                        if(pack){
-                            multi.processes[multi.processes.length-1].packName=multi.packName;
-                            multi.processes[multi.processes.length-1].template=multi.template;
-                        }
-                    }
-
-                });
-                this.processes.forEach(multik=>{
-                    multik.calculatePrice();
-                    multik.parent=multi;
-                })
-            }
-        }
-        else if(this.wrapping.length>1 && this.risk.length==1){
-            replaceProcessesInParkForMulti(this.processes);
-        }
 
         console.log(multies);
         this.show=true;
@@ -229,42 +132,7 @@ class Multi{
     }
     // функция сворачивания мультиузла в одну строку
     close(multies, toParent){
-        // проверка на то, родитель ли это
-        const isParent = () => {
-            if (multies==0) return false;
-            const supposedParent = multies[0];
-            const allChilds = supposedParent.processes.every((proc,i)=>{
-                // условия: все дети мульти узлы, у всех родитель один узел, все они находятся в переданном выше параметре multies
-                return (proc.constructor.name==="Multi") && (proc.parent===supposedParent) && (proc===multies[i+1]);
-            });
-            return allChilds;
-        } 
-        if (isParent()) toParent = true;
-        if(toParent){
-            let mass=[];
-            let multi=this;
-            this.processes.forEach(function (multik) {
-                if(multik.constructor.name==="Process") mass.push(multik);
-                else{
-                    multik.processes.forEach(function (process) {
-                        process.multi=multi;
-                        mass.push(process);
-                    });
-                    multies.splice(multies.indexOf(multik), 1);
-                }
-
-            });
-            this.processes=mass;
-        }
-        let mass=this.processes.filter(process=>process.constructor.name==="Multi");
-        mass.forEach(multi=>{
-            multi.processes.forEach(process=>{
-                this.processes.push(process);
-                process.multi=this;
-            });
-            this.processes.splice(this.processes.indexOf(multi),1);
-            multies.splice(multies.indexOf(multi), 1);
-        });
+       
         this.show=false;
         this.calculatePrice();
 
