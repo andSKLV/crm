@@ -148,28 +148,23 @@ class Multi{
     // функция сворачивания мультиузла в одну строку
     close(multies, toParent, process){
         this.processes.forEach(pr=>{
-            if (pr.constructor.name==='Multi' && pr.show===false) toParent = true;
+            if (pr.constructor.name==='Multi') toParent = true;
         })
-        
         if (toParent) {
             const newProcesses = [];
             this.processes.forEach((multi,i)=>{
                 if (multi.constructor.name==='Multi') {
-                    // const arr = [];
                     multi.show = false;
                     multi.processes.map((pr,i)=>{
-                        // arr.push(pr);
                         pr.oldMulti = multi;
                         pr.multi = this;
                         newProcesses.push (pr);
                     })
                     multi.processes.splice(0,multi.processes.length);
-                    
                 }
                 else newProcesses.push (multi);
             })
             this.processes = newProcesses;
-            // this.processes.splice(i,1,...arr);
         }
         this.show=false;
         this.calculatePrice();
