@@ -171,18 +171,31 @@ class Multi{
                 this.processes.forEach(pr => {
                     if (!keysInMulti.includes(pr[key])) keysInMulti.push(pr[key]);
                 })
+                // сортировка 
+                // FIXME: необходимо отсортировать в парке!
+                const sortedProcesses = [];
+                keysInMulti.forEach(k=>{
+                    this.processes.forEach(pr=>{
+                        if (pr[key]===k) sortedProcesses.push(pr);
+                    })
+                })
+                this.processes = sortedProcesses;
+                debugger;
+                // конец сортировки
                 keysInMulti.forEach(k => {
                     // собираем процессы с одинаковым ключем, чтобы создать из них мульти
                     const creatingMulti = this.processes.filter(pr => pr[key] === k)
                     const newMulti = new Multi(creatingMulti);
+                    // сохраняем индекс первого проца, чтобы потом на его место поставить мульти
+                    let ind = this.processes.indexOf(creatingMulti[0]);
                     creatingMulti.forEach(pr => {
                         this.processes.splice(this.processes.indexOf(pr), 1);
                     })
                     newMulti.multi = this;
                     newMulti.parent = this;
-                    // newMulti.processes.forEach(pr=>pr.oldMulti=this);
                     newMulti.show = false;
-                    this.processes.push(newMulti);
+                    this.processes.splice(ind,0,newMulti);
+                    // this.processes.push(newMulti);
                     multies.push(newMulti);
                 })
                 return true;
