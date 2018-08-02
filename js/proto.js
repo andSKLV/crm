@@ -132,7 +132,9 @@ class Multi{
     }
     // функция сворачивания мультиузла в одну строку
     close(multies, toParent){
-       
+        if (toParent) this.processes.forEach(proc=>{
+            if (proc.constructor.name==='Multi') proc.show = false;
+        })
         this.show=false;
         this.calculatePrice();
 
