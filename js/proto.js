@@ -124,6 +124,7 @@ class Multi{
     }
     // функция разворачивания мульти узла на строчки
     open(multies, key){
+        // TODO: использовать ключ
         // архив для удаления проца
         const arr = [];
         // смотрим есть ли внутри мульти узла процы, которые до сворачивания были мультиузлами
@@ -147,9 +148,11 @@ class Multi{
     }
     // функция сворачивания мультиузла в одну строку
     close(multies, toParent, process){
+        // определяем есть ли родитель, потому что то что в параметре не всегда правда
         this.processes.forEach(pr=>{
             if (pr.constructor.name==='Multi') toParent = true;
         })
+        // если закрываем родителя , то переносим все процы в него и свертываем
         if (toParent) {
             const newProcesses = [];
             this.processes.forEach((multi,i)=>{
