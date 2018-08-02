@@ -666,13 +666,14 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     newMulti.parent = multi.parent;
                 }
                 else {
-                    // создаем родителя из нового и старого процев
-                    const parentArr = new Multi ([multi,newMulti]);
-                    // присваиваем родителя
-                    parentArr.processes.forEach (el=>el.parent=parentArr);
-                    // добавляем родителя в списокмультиузлов
-                    myFactory.multi.multies.unshift(parentArr);
-                    parentArr.parent = myFactory.multi.multies;
+                    newMulti.parent = multi;
+                    // // создаем родителя из нового и старого процев
+                    // const parentArr = new Multi ([multi,newMulti]);
+                    // // присваиваем родителя
+                    // parentArr.processes.forEach (el=>el.parent=parentArr);
+                    // // добавляем родителя в списокмультиузлов
+                    // myFactory.multi.multies.unshift(parentArr);
+                    // parentArr.parent = myFactory.multi.multies;
                 }
                 value.selected=true;
                 myFactory.finalCalc();
