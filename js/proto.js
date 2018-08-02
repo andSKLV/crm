@@ -123,53 +123,90 @@ class Multi{
         this.price=total;
     }
     // функция разворачивания мульти узла на строчки
-    open(multies, key){
+    open(multies, key) {
         // TODO: использовать ключ
-        // архив для удаления проца
-        const arr = [];
-        // смотрим есть ли внутри мульти узла процы, которые до сворачивания были мультиузлами
-        this.processes.forEach(pr=>{
-            if (pr.oldMulti) {
-                pr.oldMulti.processes.push(pr);
-                arr.push(pr);
-                pr.multi = pr.oldMulti;
-                delete pr.oldMulti; 
+
+        destructuringOldMulties.call(this);
+        destructuringNew.call(this,key);
+        this.show = true;
+        multies.forEach(multi => multi.getValues());
+
+        // если раньше процы были распределены по мулььи узлам то их нужно распределить опять
+        function destructuringOldMulties() {
+            // архив для удаления проца
+            const arr = [];
+            // смотрим есть ли внутри мульти узла процы, которые до сворачивания были мультиузлами
+            this.processes.forEach(pr => {
+                if (pr.oldMulti) {
+                    pr.oldMulti.processes.push(pr);
+                    arr.push(pr);
+                    pr.multi = pr.oldMulti;
+                    delete pr.oldMulti;
+                }
+            })
+            // удаляем процы которые превратились в мульти узлы, добавляем их мульти узлы
+            arr.forEach(pr => {
+                const ind = this.processes.indexOf(pr);
+                this.processes.splice(ind, 1);
+                if (!this.processes.includes(pr.multi)) this.processes.splice(ind, 0, pr.multi);
+            })
+        }
+        // если новый мульти-в-мульти узел то структурируем его сами
+        function destructuringNew(key) {
+            const isNewMulti = () => {
+                if (!(this.risk.length > 1 && this.wrapping.length > 1 && this.processes.length % 2 === 0)) return false;
+                let isNew = true;
+                this.processes.forEach(pr => {
+                    if (pr.oldMulti || pr.constructor.name === 'Multi') isNew = false;
+                })
+                return isNew;
             }
-        })
-        // удаляем процы которые превратились в мульти узлы, добавляем их мульти узлы
-        arr.forEach(pr=>{
-            const ind = this.processes.indexOf(pr);
-            this.processes.splice(ind,1);
-            if (!this.processes.includes(pr.multi)) this.processes.splice(ind,0,pr.multi);
-        })
-        this.show=true;
-        multies.forEach(multi=>multi.getValues());
-        
+            if (isNewMulti()) {
+                debugger;
+                const keysInMulti = [];
+                this.processes.forEach(pr => {
+                    if (!keysInMulti.includes(pr[key])) keysInMulti.push(pr[key]);
+                })
+                keysInMulti.forEach(k=>{
+                    // собираем процессы с одинаковым ключем, чтобы создать из них мульти
+                    const creatingMulti = this.processes.filter(pr => pr[key] === k)
+                    const newMulti = new Multi(creatingMulti);
+                    creatingMulti.forEach(pr=>{
+                        this.processes.splice(this.processes.indexOf(pr),1);
+                    })
+                    newMulti.multi = this;
+                    newMulti.parent = this;
+                    newMulti.show = false;
+                    this.processes.push(newMulti);
+                    multies.push(newMulti);
+                })
+            }
+        }
     }
     // функция сворачивания мультиузла в одну строку
-    close(multies, toParent, process){
+    close(multies, toParent, process) {
         // определяем есть ли родитель, потому что то что в параметре не всегда правда
-        this.processes.forEach(pr=>{
-            if (pr.constructor.name==='Multi') toParent = true;
+        this.processes.forEach(pr => {
+            if (pr.constructor.name === 'Multi') toParent = true;
         })
         // если закрываем родителя , то переносим все процы в него и свертываем
         if (toParent) {
             const newProcesses = [];
-            this.processes.forEach((multi,i)=>{
-                if (multi.constructor.name==='Multi') {
+            this.processes.forEach((multi, i) => {
+                if (multi.constructor.name === 'Multi') {
                     multi.show = false;
-                    multi.processes.map((pr,i)=>{
+                    multi.processes.map((pr, i) => {
                         pr.oldMulti = multi;
                         pr.multi = this;
-                        newProcesses.push (pr);
+                        newProcesses.push(pr);
                     })
-                    multi.processes.splice(0,multi.processes.length);
+                    multi.processes.splice(0, multi.processes.length);
                 }
-                else newProcesses.push (multi);
+                else newProcesses.push(multi);
             })
             this.processes = newProcesses;
         }
-        this.show=false;
+        this.show = false;
         this.calculatePrice();
 
     }
