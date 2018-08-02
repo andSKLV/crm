@@ -182,6 +182,7 @@ class Multi{
                     })
                     newMulti.multi = this;
                     newMulti.parent = this;
+                    newMulti.destructed = true;
                     newMulti.show = false;
                     this.processes.push(newMulti);
                     multies.push(newMulti);
@@ -204,7 +205,7 @@ class Multi{
                 if (multi.constructor.name === 'Multi') {
                     multi.show = false;
                     multi.processes.map((pr, i) => {
-                        pr.oldMulti = multi;
+                        if (!multi.destructed) pr.oldMulti = multi;
                         pr.multi = this;
                         newProcesses.push(pr);
                     })
