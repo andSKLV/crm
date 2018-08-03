@@ -166,21 +166,24 @@ class Multi{
                 return true;
             }
             if (isPairs()) {
-                debugger;
                 const keysInMulti = [];
                 this.processes.forEach(pr => {
                     if (!keysInMulti.includes(pr[key])) keysInMulti.push(pr[key]);
                 })
                 // сортировка 
-                // FIXME: необходимо отсортировать в парке!
                 const sortedProcesses = [];
                 keysInMulti.forEach(k=>{
                     this.processes.forEach(pr=>{
                         if (pr[key]===k) sortedProcesses.push(pr);
                     })
                 })
+                const sortingPark = this.processes[0].park;
+                let indOfFirstProc = sortingPark.processes.indexOf(this.processes[0]);
+                this.processes.forEach(pr => {
+                    indOfFirstProc = Math.min(sortingPark.processes.indexOf(pr), indOfFirstProc)
+                })
                 this.processes = sortedProcesses;
-                debugger;
+                sortingPark.processes.splice(indOfFirstProc, sortedProcesses.length,...sortedProcesses);
                 // конец сортировки
                 keysInMulti.forEach(k => {
                     // собираем процессы с одинаковым ключем, чтобы создать из них мульти
