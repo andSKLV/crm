@@ -123,149 +123,126 @@ class Multi{
         this.price=total;
     }
     // функция разворачивания мульти узла на строчки
-    open(multies, key){
-        if(this.risk.length>1 && this.wrapping.length>1 || this.wrapping.length>1 && this.packName || this.packName!==undefined && this.risk.length>1){
-            let mass=this.processes;
-            this.processes=[];
-            let multi=this;
-            let massive=[];
-            if(key=="risk" && this[key].length==1 && this.packName){
-                massive.push("Базовые риски");
-                this.template.forEach(function (templateProcess) {
-                    massive.push(templateProcess.risk);
+    open(multies, key) {
+        const isDestructed = destructuringPairs.call(this, key);
+        if (!isDestructed) destructuringOldMulties.call(this);
+        this.show = true;
+        multies.forEach(multi => multi.getValues());
+
+        // если раньше процы были распределены по мулььи узлам то их нужно распределить опять
+        function destructuringOldMulties() {
+            // архив для удаления проца
+            const arr = [];
+            // смотрим есть ли внутри мульти узла процы, которые до сворачивания были мультиузлами
+            this.processes.forEach(pr => {
+                if (pr.oldMulti) {
+                    pr.oldMulti.processes.push(pr);
+                    arr.push(pr);
+                    pr.multi = pr.oldMulti;
+                    delete pr.oldMulti;
+                }
+            })
+            // удаляем процы которые превратились в мульти узлы, добавляем их мульти узлы
+            arr.forEach(pr => {
+                const ind = this.processes.indexOf(pr);
+                this.processes.splice(ind, 1);
+                if (!this.processes.includes(pr.multi)) this.processes.splice(ind, 0, pr.multi);
+            })
+        }
+        // если новый мульти-в-мульти узел то структурируем его сами
+        function destructuringPairs(key) {
+            const isPairs = () => {
+                let flag = true;
+                if (!(this.risk.length > 1 && this.wrapping.length > 1 && this.processes.length % 2 === 0 && this.processes.length===this.risk.length*this.wrapping.length)) flag = false;
+                this.risk.forEach(risk=> {
+                    if ((typeof risk)!=='string') flag = false;
+                    const counter = this.processes.filter(pr=>pr[key]===risk);
+                    if (counter.lenght!==this.risk.lenght) flag = false;
                 });
-                massive.forEach(function (val) {
-                    let array=mass.filter(process=>process[key]==val);
-                    replaceProcessesInParkForMulti(array);
-                    let newMulti=new Multi(array);
+                this.wrapping.forEach(wrap=> {
+                    if ((typeof wrap)!=='string') flag = false;
+                    const counter = this.processes.filter(pr=>pr[key]===wrap);
+                    if (counter.lenght!==this.wrapping.lenght) flag = false;
+                });
+                // проверяем, были ли они уже разбиты на пары по этому ключу
+                this.processes.forEach(pr => {
+                    if (pr.oldMulti && pr.oldMulti.distructedByKey === key) flag = false;
+                }); 
+                return flag;
+            } 
+            if (isPairs()) {
+                const keysInMulti = [];
+                this.processes.forEach(pr => {
+                    if (!keysInMulti.includes(pr[key])) keysInMulti.push(pr[key]);
+                })
+                // сортировка 
+                const sortedProcesses = [];
+                keysInMulti.forEach(k=>{
+                    this.processes.forEach(pr=>{
+                        if (pr[key]===k) sortedProcesses.push(pr);
+                    })
+                })
+                const sortingPark = this.processes[0].park;
+                let indOfFirstProc = sortingPark.processes.indexOf(this.processes[0]);
+                this.processes.forEach(pr => {
+                    indOfFirstProc = Math.min(sortingPark.processes.indexOf(pr), indOfFirstProc)
+                })
+                this.processes = sortedProcesses;
+                sortingPark.processes.splice(indOfFirstProc, sortedProcesses.length,...sortedProcesses);
+                // конец сортировки
+                keysInMulti.forEach(k => {
+                    // собираем процессы с одинаковым ключем, чтобы создать из них мульти
+                    const creatingMulti = this.processes.filter(pr => pr[key] === k);
+                    creatingMulti.forEach(pr=>{
+                        // если он уже был деструктурирован на другие пары, то убираем старые мульти
+                        if (pr.oldMulti && pr.oldMulti.distructedByKey!==key) {
+                            if (multies.includes(pr.oldMulti)) multies.splice(multies.indexOf(pr.oldMulti),1);
+                            delete pr.oldMulti;
+                        }
+                    })
+                    const newMulti = new Multi(creatingMulti);
+                    // сохраняем индекс первого проца, чтобы потом на его место поставить мульти
+                    let ind = this.processes.indexOf(creatingMulti[0]);
+                    creatingMulti.forEach(pr => {
+                        this.processes.splice(this.processes.indexOf(pr), 1);
+                    })
+                    newMulti.multi = this;
+                    newMulti.parent = this;
+                    newMulti.show = false;
+                    newMulti.distructedByKey = key;
+                    this.processes.splice(ind,0,newMulti);
+                    // this.processes.push(newMulti);
                     multies.push(newMulti);
-                    multi.processes.push(newMulti);
-                    array.forEach(function (process) {
-                        process.multi=multi.processes[multi.processes.length-1];
-                    });
-                });
-                this.processes.forEach(function (multik) {
-                    multik.calculatePrice();
-                    multik.parent=multi;
                 })
+                return true;
             }
-            else if(this.risk.length>1 && this.packName && this.wrapping.length==1){
-                let array=mass.filter(process=>process.package==this.packName);
-                replaceProcessesInParkForMulti(array);
-                let newMulti=new Multi(array);
-                multies.push(newMulti);
-                multi.processes.push(newMulti);
-                array.forEach(function (process) {
-                    process.multi=newMulti;
-                });
-                newMulti.calculatePrice();
-                newMulti.parent=this;
-                newMulti.template=this.template;
-                newMulti.packName=this.packName;
-                newMulti.risk=[this.packName];
-                mass.forEach(process=>{
-                    if(process.package===undefined) this.processes.push(process);
-                })
-
-            }
-            else {
-                this[key].forEach(function (val) {
-                    if(val==multi.packName){
-                        let array=mass.filter(function (process) {
-                            return process["package"]==val;
-                        });
-                        let newMulti=new Multi(array);
-                        multies.push(newMulti);
-                        multi.processes.push(newMulti);
-                        array.forEach(function (process) {
-                            process.multi=multi.processes[multi.processes.length-1];
-                        });
-                        multi.processes[multi.processes.length-1].packName=multi.packName;
-                        multi.processes[multi.processes.length-1].template=multi.template;
-
-                    }
-                    else{
-
-                        let pack=true;
-                        let array=mass.filter(process=>process[key]==val);
-                        replaceProcessesInParkForMulti(array);
-                        let newMulti=new Multi(array);
-                        multies.push(newMulti);
-                        multi.processes.push(newMulti);
-                        if(multi.packName){
-                            let flag=false;
-                            array.forEach(process=>process.package===multi.packName ? flag=true : flag=false);
-                            if(flag){
-                                newMulti.packName=multi.packName;
-                                newMulti.template=multi.template;
-                            }
-
-                        }
-                        array.forEach(process=>{
-                            if(!process.package) pack=false;
-                            process.multi=multi.processes[multi.processes.length-1];
-                        });
-                        if(pack){
-                            multi.processes[multi.processes.length-1].packName=multi.packName;
-                            multi.processes[multi.processes.length-1].template=multi.template;
-                        }
-                    }
-
-                });
-                this.processes.forEach(multik=>{
-                    multik.calculatePrice();
-                    multik.parent=multi;
-                })
-            }
+            return false;
         }
-        else if(this.wrapping.length>1 && this.risk.length==1){
-            replaceProcessesInParkForMulti(this.processes);
-        }
-
-        console.log(multies);
-        this.show=true;
-        multies.forEach(multi=>multi.getValues());
-        
     }
     // функция сворачивания мультиузла в одну строку
-    close(multies, toParent){
-        // проверка на то, родитель ли это
-        const isParent = () => {
-            if (multies==0) return false;
-            const supposedParent = multies[0];
-            const allChilds = supposedParent.processes.every((proc,i)=>{
-                // условия: все дети мульти узлы, у всех родитель один узел, все они находятся в переданном выше параметре multies
-                return (proc.constructor.name==="Multi") && (proc.parent===supposedParent) && (proc===multies[i+1]);
-            });
-            return allChilds;
-        } 
-        if (isParent()) toParent = true;
-        if(toParent){
-            let mass=[];
-            let multi=this;
-            this.processes.forEach(function (multik) {
-                if(multik.constructor.name==="Process") mass.push(multik);
-                else{
-                    multik.processes.forEach(function (process) {
-                        process.multi=multi;
-                        mass.push(process);
-                    });
-                    multies.splice(multies.indexOf(multik), 1);
+    close(multies, toParent, process) {
+        // определяем есть ли родитель, потому что то что в параметре не всегда правда
+        this.processes.forEach(pr => {
+            if (pr.constructor.name === 'Multi') toParent = true;
+        })
+        // если закрываем родителя , то переносим все процы в него и свертываем
+        if (toParent) {
+            const newProcesses = [];
+            this.processes.forEach((multi, i) => {
+                if (multi.constructor.name === 'Multi') {
+                    multi.show = false;
+                    multi.processes.map((pr, i) => {
+                        pr.oldMulti = multi;
+                        pr.multi = this;
+                        newProcesses.push(pr);
+                    })
+                    multi.processes.splice(0, multi.processes.length);
                 }
-
-            });
-            this.processes=mass;
+                else newProcesses.push(multi);
+            })
+            this.processes = newProcesses;
         }
-        let mass=this.processes.filter(process=>process.constructor.name==="Multi");
-        mass.forEach(multi=>{
-            multi.processes.forEach(process=>{
-                this.processes.push(process);
-                process.multi=this;
-            });
-            this.processes.splice(this.processes.indexOf(multi),1);
-            multies.splice(multies.indexOf(multi), 1);
-        });
-        this.show=false;
+        this.show = false;
         this.calculatePrice();
 
     }

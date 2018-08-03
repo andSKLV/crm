@@ -666,13 +666,15 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     newMulti.parent = multi.parent;
                 }
                 else {
-                    // создаем родителя из нового и старого процев
-                    const parentArr = new Multi ([multi,newMulti]);
-                    // присваиваем родителя
-                    parentArr.processes.forEach (el=>el.parent=parentArr);
-                    // добавляем родителя в списокмультиузлов
-                    myFactory.multi.multies.unshift(parentArr);
-                    parentArr.parent = myFactory.multi.multies;
+                    newMulti.parent = multi;
+                    newMulti.multi = multi;
+                    // // создаем родителя из нового и старого процев
+                    // const parentArr = new Multi ([multi,newMulti]);
+                    // // присваиваем родителя
+                    // parentArr.processes.forEach (el=>el.parent=parentArr);
+                    // // добавляем родителя в списокмультиузлов
+                    // myFactory.multi.multies.unshift(parentArr);
+                    // parentArr.parent = myFactory.multi.multies;
                 }
                 value.selected=true;
                 myFactory.finalCalc();
@@ -793,20 +795,23 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                                 const pathToChild = (parentMulti.processes) ? parentMulti.processes : parentMulti;
                                 // если есть родитель, убираем у родителя ребенка
                                 pathToChild.splice (pathToChild.indexOf(deletingProc.multi),1);
-                                // если у родителя остался один ребенок, то убираем у ребенка родителя
-                                if (pathToChild.length<2) {
-                                    pathToChild.forEach(proc=>{
-                                        if (parentMulti.parent) proc.parent = parentMulti.parent;
-                                    });
-                                    // убираем родителя из перечня мульти
-                                    myFactory.multi.multies.splice (myFactory.multi.multies.indexOf(parentMulti),1);
-                                }
                             }
                             if (deletingProc.multi.processes.length<2) {
                                 // если это теперь не мульти узел, то у оставшегося проца убираем ссылку на мульти узел
-                                if (deletingProc.multi.prevMulti) {
-                                    deletingProc.multi.processes[0].multi = deletingProc.multi.prevMulti;
-                                    deletingProc.multi.prevMulti.processes.splice(deletingProc.multi.prevMulti.processes.indexOf(deletingProc.multi),1,deletingProc.multi.processes[0]);
+                                let newMulti;
+                                // выбираем куда вставить оставшийся проц
+                                // если был записан предыдущий мульти, то туда
+                                if (deletingProc.multi.prevMulti) newMulti = deletingProc.multi.prevMulti;
+                                // если его не было, то в мульти уровнем выше
+                                else if (deletingProc.multi.multi) newMulti = deletingProc.multi.multi;
+                                if (newMulti) {
+                                    deletingProc.multi.processes[0].multi = newMulti;
+                                    // на всякий случай пост
+                                    if (!newMulti.processes) {
+                                        throw new Error('Верхний мульти с другой структурой. Нет .processes');
+                                        debugger;
+                                    }
+                                    newMulti.processes.push(deletingProc.multi.processes[0]);
                                 }
                                 else if (deletingProc.multi.parent) deletingProc.multi.processes[0].multi = deletingProc.multi.parent;
                                 else delete deletingProc.multi.processes[0].multi;

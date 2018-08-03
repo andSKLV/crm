@@ -1,7 +1,7 @@
 <table class="matrix park" ng-repeat="park in HIP.myFactory.parks track by $index" ng-init="parentIndex = $index">
     <tbody ng-if="park.show">
         <tr class="matrix_rowg" ng-repeat="process in park.processes track by $index"
-            ng-if="process.multi!==undefined && !process.multi.show && process.multi.processes.indexOf(process)==0 || process.multi===undefined || process.multi!==undefined && process.multi.show || process.multi=='deleted'">
+            ng-if="process.multi!==undefined && !process.multi.show && process.multi.processes.indexOf(process)==0 || process.multi===undefined|| process.multi!==undefined && process.multi.show || process.multi=='deleted'">
             <!-- Обычные процы -->
             <td class="properties btns" width="20px" ng-if="process.multi===undefined || process.multi.show || process.multi=='deleted'">
                 <input type="button" class="btnCopy" ng-click="calculation.matrix.loadProcess(HIP.copy(process), 'risk')" value="+">
@@ -15,7 +15,7 @@
                 ng-right-click="calculation.setParamToAllProcess(value, key, process)"  ng-click="!process.unselectable ? calculation.matrix.loadProcess(process, key) : ''">
                 {{(key=="wrapping" || key=="risk") ? value : calculation.applyFilter(value, key) }}
                 <div class="arrow_up"
-                     ng-click="process.multi.close(calculation.myFactory.multi.multies); calculation.clean()"
+                     ng-click="process.multi.close(calculation.myFactory.multi.multies, false, process); calculation.clean()"
                      ng-if="process.showRows==key && process.multi!==undefined && process.multi!=='deleted'"
                      ng-mouseenter="process.unselectable=true" ng-mouseleave="calculation.deleteProperty(process, 'unselectable')">&#9650</div>
                 <div class="copyDown"
@@ -48,7 +48,7 @@
                      ng-if="process.multi.showRows==key && ( (key=='wrapping' || key=='risk') && process.multi[key].length>1 || key=='risk' && process.multi.packName )"
                      ng-mouseenter="process.multi.unselectable=true" ng-mouseleave="calculation.deleteProperty(process.multi, 'unselectable')">&#9660</div>
                 <div class="arrow_up"
-                     ng-click="process.multi.parent.close(calculation.myFactory.multi.multies, true); calculation.clean()"
+                     ng-click="process.multi.parent.close(calculation.myFactory.multi.multies, true, process); calculation.clean()"
                      ng-if="process.multi.showRows==key && process.multi.parent!==undefined"
                      ng-mouseenter="process.multi.unselectable=true" ng-mouseleave="calculation.deleteProperty(process.multi, 'unselectable')">&#9650</div>
                 <div class="copyDown"
