@@ -192,7 +192,14 @@ class Multi{
                 // конец сортировки
                 keysInMulti.forEach(k => {
                     // собираем процессы с одинаковым ключем, чтобы создать из них мульти
-                    const creatingMulti = this.processes.filter(pr => pr[key] === k)
+                    const creatingMulti = this.processes.filter(pr => pr[key] === k);
+                    creatingMulti.forEach(pr=>{
+                        // если он уже был деструктурирован на другие пары, то убираем старые мульти
+                        if (pr.oldMulti && pr.oldMulti.distructedByKey!==key) {
+                            if (multies.includes(pr.oldMulti)) multies.splice(multies.indexOf(pr.oldMulti),1);
+                            delete pr.oldMulti;
+                        }
+                    })
                     const newMulti = new Multi(creatingMulti);
                     // сохраняем индекс первого проца, чтобы потом на его место поставить мульти
                     let ind = this.processes.indexOf(creatingMulti[0]);
