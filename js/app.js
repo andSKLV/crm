@@ -805,7 +805,7 @@ app.factory('myFactory', function(){
                 else{ //если таких рисков в первом парке нету
                     for(let i=0;i<array.length;i++){
                         array[i].park=this.parks[0];
-                        this.parks[0].processes.push(array[i]);
+                        this.parks[0].processes.unshift(array[i]);
                     }
                 }
             }
