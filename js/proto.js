@@ -152,19 +152,24 @@ class Multi{
         // если новый мульти-в-мульти узел то структурируем его сами
         function destructuringPairs(key) {
             const isPairs = () => {
-                if (!(this.risk.length > 1 && this.wrapping.length > 1 && this.processes.length % 2 === 0 && this.processes.length===this.risk.length*this.wrapping.length)) return false;
+                let flag = true;
+                if (!(this.risk.length > 1 && this.wrapping.length > 1 && this.processes.length % 2 === 0 && this.processes.length===this.risk.length*this.wrapping.length)) flag = false;
                 this.risk.forEach(risk=> {
-                    if ((typeof risk)!=='string') return false
+                    if ((typeof risk)!=='string') flag = false;
                     const counter = this.processes.filter(pr=>pr[key]===risk);
-                    if (counter.lenght!==this.risk.lenght) return false;
+                    if (counter.lenght!==this.risk.lenght) flag = false;
                 });
                 this.wrapping.forEach(wrap=> {
-                    if ((typeof wrap)!=='string') return false;
+                    if ((typeof wrap)!=='string') flag = false;
                     const counter = this.processes.filter(pr=>pr[key]===wrap);
-                    if (counter.lenght!==this.wrapping.lenght) return false;
+                    if (counter.lenght!==this.wrapping.lenght) flag = false;
                 });
-                return true;
-            }
+                // проверяем, были ли они уже разбиты на пары по этому ключу
+                this.processes.forEach(pr => {
+                    if (pr.oldMulti && pr.oldMulti.distructedByKey === key) flag = false;
+                }); 
+                return flag;
+            } 
             if (isPairs()) {
                 const keysInMulti = [];
                 this.processes.forEach(pr => {
@@ -197,6 +202,7 @@ class Multi{
                     newMulti.multi = this;
                     newMulti.parent = this;
                     newMulti.show = false;
+                    newMulti.distructedByKey = key;
                     this.processes.splice(ind,0,newMulti);
                     // this.processes.push(newMulti);
                     multies.push(newMulti);
