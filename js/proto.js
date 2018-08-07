@@ -182,13 +182,17 @@ class Multi{
                         if (pr[key]===k) sortedProcesses.push(pr);
                     })
                 })
-                const sortingPark = this.processes[0].park;
-                let indOfFirstProc = sortingPark.processes.indexOf(this.processes[0]);
-                this.processes.forEach(pr => {
-                    indOfFirstProc = Math.min(sortingPark.processes.indexOf(pr), indOfFirstProc)
+                const sortingPark = this.processes[0].park.processes;
+                const placesOfProcs = [];
+                    // находим  места процев в парке, соответствующие отсортированным процам, чтобы их потом заменить
+                sortingPark.forEach((pr,ind)=>{
+                    if (sortedProcesses.includes(pr)) placesOfProcs.push(ind);
+                })
+                    // заменяем процы в парке, на отсортированные процы
+                sortedProcesses.forEach((pr,ind)=>{
+                    sortingPark.splice(placesOfProcs[ind],1,pr);
                 })
                 this.processes = sortedProcesses;
-                sortingPark.processes.splice(indOfFirstProc, sortedProcesses.length,...sortedProcesses);
                 // конец сортировки
                 keysInMulti.forEach(k => {
                     // собираем процессы с одинаковым ключем, чтобы создать из них мульти
