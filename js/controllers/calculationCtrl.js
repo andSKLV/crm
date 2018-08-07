@@ -984,8 +984,15 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             }
             // ...если в родительском мульти узле остался один ребенок, то удаляем родительский узел
             if (multi.parent.processes.length<2){
-                parentMulti.processes.forEach(multik => delete multik.parent);
+                parentMulti.processes.forEach(multik => {
+                    if (multik.parent===multik.prevMulti) delete multik.prevMulti;
+                    if (multik.parent===multik.multi) delete multik.multi;
+                    delete multik.parent
+                });
                 myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(parentMulti), 1);
+            }
+            if (multi.multi && multi.multi.length<2){
+                delete multi.multi;
             }
         },
         /**
