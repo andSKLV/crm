@@ -1048,7 +1048,7 @@ app.factory('myFactory', function(){
                     // создаем новый мульти узел из старого объекта на основании того, что у него записано в рисках и типах отсека
                     let array=this.makeMulti(multiChanging);
                     // новый мульти узел, парк, индекс для вставки
-                    if (indexToPaste) index = indexToPaste;
+                    if (indexToPaste!==undefined) index = indexToPaste;
                     this.choosePark(array, park, index);
                     this.multi.template=[];
                 }
