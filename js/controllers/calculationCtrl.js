@@ -777,6 +777,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 };
                 // если произошло отжатие предпоследнего аргумента в мульти, то мульти должен превратиться в проц
                 if (isNotMulti()) {
+                    removeCellSelection();
                     const key = (param.model==="risk") ? "wrapping" : "risk";
                     // определяем проц, который надо удалить
                     const deletingProc = process.park.processes.find(proc=>{
@@ -827,6 +828,17 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         // если процесс единственный в парке, удаляем парк
                         else myFactory.parks.splice(myFactory.parks.indexOf(deletingProc.park), 1);
                         scope.clean();
+                    }
+                    /**
+                     * удаляем выделенные ячейки, так как из-за них скачет анимация, все равно по логике эти выделения не нужны
+                     */
+                    function removeCellSelection() {
+                        const selectedCell = document.querySelector('.matrix_table .mi_selected');
+                        if (selectedCell!== null) {
+                            selectedCell.classList.toggle('mi_selected');
+                            //  удаляем и ячейку тоже, так как замечены случаи проскакивания анимации
+                            selectedCell.parentNode.removeChild(selectedCell);
+                        }
                     }
                 }
                 else{
@@ -1459,6 +1471,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 }
                 else{
                     //  меняем проц на мульти
+                    removeCellSelection();
                     let process=myFactory.process;
                     myFactory.multi.arrays.wrapping=[process.wrapping];
                     myFactory.multi.arrays.risk=[process.risk];
@@ -1467,6 +1480,17 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     scope.clean();
                     process=myFactory.multi.multies[myFactory.multi.multies.length-1].processes[0];
                     scope.matrix.loadMulti(process, param.model);
+                    /**
+                     * удаляем выделенные ячейки, так как из-за них скачет анимация, все равно по логике эти выделения не нужны
+                     */
+                    function removeCellSelection() {
+                        const selectedCell = document.querySelector('.matrix_table .mi_selected');
+                        if (selectedCell!== null) {
+                            selectedCell.classList.toggle('mi_selected');
+                            //  удаляем и ячейку тоже, так как замечены случаи проскакивания анимации
+                            selectedCell.parentNode.removeChild(selectedCell);
+                        }
+                    }
                 }
             }
         },
