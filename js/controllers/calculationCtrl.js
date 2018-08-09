@@ -1473,7 +1473,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                      */
                     function removeCellSelection() {
                         const selectedCell = document.querySelector('.matrix_table .mi_selected');
-                        if (selectedCell!== null) selectedCell.classList.toggle('mi_selected');
+                        if (selectedCell!== null) {
+                            selectedCell.classList.toggle('mi_selected');
+                            //  удаляем и ячейку тоже, так как замечены случаи проскакивания анимации
+                            selectedCell.parentNode.removeChild(selectedCell);
+                        }
                     }
                 }
             }
