@@ -40,8 +40,7 @@ app.controller("HIP", function ($http, myFactory, $rootScope, $scope) {
     this.copy=function(process){
         let proc=new Process(process);
         // если копируем внутри мульти узла, то новый проц перемещаем в конец парка, чтобы он не мешался в мульти узле
-        if (process.multi) process.park.processes.unshift(proc);
-        else process.park.processes.splice(process.park.processes.indexOf(process)+1,0,proc);
+        process.park.processes.splice(process.park.processes.indexOf(process)+1,0,proc);
         for(let key in proc){
             if(transportProp.indexOf(key)==-1 && key!="park" && key!="totalPrice") delete proc[key];
         }
