@@ -766,18 +766,6 @@ class Park{
                 }
             }
         })
-        this.cars=[];
-        const carsNumber=this.amount/24;
-        for(let i=0; i<carsNumber; i++){
-            this.cars.push({
-                number: ""
-            })
-        }
-        this.processes.forEach(process=>{
-            if(process.amount===this.amount){
-                process.cars=this.cars;
-            }
-        })
     }
     getTotal(){
         let sum=0;
