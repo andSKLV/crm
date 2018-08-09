@@ -1,5 +1,5 @@
 <table class="matrix park" ng-repeat="park in HIP.myFactory.parks track by $index" ng-init="parentIndex = $index">
-    <tbody ng-if="park.show">
+    <tbody ng-if="park.show" class="matrix_table">
         <tr class="matrix_rowg" ng-repeat="process in park.processes track by $index"
             ng-if="process.multi!==undefined && !process.multi.show && process.multi.processes.indexOf(process)==0 || process.multi===undefined|| process.multi!==undefined && process.multi.show || process.multi=='deleted'">
             <!-- Обычные процы -->

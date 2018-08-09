@@ -1459,6 +1459,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 }
                 else{
                     //  меняем проц на мульти
+
+                    removeSelectedCell();
                     let process=myFactory.process;
                     myFactory.multi.arrays.wrapping=[process.wrapping];
                     myFactory.multi.arrays.risk=[process.risk];
@@ -1467,6 +1469,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     scope.clean();
                     process=myFactory.multi.multies[myFactory.multi.multies.length-1].processes[0];
                     scope.matrix.loadMulti(process, param.model);
+                    function removeSelectedCell() {
+                        const selectedCell = document.querySelector('.matrix_table .mi_selected');
+                        if (selectedCell!== undefined) selectedCell.parentNode.removeChild(selectedCell);
+                        else throw new Error ('Удаляемая ячейка в HTML не найдена');
+                    }
                 }
             }
         },
