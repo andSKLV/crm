@@ -43,7 +43,7 @@
                 ng-right-click="(key=='wrapping' || key=='risk') && process.multi[key].length>1 || key=='risk' && process.multi.packName ?  process.multi.open(calculation.myFactory.multi.multies, key)  : calculation.setParamToAllProcess(value, key, process); calculation.clean()"
                 ng-click="!process.multi.unselectable ? calculation.matrix.loadMulti(process, key) : ''">
                 {{ (key=="wrapping"|| key=="risk") ? value.length==1 ? value[0] : value.length : calculation.applyFilter(process.multi[key], key, true)   }}
-                <div class="arrow_down open_multi_arrow"
+                <div class="arrow_down"
                      ng-click="process.multi.open(calculation.myFactory.multi.multies, key); calculation.clean()"
                      ng-if="process.multi.showRows==key && ( (key=='wrapping' || key=='risk') && process.multi[key].length>1 || key=='risk' && process.multi.packName )"
                      ng-mouseenter="process.multi.unselectable=true" ng-mouseleave="calculation.deleteProperty(process.multi, 'unselectable')">&#9660</div>
