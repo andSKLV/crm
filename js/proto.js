@@ -124,10 +124,19 @@ class Multi{
     }
     // функция разворачивания мульти узла на строчки
     open(multies, key) {
+        removeCellSelection();
         const isDestructed = destructuringPairs.call(this, key);
         if (!isDestructed) destructuringOldMulties.call(this);
         this.show = true;
         multies.forEach(multi => multi.getValues());
+
+        /**
+         * удаляем выделенные ячейки, так как из-за них скачет анимация, все равно по логике эти выделения не нужны
+         */
+        function removeCellSelection() {
+            const selectedCell = document.querySelector('.matrix_table .mi_selected');
+            if (selectedCell!== null) selectedCell.classList.toggle('mi_selected');
+        }
 
         // если раньше процы были распределены по мулььи узлам то их нужно распределить опять
         function destructuringOldMulties() {
