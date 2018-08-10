@@ -162,7 +162,8 @@ class Multi{
         function destructuringPairs(key) {
             const isPairs = () => {
                 let flag = true;
-                if (!(this.processes.length===this.risk.length*this.wrapping.length)) flag = false;
+                if (this.risk.length===1 && this.wrapping.length > 1 && (this.risk[0]==='Международные'||this.risk[0]==='Внутренние'||this.risk[0]==='Автомотив')) return true;
+                if (!(this.risk.length > 1 && this.wrapping.length > 1 && this.processes.length===this.risk.length*this.wrapping.length)) flag = false;
                 this.risk.forEach(risk=> {
                     if ((typeof risk)!=='string') flag = false;
                     const counter = this.processes.filter(pr=>pr[key]===risk);
