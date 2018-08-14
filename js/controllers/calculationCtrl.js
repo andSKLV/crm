@@ -1488,7 +1488,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         if (selectedCell!== null) {
                             selectedCell.classList.toggle('mi_selected');
                             //  удаляем и ячейку тоже, так как замечены случаи проскакивания анимации
-                            selectedCell.parentNode.removeChild(selectedCell);
+                            // пока что вызывает удаление ненужное удаление ячеек, закомичено
+                            // selectedCell.parentNode.removeChild(selectedCell);
                         }
                     }
                 }
