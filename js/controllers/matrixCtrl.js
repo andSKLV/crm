@@ -76,7 +76,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                         }
                     });
                     let multies=JSON.parse(response.data.mass);
-                    if(multies.length>0){
+                    if(multies.length>0 && myFactory.multi.multies.length===multies.length){
                         for(let i=0;i<multies.length;i++){
                             let multi=multies[i];
                             // if (myFactory.multi.multies[i]===undefined) myFactory.multi.multies.push(multi); 
