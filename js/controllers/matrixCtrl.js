@@ -79,6 +79,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                     if(multies.length>0){
                         for(let i=0;i<multies.length;i++){
                             let multi=multies[i];
+                            // if (myFactory.multi.multies[i]===undefined) myFactory.multi.multies.push(multi); 
                             for(let key in multi){
                                 myFactory.multi.multies[i][key]=multi[key];
                             }

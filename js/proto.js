@@ -751,10 +751,11 @@ class Park{
         this.processes.forEach(function(process){
             // если расчеты были загружены из БД с назначенной фактической премией, то назначаем старую цену и удаляем ее из памяти
             if (typeof (process.loadedPrice) === "number" && mode==="load") {
-                process.practicalPriceKoef = process.loadedPrice/process.totalPrice;
+                if (process.loadedPrice!==0) process.practicalPriceKoef = process.loadedPrice/process.totalPrice;
+                else process.practicalPriceKoef = 0;
                 delete process.loadedPrice;
             }
-            if(process.practicalPriceKoef) process.totalPrice*=process.practicalPriceKoef;
+            if(process.practicalPriceKoef!==undefined) process.totalPrice*=process.practicalPriceKoef;
             
         })
     }
