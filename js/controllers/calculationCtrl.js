@@ -463,7 +463,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
         value = (value==="dashboard") ? "" : value;
         $location.path(`/${value}`);
-
+        location.reload();
     };
     this.relocateHere=function(url){//переход в углубление вверху каретки
         for(let i=0; i<scope.currObj.length;i++){
