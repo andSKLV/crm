@@ -1471,6 +1471,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 }
                 else{
                     //  меняем проц на мульти
+                    if (param.selected===value.name) return;
                     removeCellSelection();
                     let process=myFactory.process;
                     myFactory.multi.arrays.wrapping=[process.wrapping];
