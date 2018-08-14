@@ -730,3 +730,6 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     position: sticky;
     bottom: 0;
 }
+.clickable {
+    cursor: pointer;
+}

@@ -4,8 +4,8 @@
             ng-if="process.multi!==undefined && !process.multi.show && process.multi.processes.indexOf(process)==0 || process.multi===undefined|| process.multi!==undefined && process.multi.show || process.multi=='deleted'">
             <!-- Обычные процы -->
             <td class="properties btns" width="20px" ng-if="process.multi===undefined || process.multi.show || process.multi=='deleted'">
-                <input type="button" class="btnCopy" ng-click="calculation.matrix.loadProcess(HIP.copy(process), 'risk')" value="+">
-                <input type="button" class="btnDelete" ng-click="HIP.delete(process); scope.clean();" value="-">
+                <input type="button" class="btnCopy clickable" ng-click="calculation.matrix.loadProcess(HIP.copy(process), 'risk')" value="+">
+                <input type="button" class="btnDelete clickable" ng-click="HIP.delete(process); scope.clean();" value="-">
 
             </td>
             <td  ng-mouseenter="process.showRows=key; key=='risk' ? calculation.tooltip.fadeIn(value) : '';"
@@ -31,8 +31,8 @@
 
             <!-- Для мультистрок -->
             <td class="properties btns" width="20px" ng-if="process.multi!==undefined && !process.multi.show  && !process.multi.show && process.multi.processes.indexOf(process)==0">
-                <input type="button" class="btnCopy" ng-click="calculation.matrix.copyMulti(process.multi)" value="+">
-                <input type="button" class="btnDelete" ng-click="calculation.matrix.deleteMulti(process.multi)" value="-">
+                <input type="button" class="btnCopy clickable" ng-click="calculation.matrix.copyMulti(process.multi)" value="+">
+                <input type="button" class="btnDelete clickable" ng-click="calculation.matrix.deleteMulti(process.multi)" value="-">
 
             </td>
 

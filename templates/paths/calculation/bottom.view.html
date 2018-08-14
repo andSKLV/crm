@@ -32,7 +32,7 @@
             <!-- /Агрегатный лимит -->
 
 
-            <td style="text-align: center;" ng-click="calculation.myFactory.payment.changeMode(); calculation.myFactory.finalCalc();">Этапы  <span style="color: orange;">{{calculation.myFactory.payment.mode}}</span></td>
+            <td class="clickable" style="text-align: center; cursor: pointer;" ng-click="calculation.myFactory.payment.changeMode(); calculation.myFactory.finalCalc();">Этапы  <span style="color: orange;">{{calculation.myFactory.payment.mode}}</span></td>
             <td class="properties" ng-class="{hand: calculation.myFactory.payment.hand}">{{calculation.myFactory.payment.val}}</td>
         </tr>
     </tbody>
