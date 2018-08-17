@@ -1488,10 +1488,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         const selectedCell = document.querySelector('.matrix_table .mi_selected');
                         if (selectedCell!== null) {
                             selectedCell.classList.toggle('mi_selected');
-                            //  удаляем и ячейку тоже, так как замечены случаи проскакивания анимации
-                            // пока что вызывает удаление ненужное удаление ячеек, закомичено
-                            // selectedCell.parentNode.removeChild(selectedCell);
                         }
+                        const alreadySelectedCells = document.querySelectorAll('.matrix_table .alreadySelected');
+                        alreadySelectedCells.forEach(cell=>cell.classList.toggle("alreadySelected"));
                     }
                 }
             }

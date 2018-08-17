@@ -195,7 +195,7 @@ div.matrix_container.calc{
     position: absolute;
     top: 0;
     right: 0;
-    color: red;
+    color: white;
 }
 .arrow_down{
     position: absolute;
@@ -207,7 +207,7 @@ div.matrix_container.calc{
     position: absolute;
     bottom: 0;
     left: 0;
-    color: white;
+    color: red;
 }
 .closePark{
     position: absolute;
@@ -732,4 +732,68 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 }
 .clickable {
     cursor: pointer;
+}
+.copyDown:hover:after{
+    content: "Копировать параметр вниз";
+    position: absolute;
+    right: 100%;
+    top: 30%;
+    z-index: 10;
+    background-color: white;
+    color: red;
+    font-size: 14px;
+    width: 100px;
+    height: auto;
+    border: 2px solid rgb(0, 111, 167);
+    border-radius: 15px;
+    padding: 2px 6px 2px 6px;
+    font-weight: bold;
+}
+.closePark:hover:after{
+    content: "Свернуть парк";
+    position: absolute;
+    right: 100%;
+    top: 30%;
+    z-index: 10;
+    background-color: white;
+    color: black;
+    font-size: 14px;
+    width: 100px;
+    height: auto;
+    border: 2px solid rgb(0, 111, 167);
+    border-radius: 15px;
+    padding: 2px 6px 2px 6px;
+    font-weight: bold;
+}
+.arrow_down:hover:after{
+    content: "Развернуть мульти узел";
+    position: absolute;
+    left: 100%;
+    top: -50%;
+    z-index: 10;
+    background-color: white;
+    color: black;
+    font-size: 14px;
+    width: 100px;
+    height: auto;
+    border: 2px solid rgb(0, 111, 167);
+    border-radius: 15px;
+    padding: 2px 6px 2px 6px;
+    font-weight: bold;
+}
+.arrow_up:hover:after{
+    content: "Свернуть мульти узел";
+    position: absolute;
+    left: 100%;
+    top: 30%;
+    z-index: 10;
+    background-color: white;
+    color: black;
+    font-size: 14px;
+    width: 100px;
+    height: auto;
+    border: 2px solid rgb(0, 111, 167);
+    border-radius: 15px;
+    padding: 2px 6px 2px 6px;
+    font-weight: bold;
 }
