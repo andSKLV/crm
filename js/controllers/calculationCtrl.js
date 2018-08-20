@@ -2,7 +2,6 @@
  * Created by RoGGeR on 30.05.17.
  */
 
-"use strict";
 app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location){
     this.span=1;
     this.myFactory=myFactory;
@@ -1538,8 +1537,20 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         let save={};
         save.type="addNewCalculationToDB";
         save.name=this.nameOfCalculation;
-        save.parks=JSON.stringify(parks);
-        save.mass=JSON.stringify(multies);
+        try{
+            save.parks=JSON.stringify(parks);
+        }
+        catch {
+            let CircularJSON = window.CircularJSON;
+            save.parks = CircularJSON.stringify(parks);
+        }
+        try {
+            save.mass=JSON.stringify(multies);
+        }
+        catch {
+            let CircularJSON = window.CircularJSON;
+            save.mass = CircularJSON.stringify(multies);
+        }
         save.payment=myFactory.payment.val;
         save.agents=myFactory.agents.val+";"+myFactory.agents.mode;
         save.practicalPrice=myFactory.practicalPrice.val+";"+myFactory.practicalPrice.koef;
