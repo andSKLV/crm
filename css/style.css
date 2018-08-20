@@ -769,7 +769,7 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     content: "Развернуть мульти узел";
     position: absolute;
     left: 100%;
-    top: -50%;
+    top: -60%;
     z-index: 10;
     background-color: white;
     color: black;

@@ -776,6 +776,20 @@ class Park{
         });
         return sum;
     }
+    /**
+     * Функция проверки наличия таких процев в парке
+     * @param {array} checkProcs - проц или список процев, если это создаваемый мульти узел
+     * @returns {boolean}  -  true - содержит, false - не содержит
+     */
+    contains(checkProcs) {
+        let isContain = false;
+        const pairsInPark = this.processes.map(pr=>`${pr.risk}-${pr.wrapping}`);
+        checkProcs.map(pr=>{
+            const pair = `${pr.risk}-${pr.wrapping}`;
+            if (pairsInPark.includes(pair)) isContain = true;
+        })
+        return isContain;
+    }
 }
 
 function replaceProcessesInParkForMulti(array){

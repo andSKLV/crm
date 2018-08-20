@@ -743,6 +743,7 @@ app.factory('myFactory', function(){
          * @param {park} oldPark
          */
         choosePark(array, park, index, oldPark) {
+            let isContains = false;
             // проверяем если передали список мультиузлов
             for(let j=0;j<array.length; j++){
                 let process=array[j];
@@ -754,7 +755,10 @@ app.factory('myFactory', function(){
                     }
                 }
             }
-            if(park){
+            // проверка на наличие такие процев в парке
+            if (typeof park !== 'undefined') isContains = park.contains (array);
+            debugger;
+            if(park && !isContains){
                 // TODO: проверить нужен ли тут чек, а то он все портит и не записывает возвращаемый
                 // аргумент. С ним появляется ошибка если парк из двух строк и на первую сделать мульти
                 // вторая исчезнет.
@@ -1058,7 +1062,7 @@ app.factory('myFactory', function(){
                 let array=this.makeMulti();
                 this.choosePark(array);
             }
-            else if(this.multi.template.length>0){//ебучие пакеты
+            else if(this.multi.template.length>0){//пакеты
                 let obj=this.makePackage();
                 let array=obj.array;
                 this.multi.multies.push(new Multi(array, obj.packName, obj.template));
