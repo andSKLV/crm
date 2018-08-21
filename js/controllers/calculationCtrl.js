@@ -1345,6 +1345,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 }
                 
                 else if(myFactory.process.constructor.name=="Multi"||(myFactory.process.multi&&myFactory.multi.mode)){
+                    // FIXME:
                     myFactory.finalCalc();
                     let multi=myFactory.process;
                     //если включен режим мульти
