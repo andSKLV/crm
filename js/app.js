@@ -1261,5 +1261,9 @@ app.factory('myFactory', function(){
                 matrix.style.maxHeight = `${maxHeight}px`;
             }
         },
+        removeCellSelection () {
+            const selectedCell = document.querySelector('.matrix_table .mi_selected');
+            if (selectedCell!== null) selectedCell.classList.toggle('mi_selected');
+        }
     }
 });

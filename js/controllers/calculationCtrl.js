@@ -683,15 +683,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     }
                 }
                 value.selected=true;
-                removeCellSelection();
+                myFactory.removeCellSelection();
                 myFactory.finalCalc();
                 // выдедилть ту ячейку которую сейчас изменяем
                 scope.matrix.loadMulti(newMulti.processes[0],param.model);
                 return;
-                function removeCellSelection() {
-                    const selectedCell = document.querySelector('.matrix_table .mi_selected');
-                    if (selectedCell!== null) selectedCell.classList.toggle('mi_selected');
-                }
             }
             /**
              * Проверка на то, содержит ли парк такой проц
@@ -722,6 +718,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 if (myFactory.multi.arrays[param.model].indexOf(value.name) != -1) {
                     myFactory.multi.arrays[param.model].splice(myFactory.multi.arrays[param.model].indexOf(value.name), 1);
                     mode = 'unclick';
+                    myFactory.removeCellSelection();
                     delete value.selected;
                 }
                 //если такого процесса нету
@@ -798,7 +795,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 };
                 // если произошло отжатие предпоследнего аргумента в мульти, то мульти должен превратиться в проц
                 if (isNotMulti()) {
-                    removeCellSelection();
+                    myFactory.removeCellSelection();
                     const key = (param.model==="risk") ? "wrapping" : "risk";
                     // определяем проц, который надо удалить
                     const deletingProc = process.park.processes.find(proc=>{
@@ -849,17 +846,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         // если процесс единственный в парке, удаляем парк
                         else myFactory.parks.splice(myFactory.parks.indexOf(deletingProc.park), 1);
                         scope.clean();
-                    }
-                    /**
-                     * удаляем выделенные ячейки, так как из-за них скачет анимация, все равно по логике эти выделения не нужны
-                     */
-                    function removeCellSelection() {
-                        const selectedCell = document.querySelector('.matrix_table .mi_selected');
-                        if (selectedCell!== null) {
-                            selectedCell.classList.toggle('mi_selected');
-                            //  удаляем и ячейку тоже, так как замечены случаи проскакивания анимации
-                            // selectedCell.parentNode.removeChild(selectedCell);
-                        }
                     }
                 }
                 else{
@@ -1530,10 +1516,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                      * удаляем выделенные ячейки, так как из-за них скачет анимация, все равно по логике эти выделения не нужны
                      */
                     function removeCellSelection() {
-                        const selectedCell = document.querySelector('.matrix_table .mi_selected');
-                        if (selectedCell!== null) {
-                            selectedCell.classList.toggle('mi_selected');
-                        }
+                        myFactory.removeCellSelection();
+                        debugger;
                         const alreadySelectedCells = document.querySelectorAll('.matrix_table .alreadySelected');
                         alreadySelectedCells.forEach(cell=>cell.classList.toggle("alreadySelected"));
                     }
