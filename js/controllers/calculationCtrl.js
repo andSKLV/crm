@@ -635,7 +635,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         if (scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Process" && myFactory.multi.mode) {
             let newMulti;
             let multi = myFactory.process.multi;
-            // FIXME: сделать убираения выделенной ячейки
             let process=multi.processes[multi.processes.indexOf(myFactory.process)];
             const park = process.park;
             // сохраняем индекс чтобы потом поставить поц на нужное место
@@ -681,20 +680,18 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     else {
                         newMulti.parent = multi;
                         newMulti.multi = multi;
-                        // // создаем родителя из нового и старого процев
-                        // const parentArr = new Multi ([multi,newMulti]);
-                        // // присваиваем родителя
-                        // parentArr.processes.forEach (el=>el.parent=parentArr);
-                        // // добавляем родителя в списокмультиузлов
-                        // myFactory.multi.multies.unshift(parentArr);
-                        // parentArr.parent = myFactory.multi.multies;
                     }
                 }
                 value.selected=true;
+                removeCellSelection();
                 myFactory.finalCalc();
                 // выдедилть ту ячейку которую сейчас изменяем
                 scope.matrix.loadMulti(newMulti.processes[0],param.model);
                 return;
+                function removeCellSelection() {
+                    const selectedCell = document.querySelector('.matrix_table .mi_selected');
+                    if (selectedCell!== null) selectedCell.classList.toggle('mi_selected');
+                }
             }
             /**
              * Проверка на то, содержит ли парк такой проц
