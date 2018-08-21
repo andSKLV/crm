@@ -743,7 +743,6 @@ app.factory('myFactory', function(){
          * @param {park} oldPark
          */
         choosePark(array, park, index, oldPark) {
-            let isContains = false;
             // проверяем если передали список мультиузлов
             for(let j=0;j<array.length; j++){
                 let process=array[j];
@@ -755,14 +754,8 @@ app.factory('myFactory', function(){
                     }
                 }
             }
-            // проверка на наличие такие процев в парке
-            // FIXME:
+
             if(park){
-                // TODO: проверить нужен ли тут чек, а то он все портит и не записывает возвращаемый
-                // аргумент. С ним появляется ошибка если парк из двух строк и на первую сделать мульти
-                // вторая исчезнет.
-                // Эксперементально закомиченно
-                // park.check();
                 // присваиваем новым процам старый парк
                 array.forEach(function (process) {
                     // назначаем каждому новому процессу этот парк

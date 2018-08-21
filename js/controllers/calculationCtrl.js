@@ -704,6 +704,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         }
     // изменение закрытого мульти узла
         if(scope.karetka.mode=="changing process" && (myFactory.process.constructor.name=="Multi")){
+            let mode;
             // мульти-узел на котором кликнули
             let multi = myFactory.process;
             // первый проц из этого мультиузла
@@ -720,6 +721,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 //если мы отжимаем(т.е. такой процесс уже есть)
                 if (myFactory.multi.arrays[param.model].indexOf(value.name) != -1) {
                     myFactory.multi.arrays[param.model].splice(myFactory.multi.arrays[param.model].indexOf(value.name), 1);
+                    mode = 'unclick';
                     delete value.selected;
                 }
                 //если такого процесса нету
@@ -861,11 +863,34 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     }
                 }
                 else{
-                    myFactory.addNewProcess("changing", multi);
-                    myFactory.finalCalc();
-                    myFactory.process=multi;
-                    // если выделили последний элемент, то процесс выбора окончен
-                    if (myFactory.multi.arrays[param.model].length===1) scope.clean();
+                    if (checkContains()) {
+                        // если такой про уже был в парке, создаем новый парк
+                        myFactory.process=Object.assign({},multi.processes[0]);
+                        myFactory.multi.arrays.risk = multi.risk;
+                        myFactory.multi.arrays.wrapping = multi.wrapping;
+                        myFactory.addNewProcess();
+                        // так как новый парк встает на первое место, то определяем новый рабочий проц
+                        myFactory.process=myFactory.parks[0].processes[0].multi;
+                        myFactory.finalCalc();
+                        // делаем активным новый мульти, который создали
+                        scope.matrix.loadMulti(myFactory.process.processes[0],param.model);
+                    }
+                    else {
+                        // если такого проца нет, то можем менять старый
+                        myFactory.addNewProcess("changing", multi);
+                        myFactory.finalCalc();
+                        myFactory.process=multi;
+                        // если выделили последний элемент, то процесс выбора окончен
+                        if (myFactory.multi.arrays[param.model].length===1) scope.clean();
+                    }
+                    debugger;
+                    // проверяем, есть ли такой проц уже в парке
+                    function checkContains() {
+                        if (mode==='unclick') return false;
+                        const procForCheck = Object.assign({},myFactory.process);
+                        procForCheck[param.model] = value.name;
+                        return procForCheck.park.contains([procForCheck]);
+                    }
                 }
 
             }
