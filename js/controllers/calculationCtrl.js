@@ -633,53 +633,76 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.clickedOnMulti=function(param, value){//при нажатии на верх каретки в мульти параметры при режиме мульти
     // изменение открытого мульти узла
         if (scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Process" && myFactory.multi.mode) {
+            let newMulti;
             let multi = myFactory.process.multi;
+            // FIXME: сделать убираения выделенной ячейки
             let process=multi.processes[multi.processes.indexOf(myFactory.process)];
             const park = process.park;
             // сохраняем индекс чтобы потом поставить поц на нужное место
             let indexProcInPark = process.park.processes.indexOf(process);
             const indexProcInMulti = multi.processes.indexOf(process);
-
+            // проверка на наличие в парке такого проца
+            const isContaining = parkContain();
             // если того что мы хотим добавить еще нет в нашем мульти
             if(multi[param.model].indexOf(value.name)==-1 ||  multi[param.model].length>1) {
-                myFactory.process = process;
-                // добавляем новые данные в учет в коллектор "мульти"
-                myFactory.multi.arrays.risk = [process.risk];
-                myFactory.multi.arrays.wrapping = [process.wrapping];
-                myFactory.multi.arrays[param.model].push(value.name);
-                
-                park.processes.splice(indexProcInPark,1);
-                // меняем проц на мульти узел
-                myFactory.addNewProcess("changing",null,indexProcInPark);
-                // переопределяем индекс проца в парке, так как он может сползти
-                let newProc = park.processes.find(pr=>(pr.risk===process.risk)&&(pr.wrapping===process.wrapping));
-                indexProcInPark = park.processes.indexOf(newProc);
-                multi.processes[indexProcInMulti] = park.processes[indexProcInPark].multi;
-                const newMulti = multi.processes[indexProcInMulti];
-                // запоминаем прошлый мульти
-                newMulti.prevMulti = multi;
-                // назначаем родителя
-                if (multi.parent) {
-                    if (multi.parent.processes) multi.parent.processes.push(newMulti);
-                    else multi.parent.push(newMulti);
-                    newMulti.parent = multi.parent;
+                if (isContaining) {
+                    // если такой проц уже есть в парке,то создаем новый парк
+                    myFactory.process = Object.assign({},process);
+                    myFactory.multi.arrays.risk = [process.risk];
+                    myFactory.multi.arrays.wrapping = [process.wrapping];
+                    myFactory.multi.arrays[param.model].push(value.name);
+                    myFactory.addNewProcess();
+                    // новый парк всегда помещается в начало, значит берем из него ссылку на мульти
+                    newMulti = myFactory.parks[0].processes[0].multi;
                 }
                 else {
-                    newMulti.parent = multi;
-                    newMulti.multi = multi;
-                    // // создаем родителя из нового и старого процев
-                    // const parentArr = new Multi ([multi,newMulti]);
-                    // // присваиваем родителя
-                    // parentArr.processes.forEach (el=>el.parent=parentArr);
-                    // // добавляем родителя в списокмультиузлов
-                    // myFactory.multi.multies.unshift(parentArr);
-                    // parentArr.parent = myFactory.multi.multies;
+                    myFactory.process = process;
+                    // добавляем новые данные в учет в коллектор "мульти"
+                    myFactory.multi.arrays.risk = [process.risk];
+                    myFactory.multi.arrays.wrapping = [process.wrapping];
+                    myFactory.multi.arrays[param.model].push(value.name);
+                    const array = myFactory.makeMulti();
+                    park.processes.splice(indexProcInPark,1);
+                    // меняем проц на мульти узел
+                    myFactory.addNewProcess("changing",null,indexProcInPark);
+                    // переопределяем индекс проца в парке, так как он может сползти
+                    let newProc = park.processes.find(pr=>(pr.risk===process.risk)&&(pr.wrapping===process.wrapping));
+                    indexProcInPark = park.processes.indexOf(newProc);
+                    multi.processes[indexProcInMulti] = park.processes[indexProcInPark].multi;
+                    newMulti = multi.processes[indexProcInMulti];
+                    // запоминаем прошлый мульти
+                    newMulti.prevMulti = multi;
+                    // назначаем родителя
+                    if (multi.parent) {
+                        if (multi.parent.processes) multi.parent.processes.push(newMulti);
+                        else multi.parent.push(newMulti);
+                        newMulti.parent = multi.parent;
+                    }
+                    else {
+                        newMulti.parent = multi;
+                        newMulti.multi = multi;
+                        // // создаем родителя из нового и старого процев
+                        // const parentArr = new Multi ([multi,newMulti]);
+                        // // присваиваем родителя
+                        // parentArr.processes.forEach (el=>el.parent=parentArr);
+                        // // добавляем родителя в списокмультиузлов
+                        // myFactory.multi.multies.unshift(parentArr);
+                        // parentArr.parent = myFactory.multi.multies;
+                    }
                 }
                 value.selected=true;
                 myFactory.finalCalc();
                 // выдедилть ту ячейку которую сейчас изменяем
                 scope.matrix.loadMulti(newMulti.processes[0],param.model);
                 return;
+            }
+            /**
+             * Проверка на то, содержит ли парк такой проц
+             */
+            function parkContain () {
+                const procForCheck = Object.assign({},process);
+                procForCheck[param.model]=value.name;
+                return park.contains([procForCheck]);
             }
         }
     // изменение закрытого мульти узла

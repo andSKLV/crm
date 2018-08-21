@@ -756,8 +756,8 @@ app.factory('myFactory', function(){
                 }
             }
             // проверка на наличие такие процев в парке
-            if (typeof park !== 'undefined') isContains = park.contains (array);
-            if(park && !isContains){
+            // FIXME:
+            if(park){
                 // TODO: проверить нужен ли тут чек, а то он все портит и не записывает возвращаемый
                 // аргумент. С ним появляется ошибка если парк из двух строк и на первую сделать мульти
                 // вторая исчезнет.
