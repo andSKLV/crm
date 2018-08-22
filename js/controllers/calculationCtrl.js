@@ -1503,7 +1503,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 else{
                     //  меняем проц на мульти
                     if (param.selected===value.name) return;
-                    removeCellSelection();
+                    myFactory.removeCellSelection();
                     let process=myFactory.process;
                     myFactory.multi.arrays.wrapping=[process.wrapping];
                     myFactory.multi.arrays.risk=[process.risk];
@@ -1512,15 +1512,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     scope.clean();
                     process=myFactory.multi.multies[myFactory.multi.multies.length-1].processes[0];
                     scope.matrix.loadMulti(process, param.model);
-                    /**
-                     * удаляем выделенные ячейки, так как из-за них скачет анимация, все равно по логике эти выделения не нужны
-                     */
-                    function removeCellSelection() {
-                        myFactory.removeCellSelection();
-                        debugger;
-                        // const alreadySelectedCells = document.querySelectorAll('.matrix_table .alreadySelected');
-                        // alreadySelectedCells.forEach(cell=>cell.classList.toggle("alreadySelected"));
-                    }
                 }
             }
         },
