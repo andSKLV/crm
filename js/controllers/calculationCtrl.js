@@ -718,7 +718,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 if (myFactory.multi.arrays[param.model].indexOf(value.name) != -1) {
                     myFactory.multi.arrays[param.model].splice(myFactory.multi.arrays[param.model].indexOf(value.name), 1);
                     mode = 'unclick';
-                    myFactory.removeCellSelection();
+                    // myFactory.removeCellSelection();
                     delete value.selected;
                 }
                 //если такого процесса нету
@@ -990,7 +990,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
          * @param {multi} multi 
          */
         deleteMulti(multi){
-            scope.clean();
+            myFactory.removeCellSelection();
             let park=multi.processes[0].park;
             multi.processes.forEach(function (process) {
                 if(process.package){
@@ -1518,8 +1518,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     function removeCellSelection() {
                         myFactory.removeCellSelection();
                         debugger;
-                        const alreadySelectedCells = document.querySelectorAll('.matrix_table .alreadySelected');
-                        alreadySelectedCells.forEach(cell=>cell.classList.toggle("alreadySelected"));
+                        // const alreadySelectedCells = document.querySelectorAll('.matrix_table .alreadySelected');
+                        // alreadySelectedCells.forEach(cell=>cell.classList.toggle("alreadySelected"));
                     }
                 }
             }

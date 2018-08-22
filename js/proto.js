@@ -136,6 +136,8 @@ class Multi{
         function removeCellSelection() {
             const selectedCell = document.querySelector('.matrix_table .mi_selected');
             if (selectedCell!== null) selectedCell.classList.toggle('mi_selected');
+            const alreadySelectedCells = document.querySelectorAll('.matrix_table .alreadySelected');
+            alreadySelectedCells.forEach(cell=>cell.classList.toggle("alreadySelected"));
         }
 
         // если раньше процы были распределены по мулььи узлам то их нужно распределить опять
