@@ -1442,6 +1442,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                                 delete scope.myFactory.process.changing;//убираем выделение строки которую меняли
                             }
                             console.log(myFactory.parks, myFactory.multi.multies);
+                            myFactory.removeCellSelection();
                             scope.clean();
                             console.log(myFactory.parks, myFactory.multi.multies);
 
@@ -1477,6 +1478,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         myFactory.process[param.model]=value.name;
                         myFactory.addNewProcess("changing");
                         delete scope.myFactory.process.changing;//убираем выделение строки которую меняли
+                        myFactory.removeCellSelection();
                         scope.clean();
                     }
                     else{
