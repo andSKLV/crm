@@ -1507,13 +1507,29 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     if (param.selected===value.name) return;
                     myFactory.removeCellSelection();
                     let process=myFactory.process;
-                    myFactory.multi.arrays.wrapping=[process.wrapping];
-                    myFactory.multi.arrays.risk=[process.risk];
-                    if(myFactory.multi.arrays[param.model].indexOf(value.name)==-1) myFactory.multi.arrays[param.model].push(value.name);
-                    myFactory.addNewProcess("changing");
+                    // формируем myFactory.multi.arrays
+                    mulriArrayFormation();
+                    if (isContaining()) {
+                        debugger;
+                        myFactory.process = Object.assign({},process);
+                        myFactory.addNewProcess();
+                    }
+                    else {
+                        myFactory.addNewProcess("changing");
+                    }
                     scope.clean();
                     process=myFactory.multi.multies[myFactory.multi.multies.length-1].processes[0];
                     scope.matrix.loadMulti(process, param.model);
+                    function mulriArrayFormation () {
+                        myFactory.multi.arrays.wrapping=[process.wrapping];
+                        myFactory.multi.arrays.risk=[process.risk];
+                        if(myFactory.multi.arrays[param.model].indexOf(value.name)==-1) myFactory.multi.arrays[param.model].push(value.name);
+                    }
+                    function isContaining () {
+                        const procForCheck = Object.assign({},process);
+                        procForCheck[param.model] = value.name;
+                        return procForCheck.park.contains([procForCheck]);
+                    }
                 }
             }
         },
