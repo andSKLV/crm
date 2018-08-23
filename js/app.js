@@ -756,12 +756,16 @@ app.factory('myFactory', function(){
             }
 
             if(park){
+                let indexToPaste = index;
                 // присваиваем новым процам старый парк
                 array.forEach(function (process) {
                     // назначаем каждому новому процессу этот парк
                     process.park=park;
                     // если этого проца нет в парке то ставим его на место инжекс в этом парке
-                    if(park.processes.indexOf(process)===-1) park.processes.splice(index, 0,process);
+                    if(park.processes.indexOf(process)===-1) {
+                        park.processes.splice(indexToPaste, 0,process);
+                        indexToPaste++;
+                    }
                 });
             }
             else{
