@@ -1469,8 +1469,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                             const parkContains = multi.processes[0].park.contains(multiWithNewParams.processes);
                             if (parkContains) {
                                 // если какой то проц из мульти узла уже ест ьв этом парке, то нужно создать новый парка
-                                myFactory.multi.arrays.risk = multi.risk;
+                                myFactory.multi.arrays.risk = [value.name];
+                                // в данном случае предусмотрено копирование мульти узлом только с мульти-отсеком
+                                // поэтому параметром возможно задать только риск
                                 myFactory.multi.arrays.wrapping = multi.wrapping;
+                                if (param.model==="wrapping") console.error("Ожидалось изменение риска, пришел тип отсека. Необходимо поменять логику");
                                 myFactory.process = Object.assign({},multi.processes[0]);
                                 // удаляем старый мульти из коллектора мульти узлов
                                 myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi),1);
