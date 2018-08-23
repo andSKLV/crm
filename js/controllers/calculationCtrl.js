@@ -992,16 +992,28 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         deleteMulti(multi){
             myFactory.removeCellSelection();
             let park=multi.processes[0].park;
-            multi.processes.forEach(function (process) {
-                if(process.package){
-                    park.processes.forEach(proc=>{
-                        delete proc.package;
-                    });
+            let multiLength = multi.processes.length;
+            deleteProcesses();
+            function deleteProcesses () {
+                // бывают случаи когда узел мульти связан с парком и удаление из парка изменяет объект мульти
+                // таким образом forEach итерируется не по всему объекту
+                // для этого введена рекурсивная функция 
+                // если из мульти узла не удаляются элементы вместе с парком, то функция выполнится один раз
+                // если удаляется, то функция будет повторяться пока multi.length не будет равна 0
+                multi.processes.forEach(function (process) {
+                    if(process.package){
+                        park.processes.forEach(proc=>{
+                            delete proc.package;
+                        });
+                    }
+                    // удаляем процессы, которые были в нашем мульти из парка
+                    park.processes.splice(park.processes.indexOf(process), 1);
+                });
+                if (multiLength!==multi.processes.length) {
+                    multiLength = multi.processes.length;
+                    deleteProcesses();
                 }
-                // удаляем процессы, которые были в нашем мульти из парка
-                park.processes.splice(park.processes.indexOf(process), 1);
-            });
-            
+            }
             if(park.processes.length==0) {
                 // удаляем парк если больше нет строк
                 myFactory.parks.splice(myFactory.parks.indexOf(park), 1);
@@ -1448,7 +1460,29 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
 
                         }
                         else{//если числовое значение       здесь нужно прикрутить изменение пакета
-                            multi.changeProperty(param.model, value.name);
+                            // создаем копию мульти узла с новыми параметрами для проверки
+                            const multiWithNewParams = Object.assign({},multi);
+                            multiWithNewParams.processes.map(pr=>{
+                                pr[param.model] = value.name;
+                            })
+                            // проверяем, есть ли такие процы в парке
+                            const parkContains = multi.processes[0].park.contains(multiWithNewParams.processes);
+                            if (parkContains) {
+                                // если какой то проц из мульти узла уже ест ьв этом парке, то нужно создать новый парка
+                                myFactory.multi.arrays.risk = multi.risk;
+                                myFactory.multi.arrays.wrapping = multi.wrapping;
+                                myFactory.process = Object.assign({},multi.processes[0]);
+                                // удаляем старый мульти из коллектора мульти узлов
+                                myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi),1);
+                                const oldPark = multi.processes[0].park;
+                                // удаляем старые процы из его парка
+                                multi.processes.forEach(pr=>{
+                                    oldPark.processes.splice(oldPark.processes.indexOf(pr),1);
+                                })
+                                // делаем новые процы в новом парке
+                                myFactory.addNewProcess();
+                            }
+                            else multi.changeProperty(param.model, value.name);
                             delete scope.myFactory.process.changing;//убираем выделение строки которую меняли
                             scope.clean();
                         }
@@ -1510,7 +1544,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     // формируем myFactory.multi.arrays
                     mulriArrayFormation();
                     if (isContaining()) {
-                        debugger;
                         myFactory.process = Object.assign({},process);
                         myFactory.addNewProcess();
                     }

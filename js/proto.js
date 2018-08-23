@@ -260,7 +260,6 @@ class Multi{
         }
         this.show = false;
         this.calculatePrice();
-
     }
     changeProperty(key, value){
         let multi=this;
@@ -785,7 +784,12 @@ class Park{
      */
     contains(checkProcs) {
         let isContain = false;
-        const pairsInPark = this.processes.map(pr=>`${pr.risk}-${pr.wrapping}`);
+        const pairsInPark = []; 
+        this.processes.map(pr=>{
+            // формируем строку с названием риска и типом отсека
+            // бывают случаи, когда проц уже добавлен в парк, эти процы мы не должны учитывать
+            if (!checkProcs.includes(pr)) pairsInPark.push(`${pr.risk}-${pr.wrapping}`);
+        });
         checkProcs.map(pr=>{
             const pair = `${pr.risk}-${pr.wrapping}`;
             if (pairsInPark.includes(pair)) isContain = true;
