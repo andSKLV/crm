@@ -136,6 +136,8 @@ class Multi{
         function removeCellSelection() {
             const selectedCell = document.querySelector('.matrix_table .mi_selected');
             if (selectedCell!== null) selectedCell.classList.toggle('mi_selected');
+            const alreadySelectedCells = document.querySelectorAll('.matrix_table .alreadySelected');
+            alreadySelectedCells.forEach(cell=>cell.classList.toggle("alreadySelected"));
         }
 
         // если раньше процы были распределены по мулььи узлам то их нужно распределить опять
@@ -234,7 +236,8 @@ class Multi{
         }
     }
     // функция сворачивания мультиузла в одну строку
-    close(multies, toParent, process) {
+    close(multies, toParent, process, myFactory) {
+        myFactory.removeCellSelection();
         // определяем есть ли родитель, потому что то что в параметре не всегда правда
         this.processes.forEach(pr => {
             if (pr.constructor.name === 'Multi') toParent = true;
@@ -258,7 +261,6 @@ class Multi{
         }
         this.show = false;
         this.calculatePrice();
-
     }
     changeProperty(key, value){
         let multi=this;
@@ -775,6 +777,25 @@ class Park{
             sum+=process.totalPrice;
         });
         return sum;
+    }
+    /**
+     * Функция проверки наличия таких процев в парке
+     * @param {array} checkProcs - проц или список процев, если это создаваемый мульти узел
+     * @returns {boolean}  -  true - содержит, false - не содержит
+     */
+    contains(checkProcs) {
+        let isContain = false;
+        const pairsInPark = []; 
+        this.processes.map(pr=>{
+            // формируем строку с названием риска и типом отсека
+            // бывают случаи, когда проц уже добавлен в парк, эти процы мы не должны учитывать
+            if (!checkProcs.includes(pr)) pairsInPark.push(`${pr.risk}-${pr.wrapping}`);
+        });
+        checkProcs.map(pr=>{
+            const pair = `${pr.risk}-${pr.wrapping}`;
+            if (pairsInPark.includes(pair)) isContain = true;
+        })
+        return isContain;
     }
 }
 

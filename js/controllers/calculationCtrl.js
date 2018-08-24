@@ -72,7 +72,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 });
 
                 // выбираем подрежим
-                if (Array.isArray(value)) copyMultiWrapParams.call(this);
+                if (Array.isArray(value)) {
+                    if (value.length===1) copySingleWrapParam.call(this);
+                    else copyMultiWrapParams.call(this);
+                }
                 else copySingleWrapParam.call(this);
             }
             const caseNonWrap = () => {
@@ -85,7 +88,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         function copySingleParam () {
             // меняем процы
             processes.forEach(process => {
-                process[key]=value;
+                process[key]=val;
                 if(key==="limit" && process.package!==undefined){
                     delete process.multi.packName;
                     delete process.multi.template;
@@ -95,6 +98,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             });
         }
         function copySingleWrapParam() {
+            value = (Array.isArray(value)) ? value[0] : value;
             // запоминаем состояния для дальнейшего изменения
             const karetkaState = this.karetka.mode;
             const multiModeState = myFactory.multi.mode;
@@ -462,6 +466,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
         value = (value==="dashboard") ? "" : value;
         $location.path(`/${value}`);
+        let path = window.location.href;
+        path = path.replace(window.location.hash, `#!/${value}`)
+        location.replace(path);
         location.reload();
     };
     this.relocateHere=function(url){//переход в углубление вверху каретки
@@ -633,57 +640,74 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.clickedOnMulti=function(param, value){//при нажатии на верх каретки в мульти параметры при режиме мульти
     // изменение открытого мульти узла
         if (scope.karetka.mode=="changing process" && myFactory.process.constructor.name=="Process" && myFactory.multi.mode) {
+            let newMulti;
             let multi = myFactory.process.multi;
             let process=multi.processes[multi.processes.indexOf(myFactory.process)];
             const park = process.park;
             // сохраняем индекс чтобы потом поставить поц на нужное место
             let indexProcInPark = process.park.processes.indexOf(process);
             const indexProcInMulti = multi.processes.indexOf(process);
-
+            // проверка на наличие в парке такого проца
+            const isContaining = parkContain();
             // если того что мы хотим добавить еще нет в нашем мульти
             if(multi[param.model].indexOf(value.name)==-1 ||  multi[param.model].length>1) {
-                myFactory.process = process;
-                // добавляем новые данные в учет в коллектор "мульти"
-                myFactory.multi.arrays.risk = [process.risk];
-                myFactory.multi.arrays.wrapping = [process.wrapping];
-                myFactory.multi.arrays[param.model].push(value.name);
-                
-                park.processes.splice(indexProcInPark,1);
-                // меняем проц на мульти узел
-                myFactory.addNewProcess("changing",null,indexProcInPark);
-                // переопределяем индекс проца в парке, так как он может сползти
-                let newProc = park.processes.find(pr=>(pr.risk===process.risk)&&(pr.wrapping===process.wrapping));
-                indexProcInPark = park.processes.indexOf(newProc);
-                multi.processes[indexProcInMulti] = park.processes[indexProcInPark].multi;
-                const newMulti = multi.processes[indexProcInMulti];
-                // запоминаем прошлый мульти
-                newMulti.prevMulti = multi;
-                // назначаем родителя
-                if (multi.parent) {
-                    if (multi.parent.processes) multi.parent.processes.push(newMulti);
-                    else multi.parent.push(newMulti);
-                    newMulti.parent = multi.parent;
+                if (isContaining) {
+                    // если такой проц уже есть в парке,то создаем новый парк
+                    myFactory.process = Object.assign({},process);
+                    myFactory.multi.arrays.risk = [process.risk];
+                    myFactory.multi.arrays.wrapping = [process.wrapping];
+                    myFactory.multi.arrays[param.model].push(value.name);
+                    myFactory.addNewProcess();
+                    // новый парк всегда помещается в начало, значит берем из него ссылку на мульти
+                    newMulti = myFactory.parks[0].processes[0].multi;
                 }
                 else {
-                    newMulti.parent = multi;
-                    newMulti.multi = multi;
-                    // // создаем родителя из нового и старого процев
-                    // const parentArr = new Multi ([multi,newMulti]);
-                    // // присваиваем родителя
-                    // parentArr.processes.forEach (el=>el.parent=parentArr);
-                    // // добавляем родителя в списокмультиузлов
-                    // myFactory.multi.multies.unshift(parentArr);
-                    // parentArr.parent = myFactory.multi.multies;
+                    myFactory.process = process;
+                    // добавляем новые данные в учет в коллектор "мульти"
+                    myFactory.multi.arrays.risk = [process.risk];
+                    myFactory.multi.arrays.wrapping = [process.wrapping];
+                    myFactory.multi.arrays[param.model].push(value.name);
+                    const array = myFactory.makeMulti();
+                    park.processes.splice(indexProcInPark,1);
+                    // меняем проц на мульти узел
+                    myFactory.addNewProcess("changing",null,indexProcInPark);
+                    // переопределяем индекс проца в парке, так как он может сползти
+                    let newProc = park.processes.find(pr=>(pr.risk===process.risk)&&(pr.wrapping===process.wrapping));
+                    indexProcInPark = park.processes.indexOf(newProc);
+                    multi.processes[indexProcInMulti] = park.processes[indexProcInPark].multi;
+                    newMulti = multi.processes[indexProcInMulti];
+                    // запоминаем прошлый мульти
+                    newMulti.prevMulti = multi;
+                    // назначаем родителя
+                    if (multi.parent) {
+                        if (multi.parent.processes) multi.parent.processes.push(newMulti);
+                        else multi.parent.push(newMulti);
+                        newMulti.parent = multi.parent;
+                    }
+                    else {
+                        newMulti.parent = multi;
+                        newMulti.multi = multi;
+                    }
                 }
                 value.selected=true;
+                myFactory.removeCellSelection();
                 myFactory.finalCalc();
                 // выдедилть ту ячейку которую сейчас изменяем
                 scope.matrix.loadMulti(newMulti.processes[0],param.model);
                 return;
             }
+            /**
+             * Проверка на то, содержит ли парк такой проц
+             */
+            function parkContain () {
+                const procForCheck = Object.assign({},process);
+                procForCheck[param.model]=value.name;
+                return park.contains([procForCheck]);
+            }
         }
     // изменение закрытого мульти узла
         if(scope.karetka.mode=="changing process" && (myFactory.process.constructor.name=="Multi")){
+            let mode;
             // мульти-узел на котором кликнули
             let multi = myFactory.process;
             // первый проц из этого мультиузла
@@ -700,6 +724,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 //если мы отжимаем(т.е. такой процесс уже есть)
                 if (myFactory.multi.arrays[param.model].indexOf(value.name) != -1) {
                     myFactory.multi.arrays[param.model].splice(myFactory.multi.arrays[param.model].indexOf(value.name), 1);
+                    mode = 'unclick';
+                    // myFactory.removeCellSelection();
                     delete value.selected;
                 }
                 //если такого процесса нету
@@ -776,7 +802,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 };
                 // если произошло отжатие предпоследнего аргумента в мульти, то мульти должен превратиться в проц
                 if (isNotMulti()) {
-                    removeCellSelection();
+                    myFactory.removeCellSelection();
                     const key = (param.model==="risk") ? "wrapping" : "risk";
                     // определяем проц, который надо удалить
                     const deletingProc = process.park.processes.find(proc=>{
@@ -828,24 +854,35 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         else myFactory.parks.splice(myFactory.parks.indexOf(deletingProc.park), 1);
                         scope.clean();
                     }
-                    /**
-                     * удаляем выделенные ячейки, так как из-за них скачет анимация, все равно по логике эти выделения не нужны
-                     */
-                    function removeCellSelection() {
-                        const selectedCell = document.querySelector('.matrix_table .mi_selected');
-                        if (selectedCell!== null) {
-                            selectedCell.classList.toggle('mi_selected');
-                            //  удаляем и ячейку тоже, так как замечены случаи проскакивания анимации
-                            selectedCell.parentNode.removeChild(selectedCell);
-                        }
-                    }
                 }
                 else{
-                    myFactory.addNewProcess("changing", multi);
-                    myFactory.finalCalc();
-                    myFactory.process=multi;
-                    // если выделили последний элемент, то процесс выбора окончен
-                    if (myFactory.multi.arrays[param.model].length===1) scope.clean();
+                    if (checkContains()) {
+                        // если такой про уже был в парке, создаем новый парк
+                        myFactory.process=Object.assign({},multi.processes[0]);
+                        myFactory.multi.arrays.risk = multi.risk;
+                        myFactory.multi.arrays.wrapping = multi.wrapping;
+                        myFactory.addNewProcess();
+                        // так как новый парк встает на первое место, то определяем новый рабочий проц
+                        myFactory.process=myFactory.parks[0].processes[0].multi;
+                        myFactory.finalCalc();
+                        // делаем активным новый мульти, который создали
+                        scope.matrix.loadMulti(myFactory.process.processes[0],param.model);
+                    }
+                    else {
+                        // если такого проца нет, то можем менять старый
+                        myFactory.addNewProcess("changing", multi);
+                        myFactory.finalCalc();
+                        myFactory.process=multi;
+                        // если выделили последний элемент, то процесс выбора окончен
+                        if (myFactory.multi.arrays[param.model].length===1) scope.clean();
+                    }
+                    // проверяем, есть ли такой проц уже в парке
+                    function checkContains() {
+                        if (mode==='unclick') return false;
+                        const procForCheck = Object.assign({},myFactory.process);
+                        procForCheck[param.model] = value.name;
+                        return procForCheck.park.contains([procForCheck]);
+                    }
                 }
 
             }
@@ -959,18 +996,30 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
          * @param {multi} multi 
          */
         deleteMulti(multi){
-            scope.clean();
+            myFactory.removeCellSelection();
             let park=multi.processes[0].park;
-            multi.processes.forEach(function (process) {
-                if(process.package){
-                    park.processes.forEach(proc=>{
-                        delete proc.package;
-                    });
+            let multiLength = multi.processes.length;
+            deleteProcesses();
+            function deleteProcesses () {
+                // бывают случаи когда узел мульти связан с парком и удаление из парка изменяет объект мульти
+                // таким образом forEach итерируется не по всему объекту
+                // для этого введена рекурсивная функция 
+                // если из мульти узла не удаляются элементы вместе с парком, то функция выполнится один раз
+                // если удаляется, то функция будет повторяться пока multi.length не будет равна 0
+                multi.processes.forEach(function (process) {
+                    if(process.package){
+                        park.processes.forEach(proc=>{
+                            delete proc.package;
+                        });
+                    }
+                    // удаляем процессы, которые были в нашем мульти из парка
+                    park.processes.splice(park.processes.indexOf(process), 1);
+                });
+                if (multiLength!==multi.processes.length) {
+                    multiLength = multi.processes.length;
+                    deleteProcesses();
                 }
-                // удаляем процессы, которые были в нашем мульти из парка
-                park.processes.splice(park.processes.indexOf(process), 1);
-            });
-            
+            }
             if(park.processes.length==0) {
                 // удаляем парк если больше нет строк
                 myFactory.parks.splice(myFactory.parks.indexOf(park), 1);
@@ -1345,6 +1394,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 }
                 
                 else if(myFactory.process.constructor.name=="Multi"||(myFactory.process.multi&&myFactory.multi.mode)){
+                    // FIXME:
                     myFactory.finalCalc();
                     let multi=myFactory.process;
                     //если включен режим мульти
@@ -1410,12 +1460,38 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                                 delete scope.myFactory.process.changing;//убираем выделение строки которую меняли
                             }
                             console.log(myFactory.parks, myFactory.multi.multies);
+                            myFactory.removeCellSelection();
                             scope.clean();
                             console.log(myFactory.parks, myFactory.multi.multies);
 
                         }
                         else{//если числовое значение       здесь нужно прикрутить изменение пакета
-                            multi.changeProperty(param.model, value.name);
+                            // создаем копию мульти узла с новыми параметрами для проверки
+                            const multiWithNewParams = Object.assign({},multi);
+                            multiWithNewParams.processes.map(pr=>{
+                                pr[param.model] = value.name;
+                            })
+                            // проверяем, есть ли такие процы в парке
+                            const parkContains = multi.processes[0].park.contains(multiWithNewParams.processes);
+                            if (parkContains) {
+                                // если какой то проц из мульти узла уже ест ьв этом парке, то нужно создать новый парка
+                                myFactory.multi.arrays.risk = [value.name];
+                                // в данном случае предусмотрено копирование мульти узлом только с мульти-отсеком
+                                // поэтому параметром возможно задать только риск
+                                myFactory.multi.arrays.wrapping = multi.wrapping;
+                                if (param.model==="wrapping") console.error("Ожидалось изменение риска, пришел тип отсека. Необходимо поменять логику");
+                                myFactory.process = Object.assign({},multi.processes[0]);
+                                // удаляем старый мульти из коллектора мульти узлов
+                                myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi),1);
+                                const oldPark = multi.processes[0].park;
+                                // удаляем старые процы из его парка
+                                multi.processes.forEach(pr=>{
+                                    oldPark.processes.splice(oldPark.processes.indexOf(pr),1);
+                                })
+                                // делаем новые процы в новом парке
+                                myFactory.addNewProcess();
+                            }
+                            else multi.changeProperty(param.model, value.name);
                             delete scope.myFactory.process.changing;//убираем выделение строки которую меняли
                             scope.clean();
                         }
@@ -1445,13 +1521,14 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         myFactory.process[param.model]=value.name;
                         myFactory.addNewProcess("changing");
                         delete scope.myFactory.process.changing;//убираем выделение строки которую меняли
+                        myFactory.removeCellSelection();
                         scope.clean();
                     }
                     else{
                         scope.addPropertyToProcess(param, value.name);
                         let myVar=myFactory.process[param.model];
-
                         let myEl = angular.element(document.querySelector('td.mi_selected'));
+                        myFactory.removeCellSelection();
                         myEl.addClass('alreadySelected');
 
                         if(myFactory.process.package && myFactory.process.multi && myFactory.process.multi!="deleted"){
@@ -1464,6 +1541,15 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                             delete myFactory.process.package;
                             console.log(myFactory.process.multi);
                         }
+                        // проверяем есть ли такой проц в парке, эта проблема встречается внутри мульти-узлов
+                        if (myFactory.process.multi && myFactory.process.multi.show) {
+                            const parkContains = myFactory.process.park.contains([myFactory.process]);
+                            if (parkContains) {
+                                // если такой уже есть, то удаляем старый и создаем такой же в новом парке
+                                myFactory.deleteProcess(myFactory.process);
+                                myFactory.addNewProcess();
+                            }
+                        }
                         delete scope.myFactory.process.changing;//убираем выделение строки которую меняли
                         scope.clean();
                     }
@@ -1471,25 +1557,29 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 else{
                     //  меняем проц на мульти
                     if (param.selected===value.name) return;
-                    removeCellSelection();
+                    myFactory.removeCellSelection();
                     let process=myFactory.process;
-                    myFactory.multi.arrays.wrapping=[process.wrapping];
-                    myFactory.multi.arrays.risk=[process.risk];
-                    if(myFactory.multi.arrays[param.model].indexOf(value.name)==-1) myFactory.multi.arrays[param.model].push(value.name);
-                    myFactory.addNewProcess("changing");
+                    // формируем myFactory.multi.arrays
+                    mulriArrayFormation();
+                    if (isContaining()) {
+                        myFactory.process = Object.assign({},process);
+                        myFactory.addNewProcess();
+                    }
+                    else {
+                        myFactory.addNewProcess("changing");
+                    }
                     scope.clean();
                     process=myFactory.multi.multies[myFactory.multi.multies.length-1].processes[0];
                     scope.matrix.loadMulti(process, param.model);
-                    /**
-                     * удаляем выделенные ячейки, так как из-за них скачет анимация, все равно по логике эти выделения не нужны
-                     */
-                    function removeCellSelection() {
-                        const selectedCell = document.querySelector('.matrix_table .mi_selected');
-                        if (selectedCell!== null) {
-                            selectedCell.classList.toggle('mi_selected');
-                        }
-                        const alreadySelectedCells = document.querySelectorAll('.matrix_table .alreadySelected');
-                        alreadySelectedCells.forEach(cell=>cell.classList.toggle("alreadySelected"));
+                    function mulriArrayFormation () {
+                        myFactory.multi.arrays.wrapping=[process.wrapping];
+                        myFactory.multi.arrays.risk=[process.risk];
+                        if(myFactory.multi.arrays[param.model].indexOf(value.name)==-1) myFactory.multi.arrays[param.model].push(value.name);
+                    }
+                    function isContaining () {
+                        const procForCheck = Object.assign({},process);
+                        procForCheck[param.model] = value.name;
+                        return procForCheck.park.contains([procForCheck]);
                     }
                 }
             }

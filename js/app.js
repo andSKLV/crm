@@ -754,18 +754,18 @@ app.factory('myFactory', function(){
                     }
                 }
             }
+
             if(park){
-                // TODO: проверить нужен ли тут чек, а то он все портит и не записывает возвращаемый
-                // аргумент. С ним появляется ошибка если парк из двух строк и на первую сделать мульти
-                // вторая исчезнет.
-                // Эксперементально закомиченно
-                // park.check();
+                let indexToPaste = index;
                 // присваиваем новым процам старый парк
                 array.forEach(function (process) {
                     // назначаем каждому новому процессу этот парк
                     process.park=park;
                     // если этого проца нет в парке то ставим его на место инжекс в этом парке
-                    if(park.processes.indexOf(process)===-1) park.processes.splice(index, 0,process);
+                    if(park.processes.indexOf(process)===-1) {
+                        park.processes.splice(indexToPaste, 0,process);
+                        indexToPaste++;
+                    }
                 });
             }
             else{
@@ -1058,7 +1058,7 @@ app.factory('myFactory', function(){
                 let array=this.makeMulti();
                 this.choosePark(array);
             }
-            else if(this.multi.template.length>0){//ебучие пакеты
+            else if(this.multi.template.length>0){//пакеты
                 let obj=this.makePackage();
                 let array=obj.array;
                 this.multi.multies.push(new Multi(array, obj.packName, obj.template));
@@ -1264,6 +1264,46 @@ app.factory('myFactory', function(){
             if (matrix){
                 matrix.style.maxHeight = `${maxHeight}px`;
             }
+        },
+        removeCellSelection () {
+            const selectedCell = document.querySelector('.matrix_table .mi_selected');
+            if (selectedCell!== null) selectedCell.classList.toggle('mi_selected');
+            const alreadySelectedCells = document.querySelectorAll('.matrix_table .alreadySelected');
+            alreadySelectedCells.forEach(cell=>cell.classList.toggle("alreadySelected"));
+        },
+        /**
+         * Функция удаления проца, удаляет из парка и из мульти-узла с учетом наследственности мульти-узла
+         * @param {Object} process - проц, который надо удалить
+         */
+        deleteProcess (process) {
+            if(process.multi) {
+                if (process.multi.multi) {
+                    process.multi.multi.processes.splice(process.multi.multi.processes.indexOf(process.multi),1);
+                }
+                process.multi.processes.splice(process.multi.processes.indexOf(process),1); 
+                if (process.multi.processes.length<2) {
+                    let newMulti;
+                    if (process.multi.prevMulti) newMulti = process.multi.prevMulti;
+                    else if (process.multi.multi) newMulti = process.multi.multi;
+                    if (newMulti) {
+                        // если в мульти узле остался только один проц
+                        // то удаляем этот мульти, а оставшемуся процу присваиваем предыдущим мульти узел
+                        process.multi.processes[0].multi = newMulti;
+                        if (!newMulti.processes) {
+                            throw new Error('Верхний мульти с другой структурой. Нет .processes');
+                            debugger;
+                        }
+                        newMulti.processes.push(process.multi.processes[0]);
+                    }
+                    this.multi.multies.splice(this.multi.multies.indexOf(process.multi),1);
+                }
+            }
+            if(process.park.processes.length>1) {
+                //удаляем процесс из парка
+                process.park.processes.splice(process.park.processes.indexOf(process),1);
+            }
+            // если процесс единственный в парке, удаляем парк
+            else this.parks.splice(this.parks.indexOf(process.park), 1);
         },
     }
 });
