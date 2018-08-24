@@ -72,7 +72,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 });
 
                 // выбираем подрежим
-                if (Array.isArray(value)) copyMultiWrapParams.call(this);
+                if (Array.isArray(value)) {
+                    if (value.length===1) copySingleWrapParam.call(this);
+                    else copyMultiWrapParams.call(this);
+                }
                 else copySingleWrapParam.call(this);
             }
             const caseNonWrap = () => {
@@ -85,7 +88,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         function copySingleParam () {
             // меняем процы
             processes.forEach(process => {
-                process[key]=value;
+                process[key]=val;
                 if(key==="limit" && process.package!==undefined){
                     delete process.multi.packName;
                     delete process.multi.template;
@@ -95,6 +98,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             });
         }
         function copySingleWrapParam() {
+            value = (Array.isArray(value)) ? value[0] : value;
             // запоминаем состояния для дальнейшего изменения
             const karetkaState = this.karetka.mode;
             const multiModeState = myFactory.multi.mode;
@@ -462,6 +466,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
         value = (value==="dashboard") ? "" : value;
         $location.path(`/${value}`);
+        let path = window.location.href;
+        path = path.replace(window.location.hash, `#!/${value}`)
+        location.replace(path);
         location.reload();
     };
     this.relocateHere=function(url){//переход в углубление вверху каретки
@@ -869,7 +876,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         // если выделили последний элемент, то процесс выбора окончен
                         if (myFactory.multi.arrays[param.model].length===1) scope.clean();
                     }
-                    debugger;
                     // проверяем, есть ли такой проц уже в парке
                     function checkContains() {
                         if (mode==='unclick') return false;
@@ -1522,6 +1528,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         scope.addPropertyToProcess(param, value.name);
                         let myVar=myFactory.process[param.model];
                         let myEl = angular.element(document.querySelector('td.mi_selected'));
+                        myFactory.removeCellSelection();
                         myEl.addClass('alreadySelected');
 
                         if(myFactory.process.package && myFactory.process.multi && myFactory.process.multi!="deleted"){
