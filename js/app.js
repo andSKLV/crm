@@ -1270,6 +1270,40 @@ app.factory('myFactory', function(){
             if (selectedCell!== null) selectedCell.classList.toggle('mi_selected');
             const alreadySelectedCells = document.querySelectorAll('.matrix_table .alreadySelected');
             alreadySelectedCells.forEach(cell=>cell.classList.toggle("alreadySelected"));
-        }
+        },
+        /**
+         * Функция удаления проца, удаляет из парка и из мульти-узла с учетом наследственности мульти-узла
+         * @param {Object} process - проц, который надо удалить
+         */
+        deleteProcess (process) {
+            if(process.multi) {
+                if (process.multi.multi) {
+                    process.multi.multi.processes.splice(process.multi.multi.processes.indexOf(process.multi),1);
+                }
+                process.multi.processes.splice(process.multi.processes.indexOf(process),1); 
+                if (process.multi.processes.length<2) {
+                    let newMulti;
+                    if (process.multi.prevMulti) newMulti = process.multi.prevMulti;
+                    else if (process.multi.multi) newMulti = process.multi.multi;
+                    if (newMulti) {
+                        // если в мульти узле остался только один проц
+                        // то удаляем этот мульти, а оставшемуся процу присваиваем предыдущим мульти узел
+                        process.multi.processes[0].multi = newMulti;
+                        if (!newMulti.processes) {
+                            throw new Error('Верхний мульти с другой структурой. Нет .processes');
+                            debugger;
+                        }
+                        newMulti.processes.push(process.multi.processes[0]);
+                    }
+                    this.multi.multies.splice(this.multi.multies.indexOf(process.multi),1);
+                }
+            }
+            if(process.park.processes.length>1) {
+                //удаляем процесс из парка
+                process.park.processes.splice(process.park.processes.indexOf(process),1);
+            }
+            // если процесс единственный в парке, удаляем парк
+            else this.parks.splice(this.parks.indexOf(process.park), 1);
+        },
     }
 });

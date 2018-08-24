@@ -1521,7 +1521,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     else{
                         scope.addPropertyToProcess(param, value.name);
                         let myVar=myFactory.process[param.model];
-
                         let myEl = angular.element(document.querySelector('td.mi_selected'));
                         myEl.addClass('alreadySelected');
 
@@ -1534,6 +1533,15 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                             });
                             delete myFactory.process.package;
                             console.log(myFactory.process.multi);
+                        }
+                        // проверяем есть ли такой проц в парке, эта проблема встречается внутри мульти-узлов
+                        if (myFactory.process.multi && myFactory.process.multi.show) {
+                            const parkContains = myFactory.process.park.contains([myFactory.process]);
+                            if (parkContains) {
+                                // если такой уже есть, то удаляем старый и создаем такой же в новом парке
+                                myFactory.deleteProcess(myFactory.process);
+                                myFactory.addNewProcess();
+                            }
                         }
                         delete scope.myFactory.process.changing;//убираем выделение строки которую меняли
                         scope.clean();
