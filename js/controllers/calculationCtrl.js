@@ -1528,7 +1528,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                         scope.addPropertyToProcess(param, value.name);
                         let myVar=myFactory.process[param.model];
                         let myEl = angular.element(document.querySelector('td.mi_selected'));
-                        myFactory.removeCellSelection();
+                        // myFactory.removeCellSelection();
                         myEl.addClass('alreadySelected');
 
                         if(myFactory.process.package && myFactory.process.multi && myFactory.process.multi!="deleted"){
