@@ -15,7 +15,7 @@
                 ng-right-click="calculation.setParamToAllProcess(value, key, process)"  ng-click="!process.unselectable ? calculation.matrix.loadProcess(process, key) : ''">
                 {{(key=="wrapping" || key=="risk") ? value : calculation.applyFilter(value, key) }}
                 <div class="arrow_up"
-                     ng-click="process.multi.close(calculation.myFactory.multi.multies, false, process); calculation.clean()"
+                     ng-click="process.multi.close(calculation.myFactory.multi.multies, false, process, calculation.myFactory); calculation.clean()"
                      ng-if="process.showRows==key && process.multi!==undefined && process.multi!=='deleted'"
                      ng-mouseenter="process.unselectable=true" ng-mouseleave="calculation.deleteProperty(process, 'unselectable')">&#9650</div>
                 <div class="copyDown"
@@ -48,7 +48,7 @@
                      ng-if="process.multi.showRows==key && ( (key=='wrapping' || key=='risk') && process.multi[key].length>1 || key=='risk' && process.multi.packName )"
                      ng-mouseenter="process.multi.unselectable=true" ng-mouseleave="calculation.deleteProperty(process.multi, 'unselectable')">&#9660</div>
                 <div class="arrow_up"
-                     ng-click="process.multi.parent.close(calculation.myFactory.multi.multies, true, process); calculation.clean()"
+                     ng-click="process.multi.parent.close(calculation.myFactory.multi.multies, true, process, calculation.myFactory); calculation.clean()"
                      ng-if="process.multi.showRows==key && process.multi.parent!==undefined"
                      ng-mouseenter="process.multi.unselectable=true" ng-mouseleave="calculation.deleteProperty(process.multi, 'unselectable')">&#9650</div>
                 <div class="copyDown"

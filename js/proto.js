@@ -236,7 +236,8 @@ class Multi{
         }
     }
     // функция сворачивания мультиузла в одну строку
-    close(multies, toParent, process) {
+    close(multies, toParent, process, myFactory) {
+        myFactory.removeCellSelection();
         // определяем есть ли родитель, потому что то что в параметре не всегда правда
         this.processes.forEach(pr => {
             if (pr.constructor.name === 'Multi') toParent = true;
