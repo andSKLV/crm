@@ -26,7 +26,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
      * времени структура сохраненных расчетов была видоизменена
      * @param {number} id 
      */
-    this.loadCalculation= function(id){ //нажимаем на строку расчета в результате поиска
+    this.loadCalculation=function(id){ //нажимаем на строку расчета в результате поиска
         $timeout(function () {
             console.log(id);
             if($location.path!=="/calculation"){
@@ -37,7 +37,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             data.id=id;
             let scope=this;
             myFactory.urlJSON="transortation_cals.json";
-            $http.post("search.php", data).then(function success(response){
+            $http.post("search.php", data).then(async function success(response){
                 console.log(response.data);
                 myFactory.matrixType="HIP";
                 myFactory.parks=[];
@@ -233,6 +233,14 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                         myFactory.choosePark(array,park, 0);
                         console.log(myFactory.parks);
                     }
+                    if (myFactory.packages===undefined) {
+                        let resp = await fetch('HIP.json');
+                        resp = await resp.json();
+                        resp = resp.filter(r=>r.url=='Пакеты');
+                        resp = resp[0].values;
+                        myFactory.packages = resp;
+                        console.warn('myFactory.packages загружен отдельно');
+                    }
                     myFactory.parks.forEach(function (park) {
                         park.processes.forEach(function (process) {
                             if(process.packageNum!==undefined){
@@ -241,10 +249,6 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                                     return proc.packageNum==packageNum;
                                 });
                                 let pckName=process['package'];
-                                if (myFactory.packages===undefined) {
-                                    myFactory.packages= [{"name":"Международные","type":"risk","action":"package","values":[{"risk":"Неохраняемая стоянка","limit":0.5},{"risk":"Упаковка и крепление","limit":0.05},{"risk":"Таможенные платежи","limit":0.25},{"risk":"Повреждение контейнера","limit":0.15},{"risk":"Стихийные бедствия"},{"risk":"Противоправные действия третьих лиц"}]},{"name":"Внутренние","type":"risk","action":"package","values":[{"risk":"Неохраняемая стоянка","limit":0.3},{"risk":"Упаковка и крепление","limit":0.05},{"risk":"Повреждение контейнера","limit":0.1},{"risk":"Стихийные бедствия"},{"risk":"Противоправные действия третьих лиц"}]},{"name":"Автомотив","type":"risk","action":"package","values":[{"risk":"Повреждение товарных автомобилей","limit":0.1},{"risk":"Неохраняемая стоянка","limit":0.3},{"risk":"Погрузка, разгрузка"}]}];
-                                    console.warn('Данные пакетов взяты из кода программы. Проверьте соответствие matrixCtrl.js 245 на соответствие HIP.json');
-                                }
                                 let template=myFactory.packages.filter(function (pack) {
                                     return pack.name==pckName;
                                 });
