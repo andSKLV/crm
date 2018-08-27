@@ -924,7 +924,7 @@ app.factory('myFactory', function(){
                 this.process.risk=this.multi.arrays.risk[0];
                 this.process.wrapping=this.multi.arrays.wrapping[0];
                 let risk=this.multi.arrays.risk[0];
-                let packages=this.packages.filter(function (pack) {//ебучие пакеты
+                let packages=this.packages.filter(function (pack) {//пакеты
                     return pack.name==risk;
                 });
                 if(packages.length>0){
