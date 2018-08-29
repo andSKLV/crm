@@ -1053,14 +1053,64 @@ app.factory('myFactory', function(){
                     this.multi.template=[];
                 }
             }
-
-            else if(this.multi.arrays.risk.length>0 || this.multi.arrays.wrapping.length>0){
-                let array=this.makeMulti();
+            else if (this.multi.arrays.risk.length > 0 || this.multi.arrays.wrapping.length > 0) {
+                let array = [];
+                // разделяем мульти-риски на пакеты и просто риски
+                const splittedRisks = splitRisks.call (this);
+                // проверяем есть ли там больше пакетов чем надо
+                const needToEnroll = checkEnroll (splittedRisks);
+                // если есть, делаем из этого один большой мульти-узел
+                if (needToEnroll) {
+                    const enrolledRisks = enrollRisks.call (this,splittedRisks);
+                    this.multi.arrays.risk = [];
+                    // удаляем базовые риски, чтобы потом поместить в начало
+                    delete enrolledRisks["Базовые риски"];
+                    this.multi.arrays.risk = Object.keys(enrolledRisks);
+                    // добавляем базовые риски в начало списка
+                    this.multi.arrays.risk.unshift("Базовые риски");
+                    array = this.makeMulti();
+                    array.forEach (pr=>{
+                        const limitKoef = (enrolledRisks[pr.risk]) ? (enrolledRisks[pr.risk]) : 1;
+                        pr.limit = pr.limit*limitKoef;
+                    })
+                }
+                else {array = this.makeMulti();}
                 this.choosePark(array);
+                
+                function splitRisks () {
+                    const packages = []; // все выбранные пакеты
+                    const notPackages = []; // все выбранные процы
+                    const multiArr = [...this.multi.arrays.risk];
+                    // сортируем на пакеты и просто риски
+                    multiArr.map(risk => {
+                        if (this.packages.some(pack => pack.name === risk)) packages.push(risk);
+                        else notPackages.push(risk);
+                    })
+                    return {packages,notPackages};
+                }
+                function checkEnroll ({packages,notPackages}) {
+                    return (!(packages.length === 0 || (notPackages.length === 0 && packages.length === 1)));
+                }
+                function enrollRisks ({packages,notPackages}) {    
+                    const sum = {};       
+                    packages.forEach(pack=>{
+                        // проходимся по каждому пакету, вытаскиваем его риск, добавляем в коллектор, запоминаем лимит
+                        // если риск повторяется, сравниваем по лимиту и оставляем больший лимит
+                        const thisPack = this.packages.find(p => p.name === pack).values.map(val => {
+                            const limit = (val.limit) ? val.limit : 1;
+                            sum[val.risk] = (sum[val.risk]) ? Math.max(sum[val.risk],limit): limit;
+                        });
+                    })
+                    // проходимся по каждому отдельному риску и добавляем его в список, если уже существует, то ставим коэф 1
+                    notPackages.forEach(risk=>{
+                        sum[risk] = 1;
+                    })
+                    return sum;
+                }
             }
-            else if(this.multi.template.length>0){//пакеты
-                let obj=this.makePackage();
-                let array=obj.array;
+            else if (this.multi.template.length > 0) {//пакеты
+                let obj = this.makePackage();
+                let array = obj.array;
                 this.multi.multies.push(new Multi(array, obj.packName, obj.template));
                 this.choosePark(array);
             }
