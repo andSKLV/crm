@@ -186,8 +186,12 @@ function SplineKoeff(index, mass)
 function Spline(U, mass, index){
     if (isNaN(U) || U===undefined){
         console.log("Ошибка в вычислениях, необходимо обратиться к разработчику");
-
         return 1;
+    }
+    if (U>mass[mass.length-1][0]) {
+        // если значением стоимости или лимита превышает наибольшее в массиве, то коэф не высчитываем, а передаем от последней точки
+        alert ('Стоимость превышает максимальное значение графика. Значение коэффициента взято с последней точки');
+        return mass[mass.length-1][1];
     }
     let n=mass.length-1;
     let i=0;
@@ -237,8 +241,26 @@ function Spline(U, mass, index){
         }while(J>i+1);
         let dx=U-mass[i][0];
         let Spline1=mass[i][1]+dx*(MB[index][i]+dx*(MC[index][i]+dx*MD[index][i]));
+        if (!checkSpline(Spline1,i)) {
+            // если по каким то причинам сплайн выдал значение, которое не лежит между двумя точками, 
+            // то берем просто пропорциональное значение между ними
+            const diff = mass[i + 1][1] - mass[i][1];
+            const ratio = (U - mass[i][0]) / (mass[i + 1][0] - mass[i][0]);
+            Spline1 = (ratio*diff) + mass[i][1];
+        }
         return Spline1;
-
+        /**
+         * Функция проверки того, находится ли значение между границами интервала
+         * @param {number} spline - посчитанное значение сплайна
+         * @param {number} ind - нижняя граница интервала, которому пренадлежит эта точка
+         * @returns {boolean} true - если лежит в интервале
+         */
+        function checkSpline (spline, ind) {
+            let bottomEdge = mass[ind][1];
+            let topEdge = mass[ind+1][1];
+            if (bottomEdge>topEdge) [bottomEdge,topEdge] = [topEdge, bottomEdge];
+            return (spline>bottomEdge && spline<topEdge);
+        }
     }
 
 }
