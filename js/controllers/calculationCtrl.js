@@ -87,8 +87,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         }
         function copySingleParam () {
             // меняем процы
+
             processes.forEach(process => {
-                process[key]=val;
+                process[key]=value;
                 if(key==="limit" && process.package!==undefined){
                     delete process.multi.packName;
                     delete process.multi.template;
