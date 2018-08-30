@@ -1127,7 +1127,6 @@ app.factory('myFactory', function(){
                 let array = obj.array;
                 this.multi.multies.push(new Multi(array, obj.packName, obj.template));
                 this.choosePark(array);
-                debugger;
                 const times = packageTimes.call (this,obj.packName);
                 if (times) {
                     this.setAlimitAsTimes(times);
@@ -1141,7 +1140,6 @@ app.factory('myFactory', function(){
                     const searchedPack = this.packages.find(pack=>pack.name===name);
                     return searchedPack.times;
                 }
-                debugger;
             }
             //если не мульти
             else{
