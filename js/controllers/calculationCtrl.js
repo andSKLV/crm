@@ -1431,6 +1431,14 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                                 }
                                 myFactory.addNewProcess("changing", multi);
                                 delete scope.myFactory.process.changing;//убираем выделение строки которую меняли
+                                if(value.action=="package") {
+                                    if (value.times) {
+                                        myFactory.setAlimitAsTimes(value.times);
+                                    }
+                                    else {
+                                        // FIXME: добавить изменение на агр лимит при смене с кол-во раз
+                                    }
+                                }
                                 scope.clean();
                                 console.log(myFactory.parks);
                             }
