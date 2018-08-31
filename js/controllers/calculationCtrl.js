@@ -1523,12 +1523,13 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
 
                     //если выбран пакет
                     else if(value.action=="package"){
+                        // если выбран пакет, то автоматически переносим его в новый парк
                         let multi=scope.myFactory.multi;
-
+                        myFactory.deleteProcess(myFactory.process);
                         multi.template=value.values;
-
                         myFactory.process[param.model]=value.name;
-                        myFactory.addNewProcess("changing");
+                        // myFactory.addNewProcess("changing");
+                        myFactory.addNewProcess();
                         delete scope.myFactory.process.changing;//убираем выделение строки которую меняли
                         myFactory.removeCellSelection();
                         if (value.times) {
