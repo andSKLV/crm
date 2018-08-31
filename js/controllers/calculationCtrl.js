@@ -1395,7 +1395,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 }
                 
                 else if(myFactory.process.constructor.name=="Multi"||(myFactory.process.multi&&myFactory.multi.mode)){
-                    // FIXME:
                     myFactory.finalCalc();
                     let multi=myFactory.process;
                     //если включен режим мульти
@@ -1432,6 +1431,15 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                                 }
                                 myFactory.addNewProcess("changing", multi);
                                 delete scope.myFactory.process.changing;//убираем выделение строки которую меняли
+                                if(value.action=="package") {
+                                    if (value.times) {
+                                        myFactory.setAlimitAsTimes(value.times);
+                                        myFactory.finalCalc();
+                                    }
+                                    else {
+                                        // FIXME: добавить изменение на агр лимит при смене с кол-во раз
+                                    }
+                                }
                                 scope.clean();
                                 console.log(myFactory.parks);
                             }
@@ -1515,14 +1523,18 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
 
                     //если выбран пакет
                     else if(value.action=="package"){
+                        // если выбран пакет, то автоматически переносим его в новый парк
                         let multi=scope.myFactory.multi;
-
+                        myFactory.deleteProcess(myFactory.process);
                         multi.template=value.values;
-
                         myFactory.process[param.model]=value.name;
-                        myFactory.addNewProcess("changing");
+                        // myFactory.addNewProcess("changing");
+                        myFactory.addNewProcess();
                         delete scope.myFactory.process.changing;//убираем выделение строки которую меняли
                         myFactory.removeCellSelection();
+                        if (value.times) {
+                            myFactory.setAlimitAsTimes(value.times);
+                        }
                         scope.clean();
                     }
                     else{

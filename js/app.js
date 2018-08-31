@@ -614,6 +614,32 @@ app.factory('myFactory', function(){
             }
         },
         /**
+         * Функция для изменения значения лимита на "кол-во случае" со значением times - раз
+         * @param {number} times - количество случаев
+         */
+        setAlimitAsTimes (times) {
+            let a_limit=this.a_limit;
+            if (a_limit.type==="Кол-во случаев"&&a_limit.value===times) return true;
+            LimKoef = 1;
+            a_limit.type="Кол-во случаев";
+            a_limit.value=times;
+            a_limit.hand=true;
+            // первый расчет нужен для формирования значений цены
+            this.finalCalc();
+            // применение лимита к существующим значениям
+            this.applyAlimit();
+            this.finalCalc();
+        },
+        /**
+         * Функция изменения на агр. лимит
+         */
+        setAlimitAsAgr () {
+            const a_limit=this.a_limit;
+            a_limit.hand=false;
+            a_limit.type="Агр. лимит";
+            if(!a_limit.hand) a_limit.value=a_limit.max_limit;
+        },
+        /**
          * применение агрегатного лимита
          */
         applyAlimit:function(){
@@ -1113,6 +1139,19 @@ app.factory('myFactory', function(){
                 let array = obj.array;
                 this.multi.multies.push(new Multi(array, obj.packName, obj.template));
                 this.choosePark(array);
+                const times = packageTimes.call (this,obj.packName);
+                if (times) {
+                    this.setAlimitAsTimes(times);
+                }
+                /**
+                 * Функция нахождения параметра "кол-во раз" в пакете
+                 * @param {string} name - название пакета
+                 * @returns {number} кол-во раз, если undefined значит такого параметра нет
+                 */
+                function packageTimes (name) {
+                    const searchedPack = this.packages.find(pack=>pack.name===name);
+                    return (searchedPack) ? searchedPack.times : false;
+                }
             }
             //если не мульти
             else{
