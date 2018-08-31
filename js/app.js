@@ -600,12 +600,17 @@ app.factory('myFactory', function(){
          * ручной ввод агрегатного лимита
          */
         changeAlimit(){
-            const a_limit=this.a_limit;
+            let a_limit=this.a_limit;
             if(a_limit.type=="Агр. лимит"){
-                this.setAlimitAsTimes (1);
+                a_limit.type="Кол-во случаев";
+                a_limit.value=1;
+                a_limit.hand=true;
+                this.applyAlimit();
             }
             else{
-                this.setAlimitAsAgr ();
+                a_limit.hand=false;
+                a_limit.type="Агр. лимит";
+                if(!a_limit.hand) a_limit.value=a_limit.max_limit;
             }
         },
         /**
@@ -613,7 +618,9 @@ app.factory('myFactory', function(){
          * @param {number} times - количество случаев
          */
         setAlimitAsTimes (times) {
-            const a_limit=this.a_limit;
+            let a_limit=this.a_limit;
+            if (a_limit.type==="Кол-во случаев"&&a_limit.value===times) return true;
+            LimKoef = 1;
             a_limit.type="Кол-во случаев";
             a_limit.value=times;
             a_limit.hand=true;
@@ -621,6 +628,7 @@ app.factory('myFactory', function(){
             this.finalCalc();
             // применение лимита к существующим значениям
             this.applyAlimit();
+            this.finalCalc();
         },
         /**
          * Функция изменения на агр. лимит
@@ -1142,7 +1150,7 @@ app.factory('myFactory', function(){
                  */
                 function packageTimes (name) {
                     const searchedPack = this.packages.find(pack=>pack.name===name);
-                    return searchedPack.times;
+                    return (searchedPack) ? searchedPack.times : false;
                 }
             }
             //если не мульти

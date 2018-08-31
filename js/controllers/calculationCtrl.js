@@ -1434,6 +1434,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                                 if(value.action=="package") {
                                     if (value.times) {
                                         myFactory.setAlimitAsTimes(value.times);
+                                        myFactory.finalCalc();
                                     }
                                     else {
                                         // FIXME: добавить изменение на агр лимит при смене с кол-во раз
