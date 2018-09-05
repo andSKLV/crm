@@ -805,8 +805,13 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     // если в параметрах мульти коллектора теперь осталось по одному аргументу =
                     return Object.values(myFactory.multi.arrays).every(el => el.length===1)
                 };
+                //  проверяем не был ли мульти узел изменен на пакет. в этом случае это все еще мульти-узел
+                const isNotPack = () => {
+                    const mf = myFactory;
+                    return mf.packages.every(pack=>pack.name!==mf.multi.arrays.risk[0]); 
+                }
                 // если произошло отжатие предпоследнего аргумента в мульти, то мульти должен превратиться в проц
-                if (isNotMulti()) {
+                if (isNotMulti()&&isNotPack()) {
                     myFactory.removeCellSelection();
                     const key = (param.model==="risk") ? "wrapping" : "risk";
                     // определяем проц, который надо удалить
