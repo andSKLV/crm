@@ -263,7 +263,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
      */
     this.tooltip={
         title:"",
-        fadeIn(title){
+        style: "",
+
+        fadeIn(title,isMulti){
 
             let isTitle=false;
             if(typeof title === "object"){
@@ -285,6 +287,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 this.title=title;
                 scope.oldConfig=scope.config;
                 scope.config='tooltip';
+                if (isMulti) this.style = 'tooltip_span--multi';
+                else this.style = '';
             }
 
 

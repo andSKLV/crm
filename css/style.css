@@ -33,8 +33,15 @@ div.matrix_container.calc{
 }
 
 @media (min-width: 1800px) and (max-width: 3600px) {
+    td.tooltip_span--multi {
+        color: #c54f4f;
+        font-size: 1.65em;
+        line-height: 0.85em;
+        overflow: hidden;
+    }
     .tooltip_span{
         font-size: 1.2em;
+        color: rgb(146, 167, 205);
     }
     div.mi_slider {
         width:1650px;
@@ -87,6 +94,12 @@ div.matrix_container.calc{
     .tooltip_span{
         font-size: 1.1em;
       }
+    td.tooltip_span--multi {
+        color: #c54f4f;
+        font-size: 1.55em;
+        line-height: 0.85em;
+        overflow: hidden;
+    }
     div.mi_slider{
         width:1200px;
         /* height: 800px; */
@@ -136,6 +149,12 @@ div.matrix_container.calc{
 @media (min-width: 400px) and (max-width: 1300px){
     .tooltip_span{
         font-size: 1em;
+    }
+    td.tooltip_span--multi {
+        color: #c54f4f;
+        font-size: 1.45em;
+        line-height: 0.85em;
+        overflow: hidden;
     }
     div.mi_slider{
         width:1050px;
