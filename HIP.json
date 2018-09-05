@@ -81,33 +81,23 @@
     ]
   },
   {
-    "name": "Тип грузового отсека",
+    "name": "Конфигурации",
     "model": "wrapping",
     "values": [
       {
-        "name": "Контейнер/Фургон/Реф",
-        "type":"risk",
-        "value":0
+        "name": "Тип грузового отсека",
+        "type": "relocate_here",
+        "urlTo":"Тип грузового отсека"
       },
       {
-        "name": "Тент",
-        "type":"risk",
-        "value":1.2
+        "name": "Регион",
+        "type": "relocate_here",
+        "urlTo":"Регион"
       },
       {
-        "name": "Автовоз",
-        "type":"risk",
-        "value":3.5
-      },
-      {
-        "name": "Цистерна/Танк",
-        "type":"risk",
-        "value":5
-      },
-      {
-        "name": "Открытый",
-        "type":"risk",
-        "value":4
+        "name": "Форма собственности",
+        "type": "relocate_here",
+        "urlTo":"Форма собственности"
       }
     ]
   },
@@ -389,5 +379,85 @@
         "times": 1
       }
     ]
+  },
+  {
+    "url": "Тип грузового отсека",
+    "model": "wrapping",
+    "values": [
+      {
+        "name": "Контейнер/Фургон/Реф",
+        "type":"risk",
+        "value":0
+      },
+      {
+        "name": "Тент",
+        "type":"risk",
+        "value":1.2
+      },
+      {
+        "name": "Автовоз",
+        "type":"risk",
+        "value":3.5
+      },
+      {
+        "name": "Цистерна/Танк",
+        "type":"risk",
+        "value":5
+      },
+      {
+        "name": "Открытый",
+        "type":"risk",
+        "value":4
+      }
+    ]
+  },
+  {
+    "url": "Регион",
+    "model": "wrapping",
+    "values": [
+      {
+        "name": "Россия",
+        "type":"risk",
+        "value":0
+      },
+      {
+        "name": "Крайний север",
+        "type":"risk",
+        "value":1.2
+      },
+      {
+        "name": "Европа",
+        "type":"risk",
+        "value":3.5
+      },
+      {
+        "name": "Азия",
+        "type":"risk",
+        "value":5
+      }
+    ]
+
+  },
+  {
+    "url": "Форма собственности",
+    "model": "wrapping",
+    "values": [
+      {
+        "name": "Физ. лицо",
+        "type":"risk",
+        "value":5
+      },
+      {
+        "name": "ИП",
+        "type":"risk",
+        "value":3
+      },
+      {
+        "name": "ООО",
+        "type":"risk",
+        "value":1
+      }
+    ]
+
   }
 ]
