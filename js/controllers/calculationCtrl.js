@@ -1,7 +1,3 @@
-/**
- * Created by RoGGeR on 30.05.17.
- */
-
 app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location){
     this.span=1;
     this.myFactory=myFactory;
@@ -9,11 +5,15 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.search_params=[];
     this.isArray = angular.isArray;
     this.config="HIP.json";
+    /**
+     * Инициализация каретки
+     */
     $http.post("HIP.json").then(function success (response) {
-        scope.currObj=[];
-        scope.currObj=response.data;
-        scope.myFactory.currObj=response.data;
-        
+        scope.currObj = [];
+        const data = replaceSingleDepth(response.data);
+        scope.currObj = data;
+        scope.myFactory.currObj = data;
+
         let pack=scope.currObj.filter(function (param) {
             return param.url=="Пакеты";
         });
@@ -35,8 +35,26 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             scope.matrix.loadProcess(scope.myFactory.loadProcess.process, scope.myFactory.loadProcess.key);
             delete scope.myFactory.loadProcess;
         }
+        /**
+         * Функция для того, чтобы убрать лишнее заглубление, если поле содержит в себе только одно поле, то родителя не нужен
+         * @param {Object} data
+         */
+        function replaceSingleDepth  (data) {
+            const toChangeUpper = {}; // для верхнего уровня типа risk & wrapping
+            const toChangeLower = {}; //  для нижнего уровня типа url
+            const changingData = [...data];
+            data.forEach((field,ind)=>{
+                if (field.name && field.values.length===1) toChangeUpper[ind] = field.values[0].name;
+            })
+            for (let key in toChangeUpper) {
+                const toPaste = data.find(field=>field.url===toChangeUpper[key]);
+                changingData[+key].name = toPaste.url;
+                changingData[+key].values = toPaste.values;
+            }
+            return changingData;
+        }
     },function error (response){
-            console.log(response);
+            console.error(response);
         }
     );
     /**
@@ -1684,89 +1702,5 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         });
         if(multi.parent) deepRemoveMulti(multi.parent);
         myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi), 1);
-    }
-    // myFactory.parks=[];
-    // myFactory.parks.push(new Park(new Process({
-    //     cost:2000000,
-    //     amount:72,
-    //     wrapping:"Автовоз",
-    //     risk:"Базовые риски",
-    //     limit:2000000,
-    //     basePrice:26290.529691321786,
-    //     baseRate:0.018257312285640127,   
-    //     franchise:0,
-    //     riskPrice:29287.591314347355,
-    //     riskRate:0.020338605079407886,
-    //     totalPrice:29287.591314347355,
-    //     turnover:144000000,
-    //     cars: ["А123ОО", "О123АА", "О123АО"]
-        
-    // })));
-    // myFactory.parks[0].cars=[
-    //     {
-    //         number: "А123ОО"
-    //     },
-    //     {
-    //         number: "О123АА"
-    //     },
-    //     {
-    //         number: "О123АО"
-    //     }
-    // ];
-    // let processes=[
-    //     {
-    //         cost:10000000,
-    //         amount:72,
-    //         wrapping:"Автовоз",
-    //         risk:"Таможенные платежи",
-    //         limit:10000000,
-    //         basePrice:26290.529691321786,
-    //         baseRate:0.018257312285640127,   
-    //         franchise:0,
-    //         riskPrice:29287.591314347355,
-    //         riskRate:0.020338605079407886,
-    //         totalPrice:29287.591314347355,
-    //         turnover:144000000,
-    //         cars: ["А123ОО", "О123АА", "О123АО"]
-            
-    //     },
-    //     {
-    //         cost:2000000,
-    //         amount:48,
-    //         wrapping:"Автовоз",
-    //         risk:"Повреждение контейнера",
-    //         limit:2000000,
-    //         basePrice:26290.529691321786,
-    //         baseRate:0.018257312285640127,
-    //         franchise:0,
-    //         riskPrice:29287.591314347355,
-    //         riskRate:0.020338605079407886,
-    //         totalPrice:29287.591314347355,
-    //         turnover:144000000,
-    //         cars: ["А123ОО", "О123АА"]
-    //     },
-    //     {
-    //         cost:2000000,
-    //         amount:48,
-    //         wrapping:"Автовоз",
-    //         risk:"Стихийные бедствия",
-    //         limit:2000000,
-    //         basePrice:26290.529691321786,
-    //         baseRate:0.018257312285640127,           
-    //         franchise:0,
-    //         riskPrice:29287.591314347355,
-    //         riskRate:0.020338605079407886,
-    //         totalPrice:29287.591314347355,
-    //         turnover:144000000,
-    //         cars: ["А123ОО",  "О123АО"]
-    //     }
-    // ];
-    // myFactory.choosePark(
-    //     processes.map((process)=>
-    //         new Process(process)
-    //     )
-    // )
-    
-    // setTimeout(myFactory.finalCalc.bind(myFactory), 1000);
-    
+    }    
 });
