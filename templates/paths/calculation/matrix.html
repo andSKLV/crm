@@ -36,7 +36,7 @@
 
             </td>
 
-            <td ng-mouseenter="process.multi.showRows=key; (key=='wrapping' || key=='risk') && value.length>1 ? calculation.tooltip.fadeIn(value) : ''"
+            <td ng-mouseenter="process.multi.showRows=key; (key=='wrapping' || key=='risk') && value.length>1 ? calculation.tooltip.fadeIn(value,true) : ''"
                 ng-mouseleave="calculation.deleteProperty(process.multi, 'showRows'); calculation.tooltip.fadeOut();"
                 class="properties" ng-class="{mi_selected : process.multi.changing && calculation.myFactory.document.selectedParam==calculation.checkTransportProp(key)}"
                 ng-repeat="(key,value) in process.multi track by $index" ng-if="calculation.checkTransportProp(key)!=-1 && process.multi!==undefined && !process.multi.show && process.multi.processes.indexOf(process)==0"

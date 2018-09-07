@@ -1,7 +1,7 @@
 <table style="text-align: center; width:100%; height:65px; " class="animate-switch-container">
     <tbody ng-if="calculation.config=='tooltip'">
     <tr>
-        <td class="tooltip_span" style="color: rgb(146, 167, 205);height: inherit">{{calculation.tooltip.title}}</td>
+        <td class="{{calculation.tooltip.style}} tooltip_span" style="height: inherit">{{calculation.tooltip.title}}</td>
     </tr>
     </tbody>
     <tbody ng-if="calculation.config!='calculation.json' && mode=='calc'" ng-switch="calculation.karetka.mode" class="animate-switch-container animate-switch">
