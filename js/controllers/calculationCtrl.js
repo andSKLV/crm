@@ -41,12 +41,12 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
          */
         function replaceSingleDepth  (data) {
             const toChangeUpper = {}; // для верхнего уровня типа risk & wrapping
-                // const toChangeLower = {}; //  для нижнего уровня типа url
+                const toChangeLower = {}; //  для нижнего уровня типа url
             const changingData = [...data];
             // выбираем ячейки в которых количество детей ===1
             data.forEach((field,ind)=>{
                 if (field.name && field.values.length===1) toChangeUpper[ind] = field.values[0].name;
-                    // if (field.url && field.values.length===1) toChangeLower[field.url] = field.values[0];
+                if (field.url && field.values.length===1&&field.url!=='Пакеты') toChangeLower[field.url] = field.values[0];
             })
             for (let key in toChangeUpper) {
                 const toPaste = data.find(field=>field.url===toChangeUpper[key]);
@@ -56,15 +56,18 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             }
                 // *** не доделано, работает, но при переходе из матрицы в каретку баг, если понадобиться - вернуть ***
                 // *** как вариант переписать HIP.json так чтобы все где есть вложенности являлись отдельными объектами с urlTo***
-                // for (let key in toChangeLower) {
-                //     debugger;
-                //     const type = toChangeLower[key].type;
-                //     const parent = changingData.find(field=>field.name&&field.model===type).values;
-                //     let ind;
-                //     parent.forEach((val,i)=> {if (val.name===key) ind = i});
-                //     parent.splice(ind,1,toChangeLower[key])
-                //     debugger;
-                // }
+            for (let key in toChangeLower) {
+                    const type = toChangeLower[key].type;
+                    const parent = changingData.find(field=>field.name&&field.model===type).values;
+                    // заменяем параметры родителя с одни ребенком на параметры ребенка
+                    let ind;
+                    parent.forEach((val,i)=> {if (val.name===key) ind = i});
+                    parent.splice(ind,1,toChangeLower[key]);
+                
+                    // удаляем ребенка из общего списка, чтобы не дублировать
+                    changingData.forEach((val,i)=> {if (val.url===key) ind = i});
+                    changingData.splice(ind,1);
+            }
             return changingData;
         }
     },function error (response){
