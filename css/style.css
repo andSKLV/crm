@@ -93,6 +93,7 @@ div.matrix_container.calc{
 @media (min-width: 1300px) and (max-width: 1800px) {
     .tooltip_span{
         font-size: 1.1em;
+        color: rgb(146, 167, 205);
       }
     td.tooltip_span--multi {
         color: #c54f4f;
@@ -149,6 +150,7 @@ div.matrix_container.calc{
 @media (min-width: 400px) and (max-width: 1300px){
     .tooltip_span{
         font-size: 1em;
+        color: rgb(146, 167, 205);
     }
     td.tooltip_span--multi {
         color: #c54f4f;
