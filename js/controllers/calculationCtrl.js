@@ -1,5 +1,6 @@
 app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location){
     this.span=1;
+    this.karetkaDepth = 1;
     this.myFactory=myFactory;
     let scope=this;
     this.search_params=[];
@@ -529,21 +530,36 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.selectParam=function (index) { // нажатии на nav
         if(myFactory.parkTemplate.length>0) myFactory.parkTemplate=[];
         if(this.currObj[index] && this.currObj[index].name===undefined){
-            let url=this.currObj[index].url;
-            this.currObj.forEach(function (params, i) {
-                params.values.forEach(function (value) {
-                    if(value.urlTo==url) myFactory.document.selectedParam=i;
+            const url=this.currObj[index].url;
+            const prevParam = this.currObj[this.myFactory.document.currParam];
+            if (!isChild (prevParam,url)) {
+                this.currObj.forEach(function (params, i) {
+                    params.values.forEach(function (value) {
+                        if(value.urlTo==url) myFactory.document.selectedParam=i;
+                    })
                 })
-            })
+            }
+            this.karetkaDepth++;
+            function isChild(parent,child) {
+                return parent.values.some(val=>val.name===url);
+            }
         }
-        else myFactory.document.selectedParam=index;
+        else {
+            myFactory.document.selectedParam=index;
+            this.karetkaDepth = 1;
+        }
         this.myFactory.document.currParam=index;
+        console.log(this.karetkaDepth);
         $rootScope.search_result=[];
         if(index!==""){
             this.myFactory.keyCodes.number.length=this.currObj[this.myFactory.document.currParam].values.length+1;
             if(this.karetka.mode=="listener") this.karetka.mode="making new process";
         }
     };
+    this.depthSymbol = function (x) {
+        const symbols = { 1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI' }
+        return symbols[x];
+    }
     this.selectNextParam=function(){
         let i=0;
         for(let key in myFactory.process){
@@ -1719,5 +1735,5 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         });
         if(multi.parent) deepRemoveMulti(multi.parent);
         myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi), 1);
-    }    
+    }
 });

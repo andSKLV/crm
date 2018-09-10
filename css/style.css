@@ -31,6 +31,31 @@ div.matrix_container.calc{
     height: auto;
     max-height: 600px;
 }
+.depth-symbol{
+    font-size: 0.8em;
+    position: relative;
+    display: block;
+    left: 20px;
+    top: -18px;
+    height: 0px;
+    width: 0px;
+}
+.depth-symbol:hover:after{
+    content: "Уровень вложенности";
+    position: absolute;
+    right: 100%;
+    top: 30%;
+    z-index: 10;
+    background-color: white;
+    color: black;
+    font-size: 14px;
+    width: 100px;
+    height: auto;
+    border: 2px solid rgb(0, 111, 167);
+    border-radius: 15px;
+    padding: 2px 6px 2px 6px;
+    font-weight: bold;
+}
 
 @media (min-width: 1800px) and (max-width: 3600px) {
     td.tooltip_span--multi {
@@ -208,7 +233,7 @@ div.matrix_container.calc{
 }
 /***********************/
 
-/*************************** ебланские стрелки */
+/*************************** стрелки */
 .price{
     text-align: right;
 }

@@ -434,6 +434,11 @@
         "name": "Азия",
         "type":"risk",
         "value":5
+      },
+      {
+        "name": "3 уровень",
+        "type": "relocate_here",
+        "urlTo":"3 уровень"
       }
     ]
 
@@ -459,5 +464,21 @@
       }
     ]
 
+  },
+  {
+    "url": "3 уровень",
+    "model": "wrapping",
+    "values": [
+      {
+        "name": "Первый",
+        "type":"risk",
+        "value":0
+      },
+      {
+        "name": "Второй",
+        "type":"risk",
+        "value":1.2
+      }
+    ]
   }
 ]
