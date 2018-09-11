@@ -56,8 +56,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 changingData[+key].values = toPaste.values;
                 console.warn(`${toPaste.url} был заменен, так как в нем был только один параметр`);
             }
-                // *** не доделано, работает, но при переходе из матрицы в каретку баг, если понадобиться - вернуть ***
-                // *** как вариант переписать HIP.json так чтобы все где есть вложенности являлись отдельными объектами с urlTo***
+            // TODO: создана функция добавления параметра глубины и родителя для элементов
+            // можно переписать используя данные наработки
             for (let key in toChangeLower) {
                     const type = toChangeLower[key].type;
                     const parent = changingData.find(field=>field.name&&field.model===type).values;

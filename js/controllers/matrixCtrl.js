@@ -32,7 +32,6 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             if($location.path!=="/calculation"){
                 $location.path('/calculation');
             }
-            debugger;
             let data ={};
             data.type="load_calculation";
             data.id=id;

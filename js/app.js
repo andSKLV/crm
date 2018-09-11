@@ -881,7 +881,7 @@ app.factory('myFactory', function(){
             this.a_limit.max_limit=max;
             //if(!this.a_limit.hand) this.a_limit.value=max;
         },
-        makePackage(){//ебучие пакеты
+        makePackage(){//пакеты
             let array=[];
             let obj={};
             obj.packName=this.process.risk;
@@ -986,7 +986,7 @@ app.factory('myFactory', function(){
                     this.process.wrapping=this.multi.arrays.wrapping[i];
                     this.process.risk=this.multi.arrays.risk[j];
                     let risk=this.process.risk;
-                    let packages=this.packages.filter(function (pack) {//ебучие пакеты
+                    let packages=this.packages.filter(function (pack) {//пакеты
                         return pack.name==risk;
                     });
                     if(packages.length>0){
