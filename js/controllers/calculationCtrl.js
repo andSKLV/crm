@@ -11,7 +11,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
      */
     $http.post("HIP.json").then(function success (response) {
         scope.currObj = [];
-        const data = replaceSingleDepth(response.data);
+        let data = replaceSingleDepth(response.data);
+        data = putDepth(data);
         scope.currObj = data;
         scope.myFactory.currObj = data;
 
@@ -42,7 +43,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
          */
         function replaceSingleDepth  (data) {
             const toChangeUpper = {}; // для верхнего уровня типа risk & wrapping
-                const toChangeLower = {}; //  для нижнего уровня типа url
+            const toChangeLower = {}; //  для нижнего уровня типа url
             const changingData = [...data];
             // выбираем ячейки в которых количество детей ===1
             data.forEach((field,ind)=>{
@@ -68,6 +69,61 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     // удаляем ребенка из общего списка, чтобы не дублировать
                     changingData.forEach((val,i)=> {if (val.url===key) ind = i});
                     changingData.splice(ind,1);
+            }
+            return changingData;
+        }
+        /**
+         * Функция для расставления глубины вложенности и родителя
+         * @param {object} data - объект каретки 
+         */
+        function putDepth (data) {
+            let changingData = [...data];
+            // присваиваем уровень родителю и его непосредственному ребенку
+            changingData.forEach(el=>{
+                // всем родителям присваиваем вложенность = 1
+                if (el.name&&!el.url) {
+                    el.depth = 1;
+                    for (let i=0;i<el.values.length;i++){
+                        const val = el.values[i];
+                        if (val.urlTo) {
+                            const name = val.urlTo;
+                            const obj = data.find(child=>child.url===name);
+                            obj.depth = 2;
+                            obj.parent = el;
+                        }
+                    }
+                }
+            })
+            putDepthForChilds();
+            /**
+             * Функция расстановки глубины для следующего уровня вроженности
+             * если был проставлен хоть один раз уровень, то функция повторяется
+             */
+            function putDepthForChilds () {
+                let wasChange = false;
+                for (let el of changingData) {
+                    if (el.url&&!el.depth) {
+                        const parent = findParent (el);
+                        el.parent = parent;
+                        el.depth = parent.depth + 1;
+                        wasChange = true;
+                    }
+                }
+                if (wasChange) putDepthForChilds();
+            }
+            /**
+             * Функция поиска родителя этого элемента
+             * @param {*} el 
+             */
+            function findParent (el) {
+                const mayBeParents = changingData.filter(val=>val.url&&el.model===val.model&&el.url!==val.url);
+                const parent = mayBeParents.find(val=>{
+                    //  находим имена детей у всех потенциальных родителей
+                    const names = val.values.map(v=>v.name);
+                    // если имя ребенка совпало с искомым, значит это наш родитель
+                    return (names.includes(el.url));
+                })
+                return parent;
             }
             return changingData;
         }
@@ -1191,8 +1247,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             for(let i=0;i<scope.currObj.length;i++) {
                 for(let j=0;j<scope.currObj[i].values.length;j++) delete scope.currObj[i].values[j].selected;//selected параметр позволяет подсветить то значение, которое выбрано в процессе
             }
-
             scope.myFactory.document.currParam = transportProp.indexOf(prop);
+            if (scope.myFactory.document.selectedParam !== transportProp.indexOf(prop)) scope.karetkaDepth=1;
             scope.myFactory.document.selectedParam = transportProp.indexOf(prop);
             // заменяем проц с которым работаем
             myFactory.process=process;
