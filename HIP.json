@@ -81,23 +81,33 @@
     ]
   },
   {
-    "name": "Конфигурации",
+    "name": "Тип грузового отсека",
     "model": "wrapping",
     "values": [
       {
-        "name": "Тип грузового отсека",
-        "type": "relocate_here",
-        "urlTo":"Тип грузового отсека"
+        "name": "Контейнер/Фургон/Реф",
+        "type":"risk",
+        "value":0
       },
       {
-        "name": "Регион",
-        "type": "relocate_here",
-        "urlTo":"Регион"
+        "name": "Тент",
+        "type":"risk",
+        "value":1.2
       },
       {
-        "name": "Форма собственности",
-        "type": "relocate_here",
-        "urlTo":"Форма собственности"
+        "name": "Автовоз",
+        "type":"risk",
+        "value":3.5
+      },
+      {
+        "name": "Цистерна/Танк",
+        "type":"risk",
+        "value":5
+      },
+      {
+        "name": "Открытый",
+        "type":"risk",
+        "value":4
       }
     ]
   },
@@ -377,107 +387,6 @@
           }
         ],
         "times": 1
-      }
-    ]
-  },
-  {
-    "url": "Тип грузового отсека",
-    "model": "wrapping",
-    "values": [
-      {
-        "name": "Контейнер/Фургон/Реф",
-        "type":"risk",
-        "value":0
-      },
-      {
-        "name": "Тент",
-        "type":"risk",
-        "value":1.2
-      },
-      {
-        "name": "Автовоз",
-        "type":"risk",
-        "value":3.5
-      },
-      {
-        "name": "Цистерна/Танк",
-        "type":"risk",
-        "value":5
-      },
-      {
-        "name": "Открытый",
-        "type":"risk",
-        "value":4
-      }
-    ]
-  },
-  {
-    "url": "Регион",
-    "model": "wrapping",
-    "values": [
-      {
-        "name": "Россия",
-        "type":"risk",
-        "value":0
-      },
-      {
-        "name": "Крайний север",
-        "type":"risk",
-        "value":1.2
-      },
-      {
-        "name": "Европа",
-        "type":"risk",
-        "value":3.5
-      },
-      {
-        "name": "Азия",
-        "type":"risk",
-        "value":5
-      },
-      {
-        "name": "3 уровень",
-        "type": "relocate_here",
-        "urlTo":"3 уровень"
-      }
-    ]
-
-  },
-  {
-    "url": "Форма собственности",
-    "model": "wrapping",
-    "values": [
-      {
-        "name": "Физ. лицо",
-        "type":"risk",
-        "value":5
-      },
-      {
-        "name": "ИП",
-        "type":"risk",
-        "value":3
-      },
-      {
-        "name": "ООО",
-        "type":"risk",
-        "value":1
-      }
-    ]
-
-  },
-  {
-    "url": "3 уровень",
-    "model": "wrapping",
-    "values": [
-      {
-        "name": "Первый",
-        "type":"risk",
-        "value":0
-      },
-      {
-        "name": "Второй",
-        "type":"risk",
-        "value":1.2
       }
     ]
   }
