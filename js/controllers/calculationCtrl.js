@@ -532,7 +532,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         if(this.currObj[index] && this.currObj[index].name===undefined){
             const url=this.currObj[index].url;
             const prevParam = this.currObj[this.myFactory.document.currParam];
-            if (!isChild (prevParam,url)) {
+            if (!isChild (this.currObj,prevParam,url)) {
                 this.currObj.forEach(function (params, i) {
                     params.values.forEach(function (value) {
                         if(value.urlTo==url) myFactory.document.selectedParam=i;
@@ -540,8 +540,26 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 })
             }
             this.karetkaDepth++;
-            function isChild(parent,child) {
-                return parent.values.some(val=>val.name===url);
+            /**
+             * Функция проверки на то, является ли выбранный элементом вложенностью в родителя
+             * @param {object} currObj - коллектор всех объектов
+             * @param {object} parent - объект родителя в котором будем проверять наличие ребенка
+             * @param {string} child - название ребенка которого будем проверять
+             */
+            function isChild(currObj,parent,child) {
+                let flag = parent.values.some(val=>val.name===url);
+                if (flag) return flag;
+                const pseudoParents = [];
+                // собираем детей у родителей, чтобы проверить третий уровень вложенности
+                parent.values.forEach(val=>{if (val.urlTo) {
+                    const name = val.name;
+                    const el = currObj.find(val=>val.url===name);
+                    pseudoParents.push(el);
+                }})
+                // рекурсивно проверяем всех детей и их детей. если кто то окажется предком, то вернется true
+                const flags = pseudoParents.map(el=>isChild(currObj,el,child));
+                flag = flags.some(bool=>bool);
+                return flag;
             }
         }
         else {
