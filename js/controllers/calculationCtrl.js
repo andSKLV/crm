@@ -1,19 +1,21 @@
-/**
- * Created by RoGGeR on 30.05.17.
- */
-
 app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location){
     this.span=1;
+    this.karetkaDepth = 1;
     this.myFactory=myFactory;
     let scope=this;
     this.search_params=[];
     this.isArray = angular.isArray;
     this.config="HIP.json";
+    /**
+     * Инициализация каретки
+     */
     $http.post("HIP.json").then(function success (response) {
-        scope.currObj=[];
-        scope.currObj=response.data;
-        scope.myFactory.currObj=response.data;
-        
+        scope.currObj = [];
+        let data = replaceSingleDepth(response.data);
+        data = putDepth(data);
+        scope.currObj = data;
+        scope.myFactory.currObj = data;
+
         let pack=scope.currObj.filter(function (param) {
             return param.url=="Пакеты";
         });
@@ -35,8 +37,98 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             scope.matrix.loadProcess(scope.myFactory.loadProcess.process, scope.myFactory.loadProcess.key);
             delete scope.myFactory.loadProcess;
         }
+        /**
+         * Функция для того, чтобы убрать лишнее заглубление, если поле содержит в себе только одно поле, то родителя не нужен
+         * @param {Object} data
+         */
+        function replaceSingleDepth  (data) {
+            const toChangeUpper = {}; // для верхнего уровня типа risk & wrapping
+            const toChangeLower = {}; //  для нижнего уровня типа url
+            const changingData = [...data];
+            // выбираем ячейки в которых количество детей ===1
+            data.forEach((field,ind)=>{
+                if (field.name && field.values.length===1) toChangeUpper[ind] = field.values[0].name;
+                if (field.url && field.values.length===1&&field.url!=='Пакеты') toChangeLower[field.url] = field.values[0];
+            })
+            for (let key in toChangeUpper) {
+                const toPaste = data.find(field=>field.url===toChangeUpper[key]);
+                changingData[+key].name = toPaste.url;
+                changingData[+key].values = toPaste.values;
+                console.warn(`${toPaste.url} был заменен, так как в нем был только один параметр`);
+            }
+                // *** не доделано, работает, но при переходе из матрицы в каретку баг, если понадобиться - вернуть ***
+                // *** как вариант переписать HIP.json так чтобы все где есть вложенности являлись отдельными объектами с urlTo***
+            for (let key in toChangeLower) {
+                    const type = toChangeLower[key].type;
+                    const parent = changingData.find(field=>field.name&&field.model===type).values;
+                    // заменяем параметры родителя с одни ребенком на параметры ребенка
+                    let ind;
+                    parent.forEach((val,i)=> {if (val.name===key) ind = i});
+                    parent.splice(ind,1,toChangeLower[key]);
+                
+                    // удаляем ребенка из общего списка, чтобы не дублировать
+                    changingData.forEach((val,i)=> {if (val.url===key) ind = i});
+                    changingData.splice(ind,1);
+            }
+            return changingData;
+        }
+        /**
+         * Функция для расставления глубины вложенности и родителя
+         * @param {object} data - объект каретки 
+         */
+        function putDepth (data) {
+            let changingData = [...data];
+            // присваиваем уровень родителю и его непосредственному ребенку
+            changingData.forEach(el=>{
+                // всем родителям присваиваем вложенность = 1
+                if (el.name&&!el.url) {
+                    el.depth = 1;
+                    for (let i=0;i<el.values.length;i++){
+                        const val = el.values[i];
+                        if (val.urlTo) {
+                            const name = val.urlTo;
+                            const obj = data.find(child=>child.url===name);
+                            obj.depth = 2;
+                            obj.parent = el;
+                        }
+                    }
+                }
+            })
+            putDepthForChilds();
+            /**
+             * Функция расстановки глубины для следующего уровня вроженности
+             * если был проставлен хоть один раз уровень, то функция повторяется
+             */
+            function putDepthForChilds () {
+                let wasChange = false;
+                for (let el of changingData) {
+                    if (el.url&&!el.depth) {
+                        const parent = findParent (el);
+                        el.parent = parent;
+                        el.depth = parent.depth + 1;
+                        wasChange = true;
+                    }
+                }
+                if (wasChange) putDepthForChilds();
+            }
+            /**
+             * Функция поиска родителя этого элемента
+             * @param {*} el 
+             */
+            function findParent (el) {
+                const mayBeParents = changingData.filter(val=>val.url&&el.model===val.model&&el.url!==val.url);
+                const parent = mayBeParents.find(val=>{
+                    //  находим имена детей у всех потенциальных родителей
+                    const names = val.values.map(v=>v.name);
+                    // если имя ребенка совпало с искомым, значит это наш родитель
+                    return (names.includes(el.url));
+                })
+                return parent;
+            }
+            return changingData;
+        }
     },function error (response){
-            console.log(response);
+            console.error(response);
         }
     );
     /**
@@ -264,6 +356,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.tooltip={
         title:"",
         style: "",
+
         fadeIn(title,isMulti){
 
             let isTitle=false;
@@ -493,14 +586,42 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.selectParam=function (index) { // нажатии на nav
         if(myFactory.parkTemplate.length>0) myFactory.parkTemplate=[];
         if(this.currObj[index] && this.currObj[index].name===undefined){
-            let url=this.currObj[index].url;
-            this.currObj.forEach(function (params, i) {
-                params.values.forEach(function (value) {
-                    if(value.urlTo==url) myFactory.document.selectedParam=i;
+            const url=this.currObj[index].url;
+            const prevParam = this.currObj[this.myFactory.document.currParam];
+            if (!isChild (this.currObj,prevParam,url)) {
+                this.currObj.forEach(function (params, i) {
+                    params.values.forEach(function (value) {
+                        if(value.urlTo==url) myFactory.document.selectedParam=i;
+                    })
                 })
-            })
+            }
+            this.karetkaDepth = this.currObj[index].depth;
+            /**
+             * Функция проверки на то, является ли выбранный элементом вложенностью в родителя
+             * @param {object} currObj - коллектор всех объектов
+             * @param {object} parent - объект родителя в котором будем проверять наличие ребенка
+             * @param {string} child - название ребенка которого будем проверять
+             */
+            function isChild(currObj,parent,child) {
+                let flag = parent.values.some(val=>val.name===url);
+                if (flag) return flag;
+                const pseudoParents = [];
+                // собираем детей у родителей, чтобы проверить третий уровень вложенности
+                parent.values.forEach(val=>{if (val.urlTo) {
+                    const name = val.name;
+                    const el = currObj.find(val=>val.url===name);
+                    pseudoParents.push(el);
+                }})
+                // рекурсивно проверяем всех детей и их детей. если кто то окажется предком, то вернется true
+                const flags = pseudoParents.map(el=>isChild(currObj,el,child));
+                flag = flags.some(bool=>bool);
+                return flag;
+            }
         }
-        else myFactory.document.selectedParam=index;
+        else {
+            myFactory.document.selectedParam=index;
+            this.karetkaDepth = 1;
+        }
         this.myFactory.document.currParam=index;
         $rootScope.search_result=[];
         if(index!==""){
@@ -508,6 +629,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             if(this.karetka.mode=="listener") this.karetka.mode="making new process";
         }
     };
+    this.depthSymbol = function (x) {
+        const symbols = { 1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI' }
+        return symbols[x];
+    }
     this.selectNextParam=function(){
         let i=0;
         for(let key in myFactory.process){
@@ -804,6 +929,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     // если в параметрах мульти коллектора теперь осталось по одному аргументу =
                     return Object.values(myFactory.multi.arrays).every(el => el.length===1)
                 };
+                //  проверяем не был ли мульти узел изменен на пакет. в этом случае это все еще мульти-узел
+
                 const isNotPack = () => {
                     const mf = myFactory;
                     return mf.packages.every(pack=>pack.name!==mf.multi.arrays.risk[0]); 
@@ -1120,7 +1247,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             for(let i=0;i<scope.currObj.length;i++) {
                 for(let j=0;j<scope.currObj[i].values.length;j++) delete scope.currObj[i].values[j].selected;//selected параметр позволяет подсветить то значение, которое выбрано в процессе
             }
-
             scope.myFactory.document.currParam = transportProp.indexOf(prop);
             scope.myFactory.document.selectedParam = transportProp.indexOf(prop);
             // заменяем проц с которым работаем
@@ -1683,88 +1809,4 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         if(multi.parent) deepRemoveMulti(multi.parent);
         myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi), 1);
     }
-    // myFactory.parks=[];
-    // myFactory.parks.push(new Park(new Process({
-    //     cost:2000000,
-    //     amount:72,
-    //     wrapping:"Автовоз",
-    //     risk:"Базовые риски",
-    //     limit:2000000,
-    //     basePrice:26290.529691321786,
-    //     baseRate:0.018257312285640127,   
-    //     franchise:0,
-    //     riskPrice:29287.591314347355,
-    //     riskRate:0.020338605079407886,
-    //     totalPrice:29287.591314347355,
-    //     turnover:144000000,
-    //     cars: ["А123ОО", "О123АА", "О123АО"]
-        
-    // })));
-    // myFactory.parks[0].cars=[
-    //     {
-    //         number: "А123ОО"
-    //     },
-    //     {
-    //         number: "О123АА"
-    //     },
-    //     {
-    //         number: "О123АО"
-    //     }
-    // ];
-    // let processes=[
-    //     {
-    //         cost:10000000,
-    //         amount:72,
-    //         wrapping:"Автовоз",
-    //         risk:"Таможенные платежи",
-    //         limit:10000000,
-    //         basePrice:26290.529691321786,
-    //         baseRate:0.018257312285640127,   
-    //         franchise:0,
-    //         riskPrice:29287.591314347355,
-    //         riskRate:0.020338605079407886,
-    //         totalPrice:29287.591314347355,
-    //         turnover:144000000,
-    //         cars: ["А123ОО", "О123АА", "О123АО"]
-            
-    //     },
-    //     {
-    //         cost:2000000,
-    //         amount:48,
-    //         wrapping:"Автовоз",
-    //         risk:"Повреждение контейнера",
-    //         limit:2000000,
-    //         basePrice:26290.529691321786,
-    //         baseRate:0.018257312285640127,
-    //         franchise:0,
-    //         riskPrice:29287.591314347355,
-    //         riskRate:0.020338605079407886,
-    //         totalPrice:29287.591314347355,
-    //         turnover:144000000,
-    //         cars: ["А123ОО", "О123АА"]
-    //     },
-    //     {
-    //         cost:2000000,
-    //         amount:48,
-    //         wrapping:"Автовоз",
-    //         risk:"Стихийные бедствия",
-    //         limit:2000000,
-    //         basePrice:26290.529691321786,
-    //         baseRate:0.018257312285640127,           
-    //         franchise:0,
-    //         riskPrice:29287.591314347355,
-    //         riskRate:0.020338605079407886,
-    //         totalPrice:29287.591314347355,
-    //         turnover:144000000,
-    //         cars: ["А123ОО",  "О123АО"]
-    //     }
-    // ];
-    // myFactory.choosePark(
-    //     processes.map((process)=>
-    //         new Process(process)
-    //     )
-    // )
-    
-    // setTimeout(myFactory.finalCalc.bind(myFactory), 1000);
-    
 });
