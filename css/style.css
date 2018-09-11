@@ -116,6 +116,12 @@ div.matrix_container.calc{
 
 }
 @media (min-width: 1300px) and (max-width: 1800px) {
+    td.tooltip_span--multi {
+        color: #c54f4f;
+        font-size: 1.55em;
+        line-height: 0.85em;
+        overflow: hidden;
+    }
     .tooltip_span{
         font-size: 1.1em;
         color: rgb(146, 167, 205);
@@ -173,9 +179,16 @@ div.matrix_container.calc{
     }
 }
 @media (min-width: 400px) and (max-width: 1300px){
+    td.tooltip_span--multi {
+        color: #c54f4f;
+        font-size: 1.45em;
+        line-height: 0.85em;
+        overflow: hidden;
+    }
     .tooltip_span{
         font-size: 1em;
         color: rgb(146, 167, 205);
+
     }
     td.tooltip_span--multi {
         color: #c54f4f;
