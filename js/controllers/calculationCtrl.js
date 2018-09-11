@@ -595,7 +595,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     })
                 })
             }
-            this.karetkaDepth++;
+            this.karetkaDepth = this.currObj[index].depth;
             /**
              * Функция проверки на то, является ли выбранный элементом вложенностью в родителя
              * @param {object} currObj - коллектор всех объектов
@@ -623,7 +623,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             this.karetkaDepth = 1;
         }
         this.myFactory.document.currParam=index;
-        console.log(this.karetkaDepth);
         $rootScope.search_result=[];
         if(index!==""){
             this.myFactory.keyCodes.number.length=this.currObj[this.myFactory.document.currParam].values.length+1;
@@ -1248,7 +1247,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 for(let j=0;j<scope.currObj[i].values.length;j++) delete scope.currObj[i].values[j].selected;//selected параметр позволяет подсветить то значение, которое выбрано в процессе
             }
             scope.myFactory.document.currParam = transportProp.indexOf(prop);
-            if (scope.myFactory.document.selectedParam !== transportProp.indexOf(prop)) scope.karetkaDepth=1;
             scope.myFactory.document.selectedParam = transportProp.indexOf(prop);
             // заменяем проц с которым работаем
             myFactory.process=process;
