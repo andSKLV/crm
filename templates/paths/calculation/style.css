@@ -1,0 +1,11 @@
+.select_HIP {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background: rgb(230, 230, 230);
+  text-align: center;
+  vertical-align: middle;
+  display: table-cell;
+  border: 1px solid white;
+  font-size: 1em;
+}

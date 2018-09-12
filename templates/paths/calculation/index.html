@@ -6,7 +6,10 @@
     class="multi">+</div>
 
 <div class="dashboard_container" calculation-dashboard></div>
-
+<select class="select_HIP" placeholder="TYPE">
+    <option value="value1">Перевозчики</option>
+    <option value="value2">Экспедиторы</option>
+</select>
 <div id="tooltip_box" calculation-return></div>
 
 <div class="matrix_container" ng-controller="matrixCtrl as matrixCtrl" ng-class="{calc: dashboard.myFactory.matrixType=='HIP'}">
