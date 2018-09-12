@@ -9,7 +9,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     /**
      * Инициализация каретки
      */
-    $http.post("HIP.json").then(function success (response) {
+    $http.post("src/HIP.json").then(function success (response) {
         scope.currObj = [];
         let data = replaceSingleDepth(response.data);
         data = putDepth(data);
