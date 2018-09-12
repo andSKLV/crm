@@ -15,7 +15,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         data = putDepth(data);
         scope.currObj = data;
         scope.myFactory.currObj = data;
-
         let pack=scope.currObj.filter(function (param) {
             return param.url=="Пакеты";
         });
