@@ -11,13 +11,13 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         'Экспедиторы': 'HIP-conf.json',
     }
     // FIXME: возможно прописывать параметр в MF
-    this.HIPname = 'Перевозчики';
+    this.myFactory.HIPname = 'Перевозчики';
 
     this.loadMatrix = function () {
         /**
          * Инициализация каретки
          */
-        const param = this.karetkaTypes[this.HIPname];
+        const param = this.karetkaTypes[this.myFactory.HIPname];
         $http.post(`src/${param}`).then(function success (response) {
             scope.currObj = [];
             let data = replaceSingleDepth(response.data);
@@ -1759,10 +1759,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         // переключаем типа каретки
         switch (param) {
             case 0:
-                this.HIPname = 'Перевозчики';
+                this.myFactory.HIPname = 'Перевозчики';
                 break;
             case 1:
-                this.HIPname = 'Экспедиторы';
+                this.myFactory.HIPname = 'Экспедиторы';
                 break;
         }
         // перезагружаем матрицу
@@ -1781,20 +1781,20 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.saveCalculation=function () {
         if(this.nameOfCalculation=="" || this.nameOfCalculation===undefined) return false;
         let parks=[];
-        myFactory.parks.forEach(function(park){
-            let newPark={};
-            for(let key in park){
-                if(key!="processes") newPark[key]=park[key];
-                else{
-                    newPark[key]=[];
+        myFactory.parks.forEach(function (park) {
+            let newPark = {};
+            for (let key in park) {
+                if (key != "processes") newPark[key] = park[key];
+                else {
+                    newPark[key] = [];
                     park.processes.forEach(function (process) {
-                        let newProcess={};
-                        for(let prop in process){
-                            if(prop!="multi" && prop!="park"){
-                                newProcess[prop]=process[prop];
+                        let newProcess = {};
+                        for (let prop in process) {
+                            if (prop != "multi" && prop != "park") {
+                                newProcess[prop] = process[prop];
                             }
-                            else if(prop=="multi"){
-                                newProcess[prop]=myFactory.multi.multies.indexOf(process.multi);
+                            else if (prop == "multi") {
+                                newProcess[prop] = myFactory.multi.multies.indexOf(process.multi);
                             }
                         }
                         newPark[key].push(newProcess);
@@ -1803,54 +1803,54 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             }
             parks.push(newPark);
         });
-        let multies=[];
-        if(myFactory.multi.multies.length>0){
+        let multies = [];
+        if (myFactory.multi.multies.length > 0) {
             myFactory.multi.multies.forEach(function (multi) {
-                let newMulti={};
-                for(let key in multi){
-                    if(key!="processes") newMulti[key]=multi[key];
+                let newMulti = {};
+                for (let key in multi) {
+                    if (key != "processes") newMulti[key] = multi[key];
                 }
                 multies.push(newMulti);
             })
         }
         console.log(parks, multies);
-        let save={};
-        save.type="addNewCalculationToDB";
-        save.name=this.nameOfCalculation;
-        try{
-            save.parks=JSON.stringify(parks);
+        let save = {};
+        save.type = "addNewCalculationToDB";
+        save.name = this.nameOfCalculation;
+        try {
+            save.parks = JSON.stringify(parks);
         }
         catch {
             let CircularJSON = window.CircularJSON;
             save.parks = CircularJSON.stringify(parks);
         }
         try {
-            save.mass=JSON.stringify(multies);
+            save.mass = JSON.stringify(multies);
         }
         catch {
             let CircularJSON = window.CircularJSON;
             save.mass = CircularJSON.stringify(multies);
         }
-        save.payment=myFactory.payment.val;
-        save.agents=myFactory.agents.val+";"+myFactory.agents.mode;
-        save.practicalPrice=myFactory.practicalPrice.val+";"+myFactory.practicalPrice.koef;
-        save.a_limit=myFactory.a_limit.value;
-        save.a_limitType=myFactory.a_limit.type;
-        console.log(save.a_limit, myFactory.a_limit.type);
-        save.totalAmount=myFactory.totalAmount;
-        save.totalPrice=myFactory.totalPrice;
-        $http.post("search.php", save).then(function success (response) {
-                alert("Успешно сохранено");
-            },function error (response){
-                console.log(response);
-            }
+        save.payment = myFactory.payment.val;
+        save.agents = myFactory.agents.val + ";" + myFactory.agents.mode;
+        save.practicalPrice = myFactory.practicalPrice.val + ";" + myFactory.practicalPrice.koef;
+        save.a_limit = myFactory.a_limit.value;
+        save.a_limitType = myFactory.a_limit.type;
+        save.totalAmount = myFactory.totalAmount;
+        save.totalPrice = myFactory.totalPrice;
+        save.HIPname = myFactory.HIPname;
+        $http.post("search.php", save).then(function success(response) {
+            alert("Успешно сохранено");
+        }, function error(response) {
+            console.log(response);
+        }
         );
     };
-    function deepRemoveMulti(multi){
-        multi.processes.forEach(process=>{
-            if(process.constructor.name==="Process") delete process.multi;
+    function deepRemoveMulti(multi) {
+        multi.processes.forEach(process => {
+            if (process.constructor.name === "Process") delete process.multi;
         });
-        if(multi.parent) deepRemoveMulti(multi.parent);
+        if (multi.parent) deepRemoveMulti(multi.parent);
         myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi), 1);
     }
 });
