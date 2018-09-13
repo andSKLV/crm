@@ -10,9 +10,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         'Перевозчики':'HIP.json',
         'Экспедиторы': 'HIP-conf.json',
     }
-    // FIXME: возможно прописывать параметр в MF
     this.myFactory.HIPname = 'Перевозчики';
-    this.myFactory.up = this;
+    this.myFactory.scop = this;
 
     this.loadMatrix = function () {
         /**
