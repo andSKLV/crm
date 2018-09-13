@@ -6,12 +6,18 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.search_params=[];
     this.isArray = angular.isArray;
     this.config="HIP.json";
+    this.karetkaTypes = {
+        'Перевозчики':'HIP.json',
+        'Экспедиторы': 'HIP-conf.json',
+    }
+    // FIXME: возможно прописывать параметр в MF
     this.HIPname = 'Перевозчики';
 
-    this.loadMatrix = function (param) {
+    this.loadMatrix = function () {
         /**
          * Инициализация каретки
          */
+        const param = this.karetkaTypes[this.HIPname];
         $http.post(`src/${param}`).then(function success (response) {
             scope.currObj = [];
             let data = replaceSingleDepth(response.data);
@@ -1749,17 +1755,18 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         }
         //  удаляем выделение ячеек, чтобы анимация не прыгала
         myFactory.removeCellSelection('dashboard_container');
+        // FIXME:  добавить диалоговое окно подтверждения действия если есть какие то процы
         // переключаем типа каретки
         switch (param) {
             case 0:
                 this.HIPname = 'Перевозчики';
-                this.loadMatrix(`HIP.json`);
                 break;
             case 1:
                 this.HIPname = 'Экспедиторы';
-                this.loadMatrix(`HIP-conf.json`);
                 break;
         }
+        // перезагружаем матрицу
+        this.loadMatrix();
     }
     /**
      * Скрытие/раскрытие меню выбора вида каретки
