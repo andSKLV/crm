@@ -54,11 +54,14 @@ function initDB(resp) {
     SplineKoeff(2, Points.risk); //продолжаем интерполировать как жОские пацаны
     SplineKoeff(3, Points.payment);
 };
-
-async function loadRisks () {
+/**
+ * Функция создания массива риск - коэф. из файла конфигурации
+ * @param {string} param - название файла конфигурации каретки
+ */
+async function loadRisks (param = 'HIP.json') {
     try {
         let currObj=[];
-        const resp = await fetch("src/HIP.json");
+        const resp = await fetch(`src/${param}`);
         try {
             let data = await resp.json();
             currObj=data;
