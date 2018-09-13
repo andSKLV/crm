@@ -537,8 +537,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         }
         $timeout.cancel(timer);
         this.saveRes=12345;
+        const url = (string!=="HIP.json") ? string : `src/${this.karetkaTypes[this.myFactory.HIPname]}`;
         this.karetka.mode="listener";
-        $http.post(string).then(function success (response) {
+        $http.post(url).then(function success (response) {
             scope.currObj=[];
             scope.currObj=response.data;
             scope.myFactory.currObj=response.data;
@@ -1743,11 +1744,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     };
     /**
      * Функция смены каретки
-     * @param {number} param - 0 перевозчики, 1 экспедиторы
+     * @param {string} param - перевозчики, экспедиторы
      */
-    this.setHIP = function (param) {
-        const types = ['Перевозчики','Экспедиторы']; 
-        if (this.HIPname===types[param]) {
+    this.setHIP = async function (param) {
+        const HIP_name = this.karetkaTypes[param];
+        if (this.HIPname===param) {
             // если выбран тот же параметр, то просто закрываем меню
             // toogleMenu ведет себя неадекватно с ангуляром, поэтому сделано так
             document.querySelector('.select_HIP div').classList.remove('select--hidden');
@@ -1756,15 +1757,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         //  удаляем выделение ячеек, чтобы анимация не прыгала
         myFactory.removeCellSelection('dashboard_container');
         // FIXME:  добавить диалоговое окно подтверждения действия если есть какие то процы
+        // обновляем массив риск - коэф.
+        await loadRisks(HIP_name);
         // переключаем типа каретки
-        switch (param) {
-            case 0:
-                this.myFactory.HIPname = 'Перевозчики';
-                break;
-            case 1:
-                this.myFactory.HIPname = 'Экспедиторы';
-                break;
-        }
+        this.myFactory.HIPname = param;      
         // перезагружаем матрицу
         this.loadMatrix();
     }

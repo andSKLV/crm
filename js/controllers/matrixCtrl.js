@@ -87,7 +87,6 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                     }
                     // если сохраненный расчет был не перевозчиком
                     if (response.data.HIPname!==''&&response.data!=='Перевозчики') {
-                        debugger;
                         const HIP_name = myFactory.scop.karetkaTypes[response.data.HIPname]; //достаем название файла конфигурации каретки
                         await loadRisks(HIP_name); //загрузка новых рисков
                         myFactory.HIPname = response.data.HIPname;
