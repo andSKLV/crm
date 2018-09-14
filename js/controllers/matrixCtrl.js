@@ -92,6 +92,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                         myFactory.HIPname = response.data.HIPname;
                         myFactory.scop.loadMatrix();// перезагружаем матрицу
                     }
+                    myFactory.scop.calculationName = response.data.name;
                     myFactory.finalCalc();
                     //проходимся по мульти
 

@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="templates/paths/calculation/style.css">
+<div class="calc_name">{{calculation.calculationName===""? "Текущий расчет без названия" : calculation.calculationName}}</div>
 <div ng-model="dashboard.myFactory.multi.mode" 
     ng-if="dashboard.myFactory.matrixType=='HIP'" 
     ng-click="calculation.multiClicked()" 

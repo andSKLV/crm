@@ -12,6 +12,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     }
     this.myFactory.HIPname = 'Перевозчики';
     this.myFactory.scop = this;
+    this.calculationName = "";
 
     this.loadMatrix = function () {
         /**

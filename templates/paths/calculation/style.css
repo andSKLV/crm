@@ -75,3 +75,7 @@
   padding: 2px 6px 2px 6px;
   font-weight: bold;
 }
+.calc_name {
+  display: table;
+  margin: auto;
+}
