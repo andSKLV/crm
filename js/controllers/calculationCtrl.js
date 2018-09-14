@@ -599,7 +599,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         if(this.currObj[index] && this.currObj[index].name===undefined){
             const url=this.currObj[index].url;
             const prevParam = this.currObj[this.myFactory.document.currParam];
-            if (!isChild (this.currObj,prevParam,url)&&flag) {
+            if (flag&&!isChild (this.currObj,prevParam,url)) {
                 this.currObj.forEach(function (params, i) {
                     params.values.forEach(function (value) {
                         if(value.urlTo==url) myFactory.document.selectedParam=i;
@@ -634,7 +634,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             this.karetkaDepth = 1;
         }
         this.myFactory.document.currParam=index;
-        $rootScope.search_result=[];
+        // $rootScope.search_result=[];
         if(index!==""){
             this.myFactory.keyCodes.number.length=this.currObj[this.myFactory.document.currParam].values.length+1;
             if(this.karetka.mode=="listener") this.karetka.mode="making new process";
@@ -648,11 +648,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         const childInd = this.myFactory.document.currParam;
         const parent = this.currObj[childInd].parent;
         const name = parent.name || parent.url;
-        // FIXME: не работает!
-        // const index = this.currObj.findIndex(val=>(val.name===name)||(val.url===name));
-        const clicking = parent.parent.values.find(val=>(val.urlTo)===name);
-        this.clickedOnTopOfDashboard(clicking, parent.parent);
-        debugger;
+        const index = this.currObj.findIndex(val=>(val.name===name)||(val.url===name));
+        this.selectParam(index,false);
     }
     this.depthSymbol = function (x) {
         const symbols = { 1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI' }
@@ -1782,7 +1779,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
      * Скрытие/раскрытие меню выбора вида каретки
      */
     this.toogleMenu = function () {
-        const menu = document.querySelector('.select_HIP div');
+        const menu = document.querySelector('.select_HIP .select_container');
         menu.classList.toggle('select--hidden');
     }
     /**
