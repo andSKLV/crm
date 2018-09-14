@@ -456,8 +456,28 @@
         "name": "ООО",
         "type":"risk",
         "value":1
+      },
+      {
+        "name": "3й Уровень",
+        "type": "relocate_here",
+        "urlTo":"3й Уровень"
       }
     ]
-
+  },
+  {
+    "url": "3й Уровень",
+    "model": "wrapping",
+    "values": [
+      {
+        "name": "3 - 1",
+        "type":"risk",
+        "value":3
+      },
+      {
+        "name": "3 - 2",
+        "type":"risk",
+        "value":3
+      }
+    ]
   }
 ]

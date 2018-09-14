@@ -33,7 +33,7 @@
         ng-click="param.able=='none' ? '' : calculation.karetka.mode!='changing process' ? calculation.selectParam($index) : calculation.selectParam($index) " 
         ng-if="param.name" 
         ng-class="[{mi_selected: calculation.myFactory.document.selectedParam===$index}, {alreadySelected : calculation.alreadySelected(param.model)},{keyFriendly : calculation.myFactory.foc}]" class="clickable">
-            <div class="depth-symbol"ng-if="calculation.karetkaDepth>1&&calculation.myFactory.document.selectedParam===$index">{{calculation.depthSymbol(calculation.karetkaDepth);}}</div> 
+            <div class="depth-symbol" ng-click="calculation.selectParentParam()" ng-if="calculation.karetkaDepth>1&&calculation.myFactory.document.selectedParam===$index">{{calculation.depthSymbol(calculation.karetkaDepth);}}</div> 
             {{param.able=='none' ? '' : 
             param.selected ? 
                 param.model=="amount" ? 
@@ -43,7 +43,7 @@
         </div>
     </div>
 </div>
-<div class="select_HIP" ng-click="calculation.toogleMenu()">
+<div class="select_HIP" ng-click="calculation.toogleMenu()" ng-if="calculation.myFactory.parks.length===0">
     {{calculation.myFactory.HIPname}} ▼
     <div class="select_container select--hidden">
         <div class="select_option" ng-click="calculation.setHIP('Перевозчики')">Перевозчики</div>

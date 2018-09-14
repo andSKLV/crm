@@ -594,12 +594,12 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         return transportProp.indexOf(key);
     };
     this.currentProcess={};
-    this.selectParam=function (index) { // нажатии на nav
+    this.selectParam=function (index, flag = true) { // нажатии на nav
         if(myFactory.parkTemplate.length>0) myFactory.parkTemplate=[];
         if(this.currObj[index] && this.currObj[index].name===undefined){
             const url=this.currObj[index].url;
             const prevParam = this.currObj[this.myFactory.document.currParam];
-            if (!isChild (this.currObj,prevParam,url)) {
+            if (!isChild (this.currObj,prevParam,url)&&flag) {
                 this.currObj.forEach(function (params, i) {
                     params.values.forEach(function (value) {
                         if(value.urlTo==url) myFactory.document.selectedParam=i;
@@ -640,6 +640,20 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             if(this.karetka.mode=="listener") this.karetka.mode="making new process";
         }
     };
+    /**
+     * Функция перехода выше по каретке в параметр родителя
+     * @param {number} index 
+     */
+    this.selectParentParam = function () {
+        const childInd = this.myFactory.document.currParam;
+        const parent = this.currObj[childInd].parent;
+        const name = parent.name || parent.url;
+        // FIXME: не работает!
+        // const index = this.currObj.findIndex(val=>(val.name===name)||(val.url===name));
+        const clicking = parent.parent.values.find(val=>(val.urlTo)===name);
+        this.clickedOnTopOfDashboard(clicking, parent.parent);
+        debugger;
+    }
     this.depthSymbol = function (x) {
         const symbols = { 1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI' }
         return symbols[x];
