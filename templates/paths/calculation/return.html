@@ -9,7 +9,7 @@
             <td ng-click="calculation.clean()">Выйти из режима изменения</td>
         </tr>
         <tr class="animate-switch" ng-switch-when="making new process">
-            <td ng-click="calculation.clean()">Отменить создание</td>
+            <td ng-click="calculation.clean(true)">Отменить создание</td>
         </tr>
         <tr class="animate-switch" ng-switch-when="confirm refresh">
             <td ng-click="calculation.relocatePage('dashboard')" style="float: left">Да</td>

@@ -482,7 +482,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.isNaN=function(val){
         return isNaN(val);
     };
-    this.clean=function(){//очищаем каретку и возвращаем ее в исходное состояние
+    this.clean=function(flag=false){//очищаем каретку и возвращаем ее в исходное состояние
+        if (flag&&this.myFactory.parks.length===0) {
+            this.relocatePage('dashboard');
+            return true;
+        }
         this.tooltip.fadeOut();
         for(let i=0;i<scope.currObj.length;i++){
             delete scope.currObj[i].selected;//убираем подсвечивание нижней части
