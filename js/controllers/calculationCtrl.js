@@ -1768,7 +1768,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         }
         //  удаляем выделение ячеек, чтобы анимация не прыгала
         myFactory.removeCellSelection('dashboard_container');
-        // FIXME:  добавить диалоговое окно подтверждения действия если есть какие то процы
         // обновляем массив риск - коэф.
         await loadRisks(HIP_name);
         // переключаем типа каретки
@@ -1825,6 +1824,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         let save = {};
         save.type = "addNewCalculationToDB";
         save.name = this.nameOfCalculation;
+        this.calculationName = this.nameOfCalculation;
         try {
             save.parks = JSON.stringify(parks);
         }

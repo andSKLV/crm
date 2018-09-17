@@ -1,4 +1,5 @@
 <div class="ul_container">
+        <div class="calc_name">{{calculation.calculationName===""? "Текущий расчет без названия" : calculation.calculationName}}</div>
     <div ng-repeat="param in calculation.currObj" class="ul" ng-class="[{mi_current: calculation.currentUl($index)}, {mi_moveFromRight: calculation.currentUl($index)},{ mi_moveToRight: !calculation.currentUl($index)}]" ng-show="calculation.currentUl($index)" >
         <div>
             <div ng-class="[{alreadySelected: value.selected},{keyFriendly : calculation.myFactory.foc}]" ng-repeat="value in param.values  track by $index"

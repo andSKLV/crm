@@ -78,4 +78,8 @@
 .calc_name {
   display: table;
   margin: auto;
+  background: rgb(230, 230, 230);
+  text-align: center;
+  width: 100%;
+  overflow: hidden;
 }
