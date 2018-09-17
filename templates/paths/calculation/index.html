@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="templates/paths/calculation/style.css">
+<div class="calc_name">{{calculation.calculationName===""? "Текущий расчет без названия" : calculation.calculationName}}</div>
 <div ng-model="dashboard.myFactory.multi.mode" 
     ng-if="dashboard.myFactory.matrixType=='HIP'" 
     ng-click="calculation.multiClicked()" 
@@ -6,7 +7,6 @@
     class="multi">+</div>
 
 <div class="dashboard_container" calculation-dashboard></div>
-
 <div id="tooltip_box" calculation-return></div>
 
 <div class="matrix_container" ng-controller="matrixCtrl as matrixCtrl" ng-class="{calc: dashboard.myFactory.matrixType=='HIP'}">

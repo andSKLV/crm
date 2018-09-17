@@ -85,6 +85,14 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                             }
                         }
                     }
+                    // если сохраненный расчет был не перевозчиком
+                    if (response.data.HIPname!==''&&response.data!=='Перевозчики') {
+                        const HIP_name = myFactory.scop.karetkaTypes[response.data.HIPname]; //достаем название файла конфигурации каретки
+                        await loadRisks(HIP_name); //загрузка новых рисков
+                        myFactory.HIPname = response.data.HIPname;
+                        myFactory.scop.loadMatrix();// перезагружаем матрицу
+                    }
+                    myFactory.scop.calculationName = response.data.name;
                     myFactory.finalCalc();
                     //проходимся по мульти
 
@@ -234,7 +242,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                         console.log(myFactory.parks);
                     }
                     if (myFactory.packages===undefined) {
-                        let resp = await fetch('HIP.json');
+                        let resp = await fetch('src/HIP.json');
                         resp = await resp.json();
                         resp = resp.filter(r=>r.url=='Пакеты');
                         resp = resp[0].values;
@@ -283,6 +291,15 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                             }
                         })
                     });
+                    // если сохраненный расчет был не перевозчиком
+                    if (response.data.HIPname!==''&&response.data!=='Перевозчики') {
+                        const HIP_name = myFactory.scop.karetkaTypes[response.data.HIPname]; //достаем название файла конфигурации каретки
+                        await loadRisks(HIP_name); //загрузка новых рисков
+                        myFactory.HIPname = response.data.HIPname;
+                        myFactory.scop.loadMatrix();// перезагружаем матрицу
+                    }
+                    // сохраняем имя загруженного расчета в верхней части матрицы
+                    myFactory.scop.calculationName = response.data.name;
                     myFactory.finalCalc();
 
                     if(response.data.a_limit!=0 && response.data.a_limit!=myFactory.a_limit.max_limit){//агрегатный лимит

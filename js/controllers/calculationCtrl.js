@@ -6,131 +6,142 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.search_params=[];
     this.isArray = angular.isArray;
     this.config="HIP.json";
-    /**
-     * Инициализация каретки
-     */
-    $http.post("HIP.json").then(function success (response) {
-        scope.currObj = [];
-        let data = replaceSingleDepth(response.data);
-        data = putDepth(data);
-        scope.currObj = data;
-        scope.myFactory.currObj = data;
+    this.karetkaTypes = {
+        'Перевозчики':'HIP.json',
+        'Экспедиторы': 'HIP-conf.json',
+    }
+    this.myFactory.HIPname = 'Перевозчики';
+    this.myFactory.scop = this;
+    this.calculationName = "";
 
-        let pack=scope.currObj.filter(function (param) {
-            return param.url=="Пакеты";
-        });
-        pack=pack[0];
-        scope.myFactory.packages=pack.values;
-        if(myFactory.parks.length!=0) scope.selectParam("");
-        else{
-            scope.selectParam(0);
-            scope.karetka.mode="making new process";
-        }
-        scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
-            return obj["name"]!=undefined;
-        }).length;
-        scope.navStyle="width:" + 100 / scope.currObj.length + "%;";
-        scope.config="HIP.json";
-        scope.myFactory.matrixType="HIP";
+    this.loadMatrix = function () {
+        /**
+         * Инициализация каретки
+         */
+        const param = this.karetkaTypes[this.myFactory.HIPname];
+        $http.post(`src/${param}`).then(function success (response) {
+            scope.currObj = [];
+            let data = replaceSingleDepth(response.data);
+            data = putDepth(data);
+            scope.currObj = data;
+            scope.myFactory.currObj = data;
+            let pack=scope.currObj.filter(function (param) {
+                return param.url=="Пакеты";
+            });
+            pack=pack[0];
+            scope.myFactory.packages=pack.values;
+            if(myFactory.parks.length!=0) scope.selectParam("");
+            else{
+                scope.selectParam(0);
+                scope.karetka.mode="making new process";
+            }
+            scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
+                return obj["name"]!=undefined;
+            }).length;
+            scope.navStyle="width:" + 100 / scope.currObj.length + "%;";
+            scope.config="HIP.json";
+            scope.myFactory.matrixType="HIP";
 
-        if(myFactory.loadProcess!==undefined){
-            scope.matrix.loadProcess(scope.myFactory.loadProcess.process, scope.myFactory.loadProcess.key);
-            delete scope.myFactory.loadProcess;
-        }
-        /**
-         * Функция для того, чтобы убрать лишнее заглубление, если поле содержит в себе только одно поле, то родителя не нужен
-         * @param {Object} data
-         */
-        function replaceSingleDepth  (data) {
-            const toChangeUpper = {}; // для верхнего уровня типа risk & wrapping
-            const toChangeLower = {}; //  для нижнего уровня типа url
-            const changingData = [...data];
-            // выбираем ячейки в которых количество детей ===1
-            data.forEach((field,ind)=>{
-                if (field.name && field.values.length===1) toChangeUpper[ind] = field.values[0].name;
-                if (field.url && field.values.length===1&&field.url!=='Пакеты') toChangeLower[field.url] = field.values[0];
-            })
-            for (let key in toChangeUpper) {
-                const toPaste = data.find(field=>field.url===toChangeUpper[key]);
-                changingData[+key].name = toPaste.url;
-                changingData[+key].values = toPaste.values;
-                console.warn(`${toPaste.url} был заменен, так как в нем был только один параметр`);
+            if(myFactory.loadProcess!==undefined){
+                scope.matrix.loadProcess(scope.myFactory.loadProcess.process, scope.myFactory.loadProcess.key);
+                delete scope.myFactory.loadProcess;
             }
-            // TODO: создана функция добавления параметра глубины и родителя для элементов
-            // можно переписать используя данные наработки
-            for (let key in toChangeLower) {
-                    const type = toChangeLower[key].type;
-                    const parent = changingData.find(field=>field.name&&field.model===type).values;
-                    // заменяем параметры родителя с одни ребенком на параметры ребенка
-                    let ind;
-                    parent.forEach((val,i)=> {if (val.name===key) ind = i});
-                    parent.splice(ind,1,toChangeLower[key]);
-                
-                    // удаляем ребенка из общего списка, чтобы не дублировать
-                    changingData.forEach((val,i)=> {if (val.url===key) ind = i});
-                    changingData.splice(ind,1);
+            /**
+             * Функция для того, чтобы убрать лишнее заглубление, если поле содержит в себе только одно поле, то родителя не нужен
+             * @param {Object} data
+             */
+            function replaceSingleDepth  (data) {
+                const toChangeUpper = {}; // для верхнего уровня типа risk & wrapping
+                const toChangeLower = {}; //  для нижнего уровня типа url
+                const changingData = [...data];
+                // выбираем ячейки в которых количество детей ===1
+                data.forEach((field,ind)=>{
+                    if (field.name && field.values.length===1) toChangeUpper[ind] = field.values[0].name;
+                    if (field.url && field.values.length===1&&field.url!=='Пакеты') toChangeLower[field.url] = field.values[0];
+                })
+                for (let key in toChangeUpper) {
+                    const toPaste = data.find(field=>field.url===toChangeUpper[key]);
+                    changingData[+key].name = toPaste.url;
+                    changingData[+key].values = toPaste.values;
+                    console.warn(`${toPaste.url} был заменен, так как в нем был только один параметр`);
+                }
+                // TODO: создана функция добавления параметра глубины и родителя для элементов
+                // можно переписать используя данные наработки
+                for (let key in toChangeLower) {
+                        const type = toChangeLower[key].type;
+                        const parent = changingData.find(field=>field.name&&field.model===type).values;
+                        // заменяем параметры родителя с одни ребенком на параметры ребенка
+                        let ind;
+                        parent.forEach((val,i)=> {if (val.name===key) ind = i});
+                        parent.splice(ind,1,toChangeLower[key]);
+                    
+                        // удаляем ребенка из общего списка, чтобы не дублировать
+                        changingData.forEach((val,i)=> {if (val.url===key) ind = i});
+                        changingData.splice(ind,1);
+                }
+                return changingData;
             }
-            return changingData;
-        }
-        /**
-         * Функция для расставления глубины вложенности и родителя
-         * @param {object} data - объект каретки 
-         */
-        function putDepth (data) {
-            let changingData = [...data];
-            // присваиваем уровень родителю и его непосредственному ребенку
-            changingData.forEach(el=>{
-                // всем родителям присваиваем вложенность = 1
-                if (el.name&&!el.url) {
-                    el.depth = 1;
-                    for (let i=0;i<el.values.length;i++){
-                        const val = el.values[i];
-                        if (val.urlTo) {
-                            const name = val.urlTo;
-                            const obj = data.find(child=>child.url===name);
-                            obj.depth = 2;
-                            obj.parent = el;
+            /**
+             * Функция для расставления глубины вложенности и родителя
+             * @param {object} data - объект каретки 
+             */
+            function putDepth (data) {
+                let changingData = [...data];
+                // присваиваем уровень родителю и его непосредственному ребенку
+                changingData.forEach(el=>{
+                    // всем родителям присваиваем вложенность = 1
+                    if (el.name&&!el.url) {
+                        el.depth = 1;
+                        for (let i=0;i<el.values.length;i++){
+                            const val = el.values[i];
+                            if (val.urlTo) {
+                                const name = val.urlTo;
+                                const obj = data.find(child=>child.url===name);
+                                obj.depth = 2;
+                                obj.parent = el;
+                            }
                         }
                     }
-                }
-            })
-            putDepthForChilds();
-            /**
-             * Функция расстановки глубины для следующего уровня вроженности
-             * если был проставлен хоть один раз уровень, то функция повторяется
-             */
-            function putDepthForChilds () {
-                let wasChange = false;
-                for (let el of changingData) {
-                    if (el.url&&!el.depth) {
-                        const parent = findParent (el);
-                        el.parent = parent;
-                        el.depth = parent.depth + 1;
-                        wasChange = true;
-                    }
-                }
-                if (wasChange) putDepthForChilds();
-            }
-            /**
-             * Функция поиска родителя этого элемента
-             * @param {*} el 
-             */
-            function findParent (el) {
-                const mayBeParents = changingData.filter(val=>val.url&&el.model===val.model&&el.url!==val.url);
-                const parent = mayBeParents.find(val=>{
-                    //  находим имена детей у всех потенциальных родителей
-                    const names = val.values.map(v=>v.name);
-                    // если имя ребенка совпало с искомым, значит это наш родитель
-                    return (names.includes(el.url));
                 })
-                return parent;
+                putDepthForChilds();
+                /**
+                 * Функция расстановки глубины для следующего уровня вроженности
+                 * если был проставлен хоть один раз уровень, то функция повторяется
+                 */
+                function putDepthForChilds () {
+                    let wasChange = false;
+                    for (let el of changingData) {
+                        if (el.url&&!el.depth) {
+                            const parent = findParent (el);
+                            el.parent = parent;
+                            el.depth = parent.depth + 1;
+                            wasChange = true;
+                        }
+                    }
+                    if (wasChange) putDepthForChilds();
+                }
+                /**
+                 * Функция поиска родителя этого элемента
+                 * @param {*} el 
+                 */
+                function findParent (el) {
+                    const mayBeParents = changingData.filter(val=>val.url&&el.model===val.model&&el.url!==val.url);
+                    const parent = mayBeParents.find(val=>{
+                        //  находим имена детей у всех потенциальных родителей
+                        const names = val.values.map(v=>v.name);
+                        // если имя ребенка совпало с искомым, значит это наш родитель
+                        return (names.includes(el.url));
+                    })
+                    return parent;
+                }
+                return changingData;
             }
-            return changingData;
-        }
-    },function error (response){
-            console.error(response);
-        }
-    );
+        },function error (response){
+                console.error(response);
+            }
+        );
+    }
+    this.loadMatrix('HIP.json');
     /**
      * меняем в парке значение для всех строк
      * @param {any} value значение, либо string либо number на которое нужно поменять
@@ -527,8 +538,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         }
         $timeout.cancel(timer);
         this.saveRes=12345;
+        const url = (string!=="HIP.json") ? string : `src/${this.karetkaTypes[this.myFactory.HIPname]}`;
         this.karetka.mode="listener";
-        $http.post(string).then(function success (response) {
+        $http.post(url).then(function success (response) {
             scope.currObj=[];
             scope.currObj=response.data;
             scope.myFactory.currObj=response.data;
@@ -583,12 +595,12 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         return transportProp.indexOf(key);
     };
     this.currentProcess={};
-    this.selectParam=function (index) { // нажатии на nav
+    this.selectParam=function (index, flag = true) { // нажатии на nav
         if(myFactory.parkTemplate.length>0) myFactory.parkTemplate=[];
         if(this.currObj[index] && this.currObj[index].name===undefined){
             const url=this.currObj[index].url;
             const prevParam = this.currObj[this.myFactory.document.currParam];
-            if (!isChild (this.currObj,prevParam,url)) {
+            if (flag&&!isChild (this.currObj,prevParam,url)) {
                 this.currObj.forEach(function (params, i) {
                     params.values.forEach(function (value) {
                         if(value.urlTo==url) myFactory.document.selectedParam=i;
@@ -623,12 +635,23 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             this.karetkaDepth = 1;
         }
         this.myFactory.document.currParam=index;
-        $rootScope.search_result=[];
+        // $rootScope.search_result=[];
         if(index!==""){
             this.myFactory.keyCodes.number.length=this.currObj[this.myFactory.document.currParam].values.length+1;
             if(this.karetka.mode=="listener") this.karetka.mode="making new process";
         }
     };
+    /**
+     * Функция перехода выше по каретке в параметр родителя
+     * @param {number} index 
+     */
+    this.selectParentParam = function () {
+        const childInd = this.myFactory.document.currParam;
+        const parent = this.currObj[childInd].parent;
+        const name = parent.name || parent.url;
+        const index = this.currObj.findIndex(val=>(val.name===name)||(val.url===name));
+        this.selectParam(index,false);
+    }
     this.depthSymbol = function (x) {
         const symbols = { 1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI' }
         return symbols[x];
@@ -1732,25 +1755,53 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         },
     };
     /**
+     * Функция смены каретки
+     * @param {string} param - перевозчики, экспедиторы
+     */
+    this.setHIP = async function (param) {
+        const HIP_name = this.karetkaTypes[param];
+        if (this.HIPname===param) {
+            // если выбран тот же параметр, то просто закрываем меню
+            // toogleMenu ведет себя неадекватно с ангуляром, поэтому сделано так
+            document.querySelector('.select_HIP div').classList.remove('select--hidden');
+            return true;
+        }
+        //  удаляем выделение ячеек, чтобы анимация не прыгала
+        myFactory.removeCellSelection('dashboard_container');
+        // обновляем массив риск - коэф.
+        await loadRisks(HIP_name);
+        // переключаем типа каретки
+        this.myFactory.HIPname = param;      
+        // перезагружаем матрицу
+        this.loadMatrix();
+    }
+    /**
+     * Скрытие/раскрытие меню выбора вида каретки
+     */
+    this.toogleMenu = function () {
+        const menu = document.querySelector('.select_HIP .select_container');
+        menu.classList.toggle('select--hidden');
+    }
+    /**
      * сохраняем расчет в БД
      */
     this.saveCalculation=function () {
         if(this.nameOfCalculation=="" || this.nameOfCalculation===undefined) return false;
         let parks=[];
-        myFactory.parks.forEach(function(park){
-            let newPark={};
-            for(let key in park){
-                if(key!="processes") newPark[key]=park[key];
-                else{
-                    newPark[key]=[];
+        myFactory.parks.forEach(function (park) {
+            let newPark = {};
+            for (let key in park) {
+                if (key != "processes") newPark[key] = park[key];
+                else {
+                    newPark[key] = [];
                     park.processes.forEach(function (process) {
-                        let newProcess={};
-                        for(let prop in process){
-                            if(prop!="multi" && prop!="park"){
-                                newProcess[prop]=process[prop];
+                        let newProcess = {};
+                        for (let prop in process) {
+                            if (prop != "multi" && prop != "park") {
+                                newProcess[prop] = process[prop];
                             }
-                            else if(prop=="multi"){
-                                newProcess[prop]=myFactory.multi.multies.indexOf(process.multi);
+                            else if (prop == "multi") {
+                                newProcess[prop] = myFactory.multi.multies.indexOf(process.multi);
                             }
                         }
                         newPark[key].push(newProcess);
@@ -1759,54 +1810,55 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             }
             parks.push(newPark);
         });
-        let multies=[];
-        if(myFactory.multi.multies.length>0){
+        let multies = [];
+        if (myFactory.multi.multies.length > 0) {
             myFactory.multi.multies.forEach(function (multi) {
-                let newMulti={};
-                for(let key in multi){
-                    if(key!="processes") newMulti[key]=multi[key];
+                let newMulti = {};
+                for (let key in multi) {
+                    if (key != "processes") newMulti[key] = multi[key];
                 }
                 multies.push(newMulti);
             })
         }
         console.log(parks, multies);
-        let save={};
-        save.type="addNewCalculationToDB";
-        save.name=this.nameOfCalculation;
-        try{
-            save.parks=JSON.stringify(parks);
+        let save = {};
+        save.type = "addNewCalculationToDB";
+        save.name = this.nameOfCalculation;
+        this.calculationName = this.nameOfCalculation;
+        try {
+            save.parks = JSON.stringify(parks);
         }
         catch {
             let CircularJSON = window.CircularJSON;
             save.parks = CircularJSON.stringify(parks);
         }
         try {
-            save.mass=JSON.stringify(multies);
+            save.mass = JSON.stringify(multies);
         }
         catch {
             let CircularJSON = window.CircularJSON;
             save.mass = CircularJSON.stringify(multies);
         }
-        save.payment=myFactory.payment.val;
-        save.agents=myFactory.agents.val+";"+myFactory.agents.mode;
-        save.practicalPrice=myFactory.practicalPrice.val+";"+myFactory.practicalPrice.koef;
-        save.a_limit=myFactory.a_limit.value;
-        save.a_limitType=myFactory.a_limit.type;
-        console.log(save.a_limit, myFactory.a_limit.type);
-        save.totalAmount=myFactory.totalAmount;
-        save.totalPrice=myFactory.totalPrice;
-        $http.post("search.php", save).then(function success (response) {
-                alert("Успешно сохранено");
-            },function error (response){
-                console.log(response);
-            }
+        save.payment = myFactory.payment.val;
+        save.agents = myFactory.agents.val + ";" + myFactory.agents.mode;
+        save.practicalPrice = myFactory.practicalPrice.val + ";" + myFactory.practicalPrice.koef;
+        save.a_limit = myFactory.a_limit.value;
+        save.a_limitType = myFactory.a_limit.type;
+        save.totalAmount = myFactory.totalAmount;
+        save.totalPrice = myFactory.totalPrice;
+        save.HIPname = myFactory.HIPname;
+        $http.post("search.php", save).then(function success(response) {
+            alert("Успешно сохранено");
+        }, function error(response) {
+            console.log(response);
+        }
         );
     };
-    function deepRemoveMulti(multi){
-        multi.processes.forEach(process=>{
-            if(process.constructor.name==="Process") delete process.multi;
+    function deepRemoveMulti(multi) {
+        multi.processes.forEach(process => {
+            if (process.constructor.name === "Process") delete process.multi;
         });
-        if(multi.parent) deepRemoveMulti(multi.parent);
+        if (multi.parent) deepRemoveMulti(multi.parent);
         myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi), 1);
     }
 });

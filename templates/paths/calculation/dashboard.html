@@ -33,13 +33,27 @@
         ng-click="param.able=='none' ? '' : calculation.karetka.mode!='changing process' ? calculation.selectParam($index) : calculation.selectParam($index) " 
         ng-if="param.name" 
         ng-class="[{mi_selected: calculation.myFactory.document.selectedParam===$index}, {alreadySelected : calculation.alreadySelected(param.model)},{keyFriendly : calculation.myFactory.foc}]" class="clickable">
-            <div class="depth-symbol"ng-if="calculation.karetkaDepth>1&&calculation.myFactory.document.selectedParam===$index">{{calculation.depthSymbol(calculation.karetkaDepth);}}</div> 
+            <div class="depth-symbol" ng-click="calculation.selectParentParam();$event.stopPropagation();" ng-if="calculation.karetkaDepth>1&&calculation.myFactory.document.selectedParam===$index">{{calculation.depthSymbol(calculation.karetkaDepth);}}</div> 
             {{param.able=='none' ? '' : 
             param.selected ? 
                 param.model=="amount" ? 
                     calculation.applyFilter(param.selected, "badAssAmount") : 
                     calculation.applyFilter(param.selected, param.model) 
                 : param.name}}
+        </div>
+    </div>
+</div>
+<div class="select_HIP" ng-click="calculation.toogleMenu()" ng-if="calculation.myFactory.parks.length===0">
+    <div class="select_HIP-container">
+        <img src="img/{{(calculation.myFactory.HIPname==='Перевозчики')?'truck':'call-center'}}" alt=""> 
+        <p>▼</p> 
+    </div>
+    <div class="select_container select--hidden"> 
+        <div class="select_option" id="truck" ng-click="calculation.setHIP('Перевозчики')">
+            <img src="img/truck.png" alt="Перевозчики">
+        </div>
+        <div class="select_option" id="call-center" ng-click="calculation.setHIP('Экспедиторы')">
+            <img src="img/call-center.png" alt="Экспедиторы">
         </div>
     </div>
 </div>

@@ -183,7 +183,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
                         
                     }
                 })
-                xhr.open("GET", "HIP.json", true);
+                xhr.open("GET", "src/HIP.json", true);
                 xhr.send();
             })
         };

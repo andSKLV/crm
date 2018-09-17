@@ -1354,10 +1354,10 @@ app.factory('myFactory', function(){
                 matrix.style.maxHeight = `${maxHeight}px`;
             }
         },
-        removeCellSelection () {
-            const selectedCell = document.querySelector('.matrix_table .mi_selected');
+        removeCellSelection (matrix = 'matrix_table') {
+            const selectedCell = document.querySelector(`.${matrix} .mi_selected`);
             if (selectedCell!== null) selectedCell.classList.toggle('mi_selected');
-            const alreadySelectedCells = document.querySelectorAll('.matrix_table .alreadySelected');
+            const alreadySelectedCells = document.querySelectorAll(`.${matrix} .alreadySelected`);
             alreadySelectedCells.forEach(cell=>cell.classList.toggle("alreadySelected"));
         },
         /**
