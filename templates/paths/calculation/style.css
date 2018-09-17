@@ -78,8 +78,9 @@
 .calc_name {
   display: table;
   margin: auto;
+  margin-left: 50px;
   background: rgb(230, 230, 230);
   text-align: center;
-  width: 100%;
+  width: calc(100% - 50px);
   overflow: hidden;
 }
