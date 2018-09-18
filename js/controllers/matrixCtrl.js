@@ -359,7 +359,76 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
      * @param {number} id - id компании
      */
     this.loadCompany = function (id) {
-        debugger;
+        const data = {};
+        data.type = 'load_company';
+        data.id=id;
+        $http.post('search.php',data).then(async (resp)=>{
+            const data = resp.data;
+            myFactory.newClientCard = generateClientCard (data);
+            myFactory.loadClient = 'Форма собственности';
+            $location.path('/company');
+            /**
+             *  Функция генерации объекта карточки клиента из данных из БД
+             * @param {obj} data - ответ из БД
+             * @returns {obj} - объект карточки клиента
+             */
+            function generateClientCard (data) {
+                return {
+                    'Данные компании':
+                    {
+                       "Форма организации": getOrgForm(data.OrganizationFormID),
+                       "Наименование организации": data.name,
+                       "Дата регистрации": data.registration_date,
+                       "Наименование рег. органа": data.who_registate,
+                     },
+                     "Генеральный директор":
+                     {
+                       "ФИО":"",
+                       "Серия и номер паспорта":data.general_director_passport,
+                       "Когда выдан":"",
+                       "Кем выдан":""
+                     },
+                     "Реквизиты компании":
+                     {
+                       "ОГРН":data.OGRN,
+                       "ИНН/КПП": getInnKpp(data),
+                       "ОКПО":data.OKPO,
+                       "ОКВЭД":data.OKVED
+                     },
+                     "Банковские реквизиты":
+                     {
+                       "р/счет":data.r_account,
+                       "к/счет":data.k_account,
+                       "банк":data.bank,
+                       "бик":data.bik,
+                     }
+                   }
+            }
+            /**
+             * Функция возвращает наименование формы компании 
+             * @param {number} id 
+             */
+            function getOrgForm (id) {
+                const forms = {
+                    1: "ЗАО",
+                    2: "ООО",
+                    3: "ОАО",
+                    4: "ИП"
+                }
+                return forms[+id];
+            }
+            /**
+             * Function to parse INN and KPP from loaded obj
+             * @param {obj} data object of client from DB
+             */
+            function getInnKpp (data) {
+                if (data.INN===""&&data.KPP==="") return "";
+                else return `${dara.INN}/${data.KPP}`;
+            }
+        },function error(resp){
+            console.error(resp);
+        })
+
         // $timeout(function () {
         //     console.log(id);
         //     if($location.path!=="/calculation"){

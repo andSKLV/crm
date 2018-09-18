@@ -89,7 +89,14 @@
 	    $result = mysqli_query($link, $query) or die(mysqli_error());
 	    $row=mysqli_fetch_array($result, MYSQLI_ASSOC);
 	    echo json_encode($row);
-	}
+    }
+    else if ($data['type']=='load_company') {
+        $query="SELECT * FROM Companies WHERE id=".$data['id'];
+        $result = mysqli_query($link,$query) or die(mysqli_error());
+        $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        echo json_encode($row);
+
+    }
 	else if($data["type"]=="delete_calculation"){
         $id=$data['id'];
         $query = "DELETE FROM saved WHERE id = '".$id."'";
