@@ -354,4 +354,32 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
 
 
     };
+    /**
+     * Фукнция загрузки компании из БД в матрицу
+     * @param {number} id - id компании
+     */
+    this.loadCompany = function (id) {
+        debugger;
+        // $timeout(function () {
+        //     console.log(id);
+        //     if($location.path!=="/calculation"){
+        //         $location.path('/calculation');
+        //     }
+        //     let data ={};
+        //     data.type="load_calculation";
+        //     data.id=id;
+        //     let scope=this;
+        //     myFactory.urlJSON="transortation_cals.json";
+        //     $http.post("search.php", data).then(async function success(response){
+        //         console.log(response.data);
+        //         myFactory.matrixType="HIP";
+        //         myFactory.parks=[];
+        //         let mass=JSON.parse(response.data.processes);
+        //         if(response.data.user_name==123){}
+
+        //     },function error(response){
+        //         console.log(response)
+        //     });
+        // }, 0);
+    }
 });

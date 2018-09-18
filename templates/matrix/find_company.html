@@ -1,5 +1,5 @@
 <tr ng-class="{matrix_row: !row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index">
-    <td class="properties">{{row.name}}</td>
+    <td class="properties" ng-click="matrixCtrl.loadCompany(row.id)">{{row.name}}</td>
     <td class="properties" ng-if="dashboard.isArray(row.contact)" ng-click="row.close!='disable' && row.show!=true ? row.show=true : null" colspan="{{row.show ? 2 : 1}}">
         <div ng-show="!row.show" ng-class="{multi_close : dashboard.isMulti(row)}">{{row.contact[0].name}}</div>
         <div ng-repeat="ctx in row.contact track by $index" class="matrix_row multi_cell" style="line-height: 3; width: 100%; position: relative;" ng-show="row.show" ng-click="row.close!='disable' ? alert('загрузка контакта '+ ctx.name) : null">

@@ -114,7 +114,7 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
                 $rootScope.cacheTemplate={};
 
                 $rootScope.search_result=response.data;
-                if(type!=="Компания"){
+                if(type!=="Компания"&&type!=="find_company"){
                     $rootScope.search_result.forEach(row=>{
                         if(row.fact_premia.indexOf(" ")!==-1){
                             let fact_price=row.fact_premia.split(" ");
