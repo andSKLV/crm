@@ -12,8 +12,7 @@
         "name":"Юр. лицо",
         "urlTo":"find_company",
         "type":"relocate_here",
-        "search":"true",
-        "able":"none"
+        "search":"true"
       },
       {
         "name":"Полис",
@@ -61,8 +60,7 @@
         "name":"Юр. лицо",
         "urlTo":"company",
         "type":"relocatePage",
-        "json":"new_company.json",
-        "able":"none"
+        "json":"new_company.json"
       },
       {
         "name":"Контакт",
