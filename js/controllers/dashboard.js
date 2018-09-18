@@ -223,7 +223,6 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
 
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
         $location.path(`/${value.urlTo}`);
-
     };
     this.relocateHere=function(url){//переход в углубление вверху каретки
         for(let i=0; i<scope.currObj.length;i++){

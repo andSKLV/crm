@@ -545,6 +545,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         const url = (string!=="HIP.json") ? string : `src/${this.karetkaTypes[this.myFactory.HIPname]}`;
         this.karetka.mode="listener";
         $http.post(url).then(function success (response) {
+            scope.myFactory.removeCellSelection();
             scope.currObj=[];
             scope.currObj=response.data;
             scope.myFactory.currObj=response.data;
@@ -582,7 +583,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         let path = window.location.href;
         path = path.replace(window.location.hash, `#!/${value}`)
         location.replace(path);
-        location.reload();
     };
     this.relocateHere=function(url){//переход в углубление вверху каретки
         for(let i=0; i<scope.currObj.length;i++){
