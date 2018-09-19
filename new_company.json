@@ -28,7 +28,7 @@
 
     "values":[
       {
-        "name":"ФИО",
+        "name":"ФИО директора",
         "type":"input"
 
       },
@@ -82,11 +82,11 @@
         "type":"input"
       },
       {
-        "name":"банк",
+        "name":"Банк",
         "type":"input"
       },
       {
-        "name":"бик",
+        "name":"БИК",
         "type":"input"
       }
     ]

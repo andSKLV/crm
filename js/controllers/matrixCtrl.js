@@ -384,7 +384,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                      },
                      "Генеральный директор":
                      {
-                       "ФИО":"",
+                       "ФИО директора":"",
                        "Серия и номер паспорта":data.general_director_passport,
                        "Когда выдан":"",
                        "Кем выдан":"",
@@ -400,8 +400,8 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                      {
                        "р/счет":data.r_account,
                        "к/счет":data.k_account,
-                       "банк":data.bank,
-                       "бик":data.bik,
+                       "Банк":data.bank,
+                       "БИК":data.bik,
                      },
                      "ID": data.id,
                    }
