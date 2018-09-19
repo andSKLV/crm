@@ -345,7 +345,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                     }
                 }
                 myFactory.document.currParam="";
-
+                clearSearch();
             },function error(response){
                 console.log(response)
             });
@@ -367,6 +367,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             myFactory.newClientCard = generateClientCard (data);
             myFactory.loadClient = 'Форма собственности';
             $location.path('/company');
+            clearSearch();
             /**
              *  Функция генерации объекта карточки клиента из данных из БД
              * @param {obj} data - ответ из БД
@@ -429,27 +430,14 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         },function error(resp){
             console.error(resp);
         })
-
-        // $timeout(function () {
-        //     console.log(id);
-        //     if($location.path!=="/calculation"){
-        //         $location.path('/calculation');
-        //     }
-        //     let data ={};
-        //     data.type="load_calculation";
-        //     data.id=id;
-        //     let scope=this;
-        //     myFactory.urlJSON="transortation_cals.json";
-        //     $http.post("search.php", data).then(async function success(response){
-        //         console.log(response.data);
-        //         myFactory.matrixType="HIP";
-        //         myFactory.parks=[];
-        //         let mass=JSON.parse(response.data.processes);
-        //         if(response.data.user_name==123){}
-
-        //     },function error(response){
-        //         console.log(response)
-        //     });
-        // }, 0);
+    }
+    function clearSearch () {
+        debugger;
+        try {
+            $rootScope.search_result = [];
+        }
+        catch (err) {
+            console.error (`Clear search results problem: ${err}`);
+        }
     }
 });
