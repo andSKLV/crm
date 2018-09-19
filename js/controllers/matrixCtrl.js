@@ -401,7 +401,8 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                        "к/счет":data.k_account,
                        "банк":data.bank,
                        "бик":data.bik,
-                     }
+                     },
+                     "ID": data.id,
                    }
             }
             /**
@@ -423,7 +424,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
              */
             function getInnKpp (data) {
                 if (data.INN===""&&data.KPP==="") return "";
-                else return `${dara.INN}/${data.KPP}`;
+                else return `${data.INN}/${data.KPP}`;
             }
         },function error(resp){
             console.error(resp);

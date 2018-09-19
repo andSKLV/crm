@@ -40,9 +40,13 @@ app.controller("companyCtrl", function(myFactory,$scope, $http, $location, $time
                     }
 
                 }
-
+                // удаляем ИД из отображения в матрице
+                delete $scope.clientCard.ID;
                 $scope.currObj=[];
+                // делаем верхнюю каретку как образец из json
                 $scope.currObj=response.data;
+
+                // не используется, как я понимаю
                 if(scope.myFactory.clientCard!==undefined){
                     console.log(scope.myFactory.clientCard["r_account"]);
                     $scope.clientCard["Банковские реквизиты"]["Р/счет"]=scope.myFactory.clientCard["r_account"];

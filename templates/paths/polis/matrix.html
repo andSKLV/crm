@@ -1,5 +1,5 @@
 <div class="view view_active" ng-if="newDashboard.checkCurrentPage(0)  && search_result.length==0" company-view ng-controller="companyCtrl as companyCtrl"></div>
-<table class="matrix view view_active" ng-if="newDashboard.checkCurrentPage(0)  && search_result.length!=0" find-company></table>
+<table class="matrix view view_active" ng-if="newDashboard.checkCurrentPage(0)  && search_result.length!=0" find-company ng-controller="matrixCtrl as matrixCtrl"></table>
 
 
 <div class="view" ng-class="{view_active: newDashboard.checkCurrentPage(1) && search_result.length==0}" calculation-view ng-controller="calculationCtrl as calculation"></div>
