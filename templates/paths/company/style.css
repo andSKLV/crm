@@ -93,3 +93,9 @@ div#tooltip_box {
     display: block;
     width: 100%;
 }
+.mi_selected .company_matrix_header {
+    display: none;
+}
+td:hover .company_matrix_header {
+    display: none;
+}
