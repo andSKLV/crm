@@ -134,6 +134,7 @@ app.controller("companyCtrl", function(myFactory,$scope, $http, $location, $time
         }
     }
     $scope.keydownHandler=(event, param, val)=>{
+        // FIXME: работает тольо при переходе с последней ячейки строки на первую следующей
         if((event.keyCode===9 || event.keyCode===13 && param.name!=="Контакты") && param.values.indexOf(val)==param.values.length-1){
             event.preventDefault();
             if(myFactory.document.selectedParam<$scope.currObj.length-1){

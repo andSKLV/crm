@@ -45,27 +45,27 @@ div#tooltip_box {
 }
 .ul_move_to_left{
     animation-name: move-to-left;
-    animation-duration: 500ms;
+    animation-duration: 250ms;
     animation-fill-mode: both;
     animation-timing-function: linear;
 }
 .ul_move_from_left{
-    animation-delay: 350ms;
+    animation-delay: 150ms;
     animation-name: move-from-left;
-    animation-duration: 500ms;
+    animation-duration: 250ms;
     animation-fill-mode: both;
     animation-timing-function: linear;
 }
 .ul_move_to_right{
     animation-name: move-to-right;
-    animation-duration: 500ms;
+    animation-duration: 250ms;
     animation-fill-mode: both;
     animation-timing-function: linear;
 }
 .ul_move_from_right{
-    animation-delay: 350ms;
+    animation-delay: 150ms;
     animation-name: move-from-right;
-    animation-duration: 500ms;
+    animation-duration: 250ms;
     animation-fill-mode: both;
     animation-timing-function: linear;
 }
@@ -81,9 +81,9 @@ div#tooltip_box {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    background-color: white;
-    border: 1px solid rgb(146, 167, 205);
-    color: rgb(146, 167, 205);
+    background-color: var(--dark-blue);
+    border: 1px solid var(--dark-blue);
+    color: white;
     font-size: 0.8em;
     margin-top: 2px;
     margin-bottom: 2px;
@@ -93,12 +93,10 @@ div#tooltip_box {
     display: block;
     width: 100%;
 }
-.mi_selected .company_matrix_header {
-    display: none;
-}
-td:hover .company_matrix_header {
-    display: none;
-}
 .company_matrix_header--red {
-    color: red;
+    background-color: var(--red);
+    border: 1px solid var(--red);
+}
+.company_matrix_name {
+    margin-top: 1em;
 }
