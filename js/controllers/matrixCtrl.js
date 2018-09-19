@@ -377,33 +377,33 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                 return {
                     'Данные компании':
                     {
-                       "Форма организации": getOrgForm(data.OrganizationFormID) || ' ',
-                       "Наименование организации": data.name || ' ',
-                       "Дата регистрации": getDate(data.registration_date) || ' ',
-                       "Наименование рег. органа": data.who_registate || ' ',
+                       "Форма организации": getOrgForm(data.OrganizationFormID),
+                       "Наименование организации": data.name,
+                       "Дата регистрации": getDate(data.registration_date),
+                       "Наименование рег. органа": data.who_registate,
                      },
                      "Генеральный директор":
                      {
-                       "ФИО":" ",
-                       "Серия и номер паспорта":data.general_director_passport || ' ',
-                       "Когда выдан":" ",
-                       "Кем выдан":" ",
+                       "ФИО":"",
+                       "Серия и номер паспорта":data.general_director_passport,
+                       "Когда выдан":"",
+                       "Кем выдан":"",
                      },
                      "Реквизиты компании":
                      {
-                       "ОГРН":data.OGRN || ' ',
-                       "ИНН/КПП": getInnKpp(data) || ' ',
-                       "ОКПО":data.OKPO || ' ',
-                       "ОКВЭД":data.OKVED || ' ',
+                       "ОГРН":data.OGRN,
+                       "ИНН/КПП": getInnKpp(data),
+                       "ОКПО":data.OKPO,
+                       "ОКВЭД":data.OKVED,
                      },
                      "Банковские реквизиты":
                      {
-                       "р/счет":data.r_account || ' ',
-                       "к/счет":data.k_account || ' ',
-                       "банк":data.bank || ' ',
+                       "р/счет":data.r_account,
+                       "к/счет":data.k_account,
+                       "банк":data.bank,
                        "бик":data.bik,
                      },
-                     "ID": data.id || ' ',
+                     "ID": data.id,
                    }
             }
             /**
@@ -428,7 +428,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                 else return `${data.INN} / ${data.KPP}`;
             }
             function getDate (date) {
-                return (date==='0000-00-00') ? ' ' : date; 
+                return (date==='0000-00-00') ? '' : date; 
             } 
         },function error(resp){
             console.error(resp);
