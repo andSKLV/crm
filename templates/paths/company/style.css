@@ -99,3 +99,6 @@ div#tooltip_box {
 td:hover .company_matrix_header {
     display: none;
 }
+.company_matrix_header--red {
+    color: red;
+}

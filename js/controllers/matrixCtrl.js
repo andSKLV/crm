@@ -425,7 +425,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
              */
             function getInnKpp (data) {
                 if (data.INN===""&&data.KPP==="") return "";
-                else return `${data.INN}/${data.KPP}`;
+                else return `${data.INN} / ${data.KPP}`;
             }
             function getDate (date) {
                 return (date==='0000-00-00') ? ' ' : date; 

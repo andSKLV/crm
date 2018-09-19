@@ -142,10 +142,11 @@ app.controller("companyCtrl", function(myFactory,$scope, $http, $location, $time
                 })
                 $scope.newDashboard.currentPage++;
                 setTimeout(()=>{
-                    const elem=document.querySelector(".mi_current").firstElementChild.firstElementChild.firstElementChild;
-                    //elem.classList.toggle("selected");
-                    elem.focus();
-
+                    const elem=document.querySelector(".mi_current");
+                    if (elem) {
+                        elem = elem.firstElementChild.firstElementChild.firstElementChild;
+                        elem.focus();
+                    }
                 },1000);
             }
         }

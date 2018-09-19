@@ -2,7 +2,7 @@
     <tbody>
         <tr ng-repeat="param in clientCard" class="matrix_row">
             <td ng-repeat="(key,value) in param" ng-if="value!==''" data-tooltip="{{key}}" ng-mouseenter="appendTooltip(key)" ng-mouseleave="removeTooltip()" title="{{key}}" class="properties" ng-click="loadToDashboard(key)">
-                <div class="company_matrix_header">{{key}}</div>
+                <div class="company_matrix_header{{(value===' ')?' company_matrix_header--red':''}}">{{key}}</div>
                 <div>{{value}}</div>
             </td>
         </tr>
