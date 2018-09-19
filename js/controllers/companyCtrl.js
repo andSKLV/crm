@@ -170,11 +170,13 @@ app.controller("companyCtrl", function(myFactory,$scope, $http, $location, $time
         previousReturnMode=$scope.returnMode;
         $scope.returnMode="tooltip";
         $scope.tooltip=key;
+        document.querySelector('.company_matrix_header ').style.display = 'none';
     };
     $scope.removeTooltip = ()=>{
         $scope.tooltip="";
         $scope.returnMode=previousReturnMode;
         previousReturnMode="";
+        document.querySelector('.company_matrix_header ').style.display = 'block';
     };
     //******    tooltip   *******//
 
