@@ -431,6 +431,9 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             console.error(resp);
         })
     }
+    /**
+     * Deleting serach result after choosing one of the results
+     */
     function clearSearch () {
         debugger;
         try {

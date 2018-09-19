@@ -77,3 +77,19 @@ div#tooltip_box {
     position: relative;
     overflow: hidden;
 }
+.company_matrix_header {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    background-color: white;
+    border: 1px solid rgb(146, 167, 205);
+    color: rgb(146, 167, 205);
+    font-size: 0.8em;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    position: absolute;
+    top: -2px;
+    left: 0px;
+    display: block;
+    width: 100%;
+}
