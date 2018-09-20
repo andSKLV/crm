@@ -1,18 +1,10 @@
 app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootScope){
-    if (!myFactory.newClientCard) {
-        $http.post('src/newClientCard.json').then((resp)=>myFactory.newClientCard=resp.data);
-    }
     myFactory.parks.forEach((park)=>{
         park.processes.forEach((process)=>{
             process.showCars=false;
         })
     })
-    // $http.post("polis.json").then(function success (response) {
-    //     $scope.currObj=[];
-    //     $scope.currObj=response.data;
-    // },function error (response){
-    //     console.log(response);
-    // });
+
     $scope.currObj=[
         {
             "name": "Компания",

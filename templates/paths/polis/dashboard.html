@@ -12,7 +12,7 @@
         <div ng-if="param.type=='search/create'">
             <div>
                 <input ng-controller="searchCtrl as searchCtrl" type="search" ng-model="param.values[0].name" placeholder="Найти"
-                ng-keyup="param.values[0].name.length>2 ? searchCtrl.searchForPolis({
+                ng-keyup="param.values[0].name.length>1 ? searchCtrl.searchForPolis({
                     type: param.name,
                     value: param.values[0].name
                 }) : ''" 

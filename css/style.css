@@ -403,7 +403,7 @@ div#tooltip_box>table>tbody>tr>td:not(.tooltip_span){
 
 .matrix_container{
     overflow: auto;
-    margin-left: 50px;
+    margin-left: 30px;
 }
     .matrix_container::-webkit-scrollbar {
         width:2px;
@@ -462,6 +462,7 @@ div.ul>div,div.nav>div{
     line-height: 1;
     background: var(--gray);
     text-align: center;
+    opacity: 0.6;
 }
 select{
     text-align-last:center;
@@ -502,16 +503,6 @@ table.matrix>tbody>tr>.properties{
     height: 65px;
     position: relative;
 }
-
-/* table.matrix>tbody>tr>.properties::before{
-    position: absolute;
-    content: attr(data-tooltip);
-    top: 5px;
-    left: 5px;
-    font-size: 0.7em;
-    color: var(--blue);
-} */
-
 .ul{
     width: 100%;
 

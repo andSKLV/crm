@@ -100,3 +100,6 @@ div#tooltip_box {
 .company_matrix_name {
     margin-top: 1em;
 }
+.selected{
+    box-shadow: 0 0 5px var(--light-blue);
+}

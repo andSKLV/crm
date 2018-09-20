@@ -25,12 +25,12 @@ app.controller("companyCtrl", function(myFactory,$scope, $http, $location, $time
     if(!myFactory.loadCompany){
         $http.post("new_company.json").then(function success (response) {
                 const obj=response.data;
+                // загрузка в каретку данных из карты клиента
                 for(const key in obj){
                     if(obj[key].name!="Контакты" && obj[key].name!="Связи" && !$scope.isntEmpty($scope.clientCard[obj[key].name])){
                         $scope.clientCard[obj[key].name]={};
                         for(const prop in obj[key].values){
                             $scope.clientCard[obj[key].name][obj[key].values[prop].name]="";
-                            if(obj[key].values[prop].type==="select") $scope.clientCard[obj[key].name][obj[key].values[prop].name]=obj[key].values[prop].values[0];
                         }
                     }
                     else if(obj[key].name=="Контакты"){
@@ -125,9 +125,6 @@ app.controller("companyCtrl", function(myFactory,$scope, $http, $location, $time
         setCurrentPage(index){
             this.previousPage=this.currentPage;
             this.currentPage=index;
-            Array.from(document.querySelectorAll("div.clientCard td")).forEach(node=>{
-                node.classList.remove("mi_selected");
-            })
         },
         getIndex(param){
             this.setCurrentPage($scope.clientCard.indexOf(param));
@@ -215,7 +212,6 @@ app.controller("companyCtrl", function(myFactory,$scope, $http, $location, $time
         $scope.currObj.forEach((param, i)=>{
             param.values.forEach(({name}, j)=>{
                 if(name==key){
-                    
                     Array.from(document.querySelectorAll(".company_dashboard_inputs")).forEach(item=>{
                         item.classList.remove("selected");
                     });
@@ -223,23 +219,12 @@ app.controller("companyCtrl", function(myFactory,$scope, $http, $location, $time
                         node.classList.remove("mi_selected");
                         if(node.title==key) node.classList.add("mi_selected");
                     })
-                    if($scope.newDashboard.currentPage!=i){
-                        $scope.newDashboard.setCurrentPage(i);
-                        setTimeout(()=> {
-                            const elem=document.querySelector(".ul_current").firstElementChild.children[j].firstElementChild;
-                            elem.classList.add("selected");
-                            elem.focus();
-                        }, 1000);
-                    }
-                    else{
-                        setTimeout(()=> {
-                            const elem=document.querySelector(".ul_current").firstElementChild.children[j].firstElementChild;
-                            elem.classList.add("selected");
-                            elem.focus();
-                        }, 1000);
-                    }
-                    
-
+                    if($scope.newDashboard.currentPage!=i) $scope.newDashboard.setCurrentPage(i);
+                    setTimeout(()=> {
+                        const elem=document.querySelector(".ul_current").firstElementChild.children[j].firstElementChild;
+                        elem.classList.add("selected");
+                        elem.focus();
+                    }, 500);
                 }
             })
         })
