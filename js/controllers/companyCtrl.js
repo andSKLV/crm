@@ -130,23 +130,21 @@ app.controller("companyCtrl", function(myFactory,$scope, $http, $location, $time
             this.setCurrentPage($scope.clientCard.indexOf(param));
         }
     }
-    $scope.keydownHandler=(event, param, val)=>{
-        // FIXME: работает тольо при переходе с последней ячейки строки на первую следующей
-        if((event.keyCode===9 || event.keyCode===13 && param.name!=="Контакты") && param.values.indexOf(val)==param.values.length-1){
+    $scope.keydownHandler=(event, param, val,cb)=>{
+        if((event.keyCode==='Enter'||event.keyCode===9 || event.keyCode===13 && param.name!=="Контакты")){
             event.preventDefault();
-            if(myFactory.document.selectedParam<$scope.currObj.length-1){
-                Array.from(document.querySelectorAll("div.clientCard td")).forEach(node=>{
-                    node.classList.remove("mi_selected");
-                })
-                $scope.newDashboard.currentPage++;
-                setTimeout(()=>{
-                    const elem=document.querySelector(".mi_current");
-                    if (elem) {
-                        elem = elem.firstElementChild.firstElementChild.firstElementChild;
-                        elem.focus();
-                    }
-                },1000);
-            }
+                const sc = $scope.currObj;
+                // ищем 
+                let parentInd = sc.findIndex(v=>v.name===param.name)
+                let childInd = param.values.findIndex(v=>v.name===val.name);
+                if (childInd===param.values.length-1) {
+                    parentInd++;
+                    childInd = 0;
+                }
+                else childInd++;
+                if (parentInd>sc.length-1) return;
+                const clicking = sc[parentInd].values[childInd].name;
+                $scope.loadToDashboard(clicking);
         }
     };
 
