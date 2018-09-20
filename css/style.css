@@ -462,7 +462,6 @@ div.ul>div,div.nav>div{
     line-height: 1;
     background: var(--gray);
     text-align: center;
-    opacity: 0.6;
 }
 select{
     text-align-last:center;
