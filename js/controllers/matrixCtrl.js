@@ -28,7 +28,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
      */
     this.loadCalculation=function(id){ //нажимаем на строку расчета в результате поиска
         $timeout(function () {
-            console.log(id);
+            $rootScope.cacheTemplate = {};
             if($location.path!=="/calculation"){
                 $location.path('/calculation');
             }
@@ -345,7 +345,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                     }
                 }
                 myFactory.document.currParam="";
-
+                clearSearch();
             },function error(response){
                 console.log(response)
             });
@@ -354,4 +354,95 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
 
 
     };
+    /**
+     * Фукнция загрузки компании из БД в матрицу
+     * @param {number} id - id компании
+     */
+    this.loadCompany = function (id) {
+        const data = {};
+        data.type = 'load_company';
+        data.id=id;
+        $http.post('search.php',data).then(async (resp)=>{
+            const data = resp.data;
+            myFactory.newClientCard = generateClientCard (data);
+            myFactory.loadClient = 'Форма собственности';
+            $location.path('/company');
+            clearSearch();
+            /**
+             *  Функция генерации объекта карточки клиента из данных из БД
+             * @param {obj} data - ответ из БД
+             * @returns {obj} - объект карточки клиента
+             */
+            function generateClientCard (data) {
+                return {
+                    'Данные компании':
+                    {
+                       "Форма организации": getOrgForm(data.OrganizationFormID),
+                       "Наименование организации": data.name,
+                       "Дата регистрации": getDate(data.registration_date),
+                       "Наименование рег. органа": data.who_registate,
+                     },
+                     "Генеральный директор":
+                     {
+                       "ФИО директора":"",
+                       "Серия и номер паспорта":data.general_director_passport,
+                       "Когда выдан":"",
+                       "Кем выдан":"",
+                     },
+                     "Реквизиты компании":
+                     {
+                       "ОГРН":data.OGRN,
+                       "ИНН/КПП": getInnKpp(data),
+                       "ОКПО":data.OKPO,
+                       "ОКВЭД":data.OKVED,
+                     },
+                     "Банковские реквизиты":
+                     {
+                       "р/счет":data.r_account,
+                       "к/счет":data.k_account,
+                       "Банк":data.bank,
+                       "БИК":data.bik,
+                     },
+                     "ID": data.id,
+                   }
+            }
+            /**
+             * Функция возвращает наименование формы компании 
+             * @param {number} id 
+             */
+            function getOrgForm (id) {
+                const forms = {
+                    1: "ЗАО",
+                    2: "ООО",
+                    3: "ОАО",
+                    4: "ИП"
+                }
+                return forms[+id];
+            }
+            /**
+             * Function to parse INN and KPP from loaded obj
+             * @param {obj} data object of client from DB
+             */
+            function getInnKpp (data) {
+                if (data.INN===""&&data.KPP==="") return "";
+                else return `${data.INN} / ${data.KPP}`;
+            }
+            function getDate (date) {
+                return (date==='0000-00-00') ? '' : date; 
+            } 
+        },function error(resp){
+            console.error(resp);
+        })
+    }
+    /**
+     * Deleting serach result after choosing one of the results
+     */
+    function clearSearch () {
+        try {
+            $rootScope.search_result = [];
+        }
+        catch (err) {
+            console.error (`Clear search results problem: ${err}`);
+        }
+    }
 });

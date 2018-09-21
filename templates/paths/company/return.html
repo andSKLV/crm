@@ -6,12 +6,12 @@
     </tbody>
     <tbody ng-if="tooltip=='' && dashboard.myFactory.makingPolis==false">
         <tr>
-            <td ng-click="changeLocation('/dashboard')">К основному меню</td>
+            <td ng-click="changeLocation('/')">Вернуться в основное меню</td>
         </tr>
     </tbody>
     <tbody ng-if="tooltip=='' && dashboard.myFactory.makingPolis==true">
         <tr>
-            <td ng-click="changeLocation('/polis')">Вернуться</td>
+            <td ng-click="changeLocation('/polis')">Вернуться в Полис</td>
         </tr>
     </tbody>
 </table>

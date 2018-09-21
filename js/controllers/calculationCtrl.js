@@ -482,7 +482,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.isNaN=function(val){
         return isNaN(val);
     };
-    this.clean=function(){//очищаем каретку и возвращаем ее в исходное состояние
+    this.clean=function(flag=false){//очищаем каретку и возвращаем ее в исходное состояние
+        if (flag&&this.myFactory.parks.length===0) {
+            this.relocatePage('dashboard');
+            return true;
+        }
         this.tooltip.fadeOut();
         for(let i=0;i<scope.currObj.length;i++){
             delete scope.currObj[i].selected;//убираем подсвечивание нижней части
@@ -541,6 +545,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         const url = (string!=="HIP.json") ? string : `src/${this.karetkaTypes[this.myFactory.HIPname]}`;
         this.karetka.mode="listener";
         $http.post(url).then(function success (response) {
+            scope.myFactory.removeCellSelection();
             scope.currObj=[];
             scope.currObj=response.data;
             scope.myFactory.currObj=response.data;
@@ -575,10 +580,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
         value = (value==="dashboard") ? "" : value;
         $location.path(`/${value}`);
-        let path = window.location.href;
-        path = path.replace(window.location.hash, `#!/${value}`)
-        location.replace(path);
-        location.reload();
     };
     this.relocateHere=function(url){//переход в углубление вверху каретки
         for(let i=0; i<scope.currObj.length;i++){

@@ -1,14 +1,23 @@
 @import url(https://fonts.googleapis.com/css?family=Tenor+Sans);
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,900);
+@import "../templates/paths/polis/style.css";
 
+:root {
+    --blue: rgb(146, 167, 205);
+    --red:#c54f4f;
+    --gray:rgb(230, 230, 230);
+    --light-blue:#35bfff;
+    --dark-blue: rgb(0, 111, 167);
+    --tooltip-gray: #bdc3c7;
+}
 .light_red{
-    color: #c54f4f;
+    color: var(--red);
 }
 .polisEditorMatrixRow.deleted{
     opacity: .15;
 }
 .polisEditorMatrixRow.deleted:hover{
-    background: rgb(146, 167, 205)!important;
+    background: var(--blue)!important;
     color:white!important;
     opacity: 1;
 }
@@ -17,10 +26,10 @@
     width: 99%;
     top: 0px;
     position: absolute;
-    background: rgb(230, 230, 230);
+    background: var(--gray);
 }
 .matrix.contacts{
-    border-top: 5px solid rgb(146, 167, 205);
+    border-top: 5px solid var(--blue);
 }
 div.mi_slider{
     margin: auto;
@@ -51,7 +60,7 @@ div.matrix_container.calc{
     font-size: 14px;
     width: 100px;
     height: auto;
-    border: 2px solid rgb(0, 111, 167);
+    border: 2px solid var(--dark-blue);
     border-radius: 15px;
     padding: 2px 6px 2px 6px;
     font-weight: bold;
@@ -59,14 +68,14 @@ div.matrix_container.calc{
 
 @media (min-width: 1800px) and (max-width: 3600px) {
     td.tooltip_span--multi {
-        color: #c54f4f;
+        color: var(--tooltip-gray);
         font-size: 1.65em;
         line-height: 0.85em;
         overflow: hidden;
     }
     .tooltip_span{
         font-size: 1.2em;
-        color: rgb(146, 167, 205);
+        color: var(--blue);
     }
     div.mi_slider {
         width:1650px;
@@ -117,17 +126,17 @@ div.matrix_container.calc{
 }
 @media (min-width: 1300px) and (max-width: 1800px) {
     td.tooltip_span--multi {
-        color: #c54f4f;
+        color: var(--red);
         font-size: 1.55em;
         line-height: 0.85em;
         overflow: hidden;
     }
     .tooltip_span{
         font-size: 1.1em;
-        color: rgb(146, 167, 205);
+        color: var(--blue);
       }
     td.tooltip_span--multi {
-        color: #c54f4f;
+        color: var(--red);
         font-size: 1.55em;
         line-height: 0.85em;
         overflow: hidden;
@@ -180,18 +189,18 @@ div.matrix_container.calc{
 }
 @media (min-width: 400px) and (max-width: 1300px){
     td.tooltip_span--multi {
-        color: #c54f4f;
+        color: var(--red);
         font-size: 1.45em;
         line-height: 0.85em;
         overflow: hidden;
     }
     .tooltip_span{
         font-size: 1em;
-        color: rgb(146, 167, 205);
+        color: var(--blue);
 
     }
     td.tooltip_span--multi {
-        color: #c54f4f;
+        color: var(--red);
         font-size: 1.45em;
         line-height: 0.85em;
         overflow: hidden;
@@ -287,7 +296,7 @@ div.red{
 #pseudoDashboard>div{
     width: 100%;
     display: table-cell;
-    color: rgb(230, 230, 230);
+    color: var(--tooltip-gray);
     font-size: 30pt;
     bottom: 0px;
     vertical-align: middle;
@@ -295,18 +304,22 @@ div.red{
     text-align: center;
 }
 div#tooltip_box>table>tbody>tr>td:not(.not_hover):hover, #pseudoDashboard>div:hover{
-    color: rgb(0, 111, 167)!important;
+    color: var(--dark-blue)!important;
 }
 .matrix.bottom{
     table-layout: fixed;
     margin-left: 50px;
-    border-top: 1px solid rgb(146, 167, 205);
+    border-top: 1px solid var(--blue);
 }
 input.properties{
-    background: rgb(230, 230, 230);
+    background: var(--gray);
     text-align: center;
     border: 1px solid white;
 }
+input::-webkit-input-placeholder { opacity: 0.4; }
+input:-ms-input-placeholder { opacity: 0.4; }
+input::-ms-input-placeholder { opacity: 0.4; }
+input::placeholder { opacity: 0.4; } 
 .multi{
     float: left;
     text-align:center; 
@@ -314,14 +327,14 @@ input.properties{
     width: 20px;
     height: 20px;
     border-radius: 50%; 
-    border: 3px solid rgb(0, 111, 167);
-    color: rgb(0, 111, 167);
+    border: 3px solid var(--dark-blue);
+    color: var(--dark-blue);
     font:20px Arial, Helvetica, sans-serif; 
     font-weight:bold; 
-    background:rgb(230, 230, 230); 
+    background:var(--gray); 
 }
 .multi.alreadySelected{
-    border-color:  rgb(0, 111, 167);
+    border-color:  var(--dark-blue);
 }
 div.dashboard_container{
     float: right;
@@ -331,7 +344,7 @@ div.dashboard_container{
     border: 1px solid red;
 }
 .btnDelete,.btnCopy, .btnArrowUp{
-    background: rgb(230, 230, 230);
+    background: var(--gray);
     border: none;
     text-align: center;
     border-bottom: 1px solid white;
@@ -355,7 +368,7 @@ div.keyFriendly:after{
     right: 0px;
 }
 .openPark:hover{
-    background: rgb(146, 167, 205)!important;
+    background: var(--blue)!important;
     color:white!important;
 }
 
@@ -371,7 +384,7 @@ div#tooltip_box>table,div#tooltip_box>table>tbody,div#tooltip_box>table>tbody>tr
 div#tooltip_box>table>tbody>tr>td:not(.tooltip_span){
     height: 100%;
     display: inline-block;
-    color:rgb(230, 230, 230);
+    color:var(--tooltip-gray);
     font-size:30pt;
 }
 .tooltip_span{
@@ -379,7 +392,7 @@ div#tooltip_box>table>tbody>tr>td:not(.tooltip_span){
     display: inline-block;
 }
 .alreadySelected {
-    background: rgb(0, 111, 167)!important;
+    background: var(--dark-blue)!important;
     color: white;
     transition: all .3s;   
 }
@@ -390,7 +403,7 @@ div#tooltip_box>table>tbody>tr>td:not(.tooltip_span){
     position: absolute; /* Абсолютное позиционирование */
     left: 48%; bottom: 0px; /* Положение треугольника */
     border: 10px solid transparent; /* Прозрачные границы */
-    border-bottom: 10px solid rgb(0, 111, 167); /* Добавляем треугольник */
+    border-bottom: 10px solid var(--dark-blue); /* Добавляем треугольник */
 }
 
 .matrix_container{
@@ -401,10 +414,10 @@ div#tooltip_box>table>tbody>tr>td:not(.tooltip_span){
         width:2px;
     }
     .matrix_container::-webkit-scrollbar-thumb {
-        background-color:rgb(0, 111, 167);
+        background-color:var(--dark-blue);
     }
 table.matrix.park{
-    border-bottom: 5px solid rgb(146, 167, 205);
+    border-bottom: 5px solid var(--blue);
 }
 table.matrix{
     width: 100%;
@@ -412,19 +425,19 @@ table.matrix{
 }
 table.matrix>tbody>tr{
     display: table-row;
-    background: rgb(230, 230, 230);
+    background: var(--gray);
 }
 div.calc>div>table.matrix>tbody>tr.changing{
     color: white;
-    background: rgb(0, 111, 167);
+    background: var(--dark-blue);
 }
 div.calc>div>table.matrix>tbody>tr.changing>td.changing{
     color: white;
-    background: #35bfff;
+    background: var(--light-blue);
 }
 .multi_cell:hover{
     background: white;
-    color: rgb(0, 111, 167);
+    color: var(--dark-blue);
 }
 
 ::-webkit-input-placeholder {text-align: center;}
@@ -452,8 +465,9 @@ div.ul>div,div.nav>div{
     outline: none;
     border: none;
     line-height: 1;
-    background: rgb(230, 230, 230);
+    background: var(--gray);
     text-align: center;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
 }
 select{
     text-align-last:center;
@@ -461,13 +475,13 @@ select{
 input[currency-input]:hover,input[currency-input]:focus{
     color: rgb(53, 191, 255)!important;
     background: white!important;
-    border-top:2px solid rgb(230, 230, 230)!important;
+    border-top:2px solid var(--gray)!important;
 }
 .ul_container{
     height: 50%;
 }
 .multi_close{
-    color:rgb(0, 111, 167);
+    color:var(--dark-blue);
 }
 
 body{
@@ -494,13 +508,6 @@ table.matrix>tbody>tr>.properties{
     height: 65px;
     position: relative;
 }
-
-table.matrix>tbody>tr>.properties::before{
-    position: absolute;
-    content: attr(data-tooltip);
-    top: -25px;
-}
-
 .ul{
     width: 100%;
 
@@ -510,7 +517,7 @@ table.matrix>tbody>tr>.properties::before{
 }
 .mi_selected{
     color: white;
-    background: #35bfff!important;
+    background: var(--light-blue)!important;
     box-shadow: inset 0 6px 20px 0px rgba(0, 0, 0, 0.4);
     transition-property: box-shadow;
     transition-duration: 0.4s;
@@ -519,13 +526,13 @@ table.matrix>tbody>tr>.properties::before{
 }
 .mi_slider>div.dashboard_container>.nav{
     width:100%;
-    border-top: 5px solid rgb(146, 167, 205);
+    border-top: 5px solid var(--blue);
     height: 50%;
     table-layout: fixed;
     display: table;
 }
 .mi_slider>div.dashboard_container>.nav>div>div,.mi_slider>div.dashboard_container>div>.ul>div>div{
-    background: rgb(230, 230, 230);
+    background: var(--gray);
     text-align: center;
     vertical-align: middle;
     display: table-cell;
@@ -543,12 +550,12 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 .clientCard>table.matrix>tbody>tr>td:hover
 {
     color: white;
-    background: #35bfff;
+    background: var(--light-blue);
     opacity: 1;
     
 }
 .html {
-    background-color: rgb(0, 111, 167);
+    background-color: var(--dark-blue);
     font-family: "Tenor Sans", sans-serif;
 }
 
@@ -575,10 +582,10 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 .input-txt {
     width: 100%;
     padding: 20px 10px;
-    background: rgb(230, 230, 230);
+    background: var(--gray);
     border: none;
     font-size: 1em;
-    color: #35bfff;
+    color: var(--light-blue);
     border-bottom: 1px dotted rgba(250, 250, 250, 0.4);
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -611,7 +618,7 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 .btn {
     padding: 15px 30px;
     border: none;
-    background: #35bfff;
+    background: var(--light-blue);
     color: white;
 }
 .btn--right {
@@ -803,7 +810,7 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     font-size: 14px;
     width: 100px;
     height: auto;
-    border: 2px solid rgb(0, 111, 167);
+    border: 2px solid var(--dark-blue);
     border-radius: 15px;
     padding: 2px 6px 2px 6px;
     font-weight: bold;
@@ -819,7 +826,7 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     font-size: 14px;
     width: 100px;
     height: auto;
-    border: 2px solid rgb(0, 111, 167);
+    border: 2px solid var(--dark-blue);
     border-radius: 15px;
     padding: 2px 6px 2px 6px;
     font-weight: bold;
@@ -835,7 +842,7 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     font-size: 14px;
     width: 100px;
     height: auto;
-    border: 2px solid rgb(0, 111, 167);
+    border: 2px solid var(--dark-blue);
     border-radius: 15px;
     padding: 2px 6px 2px 6px;
     font-weight: bold;
@@ -851,7 +858,7 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     font-size: 14px;
     width: 100px;
     height: auto;
-    border: 2px solid rgb(0, 111, 167);
+    border: 2px solid var(--dark-blue);
     border-radius: 15px;
     padding: 2px 6px 2px 6px;
     font-weight: bold;

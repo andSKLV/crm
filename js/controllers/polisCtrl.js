@@ -1,18 +1,10 @@
 app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootScope){
-    
-    
-    myFactory.newClientCard={"Данные компании":{"Форма организации":"OAO","Наименование организации":"Рога и Копыта","Дата регистрации":"0123-03-21","Наименование рег. органа":"123123123"},"Генеральный директор":{"ФИО":"12312321","Серия и номер паспорта":"123123123","Когда выдан":"0123-03-12","Кем выдан":"123123123"},"Реквизиты компании":{"ОГРН":"123123213","ИНН/КПП":"23123213","ОКПО":"123123123","ОКВЭД":"123123"},"Банковские реквизиты":{"р/счет":"123123123","к/счет":"123123123","банк":"123123123","бик":"123123123"}};
     myFactory.parks.forEach((park)=>{
         park.processes.forEach((process)=>{
             process.showCars=false;
         })
     })
-    // $http.post("polis.json").then(function success (response) {
-    //     $scope.currObj=[];
-    //     $scope.currObj=response.data;
-    // },function error (response){
-    //     console.log(response);
-    // });
+
     $scope.currObj=[
         {
             "name": "Компания",
@@ -98,7 +90,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
 
 
     $scope.returnToDashboard=()=>{
-        $location.path('/dashboard');
+        $location.path('/');
     };
     $scope.clicking=(event, process)=>{
         event.stopImmediatePropagation();
@@ -205,4 +197,5 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
 
         })
     }
+    if (!($rootScope.search_result)) $scope.newDashboard.setCurrentPage(0);
 })

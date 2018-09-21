@@ -42,6 +42,6 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
         paramNumbers++;
     }
     $scope.returnToDashboard=()=>{
-        $location.path('/dashboard');
+        $location.path('/polis');
     };
 });

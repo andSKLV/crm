@@ -45,27 +45,27 @@ div#tooltip_box {
 }
 .ul_move_to_left{
     animation-name: move-to-left;
-    animation-duration: 500ms;
+    animation-duration: 250ms;
     animation-fill-mode: both;
     animation-timing-function: linear;
 }
 .ul_move_from_left{
-    animation-delay: 350ms;
+    animation-delay: 150ms;
     animation-name: move-from-left;
-    animation-duration: 500ms;
+    animation-duration: 250ms;
     animation-fill-mode: both;
     animation-timing-function: linear;
 }
 .ul_move_to_right{
     animation-name: move-to-right;
-    animation-duration: 500ms;
+    animation-duration: 250ms;
     animation-fill-mode: both;
     animation-timing-function: linear;
 }
 .ul_move_from_right{
-    animation-delay: 350ms;
+    animation-delay: 150ms;
     animation-name: move-from-right;
-    animation-duration: 500ms;
+    animation-duration: 250ms;
     animation-fill-mode: both;
     animation-timing-function: linear;
 }
@@ -76,4 +76,30 @@ div#tooltip_box {
 .ul_container{
     position: relative;
     overflow: hidden;
+}
+.company_matrix_header {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    background-color: var(--dark-blue);
+    border: 1px solid var(--dark-blue);
+    color: white;
+    font-size: 0.8em;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    position: absolute;
+    top: -2px;
+    left: 0px;
+    display: block;
+    width: 100%;
+}
+.company_matrix_header--red {
+    background-color: var(--red);
+    border: 1px solid var(--red);
+}
+.company_matrix_name {
+    margin-top: 1em;
+}
+.selected{
+    box-shadow: 0 0 5px var(--light-blue);
 }
