@@ -315,6 +315,10 @@ input.properties{
     text-align: center;
     border: 1px solid white;
 }
+input::-webkit-input-placeholder { opacity: 0.4; }
+input:-ms-input-placeholder { opacity: 0.4; }
+input::-ms-input-placeholder { opacity: 0.4; }
+input::placeholder { opacity: 0.4; } 
 .multi{
     float: left;
     text-align:center; 
