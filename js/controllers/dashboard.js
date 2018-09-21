@@ -222,6 +222,8 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
     );
 
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
+        if (value.urlTo==="calculation") this.myFactory.cleanCalculations(); // clear all old calculation info
+        if (value.urlTo==="company") delete this.myFactory.newClientCard; //clear all old company info
         $location.path(`/${value.urlTo}`);
     };
     this.relocateHere=function(url){//переход в углубление вверху каретки

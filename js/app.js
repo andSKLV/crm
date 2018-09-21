@@ -1394,5 +1394,41 @@ app.factory('myFactory', function(){
             // если процесс единственный в парке, удаляем парк
             else this.parks.splice(this.parks.indexOf(process.park), 1);
         },
+        /**
+         * Функция очистки фактори от всех следов вычислений. обнуление
+         */
+        cleanCalculations() {
+            this.HIPname = "Перевозчики";
+            const lim = this.a_limit;
+            lim.max_limit = 0;
+            lim.value = 0;
+            lim.type = "Агр. лимит";
+            lim.hand = false;
+            this.agents.mode = "%";
+            this.agents.val = "";
+            this.amountType = "Тягачей";
+            this.bottom.priceMode = "price";
+            this.bottom.singleAmount = false;
+            this.matrixType = "HIP";
+            this.multi.arrays.risk = [];
+            this.multi.arrays.wrapping = [];
+            this.multi.count = 0;
+            this.multi.mode = false;
+            this.multi.multies = [];
+            this.multi.template = [];
+            this.parkTemplate = [];
+            this.parks = [];
+            this.payment.hand = false;
+            this.payment.mode = 'ON';
+            this.payment.val = 0;
+            this.practicalPrice.koef = 1;
+            this.practicalPrice.val = "";
+            this.cleanProcess();
+            delete this.totalAmount;
+            delete this.totalAmountForSingle;
+            delete this.totalPrice;
+            delete this.totalPriceForSingle;
+            delete this.totalPriceWithoutPayments;
+        },
     }
 });

@@ -28,7 +28,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
      */
     this.loadCalculation=function(id){ //нажимаем на строку расчета в результате поиска
         $timeout(function () {
-            console.log(id);
+            $rootScope.cacheTemplate = {};
             if($location.path!=="/calculation"){
                 $location.path('/calculation');
             }
