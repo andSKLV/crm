@@ -466,6 +466,7 @@ div.ul>div,div.nav>div{
     line-height: 1;
     background: var(--gray);
     text-align: center;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
 }
 select{
     text-align-last:center;
