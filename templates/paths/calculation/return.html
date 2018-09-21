@@ -5,19 +5,19 @@
     </tr>
     </tbody>
     <tbody ng-if="calculation.config!='calculation.json' && mode=='calc'" ng-switch="calculation.karetka.mode" class="animate-switch-container animate-switch">
-        <tr class="animate-switch" ng-switch-when="changing process">
+        <tr class="" ng-switch-when="changing process">
             <td ng-click="calculation.clean()">Выйти из режима изменения</td>
         </tr>
-        <tr class="animate-switch" ng-switch-when="making new process">
+        <!-- <tr class="animate-switch" ng-switch-when="making new process">
             <td ng-click="calculation.clean(true)">Отменить создание</td>
-        </tr>
-        <tr class="animate-switch" ng-switch-when="confirm refresh">
+        <!-- </tr> -->
+        <!-- <tr class="animate-switch" ng-switch-when="confirm refresh">
             <td ng-click="calculation.relocatePage('dashboard')" style="float: left">Да</td>
             <td class="not_hover">Вернуться в основное меню?</td>
             <td ng-click="calculation.karetka.mode='listener'" style="float: right">Нет</td>
-        </tr>
-        <tr class="animate-switch" ng-switch-default="">
-            <td ng-click="calculation.Confirm()">Вернуться</td>
+        </tr> -->
+        <tr class="" ng-switch-default="">
+            <td ng-click="calculation.relocatePage('dashboard')">Вернуться в основное меню</td>
 
         </tr>
     </tbody>

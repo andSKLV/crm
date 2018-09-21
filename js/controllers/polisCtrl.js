@@ -90,7 +90,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
 
 
     $scope.returnToDashboard=()=>{
-        $location.path('/calculation');
+        $location.path('/');
     };
     $scope.clicking=(event, process)=>{
         event.stopImmediatePropagation();
