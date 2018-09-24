@@ -1,15 +1,6 @@
 .select_HIP {
-  cursor: pointer;
-  position: absolute;
-  top: 90px;
-  right: 20px;
-  background: rgb(230, 230, 230);
-  text-align: center;
-  vertical-align: middle;
-  border: 1px solid white;
-  font-size: 0.9em;
-  padding: 5px;
-  color: rgb(146, 167, 205);
+  display: flex;
+  flex-direction: row;
 }
 .select_HIP-container {
   display: flex;
@@ -23,17 +14,20 @@
 .select_HIP-container img {
   width: 32px;
   height: 32px;
-  margin: 2px;
+  
 }
 .select_container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  background-color: var(--gray);
+  border-radius: 10px;
 }
 .select_option {
   display: block;
+  margin: 0px 5px 0px 5px;
   padding:1px;
-  border-top: 1px solid white;
-  
+  cursor: pointer;
+
 }
 .select_option img{
   width: 32px;
@@ -46,8 +40,8 @@
 #truck:hover::after{
   content: "Перевозчики";
   position: absolute;
-  left: -140%;
-  top: 40%;
+  left: 100%;
+  top: 90px;
   z-index: 10;
   background-color: white;
   color: black;
@@ -62,8 +56,8 @@
 #call-center:hover::after{
   content: "Экспедиторы";
   position: absolute;
-  left: -140%;
-  top: 75%;
+  left: 100%;
+  top: 90px;
   z-index: 10;
   background-color: white;
   color: black;
@@ -99,6 +93,7 @@
 }
 .nav-option {
   box-sizing: content-box;
+  border: 1px solid white;
 }
 .nav-icon {
   width: 32px;
