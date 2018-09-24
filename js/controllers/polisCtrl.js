@@ -1,5 +1,5 @@
 app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootScope){
-    if (myFactory.calculationName!=="") this.calculationName = myFactory.calculationName;
+    if (myFactory.calculationName!=="" && myFactory.calculationName!==undefined) this.calculationName = myFactory.calculationName;
     if (myFactory.newClientCard) this.companyName = myFactory.newClientCard['Данные компании']['Наименование организации'];
     myFactory.parks.forEach((park)=>{
         park.processes.forEach((process)=>{

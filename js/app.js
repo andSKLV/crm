@@ -1404,6 +1404,7 @@ app.factory('myFactory', function(){
          * Функция очистки фактори от всех следов вычислений. обнуление
          */
         cleanCalculations() {
+            this.calculationName = "";
             const lim = this.a_limit;
             lim.max_limit = 0;
             lim.value = 0;
