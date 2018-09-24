@@ -15,7 +15,10 @@
         </div>
       </div>
   </div>
-  <div class="nav-option" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.myFactory.cleanCalculations()">
+  <div class="nav-option" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.myFactory.cleanCalculations();calculation.reloadDashboard('HIP.json','HIP');">
       <img class="nav-icon" src="img/nav/reload.png" alt="reload">
   </div>
+  <div class="nav-option" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.reloadDashboard('calculationActions.json','calculationActions')">
+    <img class="nav-icon" src="img/nav/save.png" alt="save">
+ </div>
 </div>
