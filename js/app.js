@@ -157,6 +157,12 @@ app.directive('calculationReturn', function(){
         templateUrl: 'templates/paths/calculation/return.html'
     };
 });
+app.directive('calculationNav', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/calculation/navigation.html'
+    };
+});
 app.directive('calculationDashboard', function(){
     return{
         restrict: 'A',

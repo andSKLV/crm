@@ -5,7 +5,6 @@
     ng-click="calculation.multiClicked()" 
     ng-class="{alreadySelected: dashboard.myFactory.multi.mode}" 
     class="multi">+</div>
-
 <div class="dashboard_container" calculation-dashboard></div>
 <div id="tooltip_box" calculation-return></div>
 
@@ -14,6 +13,6 @@
     <table class="matrix" ng-if="dashboard.myFactory.matrixType=='calculationActions'" find-calculation-view></table>
     <div ng-if="dashboard.myFactory.matrixType=='HIP'" calculation-matrix ng-controller="HIP as HIP"></div>
 </div>
-
+<div calculation-nav></div>
 <div ng-if="dashboard.myFactory.matrixType=='HIP' && dashboard.myFactory.totalPrice!=undefined && dashboard.myFactory.totalPrice!=0" calculation-bottom></div>
 
