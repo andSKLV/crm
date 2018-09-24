@@ -63,6 +63,11 @@
         "json":"new_company.json"
       },
       {
+        "name":"Полис",
+        "urlTo":"polis",
+        "type":"relocatePage"
+      },
+      {
         "name":"Контакт",
         "urlTo":"new_contact",
         "type":"relocatePage",

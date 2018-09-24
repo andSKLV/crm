@@ -92,7 +92,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                         myFactory.HIPname = response.data.HIPname;
                         myFactory.scop.loadMatrix();// перезагружаем матрицу
                     }
-                    myFactory.scop.calculationName = response.data.name;
+                    myFactory.calculationName = response.data.name;
                     myFactory.finalCalc();
                     //проходимся по мульти
 
@@ -299,7 +299,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                         myFactory.scop.loadMatrix();// перезагружаем матрицу
                     }
                     // сохраняем имя загруженного расчета в верхней части матрицы
-                    myFactory.scop.calculationName = response.data.name;
+                    myFactory.calculationName = response.data.name;
                     myFactory.finalCalc();
 
                     if(response.data.a_limit!=0 && response.data.a_limit!=myFactory.a_limit.max_limit){//агрегатный лимит

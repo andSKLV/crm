@@ -12,7 +12,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     }
     this.myFactory.HIPname = 'Перевозчики';
     this.myFactory.scop = this;
-    this.calculationName = "";
+    this.myFactory.calculationName = '';
 
     this.loadMatrix = function () {
         /**
@@ -1825,7 +1825,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         let save = {};
         save.type = "addNewCalculationToDB";
         save.name = this.nameOfCalculation;
-        this.calculationName = this.nameOfCalculation;
+        this.myFactory.calculationName = this.nameOfCalculation;
         try {
             save.parks = JSON.stringify(parks);
         }
