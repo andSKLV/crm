@@ -73,7 +73,8 @@
   display: table;
   margin: auto;
   margin-left: 50px;
-  background: rgb(230, 230, 230);
+  background: var(--blue);
+  color: white;
   text-align: center;
   width: calc(100% - 50px);
   overflow: hidden;
