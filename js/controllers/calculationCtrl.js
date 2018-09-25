@@ -10,9 +10,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         'Перевозчики':'HIP.json',
         'Экспедиторы': 'HIP-conf.json',
     }
-    this.myFactory.HIPname = 'Перевозчики';
+    if (this.myFactory.HIPname===undefined) this.myFactory.HIPname = 'Перевозчики';
     this.myFactory.scop = this;
-    // this.myFactory.calculationName = '';
 
     this.loadMatrix = function () {
         /**
