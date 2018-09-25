@@ -12,6 +12,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
     myFactory.config = "new_company.json";
     $scope.actions = false;
     $scope.cardNotEmpty = false;
+    init();
 
     $scope.$on('$destroy', function () {
         let flag = false;
@@ -23,38 +24,40 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             Object.assign(scope.myFactory.newClientCard, $scope.clientCard);
         }
     });
-    if (!myFactory.loadCompany) {
-        $http.post("new_company.json").then(function success(response) {
-            const obj = response.data;
-            // загрузка в каретку данных из карты клиента
-            for (const key in obj) {
-                if (obj[key].name != "Контакты" && obj[key].name != "Связи" && !$scope.isntEmpty($scope.clientCard[obj[key].name])) {
-                    $scope.clientCard[obj[key].name] = {};
-                    for (const prop in obj[key].values) {
-                        $scope.clientCard[obj[key].name][obj[key].values[prop].name] = "";
+    function init () {
+        if (!myFactory.loadCompany) {
+            $http.post("new_company.json").then(function success(response) {
+                const obj = response.data;
+                // загрузка в каретку данных из карты клиента
+                for (const key in obj) {
+                    if (obj[key].name != "Контакты" && obj[key].name != "Связи" && !$scope.isntEmpty($scope.clientCard[obj[key].name])) {
+                        $scope.clientCard[obj[key].name] = {};
+                        for (const prop in obj[key].values) {
+                            $scope.clientCard[obj[key].name][obj[key].values[prop].name] = "";
+                        }
+                    }
+                    else if (obj[key].name == "Контакты") {
+                        for (const prop in obj[key].values) {
+                            $scope.contact[obj[key].values[prop].name] = "";
+                        }
                     }
                 }
-                else if (obj[key].name == "Контакты") {
-                    for (const prop in obj[key].values) {
-                        $scope.contact[obj[key].values[prop].name] = "";
-                    }
+                // удаляем ИД из отображения в матрице
+                delete $scope.clientCard.ID;
+                $scope.currObj = [];
+                // делаем верхнюю каретку как образец из json
+                $scope.currObj = response.data;
+    
+                if (myFactory.loadClient !== undefined) {
+                    $scope.loadToDashboard(myFactory.loadClient);
+                    delete myFactory.loadClient;
                 }
-            }
-            // удаляем ИД из отображения в матрице
-            delete $scope.clientCard.ID;
-            $scope.currObj = [];
-            // делаем верхнюю каретку как образец из json
-            $scope.currObj = response.data;
-
-            if (myFactory.loadClient !== undefined) {
-                $scope.loadToDashboard(myFactory.loadClient);
-                delete myFactory.loadClient;
-            }
-            $scope.setEmptyCardParam();
-        }, function error(response) {
-            console.log(response);
+                $scope.setEmptyCardParam();
+            }, function error(response) {
+                console.log(response);
+                
+            });
         }
-        );
     }
     //******    Инициализация   *****//
     $scope.newDashboard = {
@@ -212,6 +215,11 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
     }
     $scope.setEmptyCardParam = ()=> {
         $scope.cardNotEmpty = $scope.checkCardIsEmpty ();
+    }
+    $scope.reload = () => {
+        scope.myFactory.removeCellSelection ('dashboard_container');
+        $scope.clientCard = {};
+        init();
     }
 });
 

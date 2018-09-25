@@ -2,7 +2,7 @@
     <div class="nav-option hover-hint" id="home" data-name="Главное меню" ng-click="calculation.relocatePage('dashboard')">
         <img class="nav-icon" src="img/nav/home.png" alt="Главное меню">
     </div>
-    <div class="nav-option hover-hint" id="reload" ng-if="cardNotEmpty" data-name="Очистить таблицу" ng-click="calculation.myFactory.cleanCalculations();calculation.reloadDashboard('HIP.json','HIP');">
+    <div class="nav-option hover-hint" id="reload" ng-if="cardNotEmpty" data-name="Очистить таблицу" ng-click="reload()">
         <img class="nav-icon" src="img/nav/reload.png" alt="">
     </div>
     <div class="nav-option hover-hint" id="save" ng-if="cardNotEmpty" data-name="Сохранить" ng-click="">
