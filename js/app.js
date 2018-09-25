@@ -13,6 +13,7 @@ app.config(function($routeProvider){//с помощью .config мы опред�
     $routeProvider
         .when('/',{
             templateUrl: 'dashboard.html',
+            controller: 'dashboardCtrl as dashboard',
         })
         .when('/dashboard',{
             resolve:{

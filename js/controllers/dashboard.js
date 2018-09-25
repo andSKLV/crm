@@ -206,22 +206,24 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
 
     };
     this.config="dashboard.json";
+
     $http.post("dashboard.json").then(function success (response) {//устанавливаем каретку управления и заполняем ее из файла dashboard.json
-            scope.currObj=response.data;
-            scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
-                return obj["name"]!=undefined;
-            }).length;
-            if($cookies.get('currentObj')){
-                scope.currObj=$cookies.get('currentObj');
-                $cookies.remove('currentObj');
+        scope.currObj=response.data;
+        scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
+            return obj["name"]!=undefined;
+        }).length;
+        if($cookies.get('currentObj')){
+            scope.currObj=$cookies.get('currentObj');
+            $cookies.remove('currentObj');
 
-            }
-
-
-        },function error (response){
-            console.log(response);
         }
+        scope.selectParam(0);
+    },function error (response){
+        console.log(response);
+    }
     );
+
+
 
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
         $location.path(`/${value.urlTo}`);
@@ -300,5 +302,5 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
         const menu = document.querySelector('.nav-back_container');
         menu.classList.toggle('nav-back_container--hidden');
     }
-
+    // this.selectParam(0);
 });
