@@ -1,24 +1,27 @@
 <div class="nav-container">
-  <div class="nav-option" ng-click="calculation.relocatePage('dashboard')">
-    <img class="nav-icon" src="img/nav/home.png" alt="home">
-  </div>
-  <div class="nav-option">
-      <div class="select_HIP" ng-click="calculation.toogleMenu()" ng-if="calculation.myFactory.parks.length===0">
-        <img ng-src="img/{{(calculation.myFactory.HIPname==='Перевозчики')?'truck.png':'call-center.png'}}" alt="" class="nav-icon">
-        <div class="select_container select--hidden"> 
-            <div class="select_option" id="truck" ng-click="calculation.setHIP('Перевозчики')">
-                <img src="img/truck.png" alt="Перевозчики">
-            </div>
-            <div class="select_option" id="call-center" ng-click="calculation.setHIP('Экспедиторы')">
-                <img src="img/call-center.png" alt="Экспедиторы">
+    <div class="nav-option" ng-click="calculation.relocatePage('dashboard')">
+        <img class="nav-icon" src="img/nav/home.png" alt="home">
+    </div>
+    <div class="nav-option">
+        <div class="select_HIP" ng-click="calculation.toogleMenu()" ng-if="calculation.myFactory.parks.length===0">
+            <img ng-src="img/{{(calculation.myFactory.HIPname==='Перевозчики')?'truck.png':'call-center.png'}}" alt="" class="nav-icon">
+            <div class="select_container select--hidden"> 
+                <div class="select_option" id="truck" ng-click="calculation.setHIP('Перевозчики')">
+                    <img src="img/truck.png" alt="Перевозчики">
+                </div>
+                <div class="select_option" id="call-center" ng-click="calculation.setHIP('Экспедиторы')">
+                    <img src="img/call-center.png" alt="Экспедиторы">
+                </div>
             </div>
         </div>
-      </div>
-  </div>
-  <div class="nav-option" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.myFactory.cleanCalculations();calculation.reloadDashboard('HIP.json','HIP');">
-      <img class="nav-icon" src="img/nav/reload.png" alt="reload">
-  </div>
-  <div class="nav-option" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.reloadDashboard('calculationActions.json','calculationActions')">
-    <img class="nav-icon" src="img/nav/save.png" alt="save">
- </div>
+    </div>
+    <div class="nav-option" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.myFactory.cleanCalculations();calculation.reloadDashboard('HIP.json','HIP');">
+        <img class="nav-icon" src="img/nav/reload.png" alt="reload">
+    </div>
+    <div class="nav-option" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.reloadDashboard('calculationActions.json','calculationActions')">
+        <img class="nav-icon" src="img/nav/save.png" alt="save">
+    </div>
+    <div class="nav-option" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.relocatePage('polis')">
+        <img class="nav-icon" src="img/nav/document.png" alt="polis">
+    </div>
 </div>
