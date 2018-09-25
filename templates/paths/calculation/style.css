@@ -58,15 +58,7 @@
 #karetka:hover::after{
   top: 60%;
 }
-.calc_name {
-  display: table;
-  margin: auto;
+.window-header {
   margin-left: 50px;
-  background: var(--blue);
-  color: white;
-  text-align: center;
   width: calc(100% - 50px);
-  overflow: hidden;
-  -webkit-animation: moveFromRight 350ms ease-in-out both;
-  animation: moveFromRight 350ms ease-in-out both;
 }

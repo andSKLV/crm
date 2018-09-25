@@ -901,3 +901,14 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     cursor: pointer;
     margin: 5px;
 }
+.window-header {
+    display: table;
+    margin: auto;
+    background: var(--blue);
+    color: white;
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+    -webkit-animation: moveFromRight 350ms ease-in-out both;
+    animation: moveFromRight 350ms ease-in-out both;
+}

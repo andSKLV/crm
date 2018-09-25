@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="templates/paths/calculation/style.css">
-<div class="calc_name">Расчет:   {{(calculation.myFactory.calculationName===undefined || calculation.myFactory.calculationName==="")? "без названия" : calculation.myFactory.calculationName}}</div>
+<div class="window-header">Расчет:   {{(calculation.myFactory.calculationName===undefined || calculation.myFactory.calculationName==="")? "без названия" : calculation.myFactory.calculationName}}</div>
 <div ng-model="dashboard.myFactory.multi.mode" 
     ng-if="dashboard.myFactory.matrixType=='HIP'" 
     ng-click="calculation.multiClicked()" 

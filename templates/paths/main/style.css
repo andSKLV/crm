@@ -33,3 +33,7 @@
 .nav-back_container--hidden{
   display: none;
 }
+.window-header{
+  margin-left: 50px;
+  width: calc(100% - 50px);
+}
