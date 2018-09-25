@@ -103,3 +103,15 @@ div#tooltip_box {
 .selected{
     box-shadow: 0 0 5px var(--light-blue);
 }
+#save:hover::after{
+top: 57%;
+}
+#polis:hover::after{
+top: 82%;
+}
+#reload:hover::after{
+top: 28%;
+}
+#home:hover::after{
+top: 8%;
+}

@@ -880,3 +880,25 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     top: 30%;
     text-align: center;
 }
+.nav-container{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 30%;
+    left: 0;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    background-color: var(--gray);
+    width: 45px;
+  }
+  .nav-option {
+    box-sizing: content-box;
+    border: 1px solid white;
+  }
+  .nav-icon {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    margin: 5px;
+    
+  }

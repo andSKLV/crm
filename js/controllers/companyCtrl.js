@@ -11,6 +11,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
     myFactory.document.currParam = "";
     myFactory.config = "new_company.json";
     $scope.actions = false;
+    $scope.cardNotEmpty = false;
 
     $scope.$on('$destroy', function () {
         let flag = false;
@@ -49,6 +50,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
                 $scope.loadToDashboard(myFactory.loadClient);
                 delete myFactory.loadClient;
             }
+            $scope.setEmptyCardParam();
         }, function error(response) {
             console.log(response);
         }
@@ -96,6 +98,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             if (parentInd > sc.length - 1) return;
             const clicking = sc[parentInd].values[childInd].name;
             $scope.loadToDashboard(clicking);
+            $scope.setEmptyCardParam();
         }
     };
 
@@ -177,7 +180,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
                 }
             })
         })
-
+        $scope.setEmptyCardParam();
     };
     $scope.changeLocation = (path) => {
         $location.path(path);
@@ -203,6 +206,12 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
     $scope.consolelog = (val) => {
         console.log(val);
     };
-
+    $scope.checkCardIsEmpty = ()=>{
+       const filled = document.querySelectorAll('.company_matrix_header:not(.company_matrix_header--red)');
+       return !!filled.length;
+    }
+    $scope.setEmptyCardParam = ()=> {
+        $scope.cardNotEmpty = $scope.checkCardIsEmpty ();
+    }
 });
 

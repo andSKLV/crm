@@ -211,6 +211,12 @@ app.directive('companyMatrix', function(){
         templateUrl: 'templates/paths/company/matrix.html'
     };
 });
+app.directive('companyNav', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/company/navigation.html'
+    };
+});
 app.directive('karetka', function(){
     return{
         restrict: 'A',
