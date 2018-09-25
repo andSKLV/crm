@@ -890,15 +890,14 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     border-bottom-right-radius: 20px;
     background-color: var(--gray);
     width: 45px;
-  }
-  .nav-option {
+}
+.nav-option {
     box-sizing: content-box;
     border: 1px solid white;
-  }
-  .nav-icon {
+}
+.nav-icon {
     width: 32px;
     height: 32px;
     cursor: pointer;
     margin: 5px;
-    
-  }
+}

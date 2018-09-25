@@ -226,7 +226,13 @@ app.directive('karetka', function(){
 app.directive('return', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/return.html'
+        templateUrl: 'templates/paths/main/return.html'
+    };
+});
+app.directive('mainNav', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/main/navigation.html'
     };
 });
 app.directive('findCompany', function () {
