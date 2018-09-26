@@ -200,4 +200,5 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
         })
     }
     if (!($rootScope.search_result)) $scope.newDashboard.setCurrentPage(0);
+    if ($rootScope.search_result) $rootScope.search_result=[];
 })
