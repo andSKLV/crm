@@ -1,11 +1,10 @@
 <link rel="stylesheet" href="templates/paths/calculation/style.css">
-<div class="calc_name">{{calculation.calculationName===""? "Текущий расчет без названия" : calculation.calculationName}}</div>
+<div class="window-header">Расчет:   {{(calculation.myFactory.calculationName===undefined || calculation.myFactory.calculationName==="")? "без названия" : calculation.myFactory.calculationName}}</div>
 <div ng-model="dashboard.myFactory.multi.mode" 
     ng-if="dashboard.myFactory.matrixType=='HIP'" 
     ng-click="calculation.multiClicked()" 
     ng-class="{alreadySelected: dashboard.myFactory.multi.mode}" 
     class="multi">+</div>
-
 <div class="dashboard_container" calculation-dashboard></div>
 <div id="tooltip_box" calculation-return></div>
 
@@ -14,6 +13,6 @@
     <table class="matrix" ng-if="dashboard.myFactory.matrixType=='calculationActions'" find-calculation-view></table>
     <div ng-if="dashboard.myFactory.matrixType=='HIP'" calculation-matrix ng-controller="HIP as HIP"></div>
 </div>
-
+<div calculation-nav></div>
 <div ng-if="dashboard.myFactory.matrixType=='HIP' && dashboard.myFactory.totalPrice!=undefined && dashboard.myFactory.totalPrice!=0" calculation-bottom></div>
 

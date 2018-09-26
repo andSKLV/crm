@@ -14,12 +14,14 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
         delete obj[key];
     };
     this.clickedOnTopOfDashboard=(value, param)=>{
+        const isNew = (param.name==='Новый');
         const type=value.type;
         switch(type){
             case "relocate_here":
                 this.relocateHere(value.urlTo);
                 break;
             case "relocatePage":
+                if (isNew) this.clearDataFromPage(value);
                 this.relocatePage(value);
                 break;
             case "reloadDashboard":
@@ -204,28 +206,32 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
 
     };
     this.config="dashboard.json";
+
     $http.post("dashboard.json").then(function success (response) {//устанавливаем каретку управления и заполняем ее из файла dashboard.json
-            scope.currObj=response.data;
-            scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
-                return obj["name"]!=undefined;
-            }).length;
-            if($cookies.get('currentObj')){
-                scope.currObj=$cookies.get('currentObj');
-                $cookies.remove('currentObj');
+        scope.currObj=response.data;
+        scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
+            return obj["name"]!=undefined;
+        }).length;
+        if($cookies.get('currentObj')){
+            scope.currObj=$cookies.get('currentObj');
+            $cookies.remove('currentObj');
 
-            }
-
-
-        },function error (response){
-            console.log(response);
         }
+        scope.selectParam(0);
+    },function error (response){
+        console.log(response);
+    }
     );
 
+
+
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
-        if (value.urlTo==="calculation") this.myFactory.cleanCalculations(); // clear all old calculation info
-        if (value.urlTo==="company") delete this.myFactory.newClientCard; //clear all old company info
         $location.path(`/${value.urlTo}`);
     };
+    this.clearDataFromPage = function (value) {
+        if (value.urlTo==="calculation") this.myFactory.cleanCalculations(); // clear all old calculation info
+        if (value.urlTo==="company") delete this.myFactory.newClientCard; //clear all old company info
+    } 
     this.relocateHere=function(url){//переход в углубление вверху каретки
         for(let i=0; i<scope.currObj.length;i++){
 
@@ -292,6 +298,9 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
         if($rootScope.mode=="calc") return !(myFactory.process[model]==="");
         else return false;
     };
-    
-
+    this.toggleMenu = function () {
+        const menu = document.querySelector('.nav-back_container');
+        menu.classList.toggle('nav-back_container--hidden');
+    }
+    // this.selectParam(0);
 });

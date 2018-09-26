@@ -13,6 +13,7 @@ app.config(function($routeProvider){//с помощью .config мы опред�
     $routeProvider
         .when('/',{
             templateUrl: 'dashboard.html',
+            controller: 'dashboardCtrl as dashboard',
         })
         .when('/dashboard',{
             resolve:{
@@ -157,6 +158,12 @@ app.directive('calculationReturn', function(){
         templateUrl: 'templates/paths/calculation/return.html'
     };
 });
+app.directive('calculationNav', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/calculation/navigation.html'
+    };
+});
 app.directive('calculationDashboard', function(){
     return{
         restrict: 'A',
@@ -205,6 +212,12 @@ app.directive('companyMatrix', function(){
         templateUrl: 'templates/paths/company/matrix.html'
     };
 });
+app.directive('companyNav', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/company/navigation.html'
+    };
+});
 app.directive('karetka', function(){
     return{
         restrict: 'A',
@@ -214,7 +227,13 @@ app.directive('karetka', function(){
 app.directive('return', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/return.html'
+        templateUrl: 'templates/paths/main/return.html'
+    };
+});
+app.directive('mainNav', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/main/navigation.html'
     };
 });
 app.directive('findCompany', function () {
@@ -1398,7 +1417,7 @@ app.factory('myFactory', function(){
          * Функция очистки фактори от всех следов вычислений. обнуление
          */
         cleanCalculations() {
-            this.HIPname = "Перевозчики";
+            this.calculationName = "";
             const lim = this.a_limit;
             lim.max_limit = 0;
             lim.value = 0;

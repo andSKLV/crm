@@ -22,10 +22,6 @@
             </div>
         </div>
     </div>
-    <div  id="pseudoDashboard" class="ul" ng-click="calculation.reloadDashboard('calculationActions.json','calculationActions')" ng-class="[{mi_current: calculation.myFactory.document.currParam===''}, {mi_moveFromRight: calculation.myFactory.document.currParam===''},{ mi_moveToRight: !calculation.myFactory.document.currParam===''}]" ng-show="calculation.myFactory.document.currParam===''" >
-        <div>Управление объектом</div>
-
-    </div>
 </div>
 <div class="nav">
     <div>
@@ -40,20 +36,6 @@
                     calculation.applyFilter(param.selected, "badAssAmount") : 
                     calculation.applyFilter(param.selected, param.model) 
                 : param.name}}
-        </div>
-    </div>
-</div>
-<div class="select_HIP" ng-click="calculation.toogleMenu()" ng-if="calculation.myFactory.parks.length===0">
-    <div class="select_HIP-container">
-        <img ng-src="img/{{(calculation.myFactory.HIPname==='Перевозчики')?'truck.png':'call-center.png'}}" alt=""> 
-        <p>▼</p> 
-    </div>
-    <div class="select_container select--hidden"> 
-        <div class="select_option" id="truck" ng-click="calculation.setHIP('Перевозчики')">
-            <img src="img/truck.png" alt="Перевозчики">
-        </div>
-        <div class="select_option" id="call-center" ng-click="calculation.setHIP('Экспедиторы')">
-            <img src="img/call-center.png" alt="Экспедиторы">
         </div>
     </div>
 </div>

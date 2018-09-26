@@ -10,9 +10,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         'Перевозчики':'HIP.json',
         'Экспедиторы': 'HIP-conf.json',
     }
-    this.myFactory.HIPname = 'Перевозчики';
+    if (this.myFactory.HIPname===undefined) this.myFactory.HIPname = 'Перевозчики';
     this.myFactory.scop = this;
-    this.calculationName = "";
 
     this.loadMatrix = function () {
         /**
@@ -544,6 +543,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         this.saveRes=12345;
         const url = (string!=="HIP.json") ? string : `src/${this.karetkaTypes[this.myFactory.HIPname]}`;
         this.karetka.mode="listener";
+        scope.myFactory.removeCellSelection('dashboard_container');
         $http.post(url).then(function success (response) {
             scope.myFactory.removeCellSelection();
             scope.currObj=[];
@@ -1825,7 +1825,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         let save = {};
         save.type = "addNewCalculationToDB";
         save.name = this.nameOfCalculation;
-        this.calculationName = this.nameOfCalculation;
+        this.myFactory.calculationName = this.nameOfCalculation;
         try {
             save.parks = JSON.stringify(parks);
         }

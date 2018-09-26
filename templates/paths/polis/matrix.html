@@ -3,7 +3,7 @@
 
 
 <div class="view" ng-class="{view_active: newDashboard.checkCurrentPage(1) && search_result.length==0}" calculation-view ng-controller="calculationCtrl as calculation"></div>
-<table class="matrix view" find-calculation-view  ng-class="{view_active: newDashboard.checkCurrentPage(1) && search_result.length!=0}"></table>
+<table class="matrix" find-calculation-view  ng-controller="matrixCtrl as matrixCtrl"></table>
 
 <div ng-if="newDashboard.checkCurrentPage(2)">
     <div addition="addition" ng-repeat="addition in dashboard.myFactory.polis" ng-if="addition.included" ng-click="dashboard.myFactory.polisCurrent=addition; dashboard.relocatePage({urlTo:'polisEditor'})"></div>
