@@ -3,7 +3,7 @@
       <div class="hover-hint" id="nav-back" data-name="Вернуться в...">
         <img class="nav-icon" src="img/nav/back.png" alt="Вернуться">
       </div>
-      <div class="nav-back_container nav-back_container--hidden">
+      <div class="nav-back_container">
             <div class="nav-back_option" ng-if="dashboard.myFactory.parks.length>0" ng-click="dashboard.relocatePage({urlTo:'calculation'})">Расчет</div>
             <div class="nav-back_option" ng-if="dashboard.myFactory.newClientCard" ng-click="dashboard.relocatePage({urlTo:'company'})">Юр. лицо</div>
             <div class="nav-back_option" ng-if="dashboard.myFactory.makingPolis" ng-click="dashboard.relocatePage({urlTo:'polis'})">Полис</div>

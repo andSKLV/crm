@@ -104,14 +104,14 @@ div#tooltip_box {
     box-shadow: 0 0 5px var(--light-blue);
 }
 #save:hover::after{
-top: 57%;
+    top: 29%;
 }
 #polis:hover::after{
-top: 82%;
+    top: 57%;
 }
 #reload:hover::after{
-top: 28%;
-}
+    top: 76%;
+} 
 #home:hover::after{
 top: 8%;
 }

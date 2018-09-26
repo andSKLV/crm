@@ -18,13 +18,13 @@
             </div>
         </div>
     </div>
-    <div class="nav-option hover-hint" id="reload" data-name="Очистить расчет" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.myFactory.cleanCalculations();calculation.reloadDashboard('HIP.json','HIP');">
-        <img class="nav-icon" src="img/nav/reload.png" alt="">
-    </div>
     <div class="nav-option hover-hint" id="save" data-name="Сохранить" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.reloadDashboard('calculationActions.json','calculationActions')">
         <img class="nav-icon" src="img/nav/save.png" alt="">
     </div>
     <div class="nav-option hover-hint" id="polis" data-name="Полис" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.relocatePage('polis')">
         <img class="nav-icon" src="img/nav/document.png" alt="">
+    </div>
+    <div class="nav-option hover-hint" id="reload" data-name="Очистить расчет" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.myFactory.cleanCalculations();calculation.reloadDashboard('HIP.json','HIP');">
+        <img class="nav-icon" src="img/nav/reload.png" alt="">
     </div>
 </div>
