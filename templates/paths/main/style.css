@@ -37,3 +37,7 @@
   margin-left: 50px;
   width: calc(100% - 50px);
 }
+#nav-back:hover::after{
+  top:100%;
+  left: 10%;
+}

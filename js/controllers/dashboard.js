@@ -15,6 +15,17 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
     };
     this.clickedOnTopOfDashboard=(value, param)=>{
         const isNew = (param.name==='Новый');
+        if (isNew) { //если нажата кнопка "новый", проверяем, чтобы не было уже созданного объекта, иначе он сотрется
+            switch (value.name){
+                case 'Расчет':
+                    if (this.myFactory.parks.length>0) return false; //если выбран расчет,а расчет уже есть, то ничего не делаем
+                    break;
+                case 'Полис':
+                    if (this.myFactory.makingPolis) return false; //если выбран полис, и есть старый, то ничего не делаем
+                    break;
+            }
+        }
+        if (param.name==="Найти") this.toggleMenu(true);// свертываем кнопку Вернуться
         const type=value.type;
         switch(type){
             case "relocate_here":
@@ -298,9 +309,16 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
         if($rootScope.mode=="calc") return !(myFactory.process[model]==="");
         else return false;
     };
-    this.toggleMenu = function () {
+    /**
+     * Функция скрывания/раскрывания/переключения кнопки "вернуться в" в главном меню
+     * @param {boolean} toBeClosed - свернуть ли меню? если не задан, значит поменять существующее значение на обратное
+     */
+    this.toggleMenu = function (toBeClosed) {
         const menu = document.querySelector('.nav-back_container');
-        menu.classList.toggle('nav-back_container--hidden');
+        if (!menu) return true; //если кнопки нет на экране, то прерываем
+        if (toBeClosed===undefined) menu.classList.toggle('nav-back_container--hidden');
+        if (toBeClosed===false) menu.classList.aremovedd('nav-back_container--hidden');
+        if (toBeClosed===true) menu.classList.add('nav-back_container--hidden');
     }
     // this.selectParam(0);
 });

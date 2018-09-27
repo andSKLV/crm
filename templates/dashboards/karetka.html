@@ -2,7 +2,12 @@
 <div class="ul_container">
     <div ng-repeat="param in dashboard.currObj" class="ul" ng-class="[{mi_current: dashboard.currentUl($index)}, {mi_moveFromRight: dashboard.currentUl($index)},{ mi_moveToRight: !dashboard.currentUl($index)}]" ng-show="dashboard.currentUl($index)" >
         <div>
-            <div key="{{dashboard.addNumberKey(value, param)}}" ng-class="[{alreadySelected: value.selected},{keyFriendly : dashboard.myFactory.foc}]" ng-repeat="value in param.values  track by $index"
+            <div key="{{dashboard.addNumberKey(value, param)}}" 
+            ng-class="[{alreadySelected: value.selected},{keyFriendly : dashboard.myFactory.foc},
+            {disable: value.name=='Расчет'&&(param.name==='Новый'||param.name==='Найти')&&dashboard.myFactory.parks.length>0},
+            {disable: value.name=='Полис'&&param.name==='Новый'&&dashboard.myFactory.makingPolis}]" 
+            data-disableMsg='Для создания нового объекта {{value.name}} очистите уже созданный'
+            ng-repeat="value in param.values  track by $index"
                  ng-click="dashboard.clickedOnTopOfDashboard(value, param)">
                 {{value.able=="none" ? "" : value.type == "text" || value.type == "relocate_here" || value.type =="relocatePage" || value.type=="reloadDashboard" || value.type=="risk" || value.type=="saveCalc" || value.type=="button" ? value.name : value.type=="currency" || value.type=="amount" ? dashboard.applyFilter(value) : value.type=="amountType" ? dashboard.myFactory.amountType : value.type=="currencyValue" ? dashboard.myFactory.document.currency : ""}}
                 <input ng-if="value.type == 'inputForCurrency'" ng-focus="dashboard.myFactory.foc=false" ng-blur="dashboard.myFactory.foc=true" type="text" param="{{param.model}}" ng-model="param.selected" placeholder="{{value.type=='inputForCurrency' ? 'Точное число' : value.name}}" style="color: #35bfff;" currency-input="{{param}}">

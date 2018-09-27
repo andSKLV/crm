@@ -44,13 +44,13 @@
   top: 90px;
 }
 #save:hover::after{
-  top: 57%;
+  top: 29%;
 }
 #polis:hover::after{
-  top: 82%;
+  top: 57%;
 }
 #reload:hover::after{
-  top: 28%;
+  top: 76%;
 }
 #home:hover::after{
   top: 8%;
