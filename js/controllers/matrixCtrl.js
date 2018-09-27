@@ -1,6 +1,6 @@
-/**
- * Created by RoGGeR on 14.06.17.
- */
+import Calculation from '../protos/calc.js';
+import { Company } from "../protos/company.js";
+
 app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $location){
     let scope=this;
     /**
@@ -346,6 +346,11 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                 }
                 myFactory.document.currParam="";
                 clearSearch();
+                debugger;
+                const calcObj = new Calculation();
+                calcObj.parseFromMyFactory(myFactory);
+                calcObj.parseFromResponse(response.data);
+                myFactory.calcObj = calcObj;
             },function error(response){
                 console.log(response)
             });

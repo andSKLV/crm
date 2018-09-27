@@ -441,6 +441,8 @@ app.directive('currencyInput', function ($filter, myFactory) {
 
 app.factory('myFactory', function(){
     return{
+        calcObj: {},
+        companyObj: {},
         makingPolis: false,
         addNewPolisProperty:function(){
             this.polis.push({
