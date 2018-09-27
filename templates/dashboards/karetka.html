@@ -4,7 +4,7 @@
         <div>
             <div key="{{dashboard.addNumberKey(value, param)}}" 
             ng-class="[{alreadySelected: value.selected},{keyFriendly : dashboard.myFactory.foc},
-            {disable: value.name=='Расчет'&&param.name==='Новый'&&dashboard.myFactory.parks.length>0},
+            {disable: value.name=='Расчет'&&(param.name==='Новый'||param.name==='Найти')&&dashboard.myFactory.parks.length>0},
             {disable: value.name=='Полис'&&param.name==='Новый'&&dashboard.myFactory.makingPolis}]" 
             data-disableMsg='Для создания нового объекта {{value.name}} очистите уже созданный'
             ng-repeat="value in param.values  track by $index"
