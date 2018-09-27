@@ -15,6 +15,16 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
     };
     this.clickedOnTopOfDashboard=(value, param)=>{
         const isNew = (param.name==='Новый');
+        if (isNew) { //если нажата кнопка "новый", проверяем, чтобы не было уже созданного объекта, иначе он сотрется
+            switch (value.name){
+                case 'Расчет':
+                    if (this.myFactory.parks.length>0) return false; //если выбран расчет,а расчет уже есть, то ничего не делаем
+                    break;
+                case 'Полис':
+                    if (this.myFactory.makingPolis) return false; //если выбран полис, и есть старый, то ничего не делаем
+                    break;
+            }
+        }
         if (param.name==="Найти") this.toggleMenu(true);// свертываем кнопку Вернуться
         const type=value.type;
         switch(type){
