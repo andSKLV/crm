@@ -211,15 +211,78 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
     };
     $scope.checkCardIsEmpty = ()=>{
        const filled = document.querySelectorAll('.company_matrix_header:not(.company_matrix_header--red)');
-       return !!filled.length;
+       return !filled.length;
     }
     $scope.setEmptyCardParam = ()=> {
-        $scope.cardNotEmpty = $scope.checkCardIsEmpty ();
+        $scope.cardNotEmpty = !$scope.checkCardIsEmpty ();
     }
     $scope.reload = () => {
         scope.myFactory.removeCellSelection ('dashboard_container');
         $scope.clientCard = {};
         init();
     }
-});
+    $scope.saveCompany = () => {
+        debugger;
+        // if (this.myFactory.companyObj.id) return false;//FIXME:
+        if ($scope.checkCardIsEmpty()) return false; // не сохраняем пустую карту
 
+        const card = $scope.clientCard;
+        const saveObj = generateSaveCompanyObj(card);
+        saveObj.type = 'save_company';
+        const companyObj = scope.myFactory.companyObj;
+        function generateSaveCompanyObj(card) {
+            return {
+                Communications: "",
+                INN: getInnKpp('INN',card["Реквизиты компании"]["ИНН/КПП"]),
+                KPP: getInnKpp('KPP',card["Реквизиты компании"]["ИНН/КПП"]),
+                Legal_address: "",
+                OGRN: card["Реквизиты компании"]["ОГРН"],
+                OKPO: card["Реквизиты компании"]['ОКПО'],
+                OKVED: card["Реквизиты компании"]['ОКВЭД'],
+                OrganizationFormID: getOrgForm(card['Данные компании']["Форма организации"]),
+                Real_address: "",
+                bank: card["Банковские реквизиты"]["Банк"],
+                bik: card["Банковские реквизиты"]["БИК"],
+                company_group: "",
+                company_mail: "",
+                company_phone: "",
+                company_url: "",
+                general_director_passport: card["Генеральный директор"]["Серия и номер паспорта"],
+                id: "",
+                k_account: card["Банковские реквизиты"]["к/счет"],
+                name: card['Данные компании']["Наименование организации"],
+                r_account: card["Банковские реквизиты"]["р/счет"],
+                registration_date: card['Данные компании']["Дата регистрации"],
+                status: "",
+                who_registate: card['Данные компании']["Наименование рег. органа"],
+            }
+        }
+        function getInnKpp (type,data) {
+            if (data===''||data===undefined) return '';
+            const arr = data.split('/');
+            switch (type) {
+                case 'INN':
+                    return arr[0].trim();
+                case 'KPP':
+                    if (arr.length===1) return '';
+                    return arr[1].trim();
+            }
+        }
+        function getOrgForm (data) {
+            if (data==='') return 0;
+            const forms = {
+                "ЗАО": "1",
+                "ООО": "2",
+                "ОАО": "3",
+                "ИП": "4"
+            }
+            return Number(forms[data]);
+        }
+        $http.post('search.php',saveObj).then((resp)=>{
+            console.log(`saved company ${resp}`);
+            alert('Карточка компании сохранена');
+        },(err)=>{
+            console.log(err);
+        })
+    }
+});
