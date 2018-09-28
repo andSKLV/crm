@@ -108,15 +108,15 @@
         $query = "INSERT INTO saved VALUES ('".$data['name']."', '123', '".$data['parks']."', '".$data['practicalPrice']."','".$data['payment']."', '".$data['agents']."', '".$date."','".$data['mass']."','','".$data['a_limit']."','".$data['a_limitType']."','".$data['totalAmount']."','".$data['totalPrice']."','','".$data['HIPname']."')";
 
 
-        $result = mysqli_query($link, $query) or die(mysqli_error());
+        $result = mysqli_query($link, $query) or die(mysqli_error($link));
         echo mysqli_insert_id($link);
     }
     else if($data['type']=="save_company"){
         $date=date("Y-m-d");
 
-        $query = "INSERT INTO CompaniesCopy VALUES ('','".$data['name']."','".$data['OrganizationFormID']."', '".$data['status']."','".$data['general_director_passport']."','".$data['company_group']."','".$data['Communications']."','".$data['registration_date']."','".$data['who_registrate']."','".$data['company_phone']."','".$data['company_mail']."','".$data['company_url']."','".$data['OGRN']."','".$data['INN']."','".$data['KPP']."','".$data['OKPO']."','".$data['OKVED']."','".$data['r_account']."','".$data['k_account']."','".$data['bank']."','".$data['bik']."','".$data['Legal_address']."','".$data['Real_address']."','".$date."')";
+        $query = "INSERT INTO CompaniesCopy VALUES ('','".$data['name']."','".$data['OrganizationFormID']."', '".$data['status']."','".$data['general_director_passport']."','".$data['company_group']."','".$data['Communications']."','".$data['registration_date']."','".$data['who_registrate']."','".$data['company_phone']."','".$data['company_mail']."','".$data['company_url']."','".$data['OGRN']."','".$data['INN']."','".$data['KPP']."','".$data['OKPO']."','".$data['OKVED']."','".$data['r_account']."','".$data['k_account']."','".$data['bank']."','".$data['bik']."','".$data['Legal_address']."','".$data['Real_address']."')";
 
-        $result = mysqli_query($link, $query) or die(mysqli_error());
+        $result = mysqli_query($link, $query) or die(mysqli_error($link));
         echo mysqli_insert_id($link);
     }
 

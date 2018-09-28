@@ -279,8 +279,14 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             return Number(forms[data]);
         }
         $http.post('search.php',saveObj).then((resp)=>{
-            console.log(`saved company ${resp}`);
-            alert('Карточка компании сохранена');
+            if (isNaN(Number(resp.data))) {
+                console.error(`Problem with saving: ${resp.data}`);
+                alert('При сохранении возникли неполадки. Обратитесь пожалуйста к разработчику');
+            }
+            else {
+                console.log(`saved company id ${resp.data}`);
+                alert('Карточка компании сохранена');
+            }
         },(err)=>{
             console.log(err);
         })
