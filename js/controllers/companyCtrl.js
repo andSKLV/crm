@@ -222,7 +222,6 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
         init();
     }
     $scope.saveCompany = () => {
-        debugger;
         if ($scope.checkCardIsEmpty()) return false; // не сохраняем пустую карту
         const card = $scope.clientCard;
         const saveObj = generateSaveCompanyObj(card);
@@ -296,6 +295,18 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             // добавляем информацию в фактори
             scope.myFactory.companyObj.id = id;
             scope.myFactory.companyObj.card = card;
+        })
+    }
+    $scope.updateCompany = () => {
+        const updateObj = {};
+        return false;
+        //FIXME: функция не сделана, оставлена на потом
+        //1 взять старую карточку из последней загрузки 2 найти различия 3 записать в базу данных все отличающиеся параметры
+        if ($scope.checkCardIsEmpty()) return false; // не сохраняем пустую карту
+        $http.post('search.php',updateObj).then((resp)=>{
+
+        },(err)=>{
+            console.error(err);
         })
     }
 });
