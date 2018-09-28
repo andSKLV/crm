@@ -370,7 +370,10 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         $http.post('search.php',data).then(async (resp)=>{
             const data = resp.data;
             myFactory.newClientCard = generateClientCard (data);
-            myFactory.loadClient = 'Форма собственности';
+            debugger;
+            myFactory.companyObj = new Company(data);
+            myFactory.companyObj.card = myFactory.newClientCard;
+            myFactory.loadClient = 'Форма собственности'; //какую ячейку открыть при старте
             $location.path('/company');
             clearSearch();
             /**

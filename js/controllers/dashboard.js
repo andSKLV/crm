@@ -25,6 +25,7 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
                     break;
             }
         }
+        if (param.name==='Найти' && value.name==='Расчет' && this.myFactory.parks.length>0) return false; // убираем возможность поиска при существующем расчете
         if (param.name==="Найти") this.toggleMenu(true);// свертываем кнопку Вернуться
         const type=value.type;
         switch(type){
