@@ -367,11 +367,11 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         const data = {};
         data.type = 'load_company';
         data.id=id;
-        $http.post('search.php',data).then(async (resp)=>{
+        $http.post('search.php', data).then(async (resp) => {
             const data = resp.data;
-            myFactory.newClientCard = generateClientCard (data);
-            debugger;
-            myFactory.companyObj = new Company(data);
+            myFactory.newClientCard = generateClientCard(data);
+            myFactory.companyObj = new Company();
+            myFactory.companyObj.parseFromCompaniesResponse(data) //создаем объект с  id  из ответа и сохраняем ответ внутри
             myFactory.companyObj.card = myFactory.newClientCard;
             myFactory.loadClient = 'Форма собственности'; //какую ячейку открыть при старте
             $location.path('/company');
@@ -410,8 +410,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                        "к/счет":data.k_account,
                        "Банк":data.bank,
                        "БИК":data.bik,
-                     },
-                     "ID": data.id,
+                     }
                    }
             }
             /**

@@ -1,7 +1,16 @@
 export class Company {
-  constructor(data){
+  constructor(){
+    this.id = null;
+    this.card = null;
+    this.responses = null
+  }
+  /**
+   * 
+   * @param {object} data объект с ответом
+   */
+  parseFromCompaniesResponse (data) {
     this.id = data.id;
-    this.calculationsId = (data.calculations) ? parseCalcId(data.calculations) : null;
+    this.responses.card = data;
   }
 }
 /**

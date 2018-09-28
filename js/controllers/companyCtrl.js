@@ -223,13 +223,11 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
     }
     $scope.saveCompany = () => {
         debugger;
-        // if (this.myFactory.companyObj.id) return false;//FIXME:
         if ($scope.checkCardIsEmpty()) return false; // не сохраняем пустую карту
-
         const card = $scope.clientCard;
         const saveObj = generateSaveCompanyObj(card);
         saveObj.type = 'save_company';
-        const companyObj = scope.myFactory.companyObj;
+
         function generateSaveCompanyObj(card) {
             return {
                 Communications: "",
@@ -278,17 +276,26 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             }
             return Number(forms[data]);
         }
+        // сохраняем компанию
         $http.post('search.php',saveObj).then((resp)=>{
             if (isNaN(Number(resp.data))) {
+                // если вернулся не id значит ошибка
                 console.error(`Problem with saving: ${resp.data}`);
                 alert('При сохранении возникли неполадки. Обратитесь пожалуйста к разработчику');
+                return undefined;
             }
             else {
                 console.log(`saved company id ${resp.data}`);
                 alert('Карточка компании сохранена');
+                return resp.data;
             }
         },(err)=>{
             console.log(err);
+        }).then((id)=>{
+            if (id===undefined) return false;
+            // добавляем информацию в фактори
+            scope.myFactory.companyObj.id = id;
+            scope.myFactory.companyObj.card = card;
         })
     }
 });
