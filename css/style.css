@@ -923,14 +923,14 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     z-index: 150;
     background-color: white;
     color: black;
-    font-size: 14px;
-    width: 150px;
     height: auto;
+    width: 75%;
+    font-size: 80%;
     border: 2px solid rgb(0, 111, 167);
     border-radius: 15px;
     padding: 2px 6px 2px 6px;
     font-weight: bold;
-    left: 20%;
+    left: 10%;
     top: 5%;
     text-align: center;
 }
