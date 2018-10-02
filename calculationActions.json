@@ -18,8 +18,9 @@
     "name": "Клиент",
     "values":[
       {
-        "name":"",
-        "type":""
+        "name":"Введите название компании",
+        "type":"inputCompany",
+        "model":"dashboard.nameOfCompany"
       }
     ]
   },

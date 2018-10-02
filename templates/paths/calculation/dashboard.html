@@ -19,6 +19,16 @@
                     ]
                 })" 
                 placeholder="{{value.name}}" style="color: #35bfff;">
+
+                <input ng-if="value.type == 'inputCompany'" type="text" 
+                ng-model="calculation.nameOfCompany" ng-controller="searchCtrl as searchCtrl" 
+                ng-change="calculation.nameOfCompany.length>1 ? 
+                        searchCtrl.searchForPolis({
+                            type: 'Компания',
+                            value: calculation.nameOfCompany
+                        }) : ''"  
+                placeholder="{{value.name}}" style="color: #35bfff;">
+
             </div>
         </div>
     </div>

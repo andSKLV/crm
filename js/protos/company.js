@@ -3,6 +3,7 @@ export class Company {
     this.id = null;
     this.card = null;
     this.responses = {};
+    this.isLoaded = false;
   }
   /**
    * 

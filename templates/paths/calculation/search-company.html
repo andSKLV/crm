@@ -1,0 +1,5 @@
+<tr ng-class="{matrix_row: !row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index">
+  <td class="properties" ng-click="matrixCtrl.loadCompany(row.id)">{{row.name}}</td>
+  <td class="properties"  ng-show="!row.show">{{row.company_phone}}</td>
+  <td class="properties">{{row.Legal_address}}</td>
+</tr>

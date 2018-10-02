@@ -373,6 +373,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             myFactory.companyObj = new Company();
             myFactory.companyObj.parseFromCompaniesResponse(data) //создаем объект с  id  из ответа и сохраняем ответ внутри
             myFactory.companyObj.card = myFactory.newClientCard;
+            myFactory.companyObj.isLoaded = true;
             myFactory.loadClient = 'Форма собственности'; //какую ячейку открыть при старте
             $location.path('/company');
             clearSearch();

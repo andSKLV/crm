@@ -246,6 +246,16 @@ app.directive('findCompany', function () {
     }
 
 });
+app.directive('searchCompany', function () {
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/calculation/search-company.html',
+        link: function(scope, elements, attrs, ctrl){
+
+        }
+    }
+
+});
 app.directive('findCalculation', function () {
     return{
         restrict: 'A',

@@ -75,7 +75,7 @@
 
 	}
 	else if($data['type']=="find_calculation" || $data['type']=="Расчет"){
-	    $query="SELECT id, name, a_limit, total_price, amount, fact_premia, date FROM saved WHERE LOWER(".$value['model'].") RLIKE LOWER('".$value['val']."')";
+	    $query="SELECT id, name, a_limit, total_price, amount, fact_premia, date FROM savedCopy WHERE LOWER(".$value['model'].") RLIKE LOWER('".$value['val']."')";
         $result = mysqli_query($link, $query) or die(mysqli_error());
         $resultJson = array();
 
@@ -126,5 +126,12 @@
         $result = mysqli_query($link, $query) or die(mysqli_error($link));
         echo mysqli_insert_id($link);
     }
+    else if($data['type']=="link_calc"){
+        $date=date("Y-m-d");
 
+        $query = "INSERT INTO calculation_company VALUES ('','".$data['calc_id']."','".$data['company_id']."','".$date."')";
+
+        $result = mysqli_query($link, $query) or die(mysqli_error($link));
+        echo mysqli_insert_id($link);
+    }
 ?>
