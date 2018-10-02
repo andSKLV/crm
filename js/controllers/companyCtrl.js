@@ -245,13 +245,16 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
                 company_phone: "",
                 company_url: "",
                 general_director_passport: card["Генеральный директор"]["Серия и номер паспорта"],
+                director_name:card["Генеральный директор"]['ФИО директора'],
+                give_date:card["Генеральный директор"]['Когда выдан'],
+                director_authority:card["Генеральный директор"]['Кем выдан'],
                 id: "",
                 k_account: card["Банковские реквизиты"]["к/счет"],
                 name: card['Данные компании']["Наименование организации"],
                 r_account: card["Банковские реквизиты"]["р/счет"],
                 registration_date: card['Данные компании']["Дата регистрации"],
                 status: "",
-                who_registate: card['Данные компании']["Наименование рег. органа"],
+                who_registrate: card['Данные компании']["Наименование рег. органа"],
             }
         }
         function getInnKpp (type,data) {

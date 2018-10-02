@@ -10,7 +10,7 @@
 	if($data['type']=="find_company" || $data['type']=="Компания"){
 	    $query="SELECT con.phone, com.id, com.name, ctx.LastName, ctx.FirstName, com.company_phone, addr.City, addr.Street ";
 	    $query.="FROM Connections as con ";
-	    $query.="LEFT JOIN Companies as com on con.company_id = com.id ";
+	    $query.="LEFT JOIN CompaniesCopy as com on con.company_id = com.id ";
 	    $query.="LEFT JOIN Contacts as ctx on con.contact_id = ctx.id ";
 	    $query.="LEFT JOIN addresses as addr on addr.id = com.Legal_address ";
 	    if($value['db']=='companies') $query.="WHERE LOWER(com.".$value['model'].") RLIKE LOWER('".$value['val']."')";
@@ -114,7 +114,7 @@
     else if($data['type']=="save_company"){
         $date=date("Y-m-d");
 
-        $query = "INSERT INTO CompaniesCopy VALUES ('','".$data['name']."','".$data['OrganizationFormID']."', '".$data['status']."','".$data['general_director_passport']."','".$data['company_group']."','".$data['Communications']."','".$data['registration_date']."','".$data['who_registrate']."','".$data['company_phone']."','".$data['company_mail']."','".$data['company_url']."','".$data['OGRN']."','".$data['INN']."','".$data['KPP']."','".$data['OKPO']."','".$data['OKVED']."','".$data['r_account']."','".$data['k_account']."','".$data['bank']."','".$data['bik']."','".$data['Legal_address']."','".$data['Real_address']."','".$date."')";
+        $query = "INSERT INTO CompaniesCopy VALUES ('','".$data['name']."','".$data['OrganizationFormID']."', '".$data['status']."','".$data['director_name']."','".$data['give_date']."','".$data['director_authority']."','".$data['general_director_passport']."','".$data['company_group']."','".$data['Communications']."','".$data['registration_date']."','".$data['who_registrate']."','".$data['company_phone']."','".$data['company_mail']."','".$data['company_url']."','".$data['OGRN']."','".$data['INN']."','".$data['KPP']."','".$data['OKPO']."','".$data['OKVED']."','".$data['r_account']."','".$data['k_account']."','".$data['bank']."','".$data['bik']."','".$data['Legal_address']."','".$data['Real_address']."','".$date."')";
 
         $result = mysqli_query($link, $query) or die(mysqli_error($link));
         echo mysqli_insert_id($link);

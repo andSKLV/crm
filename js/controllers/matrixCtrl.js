@@ -388,14 +388,14 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                        "Форма организации": getOrgForm(data.OrganizationFormID),
                        "Наименование организации": data.name,
                        "Дата регистрации": getDate(data.registration_date),
-                       "Наименование рег. органа": data.who_registate,
+                       "Наименование рег. органа": data.who_registrate,
                      },
                      "Генеральный директор":
                      {
-                       "ФИО директора":"",
+                       "ФИО директора":data.director_name,
                        "Серия и номер паспорта":data.general_director_passport,
-                       "Когда выдан":"",
-                       "Кем выдан":"",
+                       "Когда выдан":data.give_date,
+                       "Кем выдан":data.director_authority,
                      },
                      "Реквизиты компании":
                      {
