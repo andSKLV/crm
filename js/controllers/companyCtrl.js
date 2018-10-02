@@ -298,8 +298,41 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             // добавляем информацию в фактори
             scope.myFactory.companyObj.id = id;
             scope.myFactory.companyObj.card = card;
+            $scope.addNewConnection('company_id',id);
         })
     }
+    //создание новой связи
+    $scope.addNewConnection = (key,val) => {
+        const data ={
+            company_id: 0,
+            contact_id: 0,
+            status: '',
+            email: '',
+            phone: '',
+            end_date: '0000-00-00',
+        };
+        data[key] = val;
+        data.type = 'new_connection';
+        $http.post('search.php',data).then((resp)=>{
+            if (isNaN(Number(resp.data))) {
+                // если вернулся не id значит ошибка
+                console.error(`Problem with saving: ${resp.data}`);
+                alert('При сохранении связи возникли неполадки. Обратитесь пожалуйста к разработчику');
+                return undefined;
+            }
+            else {
+                console.log(`connection id ${resp.data}`);
+                alert('Связь сохранена');
+                return resp.data;
+            }
+        },(err)=>{
+            console.error(err);
+        }).then((id)=>{
+            if (id===undefined) return false;
+            // добавляем информацию в фактори
+            scope.myFactory.companyObj.connectionID = id;
+        })
+    } 
     $scope.updateCompany = () => {
         const updateObj = {};
         return false;
