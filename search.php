@@ -85,13 +85,13 @@
         echo json_encode($resultJson);
 	}
 	else if($data['type']=="load_calculation"){
-	    $query="SELECT * FROM saved WHERE id=".$data['id'];
+	    $query="SELECT * FROM savedCopy WHERE id=".$data['id'];
 	    $result = mysqli_query($link, $query) or die(mysqli_error());
 	    $row=mysqli_fetch_array($result, MYSQLI_ASSOC);
 	    echo json_encode($row);
     }
     else if ($data['type']=='load_company') {
-        $query="SELECT * FROM Companies WHERE id=".$data['id'];
+        $query="SELECT * FROM CompaniesCopy WHERE id=".$data['id'];
         $result = mysqli_query($link,$query) or die(mysqli_error());
         $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
         echo json_encode($row);
@@ -99,13 +99,13 @@
     }
 	else if($data["type"]=="delete_calculation"){
         $id=$data['id'];
-        $query = "DELETE FROM saved WHERE id = '".$id."'";
+        $query = "DELETE FROM savedCopy WHERE id = '".$id."'";
         $result = mysqli_query($link, $query) or die(mysqli_error());
         if ($result) echo "Успешно удалено";
     }
 	else if($data['type']=="addNewCalculationToDB"){
         $date=date("Y-m-d");
-        $query = "INSERT INTO saved VALUES ('".$data['name']."', '123', '".$data['parks']."', '".$data['practicalPrice']."','".$data['payment']."', '".$data['agents']."', '".$date."','".$data['mass']."','','".$data['a_limit']."','".$data['a_limitType']."','".$data['totalAmount']."','".$data['totalPrice']."','','".$data['HIPname']."')";
+        $query = "INSERT INTO savedCopy VALUES ('".$data['name']."', '123', '".$data['parks']."', '".$data['practicalPrice']."','".$data['payment']."', '".$data['agents']."', '".$date."','".$data['mass']."','','".$data['a_limit']."','".$data['a_limitType']."','".$data['totalAmount']."','".$data['totalPrice']."','','".$data['HIPname']."')";
 
 
         $result = mysqli_query($link, $query) or die(mysqli_error($link));

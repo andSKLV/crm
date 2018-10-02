@@ -2,7 +2,7 @@ export class Company {
   constructor(){
     this.id = null;
     this.card = null;
-    this.responses = null
+    this.responses = {};
   }
   /**
    * 
