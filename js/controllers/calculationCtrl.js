@@ -636,11 +636,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             this.karetkaDepth = 1;
         }
         this.myFactory.document.currParam=index;
-        // $rootScope.search_result=[];
         if(index!==""){
             this.myFactory.keyCodes.number.length=this.currObj[this.myFactory.document.currParam].values.length+1;
             if(this.karetka.mode=="listener") this.karetka.mode="making new process";
         }
+        if (this.myFactory.matrixType==='Компания'||this.myFactory.matrixType==='calculationActions') $rootScope.search_result=[];
     };
     /**
      * Функция перехода выше по каретке в параметр родителя
