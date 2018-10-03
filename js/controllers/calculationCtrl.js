@@ -1,3 +1,5 @@
+import Calculation from '../protos/calc.js';
+
 app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location){
     this.span=1;
     this.karetkaDepth = 1;
@@ -12,6 +14,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     }
     if (this.myFactory.HIPname===undefined) this.myFactory.HIPname = 'Перевозчики';
     this.myFactory.scop = this;
+    if (!this.myFactory.calcObj.inited) this.myFactory.calcObj = new Calculation(this.myFactory);
 
     this.loadMatrix = function () {
         /**
@@ -1786,7 +1789,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     /**
      * сохраняем расчет в БД
      */
-    this.saveCalculation=function () {
+    this.saveCalculation=function ({withoutNotify}={}) {
         if(this.nameOfCalculation=="" || this.nameOfCalculation===undefined) return false;
         let parks=[];
         myFactory.parks.forEach(function (park) {
@@ -1848,13 +1851,51 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         save.totalAmount = myFactory.totalAmount;
         save.totalPrice = myFactory.totalPrice;
         save.HIPname = myFactory.HIPname;
-        $http.post("search.php", save).then(function success(response) {
-            alert("Успешно сохранено");
+        return $http.post("search.php", save).then(function success(response) {
+            if (!withoutNotify) alert("Успешно сохранено");
+            myFactory.calcObj.id = response.data;
         }, function error(response) {
             console.log(response);
         }
         );
     };
+    /**
+     * Функция привязки текущего расчета к компании
+     * @param {object} - {type:id} пара к чему привязываем и айдишник
+     */
+    this.linkTo = async (params) => {
+        const calcObj = this.myFactory.calcObj;
+        // TODO: if companyOBJ then companyOBJ first in matrix
+        // если привязан уже, то выходим
+        if (calcObj.linkId) {
+            alert('Расчет уже привязан');
+            return false;
+        }
+        // если не сохранен, то сохраняем
+        if (!calcObj.isSaved) {
+            this.nameOfCalculation = 'без названия';
+            await this.saveCalculation({withoutNotify:true});
+        }
+        const saveObj = {};
+        saveObj.calc_id = calcObj.id;
+        saveObj.company_id = '';
+        saveObj.contact_id = '';
+        saveObj.agent_id = '';
+        for (let toLink in params) {
+            saveObj[toLink] = params[toLink];
+        }
+        saveObj.type = 'link_calc';
+        $http.post('search.php',saveObj).then((resp)=>{
+            if (isNaN(Number(resp.data))) alert('Ошибка привязки расчета. Обратитесь к разработчику');  
+            else {
+                alert('Расчет привязан');
+                calcObj.linkId = resp.data;
+            }
+        },(err)=>{
+            console.error('Ошибка привязки расчета');
+        })
+
+    }
     function deepRemoveMulti(multi) {
         multi.processes.forEach(process => {
             if (process.constructor.name === "Process") delete process.multi;

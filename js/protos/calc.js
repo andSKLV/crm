@@ -1,15 +1,22 @@
 export default class Calculation {
-  constructor () {
+  constructor (mf) {
     this.id = null;
     this.name = null;
     this.date = null;
-    this.company = null;
-    this.factory = null;
+    this.factory = mf || null;
     this.companyID = null;
+    this.linkId = null;
+    this.isSaved = false;
+    this.isLoaded = false;
+    this.isInited = true;
   }
   parseFromMyFactory (mf) {
     this.name = mf.calculationName;
     this.factory = mf;
+  }
+  markAsLoaded () {
+    this.isSaved = true;
+    this.isLoaded = true;
   }
   parseFromResponse (data) {
     this.id = data.id;

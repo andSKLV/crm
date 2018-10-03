@@ -129,7 +129,7 @@
     else if($data['type']=="link_calc"){
         $date=date("Y-m-d");
 
-        $query = "INSERT INTO calculation_company VALUES ('','".$data['calc_id']."','".$data['company_id']."','".$date."')";
+        $query = "INSERT INTO calculation_link VALUES ('','".$data['calc_id']."','".$data['company_id']."','".$data['contact_id']."','".$data['agent_id']."','".$date."')";
 
         $result = mysqli_query($link, $query) or die(mysqli_error($link));
         echo mysqli_insert_id($link);
