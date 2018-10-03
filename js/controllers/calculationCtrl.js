@@ -1854,6 +1854,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         return $http.post("search.php", save).then(function success(response) {
             if (!withoutNotify) alert("Успешно сохранено");
             myFactory.calcObj.id = response.data;
+            myFactory.calcObj.isSaved = true;
+            myFactory.calcObj.name = myFactory.calculationName;
+
         }, function error(response) {
             console.log(response);
         }

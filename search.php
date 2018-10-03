@@ -134,4 +134,5 @@
         $result = mysqli_query($link, $query) or die(mysqli_error($link));
         echo mysqli_insert_id($link);
     }
+
 ?>

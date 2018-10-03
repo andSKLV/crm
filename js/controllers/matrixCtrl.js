@@ -346,11 +346,25 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                 }
                 myFactory.document.currParam="";
                 clearSearch();
-                debugger;
+                // инициализируем calcObj и добавляем в него всю информацию
                 const calcObj = new Calculation();
                 calcObj.parseFromMyFactory(myFactory);
                 calcObj.parseFromResponse(response.data);
-                myFactory.calcObj = calcObj;
+                calcObj.markAsLoaded();
+                calcObj.loadLink();
+                // foo();
+                function foo() {
+                    debugger;
+                    const query = {};
+                    query.id = calcObj.id;
+                    return $http.post('php/get_link.php',query).then(async (resp)=>{
+                      debugger;
+                    },(err)=>{
+                      console.error('Ошибка поиска привязки расчета')
+                    })
+                  
+                }
+                debugger;
             },function error(response){
                 console.log(response)
             });
