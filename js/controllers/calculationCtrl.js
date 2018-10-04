@@ -1787,8 +1787,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     /**
      * сохраняем расчет в БД
      */
-    this.saveCalculation=function ({withoutNotify}={}) {
-        if(this.nameOfCalculation=="" || this.nameOfCalculation===undefined) return false;
+    this.saveCalculation=function ({withoutNotify,withoutName}={}) {
+        if((this.nameOfCalculation==""&&!withoutName) || this.nameOfCalculation===undefined) return false;
         let parks=[];
         myFactory.parks.forEach(function (park) {
             let newPark = {};
@@ -1850,6 +1850,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         save.totalPrice = myFactory.totalPrice;
         save.HIPname = myFactory.HIPname;
         return $http.post("search.php", save).then(function success(response) {
+            if (isNaN(Number(response.data))) {
+                alert('Ошибка при сохранении расчета. Обратитесь к разработчику.');
+            }
             if (!withoutNotify) alert("Успешно сохранено");
             myFactory.calcObj.id = response.data;
             myFactory.calcObj.isSaved = true;
@@ -1866,22 +1869,13 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
      */
     this.linkTo = async (params) => {
         const calcObj = this.myFactory.calcObj;
-        // TODO: if companyOBJ then companyOBJ first in matrix
-        // если привязан уже, то выходим
-        if (calcObj.isLinked) {
-            alert('Расчет уже привязан');
-            return false;
-        }
-        // если не сохранен, то сохраняем
+
+        this.nameOfCalculation = '';
+        await this.saveCalculation({withoutNotify:true,withoutName:true});
         if (!calcObj.isSaved) {
-            debugger;
-            const name = prompt ('Введите название расчета для сохранения');
-            debugger;
+            alert ('Проблемы с привязкой, обратитесь к разработчику');
             return false;
-            // this.nameOfCalculation = 'без названия';
-            // await this.saveCalculation({withoutNotify:true});
         }
-        // TODO: if saved but has changes save with another name 
         const saveObj = {};
         saveObj.calc_id = calcObj.id;
         saveObj.company_id = '';
