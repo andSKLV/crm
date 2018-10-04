@@ -5,9 +5,10 @@ export default class Calculation {
     this.date = null;
     this.factory = mf || null;
     this.companyID = null;
-    this.linkId = null;
+    this.links = null;
     this.isSaved = false;
     this.isLoaded = false;
+    this.isLinked = false;
     this.isInited = true;
   }
   parseFromMyFactory (mf) {
@@ -32,15 +33,20 @@ export default class Calculation {
   refreshName() {
     this.name = this.factory.calculationName;
   }
-  loadLink() {
-    const fd = new FormData();
-    fd.append('id',this.id);
-    const req = new Request('php/get_link.php',{method:'POST',body:fd});
-    fetch(req).then(async (resp)=>{
-      resp = await resp.json();
-      debugger;
-    },(err)=>{
-      console.error('Ошибка поиска привязки расчета')
-    })
+  /**
+   * loading links for this calc obj and binding it
+   */
+  async loadLink() {
+    const resp = await this.factory.loadLinks('calc_id',this.id);
+    await this.bindLink(resp);
+  }
+  /**
+   * Binding array of links to calculation object
+   * @param {Array} arr - all links for this calc 
+   */
+  bindLink(arr) {
+    if (!arr.length) return undefined;
+    this.isLinked = (arr.length>0); 
+    this.links = arr.length>0 ? arr : null;
   }
 }

@@ -351,20 +351,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                 calcObj.parseFromMyFactory(myFactory);
                 calcObj.parseFromResponse(response.data);
                 calcObj.markAsLoaded();
-                calcObj.loadLink();
-                // foo();
-                function foo() {
-                    debugger;
-                    const query = {};
-                    query.id = calcObj.id;
-                    return $http.post('php/get_link.php',query).then(async (resp)=>{
-                      debugger;
-                    },(err)=>{
-                      console.error('Ошибка поиска привязки расчета')
-                    })
-                  
-                }
-                debugger;
+                await calcObj.loadLink();
             },function error(response){
                 console.log(response)
             });

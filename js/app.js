@@ -1461,5 +1461,28 @@ app.factory('myFactory', function(){
             delete this.totalPriceForSingle;
             delete this.totalPriceWithoutPayments;
         },
+        /**
+         * Запрос на получение данных из БД calculation_link
+         * @param {string} type - тип по которому искать в БД: 'calc_id','company_id' ...
+         * @param {string} id - id по которому искать в формате строки
+         */
+        async loadLinks(type,id) {
+            // проверка запроса
+            if ((typeof id)=== 'number') id = `${id}`;
+            if (type!=='calc_id'&&type!=='company_id'&&type!=='agent_id'&&type!=='contact_id'&&type!=='id') {
+                console.error(`Параметры функции неверны: ${type} должен быть calc_id, company_id ...`);
+                return undefined;
+            }
+            // формирование запроса
+            const fd = new FormData();
+            fd.append('type',type);
+            fd.append('id',id);
+            const req = new Request('php/get_link.php',{method:'POST',body:fd});
+            return fetch(req).then(async (resp)=>{
+              return resp = await resp.json();
+            },(err)=>{
+              console.error('Ошибка поиска привязки расчета')
+            })
+        },
     }
 });
