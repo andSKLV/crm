@@ -1870,7 +1870,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         const calcObj = this.myFactory.calcObj;
         // TODO: if companyOBJ then companyOBJ first in matrix
         // если привязан уже, то выходим
-        if (calcObj.linkId) {
+        if (calcObj.isLinked) {
             alert('Расчет уже привязан');
             return false;
         }
@@ -1888,11 +1888,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             saveObj[toLink] = params[toLink];
         }
         saveObj.type = 'link_calc';
-        $http.post('search.php',saveObj).then((resp)=>{
+        $http.post('search.php',saveObj).then(async (resp)=>{
             if (isNaN(Number(resp.data))) alert('Ошибка привязки расчета. Обратитесь к разработчику');  
             else {
                 alert('Расчет привязан');
-                calcObj.linkId = resp.data;
+                await calcObj.loadLink();
             }
         },(err)=>{
             console.error('Ошибка привязки расчета');
