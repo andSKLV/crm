@@ -18,8 +18,9 @@
             </div>
         </div>
     </div>
-    <div class="nav-option hover-hint" id="save" data-name="Сохранить" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.reloadDashboard('calculationActions.json','calculationActions')">
+    <div class="nav-option nav-option--more hover-hint" id="save" data-name="Сохранить" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.reloadDashboard('calculationActions.json','calculationActions')">
         <img class="nav-icon" src="img/nav/save.png" alt="">
+        <p class="nav-icon--more">›</p> 
     </div>
     <div class="nav-option hover-hint" id="polis" data-name="Полис" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.relocatePage('polis')">
         <img class="nav-icon" src="img/nav/document.png" alt="">

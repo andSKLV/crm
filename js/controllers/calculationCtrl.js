@@ -356,6 +356,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             case "saveCalc":
                 this.saveCalculation();
                 break;
+            case "resaveCalc":
+                this.saveCalculation({resave:true});
+                break;
             case "polisProject":
                 this.makePolisProject();
                 break;
@@ -1790,8 +1793,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     /**
      * сохраняем расчет в БД
      */
-    this.saveCalculation=function ({withoutNotify,withoutName}={}) {
-        if((this.nameOfCalculation==""&&!withoutName) || this.nameOfCalculation===undefined) return false;
+    this.saveCalculation=function ({withoutNotify,withoutName,resave}={}) {
+        if(this.nameOfCalculation=="" || this.nameOfCalculation===undefined) {
+            if (!withoutName&&!resave) return false;
+        }
         let parks=[];
         myFactory.parks.forEach(function (park) {
             let newPark = {};
@@ -1827,8 +1832,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         }
         console.log(parks, multies);
         let save = {};
-        save.type = "addNewCalculationToDB";
-        save.name = this.nameOfCalculation;
         this.myFactory.calculationName = this.nameOfCalculation;
         try {
             save.parks = JSON.stringify(parks);
@@ -1852,14 +1855,28 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         save.totalAmount = myFactory.totalAmount;
         save.totalPrice = myFactory.totalPrice;
         save.HIPname = myFactory.HIPname;
+        if (resave) {
+            save.type = "update_calc";
+            save.name = myFactory.calcObj.name;
+            save.id = myFactory.calcObj.id;
+        }
+        else {
+            save.type = "addNewCalculationToDB";
+            save.name = this.nameOfCalculation;
+        }
         return $http.post("search.php", save).then(function success(response) {
             if (isNaN(Number(response.data))) {
-                alert('Ошибка при сохранении расчета. Обратитесь к разработчику.');
+                alert('Ошибка при сохранении расчета. Пожалуйста, по возможности не закрывайте окно и обратитесь к разработчику');
+                console.error(response.data);
+                return false;
             }
-            if (!withoutNotify) alert("Успешно сохранено");
-            myFactory.calcObj.id = response.data;
-            myFactory.calcObj.isSaved = true;
-            myFactory.calcObj.name = myFactory.calculationName;
+            if (resave) alert('Успешно пересохранено');
+            else {
+                if (!withoutNotify) alert("Успешно сохранено");
+                myFactory.calcObj.id = response.data;
+                myFactory.calcObj.isSaved = true;
+                myFactory.calcObj.name = myFactory.calculationName;
+            }
 
         }, function error(response) {
             console.log(response);

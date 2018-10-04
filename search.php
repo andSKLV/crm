@@ -110,6 +110,14 @@
         $result = mysqli_query($link, $query) or die(mysqli_error($link));
         echo mysqli_insert_id($link);
     }
+    else if ($data['type']=="update_calc"){
+
+        $date=date("Y-m-d");
+
+        $query = "UPDATE savedCopy SET processes='".$data['parks']."', fact_premia='".$data['practicalPrice']."', payment='".$data['payment']."', agents='".$data['agents']."', date='".$date."',mass='".$data['mass']."', a_limit='".$data['a_limit']."', a_limitType='".$data['a_limitType']."', amount='".$data['totalAmount']."', total_price='".$data['totalPrice']."', HIPname='".$data['HIPname']."'  WHERE id = '".$data['id']."'";
+        $result = mysqli_query($link, $query) or die(mysqli_error($link));
+        echo $result;
+    }
     else if($data['type']=="save_company"){
         $date=date("Y-m-d");
 
