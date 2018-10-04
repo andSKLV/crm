@@ -223,6 +223,16 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
     }
     $scope.saveCompany = () => {
         if ($scope.checkCardIsEmpty()) return false; // не сохраняем пустую карту
+        if (scope.myFactory.companyObj&&scope.myFactory.companyObj.isSaved) {
+            // проверка сохраненная ли это компания
+            alert('Компания уже сохранена');
+            return false;
+        }
+        if (card['Данные компании']["Наименование организации"]==='') {
+            // проверка на наличие названия компании
+            alert('Перед сохранением необходимо заполнить поле "Наименование организации"');
+            return false;
+        }
         const card = $scope.clientCard;
         const saveObj = generateSaveCompanyObj(card);
         saveObj.type = 'save_company';
@@ -298,10 +308,14 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             // добавляем информацию в фактори
             scope.myFactory.companyObj.id = id;
             scope.myFactory.companyObj.card = card;
-            $scope.addNewConnection('company_id',id);
+            // $scope.addNewConnection('company_id',id);
         })
     }
-    //создание новой связи
+    /** 
+     * создание новой связи в базу Connections
+     * @param {strinf} key - company_id etc
+     * @param {string} val - id
+     */
     $scope.addNewConnection = (key,val) => {
         const data ={
             company_id: 0,

@@ -67,8 +67,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     changingData[+key].values = toPaste.values;
                     console.warn(`${toPaste.url} был заменен, так как в нем был только один параметр`);
                 }
-                // TODO: создана функция добавления параметра глубины и родителя для элементов
-                // можно переписать используя данные наработки
                 for (let key in toChangeLower) {
                         const type = toChangeLower[key].type;
                         const parent = changingData.find(field=>field.name&&field.model===type).values;
