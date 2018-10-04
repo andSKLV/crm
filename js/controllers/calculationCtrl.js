@@ -1784,6 +1784,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         const menu = document.querySelector('.select_HIP .select_container');
         menu.classList.toggle('select--hidden');
     }
+    this.cleanCalcObj = () => {
+        this.myFactory.calcObj = new Calculation ();
+    }
     /**
      * сохраняем расчет в БД
      */

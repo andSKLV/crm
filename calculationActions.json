@@ -3,14 +3,19 @@
     "name": "Сохранить",
     "values":[
       {
-        "name":"Введите название расчета",
+        "name":"Название расчета для сохранения",
         "type":"inputSaveCalc",
         "model":"dashboard.nameOfCalculation"
       },
       {
-        "name":"Сохранить",
+        "name":"Сохранить как новый",
         "type":"saveCalc",
         "function": "saveCalc"
+      },
+      {
+        "name":"Пересохранить загруженный",
+        "type":"resaveCalc",
+        "function": "resaveCalc"
       }
     ]
   },
