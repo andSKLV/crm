@@ -474,7 +474,7 @@ select{
     text-align-last:center;
 }
 input[currency-input]:hover,input[currency-input]:focus{
-    color: rgb(53, 191, 255)!important;
+    color: var(--dark-blue)!important;
     background: white!important;
     border-top:2px solid var(--gray)!important;
 }
