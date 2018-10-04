@@ -23,7 +23,7 @@
         "model":"dashboard.nameOfCompany"
       },
       {
-        "name":"Создать/Перейти в редактируемый",
+        "name":"Создать/Перейти в открытую",
         "type":"relocatePage",
         "urlTo": "company"
       }

@@ -1,22 +1,4 @@
-<!-- // scope.myFactory.matrixType=type;
-console.log(this.currObj[myFactory.document.selectedParam].name); -->
-
-<!-- <div ng-if="dashboard.myFactory.matrixType=='Компания'">
-  <!-- <div class="properties" ng-click="calculation.linkTo({'company_id':calculation.myFactory.companyObj.id})">
-    <div>Привязать</div>
-  </div>
-  <div class="properties">id {{calculation.myFactory.companyObj.id}}</div> -->
-  <!-- <table class="matrix" ng-if="">
-    <tr>
-    <td class="properties">
-      Привязать
-    </td>
-    <td class="properties">
-      Компанию
-    </td>
-    </tr>
-</table> -->
-<div class="company-link-btn" ng-if="calculation.myFactory.companyObj.isSaved">
+<div class="company-link-btn" ng-if="calculation.myFactory.companyObj.isSaved" ng-click="calculation.linkTo({'company_id':calculation.myFactory.companyObj.id})">
   <p>
     Привязать к открытой компании "{{calculation.myFactory.companyObj.name}}"
   </p>
