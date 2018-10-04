@@ -15,12 +15,17 @@
     ]
   },
   {
-    "name": "Клиент",
+    "name": "Компания",
     "values":[
       {
         "name":"Введите название компании",
         "type":"inputCompany",
         "model":"dashboard.nameOfCompany"
+      },
+      {
+        "name":"Создать/Перейти в редактируемый",
+        "type":"relocatePage",
+        "urlTo": "company"
       }
     ]
   },

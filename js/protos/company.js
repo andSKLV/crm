@@ -4,6 +4,9 @@ export class Company {
     this.card = null;
     this.responses = {};
     this.isLoaded = false;
+    this.isSaved = false;
+    this.links = null;
+    this.name = null;
   }
   /**
    * 
@@ -12,6 +15,11 @@ export class Company {
   parseFromCompaniesResponse (data) {
     this.id = data.id;
     this.responses.card = data;
+    this.name = data.name;
+  }
+  markAsLoaded(){
+    this.isLoaded = true;
+    this.isSaved = true;
   }
 }
 /**

@@ -371,10 +371,11 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         $http.post('search.php', data).then(async (resp) => {
             const data = resp.data;
             myFactory.newClientCard = generateClientCard(data);
-            myFactory.companyObj = new Company();
-            myFactory.companyObj.parseFromCompaniesResponse(data) //создаем объект с  id  из ответа и сохраняем ответ внутри
-            myFactory.companyObj.card = myFactory.newClientCard;
-            myFactory.companyObj.isLoaded = true;
+            const companyObj = new Company();
+            myFactory.companyObj = companyObj;
+            companyObj.parseFromCompaniesResponse(data) //создаем объект с  id  из ответа и сохраняем ответ внутри
+            companyObj.card = myFactory.newClientCard;
+            companyObj.markAsLoaded();
             myFactory.loadClient = 'Форма собственности'; //какую ячейку открыть при старте
             $location.path('/company');
             clearSearch();

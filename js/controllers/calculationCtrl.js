@@ -1876,9 +1876,14 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         }
         // если не сохранен, то сохраняем
         if (!calcObj.isSaved) {
-            this.nameOfCalculation = 'без названия';
-            await this.saveCalculation({withoutNotify:true});
+            debugger;
+            const name = prompt ('Введите название расчета для сохранения');
+            debugger;
+            return false;
+            // this.nameOfCalculation = 'без названия';
+            // await this.saveCalculation({withoutNotify:true});
         }
+        // TODO: if saved but has changes save with another name 
         const saveObj = {};
         saveObj.calc_id = calcObj.id;
         saveObj.company_id = '';

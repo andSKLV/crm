@@ -1,8 +1,33 @@
-<tr ng-class="{matrix_row: !row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index" >
-  <td class="properties" ng-click="calculation.linkTo({'company_id':row.id})">
+<!-- // scope.myFactory.matrixType=type;
+console.log(this.currObj[myFactory.document.selectedParam].name); -->
+
+<!-- <div ng-if="dashboard.myFactory.matrixType=='Компания'">
+  <!-- <div class="properties" ng-click="calculation.linkTo({'company_id':calculation.myFactory.companyObj.id})">
     <div>Привязать</div>
-  </td>
-  <td class="properties" ng-click="matrixCtrl.loadCompany(row.id)">{{row.name}}</td>
-  <td class="properties"  ng-show="!row.show">{{row.company_phone}}</td>
-  <td class="properties">{{row.Legal_address}}</td>
-</tr>
+  </div>
+  <div class="properties">id {{calculation.myFactory.companyObj.id}}</div> -->
+  <!-- <table class="matrix" ng-if="">
+    <tr>
+    <td class="properties">
+      Привязать
+    </td>
+    <td class="properties">
+      Компанию
+    </td>
+    </tr>
+</table> -->
+<div class="company-link-btn" ng-if="calculation.myFactory.companyObj.isSaved">
+  <p>
+    Привязать к открытой компании "{{calculation.myFactory.companyObj.name}}"
+  </p>
+</div>
+<table class="matrix">
+  <tr ng-class="{matrix_row: !row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index" >
+    <td class="properties" ng-click="calculation.linkTo({'company_id':row.id})">
+      <div>Привязать</div>
+    </td>
+    <td class="properties" ng-click="matrixCtrl.loadCompany(row.id)">{{row.name}}</td>
+    <td class="properties"  ng-show="!row.show">{{row.company_phone}}</td>
+    <td class="properties">{{row.Legal_address}}</td>
+  </tr>
+</table>
