@@ -364,11 +364,11 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
      * Фукнция загрузки компании из БД в матрицу
      * @param {number} id - id компании
      */
-    this.loadCompany = function (id) {
+    this.loadCompany = function (id, noRelocation) {
         const data = {};
         data.type = 'load_company';
         data.id=id;
-        $http.post('search.php', data).then(async (resp) => {
+        return $http.post('search.php', data).then(async (resp) => {
             const data = resp.data;
             myFactory.newClientCard = generateClientCard(data);
             const companyObj = new Company();
@@ -376,8 +376,10 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             companyObj.parseFromCompaniesResponse(data) //создаем объект с  id  из ответа и сохраняем ответ внутри
             companyObj.card = myFactory.newClientCard;
             companyObj.markAsLoaded();
-            myFactory.loadClient = 'Форма собственности'; //какую ячейку открыть при старте
-            $location.path('/company');
+            if (!noRelocation) {
+                myFactory.loadClient = 'Форма собственности'; //какую ячейку открыть при старте
+                $location.path('/company');
+            }
             clearSearch();
             /**
              *  Функция генерации объекта карточки клиента из данных из БД

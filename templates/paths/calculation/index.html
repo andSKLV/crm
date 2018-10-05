@@ -8,7 +8,7 @@
 <div class="dashboard_container" calculation-dashboard></div>
 <div id="tooltip_box" calculation-return></div>
 
-<div class="matrix_container" ng-controller="matrixCtrl as matrixCtrl" ng-class="[{calc: dashboard.myFactory.matrixType=='HIP'},{matrix_results:dashboard.myFactory.matrixType!=='HIP'}]">
+<div class="matrix_container" ng-controller="matrixCtrl as matrixCtrl" ng-class="{calc:dashboard.myFactory.matrixType=='HIP'}">
     <div ng-if="calculation.currObj[calculation.myFactory.document.selectedParam].name==='Компания'" search-company></div>
     <!-- если нужны результаты поиска при сохранении расчетов <table class="matrix" ng-if="dashboard.myFactory.matrixType=='calculationActions'&&dashboard.myFactory.document.selectedParam==0" find-calculation></table> -->
     <div ng-if="dashboard.myFactory.matrixType=='HIP'" calculation-matrix ng-controller="HIP as HIP"></div>

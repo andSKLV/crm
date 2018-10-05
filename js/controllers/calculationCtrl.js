@@ -1885,16 +1885,29 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         );
     };
     /**
+     * Функция осуществления привязки расчета, доавблению этого объекта и перехода в Проект документа
+     * @param {*} id - id компании к которой привязываем
+     */
+    this.linkToCompany = async (id,FNloadCompany) => {
+        try{
+            await this.linkTo({'company_id':id});
+            await FNloadCompany(id,true);
+        }
+        catch (err) {
+            console.error(err);
+        }
+    }
+    /**
      * Функция привязки текущего расчета к компании
      * @param {object} - {type:id} пара к чему привязываем и айдишник
      */
     this.linkTo = async (params) => {
         const calcObj = this.myFactory.calcObj;
-
         this.nameOfCalculation = '';
         await this.saveCalculation({withoutNotify:true,withoutName:true});
         if (!calcObj.isSaved) {
-            alert ('Проблемы с привязкой, обратитесь к разработчику');
+            alert ('Ошибка привязки расчета. Пожалуйста, по возможности не закрывайте это окно и братитесь к разработчику');
+            console.error('При привязке не удалось сохранить расчет');
             return false;
         }
         const saveObj = {};
@@ -1906,8 +1919,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             saveObj[toLink] = params[toLink];
         }
         saveObj.type = 'link_calc';
-        $http.post('search.php',saveObj).then(async (resp)=>{
-            if (isNaN(Number(resp.data))) alert('Ошибка привязки расчета. Обратитесь к разработчику');  
+        return $http.post('search.php',saveObj).then(async (resp)=>{
+            if (isNaN(Number(resp.data))) {
+                alert('Ошибка привязки расчета. Пожалуйста, по возможности не закрывайте это окно и братитесь к разработчику'); 
+                console.error(resp.data);
+            } 
             else {
                 alert('Расчет привязан');
                 await calcObj.loadLink();
