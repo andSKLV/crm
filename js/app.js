@@ -24,7 +24,7 @@ app.config(function($routeProvider){//с помощью .config мы опред�
                         let data={};
                         data.login=cookies.login;
                         data.pwd=cookies.pwd;
-                        $http.post("authorization.php", data).then(function success (response) {
+                        $http.post("php/authorization.php", data).then(function success (response) {
                             if (response.data['loggin'] === true) {
                                 $rootScope.loggedIn = true;
                                 $location.path('/dashboard');

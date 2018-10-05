@@ -37,7 +37,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             data.id=id;
             let scope=this;
             myFactory.urlJSON="transortation_cals.json";
-            $http.post("search.php", data).then(async function success(response){
+            $http.post("php/search.php", data).then(async function success(response){
                 console.log(response.data);
                 myFactory.matrixType="HIP";
                 myFactory.parks=[];
@@ -368,7 +368,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         const data = {};
         data.type = 'load_company';
         data.id=id;
-        return $http.post('search.php', data).then(async (resp) => {
+        return $http.post('php/search.php', data).then(async (resp) => {
             const data = resp.data;
             myFactory.newClientCard = generateClientCard(data);
             const companyObj = new Company();

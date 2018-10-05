@@ -29,7 +29,7 @@ async function init() {
  */
 async function loadDB () {
     try{
-        let resp = await fetch('loadPoints.php');
+        let resp = await fetch('php/loadPoints.php');
         resp = await resp.json();
         return resp;
     } catch (e){

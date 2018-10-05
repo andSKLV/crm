@@ -105,7 +105,7 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
         scope.template.txt=flag.val;
         scope.template.model=flag.model;
 
-        $http.post("search.php", data,{timeout:scope.abort.promise}).then(function success (response) {
+        $http.post("php/search.php", data,{timeout:scope.abort.promise}).then(function success (response) {
 
 
 
