@@ -1,4 +1,4 @@
-export class Company {
+export default class Company {
   constructor(){
     this.id = null;
     this.card = null;
@@ -7,6 +7,7 @@ export class Company {
     this.isSaved = false;
     this.links = null;
     this.name = null;
+    this.factory = null;
   }
   /**
    * 
@@ -20,6 +21,12 @@ export class Company {
   markAsLoaded(){
     this.isLoaded = true;
     this.isSaved = true;
+  }
+  savedAs({id,card}){
+    this.isSaved = true;
+    this.id = id;
+    this.card = card;
+    this.name = card['Данные компании']['Наименование организации'];
   }
 }
 /**

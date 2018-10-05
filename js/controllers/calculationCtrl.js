@@ -1862,10 +1862,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             save.id = myFactory.calcObj.id;
         }
         else {
-            save.type = "addNewCalculationToDB";
+            save.type = "save_calc";
             save.name = this.nameOfCalculation;
         }
-        return $http.post("search.php", save).then(function success(response) {
+        return $http.post("php/save.php", save).then(function success(response) {
             if (isNaN(Number(response.data))) {
                 alert('Ошибка при сохранении расчета. Пожалуйста, по возможности не закрывайте окно и обратитесь к разработчику');
                 console.error(response.data);
@@ -1919,7 +1919,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             saveObj[toLink] = params[toLink];
         }
         saveObj.type = 'link_calc';
-        return $http.post('search.php',saveObj).then(async (resp)=>{
+        return $http.post('php/save.php',saveObj).then(async (resp)=>{
             if (isNaN(Number(resp.data))) {
                 alert('Ошибка привязки расчета. Пожалуйста, по возможности не закрывайте это окно и братитесь к разработчику'); 
                 console.error(resp.data);

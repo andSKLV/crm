@@ -1,3 +1,5 @@
+import Company from '../protos/company.js';
+
 /**
  * Created by RoGGeR on 30.11.2017.
  */
@@ -135,9 +137,9 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
 
 
     //******    Contacts   **********
-    $scope.contact = {};
+    
     $scope.contacts = [];
-    contact = {
+    $scope.contact = {
         clean() {
             for (const key in $scope.contact) {
                 $scope.contact[key] = "";
@@ -228,12 +230,12 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             alert('Компания уже сохранена');
             return false;
         }
+        const card = $scope.clientCard;
         if (card['Данные компании']["Наименование организации"]==='') {
             // проверка на наличие названия компании
             alert('Перед сохранением необходимо заполнить поле "Наименование организации"');
             return false;
         }
-        const card = $scope.clientCard;
         const saveObj = generateSaveCompanyObj(card);
         saveObj.type = 'save_company';
 
@@ -289,7 +291,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             return Number(forms[data]);
         }
         // сохраняем компанию
-        $http.post('search.php',saveObj).then((resp)=>{
+        $http.post('php/save.php',saveObj).then((resp)=>{
             if (isNaN(Number(resp.data))) {
                 // если вернулся не id значит ошибка
                 console.error(`Problem with saving: ${resp.data}`);
@@ -306,8 +308,10 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
         }).then((id)=>{
             if (id===undefined) return false;
             // добавляем информацию в фактори
-            scope.myFactory.companyObj.id = id;
-            scope.myFactory.companyObj.card = card;
+            const compObj = new Company();
+            compObj.savedAs({'id':id,'card':card});
+            scope.myFactory.companyObj = compObj;
+            compObj.factory = scope.myFactory;
             // $scope.addNewConnection('company_id',id);
         })
     }
@@ -327,7 +331,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
         };
         data[key] = val;
         data.type = 'new_connection';
-        $http.post('search.php',data).then((resp)=>{
+        $http.post('php/save.php',data).then((resp)=>{
             if (isNaN(Number(resp.data))) {
                 // если вернулся не id значит ошибка
                 console.error(`Problem with saving: ${resp.data}`);
@@ -353,7 +357,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
         //FIXME: функция не сделана, оставлена на потом
         //1 взять старую карточку из последней загрузки 2 найти различия 3 записать в базу данных все отличающиеся параметры
         if ($scope.checkCardIsEmpty()) return false; // не сохраняем пустую карту
-        $http.post('search.php',updateObj).then((resp)=>{
+        $http.post('php/save.php',updateObj).then((resp)=>{
 
         },(err)=>{
             console.error(err);

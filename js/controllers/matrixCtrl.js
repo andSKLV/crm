@@ -1,5 +1,5 @@
 import Calculation from '../protos/calc.js';
-import { Company } from "../protos/company.js";
+import Company from "../protos/company.js";
 
 app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $location){
     let scope=this;
@@ -13,7 +13,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         let data={};
         data.type="delete_calculation";
         data.id=id;
-        $http.post("search.php", data).then(function success(response){
+        $http.post("php/save.php", data).then(function success(response){
             console.log(response, "success");
         },function error(response){
             console.log(response)
