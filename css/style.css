@@ -890,7 +890,7 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     background-color: var(--gray);
-    width: 48px;
+    width: 45px;
 }
 .nav-option {
     box-sizing: content-box;
@@ -902,18 +902,7 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     cursor: pointer;
     margin: 5px;
 }
-.nav-option--more {
-    display: flex;
-    flex-direction: row;
-}
-.nav-option--more img {
-    margin-right: 0px;
-}
-.nav-icon--more{
-    margin: 0 0 0 0;
-    font-size: 2em;
-    color: var(--dark-blue);
-}
+
 .window-header {
     display: table;
     margin: auto;

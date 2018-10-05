@@ -357,6 +357,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 this.saveCalculation();
                 break;
             case "resaveCalc":
+                if (!this.myFactory.calcObj.isSaved) break;
                 this.saveCalculation({resave:true});
                 break;
             case "polisProject":
