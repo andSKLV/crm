@@ -9,7 +9,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
         })
     })
     this.myFactory = myFactory;
-
+    // FIXME: переписать на загрузку из папки src/*.json
     $scope.currObj=[
         {
             "name": "Компания",

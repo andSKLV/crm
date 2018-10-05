@@ -219,7 +219,7 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
     };
     this.config="dashboard.json";
 
-    $http.post("dashboard.json").then(function success (response) {//устанавливаем каретку управления и заполняем ее из файла dashboard.json
+    $http.post("src/dashboard.json").then(function success (response) {//устанавливаем каретку управления и заполняем ее из файла dashboard.json
         scope.currObj=response.data;
         scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
             return obj["name"]!=undefined;

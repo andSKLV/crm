@@ -546,7 +546,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         }
         $timeout.cancel(timer);
         this.saveRes=12345;
-        const url = (string!=="HIP.json") ? string : `src/${this.karetkaTypes[this.myFactory.HIPname]}`;
+        const url = `src/${string}`;
         this.karetka.mode="listener";
         scope.myFactory.removeCellSelection('dashboard_container');
         $http.post(url).then(function success (response) {
