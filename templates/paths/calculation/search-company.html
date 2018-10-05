@@ -1,10 +1,10 @@
 <table class="matrix">
-  <tr class="matrix_row" ng-if="calculation.myFactory.companyObj.isSaved" ng-click="calculation.linkToCompany(calculation.myFactory.companyObj.id,matrixCtrl.loadCompany);calculation.relocatePage('polis');">
+  <tr class="matrix_row" ng-if="calculation.myFactory.companyObj.isSaved" ng-click="calculation.linkToCompany(calculation.myFactory.companyObj.id,matrixCtrl.loadCompany,calculation);calculation.relocatePage('polis')">
     <td class="properties">{{calculation.myFactory.companyObj.name}}</td>
     <td class="properties">**Скоро здесь будет телефон компании**</td>
     <td class="properties">**Скоро здесь будет адрес компании**</td>
   </tr>
-  <tr ng-class="{matrix_row: !row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index" ng-click="calculation.linkToCompany(row.id,matrixCtrl.loadCompany);calculation.relocatePage('polis');">
+  <tr ng-class="{matrix_row: !row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index" ng-click="calculation.linkToCompany(row.id,matrixCtrl.loadCompany);calculation.relocatePage('polis')">
     <td class="properties" >{{row.name}}</td>
     <td class="properties"  ng-show="!row.show">{{row.company_phone}}</td>
     <td class="properties">{{row.Legal_address}}</td>
