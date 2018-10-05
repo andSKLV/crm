@@ -1,14 +1,11 @@
-<div class="company-link-btn" ng-if="calculation.myFactory.companyObj.isSaved" ng-click="calculation.linkTo({'company_id':calculation.myFactory.companyObj.id})">
-  <p>
-    Привязать к открытой компании "{{calculation.myFactory.companyObj.name}}"
-  </p>
-</div>
 <table class="matrix">
-  <tr ng-class="{matrix_row: !row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index" >
-    <td class="properties" ng-click="calculation.linkTo({'company_id':row.id})">
-      <div>Привязать</div>
-    </td>
-    <td class="properties" ng-click="matrixCtrl.loadCompany(row.id)">{{row.name}}</td>
+  <tr class="matrix_row" ng-if="calculation.myFactory.companyObj.isSaved" ng-click="calculation.linkTo({'company_id':calculation.myFactory.companyObj.id})">
+    <td class="properties">{{calculation.myFactory.companyObj.name}}</td>
+    <td class="properties">**Скоро здесь будет телефон компании**</td>
+    <td class="properties">**Скоро здесь будет адрес компании**</td>
+  </tr>
+  <tr ng-class="{matrix_row: !row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index" ng-click="calculation.linkTo({'company_id':row.id})">
+    <td class="properties" >{{row.name}}</td>
     <td class="properties"  ng-show="!row.show">{{row.company_phone}}</td>
     <td class="properties">{{row.Legal_address}}</td>
   </tr>

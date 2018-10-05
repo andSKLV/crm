@@ -14,7 +14,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     }
     if (this.myFactory.HIPname===undefined) this.myFactory.HIPname = 'Перевозчики';
     this.myFactory.scop = this;
-    if (!this.myFactory.calcObj.inited) this.myFactory.calcObj = new Calculation(this.myFactory);
+    if (!this.myFactory.calcObj.isInited) this.myFactory.calcObj = new Calculation(this.myFactory);
 
     this.loadMatrix = function () {
         /**
