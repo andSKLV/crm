@@ -1,11 +1,14 @@
 app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootScope){
     if (myFactory.calculationName!=="" && myFactory.calculationName!==undefined) this.calculationName = myFactory.calculationName;
+    else if (myFactory.calcObj.isLinked) this.calculationName = 'привязанный';
+    else if (!myFactory.calcObj.isInited) this.calculationName = 'не выбран';
     if (myFactory.newClientCard) this.companyName = myFactory.newClientCard['Данные компании']['Наименование организации'];
     myFactory.parks.forEach((park)=>{
         park.processes.forEach((process)=>{
             process.showCars=false;
         })
     })
+    this.myFactory = myFactory;
 
     $scope.currObj=[
         {
