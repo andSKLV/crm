@@ -73,6 +73,11 @@ app.config(function($routeProvider){//с помощью .config мы опред�
             templateUrl: './templates/paths/finance/index.html',
             controller: 'financeCtrl'
         })
+        .when('/connections',{
+            
+            templateUrl: '/templates/paths/connections/index.html',
+            controller: 'connectionsCtrl'
+        })
         .otherwise({
             redirectTo: '/login'
         });
@@ -268,6 +273,30 @@ app.directive('findCalculationView', function () {
         templateUrl: 'templates/views/find_calculation_view.html'
     }
 });
+app.directive('connectionsDashboard', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/connections/dashboard.html'
+    }
+});
+app.directive('connectionsHeader', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/connections/header.html'
+    }
+});
+app.directive('connectionsMatrix', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/connections/matrix.html'
+    }
+});
+app.directive('connectionsNav', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/connections/navigation.html'
+    }
+})
 
 
 app.directive('ngRightClick', function($parse) {
