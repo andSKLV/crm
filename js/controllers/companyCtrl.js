@@ -306,8 +306,14 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
         const newCard = generateSaveCompanyObj($scope.clientCard);
         const prevValues = findChanges(oldCard,newCard);
         const companyId = $scope.myFactory.companyObj.id;
-        await updateCard (newCard,companyId);
-        await saveChanges (prevValues,companyId);
+        const isEmpty = !Object.keys(prevValues).length;
+        if (isEmpty) {
+            alert ('В карточке нет изменений');
+        }
+        else {
+            await updateCard (Object.assign({},newCard),companyId);
+            await saveChanges (prevValues,companyId);
+        }
         /**
          * Updating company card in DB to the newest
          * @param {object} card - object of new card
@@ -318,13 +324,17 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             query.type = 'update_company';
             query.card = card;
             query.id = id;
+            // сохраняем новую карточку в базу данных
             return $http.post('php/save.php',query).then((resp)=>{
                 if (resp.data=='1') {
                     alert('Изменения сохранены')
                     console.log(`company updated; id ${resp.config.data.id}`);
+                    // сохраняем новую карточку для отслеживания изменений
+                    $scope.myFactory.companyObj.card = resp.config.data.card;
                 }
                 else {
                     alert ('Проблемы с обновлением данных карточки компании. Пожалуйста, по возможности не закрывайте окно и обратитесь к разработчику');
+                    debugger;
                     console.error(resp.data);
                 }
             },(err)=>{
@@ -336,8 +346,11 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             query.type = 'save_company_changes';
             query.company_id = companyId;
             query.prev = prev;
+            // сохраняем изменения в базу данных
             return $http.post('php/save.php',query).then((resp)=>{
-                if (resp.data=='1') console.log(`changes saved; id ${resp.config.data.id}`);
+                if (resp.data=='1') {
+                    console.log(`changes saved; id ${resp.config.data.company_id}`);
+                }
                 else {
                     alert ('Проблемы с обновлением данных карточки компании. Пожалуйста, по возможности не закрывайте окно и обратитесь к разработчику');
                     console.error(resp.data);
@@ -357,7 +370,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             const skip = ['id','date','type','Communications','Legal_address','Real_address','company_group','company_mail','company_phone','company_url'];
             // если даты не заданы в новом и старом, то убираем их из списка сравнения
             if ((oldC['give_date']===''||oldC['give_date']==='0000-00-00')&&(newC['give_date']===''||newC['give_date']==='0000-00-00')) skip.push('give_date');
-            if ((oldC['registration_date']===''||oldC['registration_date']==='0000-00-00')&&(newC['registration_date']===''||newC['registration_date']==='0000-00-00')) skip.push('give_date');
+            if ((oldC['registration_date']===''||oldC['registration_date']==='0000-00-00')&&(newC['registration_date']===''||newC['registration_date']==='0000-00-00')) skip.push('registration_date');
             //удаляем поля, которые не нужно сравнивать
             skip.forEach(key=>{
                 if (oldC[key]) delete oldC[key];
