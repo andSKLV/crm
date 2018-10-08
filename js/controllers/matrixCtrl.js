@@ -399,7 +399,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                      {
                        "ФИО директора":data.director_name,
                        "Серия и номер паспорта":data.general_director_passport,
-                       "Когда выдан":data.give_date,
+                       "Когда выдан":getDate(data.give_date),
                        "Кем выдан":data.director_authority,
                      },
                      "Реквизиты компании":
@@ -423,6 +423,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
              * @param {number} id 
              */
             function getOrgForm (id) {
+                if (id==='0') return '';
                 const forms = {
                     1: "ЗАО",
                     2: "ООО",

@@ -22,11 +22,13 @@ export default class Company {
     this.isLoaded = true;
     this.isSaved = true;
   }
-  savedAs({id,card}){
+  savedAs({id,card,savedObj}){
     this.isSaved = true;
     this.id = id;
     this.card = card;
     this.name = card['Данные компании']['Наименование организации'];
+    delete savedObj.type;
+    this.responses.card = savedObj;
   }
 }
 /**

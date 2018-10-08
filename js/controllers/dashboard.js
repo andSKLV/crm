@@ -1,3 +1,5 @@
+import Company from "../protos/company";
+
 /**
  * Created by RoGGeR on 30.05.17.
  */
@@ -242,7 +244,11 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
     };
     this.clearDataFromPage = function (value) {
         if (value.urlTo==="calculation") this.myFactory.cleanCalculations(); // clear all old calculation info
-        if (value.urlTo==="company") delete this.myFactory.newClientCard; //clear all old company info
+        if (value.urlTo==="company") {
+            //clear all old company info
+            delete this.myFactory.newClientCard;
+            this.myFactory.companyObj = new Company();
+        }  
     } 
     this.relocateHere=function(url){//переход в углубление вверху каретки
         for(let i=0; i<scope.currObj.length;i++){

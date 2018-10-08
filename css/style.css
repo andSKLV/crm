@@ -2,6 +2,9 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,900);
 @import "../templates/paths/polis/style.css";
 @import "../templates/paths/calculation/style.css";
+@import "../templates/paths/company/style.css";
+@import "../templates/paths/main/style.css";
+@import "../templates/paths/finance/style.css";
 
 :root {
     --blue: rgb(146, 167, 205);
