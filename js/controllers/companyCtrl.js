@@ -330,7 +330,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
                     alert('Изменения сохранены')
                     console.log(`company updated; id ${resp.config.data.id}`);
                     // сохраняем новую карточку для отслеживания изменений
-                    $scope.myFactory.companyObj.card = resp.config.data.card;
+                    $scope.myFactory.companyObj.responses.card = Object.assign({},resp.config.data.card);
                 }
                 else {
                     alert ('Проблемы с обновлением данных карточки компании. Пожалуйста, по возможности не закрывайте окно и обратитесь к разработчику');

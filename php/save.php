@@ -47,8 +47,9 @@
     $prev = $data['prev'];
     $company_id = $data['company_id'];
     $table_name = 'Companies';
+    $time = time();
     foreach($prev as $key=>$value) {
-      $query = "INSERT INTO Changes VALUES ('','".$table_name."','".$company_id."','".$key."','".$value."','".$date."')";
+      $query = "INSERT INTO Changes VALUES ('','".$table_name."','".$company_id."','".$key."','".$value."','".$date."','".$time."')";
       $result = mysqli_query($link, $query) or die(mysqli_error($link));
     }
     echo $result;
