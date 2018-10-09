@@ -359,7 +359,6 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
                 console.error(err);
             });
         }
-        debugger;
         /**
          * finding differences in old and new card 
          * @param {object} oldC объект старой карточки
@@ -388,8 +387,6 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             return changed;
             debugger;
         }
-        //FIXME: функция не сделана, оставлена на потом
-        //3 записать в базу данных все отличающиеся параметры
     }
     function generateSaveCompanyObj(card) {
         return {

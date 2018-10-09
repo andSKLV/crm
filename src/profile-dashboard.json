@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Карточка компании",
+    "values":[
+      {
+        "name":"Название расчета для сохранения",
+        "type":"inputSaveCalc",
+        "model":"dashboard.nameOfCalculation"
+      },
+      {
+        "name":"Сохранить как новый",
+        "type":"saveCalc",
+        "function": "saveCalc"
+      },
+      {
+        "name":"Пересохранить загруженный",
+        "type":"resaveCalc",
+        "function": "resaveCalc"
+      }
+    ]
+  },
+  {
+    "name": "Группы",
+    "values": [
+      {
+        "name":"Добавить",
+        "type":"addGroup",
+        "model":"addGroup"
+      }
+    ]
+  }
+]
