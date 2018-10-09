@@ -1925,7 +1925,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 console.error(resp.data);
             } 
             else {
-                // alert('Расчет привязан');
+                alert('Расчет привязан');
                 await calcObj.loadLink();
             }
         },(err)=>{

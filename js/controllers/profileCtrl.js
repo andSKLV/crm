@@ -3,27 +3,34 @@ import Company from '../protos/company.js';
 app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location, myFactory) {
   $scope.myFactory = myFactory;
   const scope = this;
-  debugger;
   init();
 
   async function init () {
+    const id = '650';
     await loadDash();
-    await loadComp();
+    await $scope.loadCompany(id);
+    await $scope.loadCalculations (id);
 
     function loadDash () {
       return $http.post('src/profile-dashboard.json').then((resp)=>{
         $scope.currObj = resp.data;
-        debugger;
       },(err)=>{
         console.error(err);
       })
     }
-    function loadComp() {
-      scope.loadCompany('650');
-    }
   }
-
-  this.loadCompany = function (id) {
+  $scope.loadCalculations = function (id) {
+    const query = {};
+    query.type = 'company_calculations';
+    query.model = 'company_id';
+    query.id = id;
+    return $http.post('php/load.php',query).then(resp=>{
+      debugger;
+    },err=>{
+      console.error(err);
+    });
+  }
+  $scope.loadCompany = function (id) {
     // const myFactory = $scope.myFactory;
     const data = {};
     data.type = 'load_company';
@@ -102,18 +109,18 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     },function error(resp){
         console.error(resp);
     })
-}
-/**
- * Deleting serach result after choosing one of the results
- */
-function clearSearch () {
-    try {
-        $rootScope.search_result = [];
-    }
-    catch (err) {
-        console.error (`Clear search results problem: ${err}`);
-    }
-}
+  }
+  /**
+   * Deleting serach result after choosing one of the results
+   */
+  function clearSearch () {
+      try {
+          $rootScope.search_result = [];
+      }
+      catch (err) {
+          console.error (`Clear search results problem: ${err}`);
+      }
+  }
 
 
   $scope.newDashboard = {
