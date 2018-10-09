@@ -285,6 +285,12 @@ app.directive('profileHeader', function(){
         templateUrl: 'templates/paths/profile/header.html'
     }
 });
+app.directive('profileReturn', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/profile/return.html'
+    }
+})
 app.directive('profileMatrix', function(){
     return{
         restrict: 'A',

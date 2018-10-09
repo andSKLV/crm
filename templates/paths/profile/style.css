@@ -1,0 +1,4 @@
+.mi_slider{
+  display: flex;
+  flex-direction: column;
+}
