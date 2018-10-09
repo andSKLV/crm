@@ -1,31 +1,67 @@
 [
   {
     "name": "Карточка компании",
+    "type": "company",
     "values":[
       {
-        "name":"Название расчета для сохранения",
+        "name":"Посмотреть",
         "type":"inputSaveCalc",
-        "model":"dashboard.nameOfCalculation"
-      },
-      {
-        "name":"Сохранить как новый",
-        "type":"saveCalc",
-        "function": "saveCalc"
-      },
-      {
-        "name":"Пересохранить загруженный",
-        "type":"resaveCalc",
-        "function": "resaveCalc"
+        "function":""
       }
     ]
   },
   {
-    "name": "Группы",
-    "values": [
+    "name": "Расчеты",
+    "type": "calcs",
+    "values":[
       {
-        "name":"Добавить",
-        "type":"addGroup",
-        "model":"addGroup"
+        "name":"Посмотреть",
+        "type":"btn",
+        "function":""
+      }
+    ]
+  },
+  {
+    "name": "Полисы",
+    "type": "polises",
+    "values":[
+      {
+        "name":"Посмотреть",
+        "type":"btn",
+        "function":""
+      }
+    ]
+  },
+  {
+    "name": "Контакты",
+    "type": "contacts",
+    "values":[
+      {
+        "name":"Посмотреть",
+        "type":"btn",
+        "function":""
+      }
+    ]
+  },
+  {
+    "name": "Агенты",
+    "type": "agents",
+    "values":[
+      {
+        "name":"Посмотреть",
+        "type":"btn",
+        "function":""
+      }
+    ]
+  },
+  {
+    "name": "Группа компаний",
+    "type": "group",
+    "values":[
+      {
+        "name":"Посмотреть",
+        "type":"btn",
+        "function":""
       }
     ]
   }

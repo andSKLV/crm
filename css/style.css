@@ -647,30 +647,30 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 /* moveFromRight */
 
 .mi_moveFromRight div {
-    -webkit-animation: moveFromRight 350ms ease-in-out both;
-    animation: moveFromRight 350ms ease-in-out both;
+    -webkit-animation: moveFromRight 150ms ease-in-out both;
+    animation: moveFromRight 150ms ease-in-out both;
 
 }
 
 /* moveFromLeft */
 
 .mi_moveFromLeft div {
-    -webkit-animation: moveFromLeft 350ms ease-in-out both;
-    animation: moveFromLeft 350ms ease-in-out both;
+    -webkit-animation: moveFromLeft 150ms ease-in-out both;
+    animation: moveFromLeft 150ms ease-in-out both;
 }
 
 /* moveToRight */
 
 .mi_moveToRight div {
-    -webkit-animation: moveToRight 350ms ease-in-out both;
-    animation: moveToRight 350ms ease-in-out both;
+    -webkit-animation: moveToRight 150ms ease-in-out both;
+    animation: moveToRight 150ms ease-in-out both;
 }
 
 /* moveToLeft */
 
 .mi_moveToLeft div {
-    -webkit-animation: moveToLeft 350ms ease-in-out both;
-    animation: moveToLeft 350ms ease-in-out both;
+    -webkit-animation: moveToLeft 150ms ease-in-out both;
+    animation: moveToLeft 150ms ease-in-out both;
 }
 
 /* Animation Delays */
@@ -703,10 +703,10 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 .mi_moveFromRight div:nth-child(4),
 .mi_moveToRight div:first-child,
 .mi_moveFromLeft div:first-child  {
-    -webkit-animation-delay: 270ms;
-    animation-delay: 270ms;
+    -webkit-animation-delay: 170ms;
+    animation-delay: 170ms;
 }
-.animation { transition: 0.5s; }
+.animation { transition: 0.2s; }
 
 .animation.ng-enter-stagger,
 .animation.ng-leave-stagger{
@@ -943,4 +943,62 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 .matrix_results{
     margin-right: 0px;
     margin-left: 45px;
+}
+@keyframes move-to-left{
+    from{
+        transform: translateX(0%);
+    }
+    to{
+        transform: translateX(-101%);
+    }
+}
+@keyframes move-from-left{
+    from{
+        transform: translateX(-101%);
+    }
+    to{
+        transform: translateX(0%);
+    }
+}
+@keyframes move-to-right{
+    from{
+        transform: translateX(0%);
+    }
+    to{
+        transform: translateX(101%);
+    }
+}
+@keyframes move-from-right{
+    from{
+        transform: translateX(101%);
+    }
+    to{
+        transform: translateX(0%);
+    }
+}
+.ul_move_to_left{
+    animation-name: move-to-left;
+    animation-duration: 250ms;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+}
+.ul_move_from_left{
+    animation-delay: 150ms;
+    animation-name: move-from-left;
+    animation-duration: 250ms;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+}
+.ul_move_to_right{
+    animation-name: move-to-right;
+    animation-duration: 250ms;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+}
+.ul_move_from_right{
+    animation-delay: 150ms;
+    animation-name: move-from-right;
+    animation-duration: 250ms;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
 }
