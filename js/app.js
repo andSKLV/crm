@@ -73,10 +73,10 @@ app.config(function($routeProvider){//с помощью .config мы опред�
             templateUrl: './templates/paths/finance/index.html',
             controller: 'financeCtrl'
         })
-        .when('/connections',{
+        .when('/profile',{
             
-            templateUrl: '/templates/paths/connections/index.html',
-            controller: 'connectionsCtrl'
+            templateUrl: '/templates/paths/profile/index.html',
+            controller: 'profileCtrl'
         })
         .otherwise({
             redirectTo: '/login'
@@ -273,28 +273,28 @@ app.directive('findCalculationView', function () {
         templateUrl: 'templates/views/find_calculation_view.html'
     }
 });
-app.directive('connectionsDashboard', function(){
+app.directive('profileDashboard', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/connections/dashboard.html'
+        templateUrl: 'templates/paths/profile/dashboard.html'
     }
 });
-app.directive('connectionsHeader', function(){
+app.directive('profileHeader', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/connections/header.html'
+        templateUrl: 'templates/paths/profile/header.html'
     }
 });
-app.directive('connectionsMatrix', function(){
+app.directive('profileMatrix', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/connections/matrix.html'
+        templateUrl: 'templates/paths/profile/matrix.html'
     }
 });
-app.directive('connectionsNav', function(){
+app.directive('profileNav', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/connections/navigation.html'
+        templateUrl: 'templates/paths/profile/navigation.html'
     }
 })
 
