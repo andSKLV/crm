@@ -1,5 +1,6 @@
 import Company from '../protos/company.js';
 import Profile from '../protos/profile.js';
+import Loading from '../protos/loading.js';
 
 app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location, myFactory) {
   $scope.myFactory = myFactory;
@@ -7,12 +8,18 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
   init();
 
   async function init () {
+    debugger;
+    const modal = new Loading();
+    modal.show();
     const id = '650';
     const pr = new Profile();
     pr.bindFactory($scope.myFactory);
     await loadDash();
     await $scope.loadCompany(id);
     pr.store.calcLinks = await $scope.loadCalcLinks (id);
+    const calcs = await $scope.loadCalculations(pr.store.calcLinks); //загрузка расчетов, если они еще не были загружены
+    pr.store.calculations = calcs;
+    modal.hide();
 
 
     // TODO: линки с БД connections
@@ -174,22 +181,24 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     checkCurrentPage(index) {
       return index === this.currentPage;
     },
-    setCurrentPage(index) {
+    async setCurrentPage(index) {
+      // await this.extraAction(index);
       this.previousPage = this.currentPage;
       this.currentPage = index;
-      this.extraAction(index);
     },
     // дополнительные действия при нажатии на каретку
     async extraAction(ind){
-      const prof = $scope.myFactory.profileObj;
-      switch (ind) {
-        case 1:
-          if (ind===1&&!prof.store.calculations) {
-            const calcs = await $scope.loadCalculations(prof.store.calcLinks); //загрузка расчетов, если они еще не были загружены
-            prof.store.calculations = calcs;
-          }
-          break;
-      }
+      // const prof = $scope.myFactory.profileObj;
+
+      // switch (ind) {
+      //   case 1:
+      //     if (ind===1&&!prof.store.calculations) {
+      //       const calcs = await $scope.loadCalculations(prof.store.calcLinks); //загрузка расчетов, если они еще не были загружены
+      //       prof.store.calculations = calcs;
+      //       return calcs;
+      //     }
+      //     break;
+      // }
       
 
     },

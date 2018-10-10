@@ -308,8 +308,13 @@ app.directive('profileCalcs', function(){
         restrict: 'A',
         templateUrl: 'templates/paths/profile/calcs.html'
     }
+});
+app.directive('loading', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/views/loading.html'
+    }
 })
-
 
 app.directive('ngRightClick', function($parse) {
     return function(scope, element, attrs) {

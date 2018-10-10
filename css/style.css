@@ -1012,3 +1012,29 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     flex-direction: row;
     align-content: center;
 }
+#loading_modal{
+    display: none;
+}
+.loading_container{
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    background-color: black;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.3;
+}
+.loading_box{
+    width: 40%;
+    height: 20%;
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    background-color: white;
+    z-index: 1001;
+    opacity: 1;
+    padding: 20px;
+    border-radius: 20px;
+    border: 2px solid var(--dark-blue);
+}

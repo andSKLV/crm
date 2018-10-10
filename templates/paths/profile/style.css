@@ -1,11 +1,13 @@
+
 .flex{
   display: flex;
   flex-direction: column;
 }
-.matrix_container{
+div.matrix_container{
   margin-left: 0px;
   margin-right: 0px;
   width: 100%;
+  height: auto;
 }
 div.dashboard_container{
   margin-left: 0px;
