@@ -360,6 +360,10 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
 
 
     };
+    this.loadCompanyProfile = async function (id){
+        myFactory.companyObj.id = id;
+        $location.path('/profile');
+    }
     /**
      * Фукнция загрузки компании из БД в матрицу
      * @param {number} id - id компании

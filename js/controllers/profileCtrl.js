@@ -6,11 +6,15 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
   $scope.myFactory = myFactory;
   const scope = this;
   init();
-
+  
   async function init () {
+    const id = $scope.myFactory.companyObj.id;
+    if (!id) {
+      alert('Ошибка открытия клиента. ПОжалуйста обратиетсь к разработчику');
+      return false;
+    }
     const modal = new Loading();
     modal.show(); // всплывающее окно о загрузке
-    const id = '650';
     const pr = new Profile();
     pr.bindFactory($scope.myFactory);
     await loadDash();
@@ -139,7 +143,7 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
       return false;
     }
     if (links.length===0) {
-      alert('Нет расчетов');
+      console.log('Нет расчетов');
       return false;
     }
     const query = {};
@@ -240,5 +244,6 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     catch (err) {
         console.error (`Clear search results problem: ${err}`);
     }
-}
+  }
+
 });
