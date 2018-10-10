@@ -14,5 +14,17 @@
     }
     echo json_encode($resultJson);
   }
+  else if($data['type']=="load_linked_calcs"){
+    $ids = $data['ids'];
+    $resultJson = array();
+    foreach ($ids as $id) {
+      $query = "SELECT id, name, a_limit, total_price, amount, fact_premia, date FROM savedCopy WHERE id = '".$id."'";
+      $result = mysqli_query($link, $query) or die(mysqli_error($link));
+      while($row=mysqli_fetch_array($result, MYSQLI_ASSOC)){
+        $resultJson[]=$row;
+      }
+    }
 
+    echo json_encode($resultJson);
+}
 ?>

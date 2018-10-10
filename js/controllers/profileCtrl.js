@@ -1,4 +1,5 @@
 import Company from '../protos/company.js';
+import Profile from '../protos/profile.js';
 
 app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location, myFactory) {
   $scope.myFactory = myFactory;
@@ -7,9 +8,13 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
 
   async function init () {
     const id = '650';
+    const pr = new Profile();
+    pr.bindFactory($scope.myFactory);
     await loadDash();
     await $scope.loadCompany(id);
-    await $scope.loadCalculations (id);
+    pr.store.calcLinks = await $scope.loadCalcLinks (id);
+
+    // TODO: линки с БД connections
 
     function loadDash () {
       return $http.post('src/profile-dashboard.json').then((resp)=>{
@@ -19,17 +24,26 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
       })
     }
   }
-  $scope.loadCalculations = function (id) {
+  /**
+   * Функция загрузки айдишников расчетов, которые првязаны к данной компании
+   * @param {string} id компания, связки с которой загружаем
+   */
+  $scope.loadCalcLinks = function (id) {
     const query = {};
     query.type = 'company_calculations';
     query.model = 'company_id';
     query.id = id;
     return $http.post('php/load.php',query).then(resp=>{
-      debugger;
+      if (Array.isArray(resp.data)) return resp.data;
+      else alert ('Возникли проблемы с загрузкой привязанных расчетов. Обратитесь к разработчику');
     },err=>{
       console.error(err);
     });
   }
+  /**
+   * Загрузка из БД данных карточки клиента
+   * @param {strinf} id компании
+   */
   $scope.loadCompany = function (id) {
     // const myFactory = $scope.myFactory;
     const data = {};
@@ -111,17 +125,31 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     })
   }
   /**
-   * Deleting serach result after choosing one of the results
+   * Загрузка рассчетов из ссылок на них
+   * @param {Array} links - массив с обектами пар id - data. берется из метода loadCalcLinks
    */
-  function clearSearch () {
-      try {
-          $rootScope.search_result = [];
-      }
-      catch (err) {
-          console.error (`Clear search results problem: ${err}`);
-      }
+  $scope.loadCalculations = function (links) {
+    console.log($scope);
+    
+    const calculations = {};
+    if (!Array.isArray(links)) {
+      console.error(`Ошибка формата:${typeof links} должкен быть array`);
+      return false;
+    }
+    if (links.length===0) {
+      alert('Нет расчетов');
+      return false;
+    }
+    const query = {};
+    query.type='load_linked_calcs';
+    query.ids = links.map(link=>link['calc_id']);
+    return $http.post('php/load.php',query).then(resp=>{
+      debugger;
+    },err=>{
+      console.error(err);
+    })
+    debugger;
   }
-
 
   $scope.newDashboard = {
     currentPage: 0,
@@ -144,6 +172,18 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     setCurrentPage(index) {
       this.previousPage = this.currentPage;
       this.currentPage = index;
+      this.extraAction(index);
+    },
+    // дополнительные действия при нажатии на каретку
+    async extraAction(ind){
+      const prof = $scope.myFactory.profileObj;
+      switch (ind) {
+        case 1:
+          if (ind===1&&!prof.store.calculations) await $scope.loadCalculations(prof.store.calcLinks); //загрузка расчетов, если они еще не были загружены
+          break;
+      }
+      
+
     },
     getIndex(param) {
       // FIXME:
@@ -177,4 +217,15 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     }
     return false;
   };
+    /**
+   * Deleting serach result after choosing one of the results
+   */
+  function clearSearch () {
+    try {
+        $rootScope.search_result = [];
+    }
+    catch (err) {
+        console.error (`Clear search results problem: ${err}`);
+    }
+}
 });
