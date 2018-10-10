@@ -1,0 +1,18 @@
+<div class='table-flex' >
+  <div class="row-flex">
+    <div class="cell-flex matrix-header"><p>Дата</p></div> 
+    <div class="cell-flex matrix-header"><p>Стоимость</div> 
+    <div class="cell-flex matrix-header"><p>Кол-во машин</p></div>
+    <div class="cell-flex matrix-header"><p>Кол-во платежей</p></div>
+    <div class="cell-flex matrix-header"><p>Тип лимита</p></div>
+    <div class="cell-flex matrix-header"><p>Лимит</p></div>
+  </div>
+  <div class="row-flex" ng-repeat="calc in myFactory.profileObj.store.calculations track by $index">
+    <div class="cell-flex properties"><p>{{calc.date}}</p> </div>
+    <div class="cell-flex properties"><p>{{(calc.fact_premia===';1')? calc.total_price : calc.fact_premia | currency:'RUB '}}</p></div>
+    <div class="cell-flex properties"><p>{{calc.amount/24}}</p></div>
+    <div class="cell-flex properties"><p>{{calc.payment}}</p></div>
+    <div class="cell-flex properties"><p>{{calc.a_limitType}}</p></div>
+    <div class="cell-flex properties"><p>{{calc.a_limit}}</p></div>
+  </div>
+</div>

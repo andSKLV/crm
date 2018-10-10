@@ -302,6 +302,12 @@ app.directive('profileNav', function(){
         restrict: 'A',
         templateUrl: 'templates/paths/profile/navigation.html'
     }
+});
+app.directive('profileCalcs', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/profile/calcs.html'
+    }
 })
 
 

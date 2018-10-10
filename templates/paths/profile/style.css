@@ -1,4 +1,40 @@
-.mi_slider{
+.flex{
   display: flex;
   flex-direction: column;
+}
+.matrix_container{
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%;
+}
+div.dashboard_container{
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%;
+}
+
+.cell-flex{
+  background-color: var(--gray);
+  text-align: center;
+  vertical-align: middle;
+  display: table-cell;
+  border: 1px solid white;
+  font-weight: 500;
+  line-height: 1;
+  min-height: 50px;
+  width: calc(100%/6);
+}
+.back{
+  height: 100%;
+  display: inline-block;
+  color: var(--tooltip-gray);
+  font-size: 30pt;
+  cursor: pointer;
+}
+.back:hover{
+  color: var(--dark-blue);
+}
+.matrix-header{
+  background-color: var(--blue);
+  color: white;
 }

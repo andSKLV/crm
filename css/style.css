@@ -5,6 +5,7 @@
 @import "../templates/paths/company/style.css";
 @import "../templates/paths/main/style.css";
 @import "../templates/paths/finance/style.css";
+@import "../templates/paths/profile/style.css";
 
 :root {
     --blue: rgb(146, 167, 205);
@@ -1001,4 +1002,13 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     animation-duration: 250ms;
     animation-fill-mode: both;
     animation-timing-function: linear;
+}
+.table-flex{
+    display: flex;
+    flex-direction: column;
+}
+.row-flex{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
 }

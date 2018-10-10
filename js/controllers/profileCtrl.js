@@ -14,6 +14,7 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     await $scope.loadCompany(id);
     pr.store.calcLinks = await $scope.loadCalcLinks (id);
 
+
     // TODO: линки с БД connections
 
     function loadDash () {
@@ -129,8 +130,6 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
    * @param {Array} links - массив с обектами пар id - data. берется из метода loadCalcLinks
    */
   $scope.loadCalculations = function (links) {
-    console.log($scope);
-    
     const calculations = {};
     if (!Array.isArray(links)) {
       console.error(`Ошибка формата:${typeof links} должкен быть array`);
@@ -144,11 +143,17 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     query.type='load_linked_calcs';
     query.ids = links.map(link=>link['calc_id']);
     return $http.post('php/load.php',query).then(resp=>{
-      debugger;
+      if (!Array.isArray(resp.data)) {
+        alert (`Проблема с загрузкой расчетов. Пожалуйста, по возможности не закрывайте это окно и обратитесь к разработчику`);
+        console.error(resp.data);
+        return null;
+      }
+      if (resp.data.length!==links.length) console.error(`Размер полученных данных не совпадает с запрошенными`);
+      return resp.data;
+
     },err=>{
       console.error(err);
     })
-    debugger;
   }
 
   $scope.newDashboard = {
@@ -179,7 +184,10 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
       const prof = $scope.myFactory.profileObj;
       switch (ind) {
         case 1:
-          if (ind===1&&!prof.store.calculations) await $scope.loadCalculations(prof.store.calcLinks); //загрузка расчетов, если они еще не были загружены
+          if (ind===1&&!prof.store.calculations) {
+            const calcs = await $scope.loadCalculations(prof.store.calcLinks); //загрузка расчетов, если они еще не были загружены
+            prof.store.calculations = calcs;
+          }
           break;
       }
       
