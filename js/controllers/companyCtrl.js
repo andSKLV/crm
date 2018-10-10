@@ -222,6 +222,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
         $scope.myFactory.removeCellSelection ('dashboard_container');
         $scope.clientCard = {};
         $scope.myFactory.companyObj = new Company();
+        delete $scope.myFactory.newClientCard;
         init();
     }
     $scope.saveCompany = () => {
