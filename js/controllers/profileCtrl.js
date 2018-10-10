@@ -8,21 +8,17 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
   init();
 
   async function init () {
-    debugger;
     const modal = new Loading();
-    modal.show();
+    modal.show(); // всплывающее окно о загрузке
     const id = '650';
     const pr = new Profile();
     pr.bindFactory($scope.myFactory);
     await loadDash();
     await $scope.loadCompany(id);
-    pr.store.calcLinks = await $scope.loadCalcLinks (id);
-    const calcs = await $scope.loadCalculations(pr.store.calcLinks); //загрузка расчетов, если они еще не были загружены
-    pr.store.calculations = calcs;
-    modal.hide();
-
-
+    pr.store.calcLinks = await $scope.loadCalcLinks(id);
+    pr.store.calculations = await $scope.loadCalculations(pr.store.calcLinks);//загрузка расчетов
     // TODO: линки с БД connections
+    modal.hide();
 
     function loadDash () {
       return $http.post('src/profile-dashboard.json').then((resp)=>{

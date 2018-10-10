@@ -24,7 +24,7 @@ div.dashboard_container{
   font-weight: 500;
   line-height: 1;
   min-height: 50px;
-  width: calc(100%/6);
+  width: calc(100%/5);
 }
 .back{
   height: 100%;
@@ -36,7 +36,4 @@ div.dashboard_container{
 .back:hover{
   color: var(--dark-blue);
 }
-.matrix-header{
-  background-color: var(--blue);
-  color: white;
-}
+

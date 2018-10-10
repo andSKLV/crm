@@ -1012,6 +1012,10 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     flex-direction: row;
     align-content: center;
 }
+div.matrix-header{
+    background-color: var(--blue);
+    color: white;
+}
 #loading_modal{
     display: none;
 }
