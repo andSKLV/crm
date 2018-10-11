@@ -7,11 +7,11 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
     this.makeSearch=(param)=>{
         this.isEmptyQuery(param.values) ? this.isEmptyObject(this.template) ? this.search(param.values, param.url) : this.checkTemplate(param.values) ? this.searchFilter(param.values) : this.search(param.values, param.url) : this.clean();
     }
-    this.searchForPolis= ({type, value}) => {
+    this.searchForPolis= async ({type, value}) => {
         if(value=="" || value.length<=2) this.clean();
         if($rootScope.search_result.length==0) scope.template={};
         if(this.isEmptyObject(this.template)){
-            this.search(
+            await this.search(
                 [{
                     model:"name",
                     name:"Название",
@@ -33,7 +33,7 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
                 }])
             }
             else{
-                this.search(
+                await this.search(
                     [{
                         model:"name",
                         name:"Название",
@@ -82,7 +82,7 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
         if(obj) return obj.val.search(scope.template.txt)==0;
         else return false;
     };
-    this.search = async function( values , type) {
+    this.search = function( values , type) {
         let data={};
         if(type=="Компания"){
             data.type="find_company";
@@ -90,25 +90,17 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
         } 
         if(type=="calculationActions") data.type="find_calculation";
         else data.type=type;
-
         if(scope.abort){
             scope.abort.resolve();
         }
         scope.abort = $q.defer();
         let flag=this.isEmptyQuery(values);
         data.value=flag;
-
         scope.template.txt=flag.val;
         scope.template.model=flag.model;
-
-        await $http.post("php/search.php", data,{timeout:scope.abort.promise}).then(function success (response) {
-
-
-
+        return $http.post("php/search.php", data,{timeout:scope.abort.promise}).then(function success (response) {
                 scope.myFactory.matrixType=type;
-
                 $rootScope.cacheTemplate={};
-
                 $rootScope.search_result=response.data;
                 if(type!=="Компания"&&type!=="find_company"){
                     $rootScope.search_result.forEach(row=>{

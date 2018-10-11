@@ -52,6 +52,9 @@ div.matrix_container.calc{
     max-height: 600px;
     margin-left: 30px;
 }
+div.matrix_container:not(.calc){
+    height: calc(100vh - 280px);
+}
 #find_company_matrix td{
     width: 25%;
 }
