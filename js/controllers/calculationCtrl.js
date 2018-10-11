@@ -16,12 +16,12 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.myFactory.scop = this;
     if (!this.myFactory.calcObj.isInited) this.myFactory.calcObj = new Calculation(this.myFactory);
 
-    this.loadMatrix = function () {
+    this.loadMatrix = async function () {
         /**
          * Инициализация каретки
          */
         const param = this.karetkaTypes[this.myFactory.HIPname];
-        $http.post(`src/${param}`).then(function success (response) {
+        await $http.post(`src/${param}`).then(function success (response) {
             scope.currObj = [];
             let data = replaceSingleDepth(response.data);
             data = putDepth(data);
@@ -48,6 +48,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 scope.matrix.loadProcess(scope.myFactory.loadProcess.process, scope.myFactory.loadProcess.key);
                 delete scope.myFactory.loadProcess;
             }
+            scope.selectParam(0);
             /**
              * Функция для того, чтобы убрать лишнее заглубление, если поле содержит в себе только одно поле, то родителя не нужен
              * @param {Object} data
@@ -141,7 +142,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             }
         );
     }
-    this.loadMatrix('HIP.json');
     /**
      * меняем в парке значение для всех строк
      * @param {any} value значение, либо string либо number на которое нужно поменять
@@ -1940,4 +1940,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         if (multi.parent) deepRemoveMulti(multi.parent);
         myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi), 1);
     }
+
+    this.loadMatrix('HIP.json');
 });
