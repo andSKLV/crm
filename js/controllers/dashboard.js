@@ -240,7 +240,6 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
 
 
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
-        debugger;
         if (value.urlTo==='profile'&&!this.myFactory.companyObj.id) value.urlTo='company';
         $location.path(`/${value.urlTo}`);
     };

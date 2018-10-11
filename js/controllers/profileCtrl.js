@@ -36,6 +36,7 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
      * @param {Array} arr - массив с расчетами из БД
      */
     function fixPremia(arr){
+      if (!arr) return [];
       const fixed = arr.map(calc=>{
         const oldVal = calc['fact_premia'];
         let newVal = null;
