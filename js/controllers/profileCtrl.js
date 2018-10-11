@@ -20,7 +20,9 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     await loadDash();
     await $scope.loadCompany(id);
     pr.store.calcLinks = await $scope.loadCalcLinks(id);
-    pr.store.calculations = await $scope.loadCalculations(pr.store.calcLinks);//загрузка расчетов
+    const calcs =  await $scope.loadCalculations(pr.store.calcLinks);//загрузка расчетов
+    pr.store.calculations = fixPremia(calcs);
+
     // TODO: линки с БД connections
     modal.hide();
 
@@ -30,6 +32,24 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
       },(err)=>{
         console.error(err);
       })
+    }
+    /**
+     * Функция изменения вида значения фактической премии, так как она может быть записана с коэфициентом
+     * @param {Array} arr - массив с расчетами из БД
+     */
+    function fixPremia(arr){
+      const fixed = arr.map(calc=>{
+        const oldVal = calc['fact_premia'];
+        let newVal = null;
+        if (!oldVal||oldVal===';1') newVal = calc['total_price'];
+        else {
+          const ind = oldVal.search(';');
+          if (ind>=1) newVal = oldVal.slice(0,ind);
+        }
+        calc['fact_premia'] = newVal;
+        return calc;
+      })
+      return fixed;
     }
   }
   /**
@@ -186,22 +206,6 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
       this.previousPage = this.currentPage;
       this.currentPage = index;
     },
-    // дополнительные действия при нажатии на каретку
-    async extraAction(ind){
-      // const prof = $scope.myFactory.profileObj;
-
-      // switch (ind) {
-      //   case 1:
-      //     if (ind===1&&!prof.store.calculations) {
-      //       const calcs = await $scope.loadCalculations(prof.store.calcLinks); //загрузка расчетов, если они еще не были загружены
-      //       prof.store.calculations = calcs;
-      //       return calcs;
-      //     }
-      //     break;
-      // }
-      
-
-    },
     getIndex(param) {
       // FIXME:
       // this.setCurrentPage($scope.clientCard.indexOf(param));
@@ -233,6 +237,9 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
         if (obj[key] != "" && obj[key] != "Форма организации" && obj[key] != undefined) return true;
     }
     return false;
+  };
+  $scope.relocate = (path) => {
+    $location.path(path);
   };
     /**
    * Deleting serach result after choosing one of the results

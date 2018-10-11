@@ -11,6 +11,6 @@
     <div class="cell-flex properties"><p>{{calc.a_limitType}} - {{calc.a_limit}}</p></div>
     <div class="cell-flex properties"><p>{{calc.amount/24}}</p></div>
     <div class="cell-flex properties"><p>{{calc.payment}}</p></div>
-    <div class="cell-flex properties"><p>{{(calc.fact_premia===';1')? calc.total_price : calc.fact_premia | currency:'RUB '}}</p></div>
+    <div class="cell-flex properties"><p>{{calc.fact_premia | currency:'RUB '}}</p></div>
   </div>
 </div>

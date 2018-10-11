@@ -306,7 +306,7 @@ app.directive('profileNav', function(){
 app.directive('profileCalcs', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/profile/calcs.html'
+        templateUrl: 'templates/paths/profile/calcs-matrix.html'
     }
 });
 app.directive('loading', function(){
