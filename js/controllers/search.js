@@ -1,6 +1,3 @@
-/**
- * Created by RoGGeR on 14.06.17.
- */
 app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
     this.myFactory=myFactory;
 
@@ -13,7 +10,6 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
     this.searchForPolis= ({type, value}) => {
         if(value=="" || value.length<=2) this.clean();
         if($rootScope.search_result.length==0) scope.template={};
-        
         if(this.isEmptyObject(this.template)){
             this.search(
                 [{
@@ -86,7 +82,7 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
         if(obj) return obj.val.search(scope.template.txt)==0;
         else return false;
     };
-    this.search = function( values , type) {
+    this.search = async function( values , type) {
         let data={};
         if(type=="Компания"){
             data.type="find_company";
@@ -105,7 +101,7 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
         scope.template.txt=flag.val;
         scope.template.model=flag.model;
 
-        $http.post("php/search.php", data,{timeout:scope.abort.promise}).then(function success (response) {
+        await $http.post("php/search.php", data,{timeout:scope.abort.promise}).then(function success (response) {
 
 
 

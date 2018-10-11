@@ -1,4 +1,4 @@
-<tr ng-class="{matrix_row: !row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index">
+<tr id='find_company_matrix' ng-class="{matrix_row: !row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index">
     <td class="properties" ng-click="matrixCtrl.loadCompanyProfile(row.id)">{{row.name}}</td>
     <td class="properties" ng-if="dashboard.isArray(row.contact)" ng-click="row.close!='disable' && row.show!=true ? row.show=true : null" colspan="{{row.show ? 2 : 1}}">
         <div ng-show="!row.show" ng-class="{multi_close : dashboard.isMulti(row)}">{{row.contact[0].name}}</div>

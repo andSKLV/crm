@@ -52,6 +52,9 @@ div.matrix_container.calc{
     max-height: 600px;
     margin-left: 30px;
 }
+#find_company_matrix td{
+    width: 25%;
+}
 .depth-symbol{
     font-size: 0.8em;
     position: relative;
@@ -107,9 +110,7 @@ div.matrix_container.calc{
         margin-top: 72px;
     }
     div.matrix_container,  .clientCard{
-        width:1600px;
         font-size: 16pt;
-        height:800px;
     }
     div.matrix_container.calc{
         width:1770px;
@@ -174,9 +175,7 @@ div.matrix_container.calc{
         width:1150px;
     }
     div.matrix_container, .clientCard{
-
         font-size: 12pt;
-        height:560px
     }
     .matrix.bottom>tbody>tr>td,input[currency-input]{
         font-size: 14pt;
@@ -239,9 +238,7 @@ div.matrix_container.calc{
     }
 
     div.matrix_container, .clientCard{
-
         font-size: 12pt;
-        height:500px;
     }
     .matrix.bottom>tbody>tr>td,input[currency-input]{
         font-size: 14pt;

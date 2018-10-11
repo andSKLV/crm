@@ -188,3 +188,9 @@ div.ul_container>div.ul>div>div.addAddition{
     position: relative;
     overflow: hidden;
 }
+div.matrix_container{
+    margin-left: 0px;
+}
+tbody{
+    width: 100%;
+}

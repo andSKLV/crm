@@ -19,7 +19,7 @@
 
                 <input ng-if="value.type == 'inputCompany'" type="text" 
                 ng-model="calculation.nameOfCompany" ng-controller="searchCtrl as searchCtrl" 
-                ng-change="calculation.nameOfCompany.length>1 ? 
+                ng-change="calculation.nameOfCompany.length>=1 ? 
                         searchCtrl.searchForPolis({
                             type: 'Компания',
                             value: calculation.nameOfCompany
