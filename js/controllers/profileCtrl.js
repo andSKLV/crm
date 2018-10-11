@@ -182,7 +182,7 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
       return index === this.currentPage;
     },
     async setCurrentPage(index) {
-      // await this.extraAction(index);
+      const mf = $scope.myFactory;
       this.previousPage = this.currentPage;
       this.currentPage = index;
     },
