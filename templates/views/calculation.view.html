@@ -8,7 +8,7 @@
                </td>
             </tr>
         </table>
-        <ul ng-show="process.showCars" class="cars-list">
+        <ul ng-if="process.showCars" class="cars-list">
             <li ng-repeat="car in park.cars"><input type="checkbox" ng-checked="process.amount==park.amount" id="{{calculation.getUniqueId(process, $index)}}"><label for="{{calculation.getUniqueId(process, $index)}}"></label>
                 <table>
                     <tr>

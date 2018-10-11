@@ -19,7 +19,6 @@ div.return a:hover{
 }
 .view {
     margin: auto;
-    display: none;
 }
 .view_active{
     box-shadow: 0 6px 20px 0px rgba(0, 0, 0, 0.4);
@@ -38,7 +37,7 @@ ul.park{
     list-style: none;
     padding: 0;
     margin: 0;
-    
+    border: 1px solid var(--blue);
 }
 ul.park li table{
     width: 100%;
@@ -101,10 +100,10 @@ ul.cars-list input[type="text"]{
     background: var(--gray);
     text-transform: uppercase;
 }
-.bottom.calculation.view{
+.bottom.calculation{
     position: static;
-    margin: auto;
-    border: 12px solid var(--blue);
+    margin: 0;
+    border: 1px solid var(--blue);
     width: 100%;
 }
 div.return{
