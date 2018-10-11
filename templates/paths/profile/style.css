@@ -1,4 +1,7 @@
 
+:root{
+  --btn-func-width: 40px;
+}
 .flex{
   display: flex;
   flex-direction: column;
@@ -16,15 +19,15 @@ div.dashboard_container{
 }
 
 .cell-flex{
-  background-color: var(--gray);
-  text-align: center;
-  vertical-align: middle;
-  display: table-cell;
-  border: 1px solid white;
-  font-weight: 500;
-  line-height: 1;
-  min-height: 50px;
-  width: calc(100%/5);
+  min-height: 40px;
+  max-height: 80px;
+  width: calc((100%-var(--btn-func-width))/5);
+}
+.btn-func_conatiner{
+  width: var(--btn-func-width);
+  border-radius: 5px;
+  min-height: 40px;
+  max-height: 80px;
 }
 .back{
   height: 100%;

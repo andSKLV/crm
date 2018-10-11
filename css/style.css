@@ -1021,6 +1021,8 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 div.matrix-header{
     background-color: var(--blue);
     color: white;
+    text-align: center;
+    border: 1px solid white;
 }
 #loading_modal{
     display: none;
@@ -1047,4 +1049,24 @@ div.matrix-header{
     padding: 20px;
     border-radius: 20px;
     border: 2px solid var(--dark-blue);
+}
+.matrix-cell{
+    background-color: var(--gray);
+    text-align: center;
+    border: 1px solid white;
+    cursor: pointer;
+}
+.btn-func{
+    /* height: 30px; */
+    border-bottom: 1px solid white;
+    border-top: 1px solid white;
+}
+.btn-func p {
+    margin: 0px;
+    color: var(--dark-blue);
+}
+.btn-func img {
+    height: 20px;
+    width: 20px;
+    margin: 3px;
 }

@@ -5,12 +5,11 @@ import Loading from '../protos/loading.js';
 app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location, myFactory) {
   $scope.myFactory = myFactory;
   const scope = this;
-  init();
   
   async function init () {
     const id = $scope.myFactory.companyObj.id;
     if (!id) {
-      alert('Ошибка открытия клиента. ПОжалуйста обратиетсь к разработчику');
+      alert('Ошибка открытия клиента. Пожалуйста обратиетсь к разработчику');
       return false;
     }
     const modal = new Loading();
@@ -22,7 +21,6 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     pr.store.calcLinks = await $scope.loadCalcLinks(id);
     const calcs =  await $scope.loadCalculations(pr.store.calcLinks);//загрузка расчетов
     pr.store.calculations = fixPremia(calcs);
-
     // TODO: линки с БД connections
     modal.hide();
 
@@ -253,4 +251,6 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     }
   }
 
+  if (!$scope.myFactory.companyObj.id) $scope.relocate('/');
+  else init();
 });
