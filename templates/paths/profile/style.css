@@ -21,7 +21,7 @@ div.dashboard_container{
 .cell-flex{
   min-height: 40px;
   max-height: 80px;
-  width: calc((100%-var(--btn-func-width))/5);
+  width: calc((100% - var(--btn-func-width))/5);
 }
 .btn-func_conatiner{
   width: var(--btn-func-width);
