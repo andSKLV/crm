@@ -18,7 +18,7 @@
     $ids = $data['ids'];
     $resultJson = array();
     foreach ($ids as $id) {
-      $query = "SELECT id, a_limit, a_limitType, agents, payment, total_price, amount, fact_premia, date FROM savedCopy WHERE id = '".$id."'";
+      $query = "SELECT id, a_limit, a_limitType, agents, payment, total_price, amount, fact_premia, date FROM saved WHERE id = '".$id."'";
       $result = mysqli_query($link, $query) or die(mysqli_error($link));
       while($row=mysqli_fetch_array($result, MYSQLI_ASSOC)){
         $resultJson[]=$row;
