@@ -29,7 +29,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
     });
     function init () {
         if (!myFactory.loadCompany) {
-            $http.post("src/new_company.json").then(function success(response) {
+            $http.post("./src/new_company.json").then(function success(response) {
                 const obj = response.data;
                 // загрузка в каретку данных из карты клиента
                 for (const key in obj) {

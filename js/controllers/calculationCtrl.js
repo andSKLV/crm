@@ -21,7 +21,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
          * Инициализация каретки
          */
         const param = this.karetkaTypes[this.myFactory.HIPname];
-        await $http.post(`src/${param}`).then(function success (response) {
+        await $http.post(`./src/${param}`).then(function success (response) {
             scope.currObj = [];
             let data = replaceSingleDepth(response.data);
             data = putDepth(data);
@@ -546,7 +546,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         }
         $timeout.cancel(timer);
         this.saveRes=12345;
-        const url = `src/${string}`;
+        const url = `./src/${string}`;
         this.karetka.mode="listener";
         scope.myFactory.removeCellSelection('dashboard_container');
         $http.post(url).then(function success (response) {

@@ -25,7 +25,7 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     modal.hide();
 
     function loadDash () {
-      return $http.post('src/profile-dashboard.json').then((resp)=>{
+      return $http.post('./src/profile-dashboard.json').then((resp)=>{
         $scope.currObj = resp.data;
       },(err)=>{
         console.error(err);
