@@ -16,7 +16,7 @@ app.controller('loginCtrl', function($scope, $location, $rootScope, $http, $cook
                 data.login=login;
                 data.pwd=pwd;
             }
-            $http.post("authorization.php", data).then(function success (response) {
+            $http.post("php/authorization.php", data).then(function success (response) {
                     if (response.data['loggin'] === true) {
                         $rootScope.loggedIn = true;
                         $location.path('/dashboard');

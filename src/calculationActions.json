@@ -3,23 +3,34 @@
     "name": "Сохранить",
     "values":[
       {
-        "name":"Введите название расчета",
+        "name":"Название расчета для сохранения",
         "type":"inputSaveCalc",
         "model":"dashboard.nameOfCalculation"
       },
       {
-        "name":"Сохранить",
+        "name":"Сохранить как новый",
         "type":"saveCalc",
         "function": "saveCalc"
+      },
+      {
+        "name":"Пересохранить загруженный",
+        "type":"resaveCalc",
+        "function": "resaveCalc"
       }
     ]
   },
   {
-    "name": "Клиент",
+    "name": "Компания",
     "values":[
       {
-        "name":"",
-        "type":""
+        "name":"Введите название компании",
+        "type":"inputCompany",
+        "model":"dashboard.nameOfCompany"
+      },
+      {
+        "name":"Создать/Перейти в редактор",
+        "type":"relocatePage",
+        "urlTo": "company"
       }
     ]
   },

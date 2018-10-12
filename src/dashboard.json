@@ -63,7 +63,7 @@
         "json":"new_company.json"
       },
       {
-        "name":"Полис",
+        "name":"Проект документа",
         "urlTo":"polis",
         "type":"relocatePage"
       },

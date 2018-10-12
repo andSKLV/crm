@@ -1,24 +1,31 @@
 <div class="ul_container">
     <div ng-repeat="param in calculation.currObj" class="ul" ng-class="[{mi_current: calculation.currentUl($index)}, {mi_moveFromRight: calculation.currentUl($index)},{ mi_moveToRight: !calculation.currentUl($index)}]" ng-show="calculation.currentUl($index)" >
         <div>
-            <div ng-class="[{alreadySelected: value.selected},{keyFriendly : calculation.myFactory.foc}]" ng-repeat="value in param.values  track by $index"
-                 ng-click="calculation.clickedOnTopOfDashboard(value, param)" class="clickable">
-                {{value.type == "relocate_here" || value.type == "relocatePage" || value.type=="risk" || value.type=="saveCalc" || value.type=="button" ? value.name : value.type=="currency" || value.type=="amount" ? calculation.applyFilter(value) : value.type=="amountType" ? calculation.myFactory.amountType : value.type=="currencyValue" ? calculation.myFactory.document.currency : ""}}
+            <div ng-class="[{alreadySelected: value.selected},{keyFriendly : calculation.myFactory.foc},{disable: value.type=='resaveCalc'&&!calculation.myFactory.calcObj.isSaved}]" ng-repeat="value in param.values  track by $index"
+                 ng-click="calculation.clickedOnTopOfDashboard(value, param)" class="clickable" data-disableMsg="{{value.type=='resaveCalc' ? 'Расчет еще не сохранен': ''}}">
+                {{value.type == "relocate_here" || value.type == "relocatePage" || value.type=="risk" || value.type=="saveCalc"|| value.type=="resaveCalc" || value.type=="button" ? 
+                value.name : 
+                value.type=="currency" || value.type=="amount" ? 
+                calculation.applyFilter(value) : 
+                value.type=="amountType" ? 
+                calculation.myFactory.amountType : 
+                value.type=="currencyValue" ? 
+                calculation.myFactory.document.currency : ""}}
                 <input ng-if="value.type == 'inputForCurrency'" ng-focus="calculation.myFactory.foc=false" ng-blur="calculation.myFactory.foc=true" type="text" param="{{param.model}}" ng-model="param.selected" placeholder="{{value.type=='inputForCurrency' ? 'Точное число' : value.name}}" style="color: #35bfff;" currency-input="{{param}}" id="inputForCurrency-{{param.model}}">
                 <input ng-if="value.type == 'input_search'" ng-focus="calculation.myFactory.foc=false" ng-blur="calculation.myFactory.foc=true" name="value.model" ng-model="value.val" ng-controller="searchCtrl as searchCtrl" ng-change="searchCtrl.makeSearch(param)" type="text" placeholder="{{value.type=='inputForCurrency' ? 'Точное число' : value.name}}">
                 <input ng-if="value.type == 'inputSaveCalc'" ng-focus="calculation.myFactory.foc=false" ng-blur="calculation.myFactory.foc=true" type="text" 
                 ng-model="calculation.nameOfCalculation" ng-controller="searchCtrl as searchCtrl" 
-                ng-change="searchCtrl.makeSearch({
-                    url:'calculationActions',
-                    values:[
-                        {
-                            model: 'name',
-                            name: 'Название',
-                            val: calculation.nameOfCalculation
-                        }
-                    ]
-                })" 
-                placeholder="{{value.name}}" style="color: #35bfff;">
+                placeholder="{{value.name}}" style="color: rgb(0, 111, 167);">
+
+                <input ng-if="value.type == 'inputCompany'" type="text" 
+                ng-model="calculation.nameOfCompany" ng-controller="searchCtrl as searchCtrl" 
+                ng-change="calculation.nameOfCompany.length>=1 ? 
+                        searchCtrl.searchForPolis({
+                            type: 'Компания',
+                            value: calculation.nameOfCompany
+                        }) : ''"  
+                placeholder="{{value.name}}" style="color: rgb(0, 111, 167);">
+
             </div>
         </div>
     </div>

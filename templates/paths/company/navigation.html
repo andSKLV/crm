@@ -2,7 +2,7 @@
     <div class="nav-option hover-hint" id="home" data-name="Главное меню" ng-click="changeLocation('/')">
         <img class="nav-icon" src="img/nav/home.png" alt="Главное меню">
     </div>
-    <div class="nav-option hover-hint" style="opacity: 0.3;" id="save" ng-if="cardNotEmpty" data-name="Сохранить" ng-click="">
+    <div class="nav-option hover-hint" id="save" ng-if="cardNotEmpty" data-name="Сохранить" ng-click="saveCompany()">
         <img class="nav-icon" src="img/nav/save.png" alt="">
     </div>
     <div class="nav-option hover-hint" id="polis" data-name="Полис" ng-if="cardNotEmpty" ng-click="changeLocation('polis')">

@@ -1,0 +1,42 @@
+
+:root{
+  --btn-func-width: 40px;
+}
+.flex{
+  display: flex;
+  flex-direction: column;
+}
+div.matrix_container{
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%;
+  height: auto;
+}
+div.dashboard_container{
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%;
+}
+
+.cell-flex{
+  min-height: 40px;
+  max-height: 80px;
+  width: calc((100% - var(--btn-func-width))/5);
+}
+.btn-func_conatiner{
+  width: var(--btn-func-width);
+  border-radius: 5px;
+  min-height: 40px;
+  max-height: 80px;
+}
+.back{
+  height: 100%;
+  display: inline-block;
+  color: var(--tooltip-gray);
+  font-size: 30pt;
+  cursor: pointer;
+}
+.back:hover{
+  color: var(--dark-blue);
+}
+

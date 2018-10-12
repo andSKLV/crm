@@ -1,3 +1,5 @@
+import Calculation from '../protos/calc.js';
+
 app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location){
     this.span=1;
     this.karetkaDepth = 1;
@@ -12,13 +14,14 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     }
     if (this.myFactory.HIPname===undefined) this.myFactory.HIPname = 'Перевозчики';
     this.myFactory.scop = this;
+    if (!this.myFactory.calcObj.isInited) this.myFactory.calcObj = new Calculation(this.myFactory);
 
-    this.loadMatrix = function () {
+    this.loadMatrix = async function () {
         /**
          * Инициализация каретки
          */
         const param = this.karetkaTypes[this.myFactory.HIPname];
-        $http.post(`src/${param}`).then(function success (response) {
+        await $http.post(`src/${param}`).then(function success (response) {
             scope.currObj = [];
             let data = replaceSingleDepth(response.data);
             data = putDepth(data);
@@ -45,6 +48,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 scope.matrix.loadProcess(scope.myFactory.loadProcess.process, scope.myFactory.loadProcess.key);
                 delete scope.myFactory.loadProcess;
             }
+            scope.selectParam(0);
             /**
              * Функция для того, чтобы убрать лишнее заглубление, если поле содержит в себе только одно поле, то родителя не нужен
              * @param {Object} data
@@ -64,8 +68,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     changingData[+key].values = toPaste.values;
                     console.warn(`${toPaste.url} был заменен, так как в нем был только один параметр`);
                 }
-                // TODO: создана функция добавления параметра глубины и родителя для элементов
-                // можно переписать используя данные наработки
                 for (let key in toChangeLower) {
                         const type = toChangeLower[key].type;
                         const parent = changingData.find(field=>field.name&&field.model===type).values;
@@ -140,7 +142,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             }
         );
     }
-    this.loadMatrix('HIP.json');
     /**
      * меняем в парке значение для всех строк
      * @param {any} value значение, либо string либо number на которое нужно поменять
@@ -355,6 +356,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             case "saveCalc":
                 this.saveCalculation();
                 break;
+            case "resaveCalc":
+                if (!this.myFactory.calcObj.isSaved) break;
+                this.saveCalculation({resave:true});
+                break;
             case "polisProject":
                 this.makePolisProject();
                 break;
@@ -541,7 +546,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         }
         $timeout.cancel(timer);
         this.saveRes=12345;
-        const url = (string!=="HIP.json") ? string : `src/${this.karetkaTypes[this.myFactory.HIPname]}`;
+        const url = `src/${string}`;
         this.karetka.mode="listener";
         scope.myFactory.removeCellSelection('dashboard_container');
         $http.post(url).then(function success (response) {
@@ -636,11 +641,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             this.karetkaDepth = 1;
         }
         this.myFactory.document.currParam=index;
-        // $rootScope.search_result=[];
         if(index!==""){
             this.myFactory.keyCodes.number.length=this.currObj[this.myFactory.document.currParam].values.length+1;
             if(this.karetka.mode=="listener") this.karetka.mode="making new process";
         }
+        if (this.myFactory.matrixType==='Компания'||this.myFactory.matrixType==='calculationActions') $rootScope.search_result=[];
     };
     /**
      * Функция перехода выше по каретке в параметр родителя
@@ -1783,11 +1788,16 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         const menu = document.querySelector('.select_HIP .select_container');
         menu.classList.toggle('select--hidden');
     }
+    this.cleanCalcObj = () => {
+        this.myFactory.calcObj = new Calculation ();
+    }
     /**
      * сохраняем расчет в БД
      */
-    this.saveCalculation=function () {
-        if(this.nameOfCalculation=="" || this.nameOfCalculation===undefined) return false;
+    this.saveCalculation=function ({withoutNotify,withoutName,resave}={}) {
+        if(this.nameOfCalculation=="" || this.nameOfCalculation===undefined) {
+            if (!withoutName&&!resave) return false;
+        }
         let parks=[];
         myFactory.parks.forEach(function (park) {
             let newPark = {};
@@ -1823,8 +1833,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         }
         console.log(parks, multies);
         let save = {};
-        save.type = "addNewCalculationToDB";
-        save.name = this.nameOfCalculation;
         this.myFactory.calculationName = this.nameOfCalculation;
         try {
             save.parks = JSON.stringify(parks);
@@ -1848,13 +1856,83 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         save.totalAmount = myFactory.totalAmount;
         save.totalPrice = myFactory.totalPrice;
         save.HIPname = myFactory.HIPname;
-        $http.post("search.php", save).then(function success(response) {
-            alert("Успешно сохранено");
+        if (resave) {
+            save.type = "update_calc";
+            save.name = myFactory.calcObj.name;
+            save.id = myFactory.calcObj.id;
+        }
+        else {
+            save.type = "save_calc";
+            save.name = this.nameOfCalculation;
+        }
+        return $http.post("php/save.php", save).then(function success(response) {
+            if (isNaN(Number(response.data))) {
+                alert('Ошибка при сохранении расчета. Пожалуйста, по возможности не закрывайте окно и обратитесь к разработчику');
+                console.error(response.data);
+                return false;
+            }
+            if (resave) alert('Успешно пересохранено');
+            else {
+                if (!withoutNotify) alert("Успешно сохранено");
+                myFactory.calcObj.id = response.data;
+                myFactory.calcObj.isSaved = true;
+                myFactory.calcObj.name = myFactory.calculationName;
+            }
+
         }, function error(response) {
             console.log(response);
         }
         );
     };
+    /**
+     * Функция осуществления привязки расчета, доавблению этого объекта и перехода в Проект документа
+     * @param {*} id - id компании к которой привязываем
+     */
+    this.linkToCompany = async (id,FNloadCompany) => {
+        try{
+            await this.linkTo({'company_id':id});
+            await FNloadCompany(id,true);
+        }
+        catch (err) {
+            console.error(err);
+        }
+    }
+    /**
+     * Функция привязки текущего расчета к компании
+     * @param {object} - {type:id} пара к чему привязываем и айдишник
+     */
+    this.linkTo = async (params) => {
+        const calcObj = this.myFactory.calcObj;
+        this.nameOfCalculation = '';
+        await this.saveCalculation({withoutNotify:true,withoutName:true});
+        if (!calcObj.isSaved) {
+            alert ('Ошибка привязки расчета. Пожалуйста, по возможности не закрывайте это окно и братитесь к разработчику');
+            console.error('При привязке не удалось сохранить расчет');
+            return false;
+        }
+        const saveObj = {};
+        saveObj.calc_id = calcObj.id;
+        saveObj.company_id = '';
+        saveObj.contact_id = '';
+        saveObj.agent_id = '';
+        for (let toLink in params) {
+            saveObj[toLink] = params[toLink];
+        }
+        saveObj.type = 'link_calc';
+        return $http.post('php/save.php',saveObj).then(async (resp)=>{
+            if (isNaN(Number(resp.data))) {
+                alert('Ошибка привязки расчета. Пожалуйста, по возможности не закрывайте это окно и братитесь к разработчику'); 
+                console.error(resp.data);
+            } 
+            else {
+                alert('Расчет привязан');
+                await calcObj.loadLink();
+            }
+        },(err)=>{
+            console.error('Ошибка привязки расчета');
+        })
+
+    }
     function deepRemoveMulti(multi) {
         multi.processes.forEach(process => {
             if (process.constructor.name === "Process") delete process.multi;
@@ -1862,4 +1940,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         if (multi.parent) deepRemoveMulti(multi.parent);
         myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi), 1);
     }
+
+    this.loadMatrix('HIP.json');
 });

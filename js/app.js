@@ -24,7 +24,7 @@ app.config(function($routeProvider){//с помощью .config мы опред�
                         let data={};
                         data.login=cookies.login;
                         data.pwd=cookies.pwd;
-                        $http.post("authorization.php", data).then(function success (response) {
+                        $http.post("php/authorization.php", data).then(function success (response) {
                             if (response.data['loggin'] === true) {
                                 $rootScope.loggedIn = true;
                                 $location.path('/dashboard');
@@ -72,6 +72,11 @@ app.config(function($routeProvider){//с помощью .config мы опред�
         .when('/finance',{
             templateUrl: './templates/paths/finance/index.html',
             controller: 'financeCtrl'
+        })
+        .when('/profile',{
+            
+            templateUrl: '/templates/paths/profile/index.html',
+            controller: 'profileCtrl'
         })
         .otherwise({
             redirectTo: '/login'
@@ -246,6 +251,16 @@ app.directive('findCompany', function () {
     }
 
 });
+app.directive('searchCompany', function () {
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/calculation/search-company.html',
+        link: function(scope, elements, attrs, ctrl){
+
+        }
+    }
+
+});
 app.directive('findCalculation', function () {
     return{
         restrict: 'A',
@@ -258,7 +273,48 @@ app.directive('findCalculationView', function () {
         templateUrl: 'templates/views/find_calculation_view.html'
     }
 });
-
+app.directive('profileDashboard', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/profile/dashboard.html'
+    }
+});
+app.directive('profileHeader', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/profile/header.html'
+    }
+});
+app.directive('profileReturn', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/profile/return.html'
+    }
+})
+app.directive('profileMatrix', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/profile/matrix.html'
+    }
+});
+app.directive('profileNav', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/profile/navigation.html'
+    }
+});
+app.directive('profileCalcs', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/paths/profile/calcs-matrix.html'
+    }
+});
+app.directive('loading', function(){
+    return{
+        restrict: 'A',
+        templateUrl: 'templates/views/loading.html'
+    }
+})
 
 app.directive('ngRightClick', function($parse) {
     return function(scope, element, attrs) {
@@ -441,6 +497,8 @@ app.directive('currencyInput', function ($filter, myFactory) {
 
 app.factory('myFactory', function(){
     return{
+        calcObj: {},
+        companyObj: {},
         makingPolis: false,
         addNewPolisProperty:function(){
             this.polis.push({
@@ -1448,6 +1506,29 @@ app.factory('myFactory', function(){
             delete this.totalPrice;
             delete this.totalPriceForSingle;
             delete this.totalPriceWithoutPayments;
+        },
+        /**
+         * Запрос на получение данных из БД calculation_link
+         * @param {string} type - тип по которому искать в БД: 'calc_id','company_id' ...
+         * @param {string} id - id по которому искать в формате строки
+         */
+        async loadLinks(type,id) {
+            // проверка запроса
+            if ((typeof id)=== 'number') id = `${id}`;
+            if (type!=='calc_id'&&type!=='company_id'&&type!=='agent_id'&&type!=='contact_id'&&type!=='id') {
+                console.error(`Параметры функции неверны: ${type} должен быть calc_id, company_id ...`);
+                return undefined;
+            }
+            // формирование запроса
+            const fd = new FormData();
+            fd.append('type',type);
+            fd.append('id',id);
+            const req = new Request('php/get_link.php',{method:'POST',body:fd});
+            return fetch(req).then(async (resp)=>{
+              return resp = await resp.json();
+            },(err)=>{
+              console.error('Ошибка поиска привязки расчета')
+            })
         },
     }
 });

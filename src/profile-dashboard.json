@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Карточка компании",
+    "type": "company",
+    "values":[
+      {
+        "name":"Посмотреть",
+        "type":"inputSaveCalc",
+        "function":""
+      }
+    ]
+  },
+  {
+    "name": "Расчеты",
+    "type": "calcs",
+    "values":[
+      {
+        "name":"Посмотреть",
+        "type":"btn",
+        "function":""
+      }
+    ]
+  },
+  {
+    "name": "Полисы",
+    "type": "polises",
+    "values":[
+      {
+        "name":"Посмотреть",
+        "type":"btn",
+        "function":""
+      }
+    ]
+  },
+  {
+    "name": "Контакты",
+    "type": "contacts",
+    "values":[
+      {
+        "name":"Посмотреть",
+        "type":"btn",
+        "function":""
+      }
+    ]
+  },
+  {
+    "name": "Агенты",
+    "type": "agents",
+    "values":[
+      {
+        "name":"Посмотреть",
+        "type":"btn",
+        "function":""
+      }
+    ]
+  },
+  {
+    "name": "Группа компаний",
+    "type": "group",
+    "values":[
+      {
+        "name":"Посмотреть",
+        "type":"btn",
+        "function":""
+      }
+    ]
+  }
+]

@@ -1,7 +1,4 @@
 <?
-
-    //ini_set('display_errors',1);
-	//error_reporting(E_ALL);
 	header("Content-Type: text/html; charset=utf-8");
 	include_once('db_connect.php');
 
@@ -9,8 +6,8 @@
 	$value=$data['value'];
 	if($data['type']=="find_company" || $data['type']=="Компания"){
 	    $query="SELECT con.phone, com.id, com.name, ctx.LastName, ctx.FirstName, com.company_phone, addr.City, addr.Street ";
-	    $query.="FROM Connections as con ";
-	    $query.="LEFT JOIN Companies as com on con.company_id = com.id ";
+	    $query.="FROM ConnectionsCopy as con ";
+	    $query.="LEFT JOIN CompaniesCopy as com on con.company_id = com.id ";
 	    $query.="LEFT JOIN Contacts as ctx on con.contact_id = ctx.id ";
 	    $query.="LEFT JOIN addresses as addr on addr.id = com.Legal_address ";
 	    if($value['db']=='companies') $query.="WHERE LOWER(com.".$value['model'].") RLIKE LOWER('".$value['val']."')";
@@ -75,7 +72,7 @@
 
 	}
 	else if($data['type']=="find_calculation" || $data['type']=="Расчет"){
-	    $query="SELECT id, name, a_limit, total_price, amount, fact_premia, date FROM saved WHERE LOWER(".$value['model'].") RLIKE LOWER('".$value['val']."')";
+	    $query="SELECT id, name, a_limit, total_price, amount, fact_premia, date FROM savedCopy WHERE LOWER(".$value['model'].") RLIKE LOWER('".$value['val']."')";
         $result = mysqli_query($link, $query) or die(mysqli_error());
         $resultJson = array();
 
@@ -85,28 +82,17 @@
         echo json_encode($resultJson);
 	}
 	else if($data['type']=="load_calculation"){
-	    $query="SELECT * FROM saved WHERE id=".$data['id'];
+	    $query="SELECT * FROM savedCopy WHERE id=".$data['id'];
 	    $result = mysqli_query($link, $query) or die(mysqli_error());
 	    $row=mysqli_fetch_array($result, MYSQLI_ASSOC);
 	    echo json_encode($row);
     }
     else if ($data['type']=='load_company') {
-        $query="SELECT * FROM Companies WHERE id=".$data['id'];
+        $query="SELECT * FROM CompaniesCopy WHERE id=".$data['id'];
         $result = mysqli_query($link,$query) or die(mysqli_error());
         $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
         echo json_encode($row);
 
     }
-	else if($data["type"]=="delete_calculation"){
-        $id=$data['id'];
-        $query = "DELETE FROM saved WHERE id = '".$id."'";
-        $result = mysqli_query($link, $query) or die(mysqli_error());
-        if ($result) echo "Успешно удалено";
-    }
-	else if($data['type']=="addNewCalculationToDB"){
-        $date=date("Y-m-d");
-        $query = "INSERT INTO saved VALUES ('".$data['name']."', '123', '".$data['parks']."', '".$data['practicalPrice']."','".$data['payment']."', '".$data['agents']."', '".$date."','".$data['mass']."','','".$data['a_limit']."','".$data['a_limitType']."','".$data['totalAmount']."','".$data['totalPrice']."','','".$data['HIPname']."')";
 
-
-        $result = mysqli_query($link, $query) or die(mysqli_error());
-	}
+?>

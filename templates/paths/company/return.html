@@ -4,7 +4,12 @@
             <td style="color: rgb(146, 167, 205);">{{tooltip}}</td>
         </tr>
     </tbody>
-    <tbody ng-if="tooltip=='' && dashboard.myFactory.makingPolis==false">
+    <tbody ng-if="tooltip=='' && dashboard.myFactory.makingPolis==false && dashboard.myFactory.profileObj.store && dashboard.myFactory.companyObj.isSaved">
+        <tr>
+            <td ng-click="changeLocation('/profile')">Вернуться в карту клиента</td>
+        </tr>
+    </tbody>
+    <tbody ng-if="tooltip=='' && dashboard.myFactory.makingPolis==false && !dashboard.myFactory.profileObj.store">
         <tr>
             <td ng-click="changeLocation('/')">Вернуться в основное меню</td>
         </tr>

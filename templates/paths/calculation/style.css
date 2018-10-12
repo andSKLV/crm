@@ -24,7 +24,7 @@
 }
 .select_option {
   display: block;
-  margin: 0px 5px 0px 5px;
+  margin: 2px 5px 2px 5px;
   padding:1px;
   cursor: pointer;
 
@@ -47,7 +47,7 @@
   top: 29%;
 }
 #polis:hover::after{
-  top: 57%;
+  top: 52%;
 }
 #reload:hover::after{
   top: 76%;

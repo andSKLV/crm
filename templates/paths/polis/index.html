@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="templates/paths/polis/style.css">
-<div ng-controller="polisCtrl as polisCtrl" class="window-header"> Полис. Юр. лицо: {{polisCtrl.companyName || 'без названия'}}. Расчет: {{(polisCtrl.calculationName && polisCtrl.calculationName!=='')?polisCtrl.calculationName:'без названия'}}</div>
+<div ng-controller="polisCtrl as polisCtrl" class="window-header"> Проект документа. Компания: {{polisCtrl.myFactory.companyObj.name || 'не выбрана'}}. Расчет: {{(polisCtrl.calculationName && polisCtrl.calculationName!=='')?polisCtrl.calculationName:'без названия'}}
+  </div>
 <div class="dashboard_container" polis-dashboard></div>
 <div class="return" polis-return></div>
 <div class="matrix_container" polis-matrix></div>

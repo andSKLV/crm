@@ -1,0 +1,22 @@
+<div class='table-flex' >
+  <div class="row-flex">
+    <div class="btn-func_conatiner matrix-header" >
+    </div>
+    <div class="cell-flex matrix-header"><p>Дата</p></div> 
+    <div class="cell-flex matrix-header"><p>Лимит</p></div>
+    <div class="cell-flex matrix-header"><p>Кол-во машин</p></div>
+    <div class="cell-flex matrix-header"><p>Кол-во платежей</p></div>
+    <div class="cell-flex matrix-header"><p>Стоимость</div> 
+  </div>
+  <div class="row-flex" ng-repeat="calc in myFactory.profileObj.store.calculations track by $index" ng-controller="matrixCtrl as matrix" ng-click="matrix.loadCalculation(calc.id)">
+    <div class="btn-func_conatiner matrix-cell">
+      <div class="btn-func" ng-click="$event.stopPropagation();"><img src="/img/nav/document.png" alt=""></div>
+      <div class="btn-func" ng-click="$event.stopPropagation();"><img src="/img/nav/delete.png" alt=""></div>
+    </div>
+    <div class="cell-flex matrix-cell"><p>{{calc.date}}</p> </div>
+    <div class="cell-flex matrix-cell"><p>{{calc.a_limitType}} - {{calc.a_limit}}</p></div>
+    <div class="cell-flex matrix-cell"><p>{{calc.amount/24}}</p></div>
+    <div class="cell-flex matrix-cell"><p>{{calc.payment}}</p></div>
+    <div class="cell-flex matrix-cell"><p>{{calc.fact_premia | currency:'RUB '}}</p></div>
+  </div>
+</div>

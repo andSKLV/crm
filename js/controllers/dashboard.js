@@ -1,3 +1,5 @@
+import Company from "../protos/company";
+
 /**
  * Created by RoGGeR on 30.05.17.
  */
@@ -25,6 +27,7 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
                     break;
             }
         }
+        if (param.name==='Найти' && value.name==='Расчет' && this.myFactory.parks.length>0) return false; // убираем возможность поиска при существующем расчете
         if (param.name==="Найти") this.toggleMenu(true);// свертываем кнопку Вернуться
         const type=value.type;
         switch(type){
@@ -218,7 +221,7 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
     };
     this.config="dashboard.json";
 
-    $http.post("dashboard.json").then(function success (response) {//устанавливаем каретку управления и заполняем ее из файла dashboard.json
+    $http.post("src/dashboard.json").then(function success (response) {//устанавливаем каретку управления и заполняем ее из файла dashboard.json
         scope.currObj=response.data;
         scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
             return obj["name"]!=undefined;
@@ -237,11 +240,16 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
 
 
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
+        if (value.urlTo==='profile'&&!this.myFactory.companyObj.id) value.urlTo='company';
         $location.path(`/${value.urlTo}`);
     };
     this.clearDataFromPage = function (value) {
         if (value.urlTo==="calculation") this.myFactory.cleanCalculations(); // clear all old calculation info
-        if (value.urlTo==="company") delete this.myFactory.newClientCard; //clear all old company info
+        if (value.urlTo==="company") {
+            //clear all old company info
+            delete this.myFactory.newClientCard;
+            this.myFactory.companyObj = new Company();
+        }  
     } 
     this.relocateHere=function(url){//переход в углубление вверху каретки
         for(let i=0; i<scope.currObj.length;i++){

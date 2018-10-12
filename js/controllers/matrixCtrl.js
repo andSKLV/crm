@@ -1,6 +1,6 @@
-/**
- * Created by RoGGeR on 14.06.17.
- */
+import Calculation from '../protos/calc.js';
+import Company from "../protos/company.js";
+
 app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $location){
     let scope=this;
     /**
@@ -13,7 +13,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         let data={};
         data.type="delete_calculation";
         data.id=id;
-        $http.post("search.php", data).then(function success(response){
+        $http.post("php/save.php", data).then(function success(response){
             console.log(response, "success");
         },function error(response){
             console.log(response)
@@ -37,7 +37,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             data.id=id;
             let scope=this;
             myFactory.urlJSON="transortation_cals.json";
-            $http.post("search.php", data).then(async function success(response){
+            $http.post("php/search.php", data).then(async function success(response){
                 console.log(response.data);
                 myFactory.matrixType="HIP";
                 myFactory.parks=[];
@@ -346,6 +346,12 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                 }
                 myFactory.document.currParam="";
                 clearSearch();
+                // инициализируем calcObj и добавляем в него всю информацию
+                const calcObj = new Calculation();
+                calcObj.parseFromMyFactory(myFactory);
+                calcObj.parseFromResponse(response.data);
+                calcObj.markAsLoaded();
+                await calcObj.loadLink();
             },function error(response){
                 console.log(response)
             });
@@ -354,19 +360,30 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
 
 
     };
+    this.loadCompanyProfile = async function (id){
+        myFactory.companyObj.id = id;
+        $location.path('/profile');
+    }
     /**
      * Фукнция загрузки компании из БД в матрицу
      * @param {number} id - id компании
      */
-    this.loadCompany = function (id) {
+    this.loadCompany = function (id, noRelocation) {
         const data = {};
         data.type = 'load_company';
         data.id=id;
-        $http.post('search.php',data).then(async (resp)=>{
+        return $http.post('php/search.php', data).then(async (resp) => {
             const data = resp.data;
-            myFactory.newClientCard = generateClientCard (data);
-            myFactory.loadClient = 'Форма собственности';
-            $location.path('/company');
+            myFactory.newClientCard = generateClientCard(data);
+            const companyObj = new Company();
+            myFactory.companyObj = companyObj;
+            companyObj.parseFromCompaniesResponse(data) //создаем объект с  id  из ответа и сохраняем ответ внутри
+            companyObj.card = myFactory.newClientCard;
+            companyObj.markAsLoaded();
+            if (!noRelocation) {
+                myFactory.loadClient = 'Форма собственности'; //какую ячейку открыть при старте
+                $location.path('/company');
+            }
             clearSearch();
             /**
              *  Функция генерации объекта карточки клиента из данных из БД
@@ -380,14 +397,14 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                        "Форма организации": getOrgForm(data.OrganizationFormID),
                        "Наименование организации": data.name,
                        "Дата регистрации": getDate(data.registration_date),
-                       "Наименование рег. органа": data.who_registate,
+                       "Наименование рег. органа": data.who_registrate,
                      },
                      "Генеральный директор":
                      {
-                       "ФИО директора":"",
+                       "ФИО директора":data.director_name,
                        "Серия и номер паспорта":data.general_director_passport,
-                       "Когда выдан":"",
-                       "Кем выдан":"",
+                       "Когда выдан":getDate(data.give_date),
+                       "Кем выдан":data.director_authority,
                      },
                      "Реквизиты компании":
                      {
@@ -402,8 +419,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                        "к/счет":data.k_account,
                        "Банк":data.bank,
                        "БИК":data.bik,
-                     },
-                     "ID": data.id,
+                     }
                    }
             }
             /**
@@ -411,6 +427,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
              * @param {number} id 
              */
             function getOrgForm (id) {
+                if (id==='0') return '';
                 const forms = {
                     1: "ЗАО",
                     2: "ООО",

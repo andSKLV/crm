@@ -1,6 +1,11 @@
 @import url(https://fonts.googleapis.com/css?family=Tenor+Sans);
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,900);
 @import "../templates/paths/polis/style.css";
+@import "../templates/paths/calculation/style.css";
+@import "../templates/paths/company/style.css";
+@import "../templates/paths/main/style.css";
+@import "../templates/paths/finance/style.css";
+@import "../templates/paths/profile/style.css";
 
 :root {
     --blue: rgb(146, 167, 205);
@@ -35,10 +40,23 @@ div.mi_slider{
     margin: auto;
     height: auto; 
 }
+div.matrix_container{
+    margin-left: 45px;
+    margin-right: 0px;
+    width: auto;
+    height: auto;
+  }
 div.matrix_container.calc{
     overflow: auto;
     height: auto;
     max-height: 600px;
+    margin-left: 30px;
+}
+div.matrix_container:not(.calc){
+    height: calc(100vh - 280px);
+}
+#find_company_matrix td{
+    width: 25%;
 }
 .depth-symbol{
     font-size: 0.8em;
@@ -95,9 +113,7 @@ div.matrix_container.calc{
         margin-top: 72px;
     }
     div.matrix_container,  .clientCard{
-        width:1600px;
         font-size: 16pt;
-        height:800px;
     }
     div.matrix_container.calc{
         width:1770px;
@@ -162,15 +178,13 @@ div.matrix_container.calc{
         width:1150px;
     }
     div.matrix_container, .clientCard{
-
         font-size: 12pt;
-        height:560px
     }
     .matrix.bottom>tbody>tr>td,input[currency-input]{
         font-size: 14pt;
     }
     div.matrix_container.calc{
-        width:1340px;
+        width:1320px;
         font-size: 14pt;
 
     }
@@ -227,9 +241,7 @@ div.matrix_container.calc{
     }
 
     div.matrix_container, .clientCard{
-
         font-size: 12pt;
-        height:500px;
     }
     .matrix.bottom>tbody>tr>td,input[currency-input]{
         font-size: 14pt;
@@ -408,7 +420,7 @@ div#tooltip_box>table>tbody>tr>td:not(.tooltip_span){
 
 .matrix_container{
     overflow: auto;
-    margin-left: 30px;
+    margin-left: 45px;
 }
     .matrix_container::-webkit-scrollbar {
         width:2px;
@@ -473,7 +485,7 @@ select{
     text-align-last:center;
 }
 input[currency-input]:hover,input[currency-input]:focus{
-    color: rgb(53, 191, 255)!important;
+    color: var(--dark-blue)!important;
     background: white!important;
     border-top:2px solid var(--gray)!important;
 }
@@ -642,30 +654,30 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 /* moveFromRight */
 
 .mi_moveFromRight div {
-    -webkit-animation: moveFromRight 350ms ease-in-out both;
-    animation: moveFromRight 350ms ease-in-out both;
+    -webkit-animation: moveFromRight 150ms ease-in-out both;
+    animation: moveFromRight 150ms ease-in-out both;
 
 }
 
 /* moveFromLeft */
 
 .mi_moveFromLeft div {
-    -webkit-animation: moveFromLeft 350ms ease-in-out both;
-    animation: moveFromLeft 350ms ease-in-out both;
+    -webkit-animation: moveFromLeft 150ms ease-in-out both;
+    animation: moveFromLeft 150ms ease-in-out both;
 }
 
 /* moveToRight */
 
 .mi_moveToRight div {
-    -webkit-animation: moveToRight 350ms ease-in-out both;
-    animation: moveToRight 350ms ease-in-out both;
+    -webkit-animation: moveToRight 150ms ease-in-out both;
+    animation: moveToRight 150ms ease-in-out both;
 }
 
 /* moveToLeft */
 
 .mi_moveToLeft div {
-    -webkit-animation: moveToLeft 350ms ease-in-out both;
-    animation: moveToLeft 350ms ease-in-out both;
+    -webkit-animation: moveToLeft 150ms ease-in-out both;
+    animation: moveToLeft 150ms ease-in-out both;
 }
 
 /* Animation Delays */
@@ -698,10 +710,10 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 .mi_moveFromRight div:nth-child(4),
 .mi_moveToRight div:first-child,
 .mi_moveFromLeft div:first-child  {
-    -webkit-animation-delay: 270ms;
-    animation-delay: 270ms;
+    -webkit-animation-delay: 170ms;
+    animation-delay: 170ms;
 }
-.animation { transition: 0.5s; }
+.animation { transition: 0.2s; }
 
 .animation.ng-enter-stagger,
 .animation.ng-leave-stagger{
@@ -893,7 +905,7 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 }
 .nav-option {
     box-sizing: content-box;
-    border: 1px solid white;
+
 }
 .nav-icon {
     width: 32px;
@@ -901,6 +913,7 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     cursor: pointer;
     margin: 5px;
 }
+
 .window-header {
     display: table;
     margin: auto;
@@ -923,14 +936,137 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     z-index: 150;
     background-color: white;
     color: black;
-    font-size: 14px;
-    width: 150px;
     height: auto;
+    width: 75%;
+    font-size: 80%;
     border: 2px solid rgb(0, 111, 167);
     border-radius: 15px;
     padding: 2px 6px 2px 6px;
     font-weight: bold;
-    left: 20%;
+    left: 10%;
     top: 5%;
     text-align: center;
+}
+.matrix_results{
+    margin-right: 0px;
+    margin-left: 45px;
+}
+@keyframes move-to-left{
+    from{
+        transform: translateX(0%);
+    }
+    to{
+        transform: translateX(-101%);
+    }
+}
+@keyframes move-from-left{
+    from{
+        transform: translateX(-101%);
+    }
+    to{
+        transform: translateX(0%);
+    }
+}
+@keyframes move-to-right{
+    from{
+        transform: translateX(0%);
+    }
+    to{
+        transform: translateX(101%);
+    }
+}
+@keyframes move-from-right{
+    from{
+        transform: translateX(101%);
+    }
+    to{
+        transform: translateX(0%);
+    }
+}
+.ul_move_to_left{
+    animation-name: move-to-left;
+    animation-duration: 250ms;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+}
+.ul_move_from_left{
+    animation-delay: 150ms;
+    animation-name: move-from-left;
+    animation-duration: 250ms;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+}
+.ul_move_to_right{
+    animation-name: move-to-right;
+    animation-duration: 250ms;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+}
+.ul_move_from_right{
+    animation-delay: 150ms;
+    animation-name: move-from-right;
+    animation-duration: 250ms;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+}
+.table-flex{
+    display: flex;
+    flex-direction: column;
+}
+.row-flex{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+}
+div.matrix-header{
+    background-color: var(--blue);
+    color: white;
+    text-align: center;
+    border: 1px solid white;
+}
+#loading_modal{
+    display: none;
+}
+.loading_container{
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    background-color: black;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.3;
+}
+.loading_box{
+    width: 40%;
+    height: 20%;
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    background-color: white;
+    z-index: 1001;
+    opacity: 1;
+    padding: 20px;
+    border-radius: 20px;
+    border: 2px solid var(--dark-blue);
+}
+.matrix-cell{
+    background-color: var(--gray);
+    text-align: center;
+    border: 1px solid white;
+    cursor: pointer;
+}
+.btn-func{
+    /* height: 30px; */
+    border-bottom: 1px solid white;
+    border-top: 1px solid white;
+}
+.btn-func p {
+    margin: 0px;
+    color: var(--dark-blue);
+}
+.btn-func img {
+    height: 20px;
+    width: 20px;
+    margin: 3px;
 }
