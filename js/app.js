@@ -47,19 +47,19 @@ app.config(function($routeProvider){//с помощью .config мы опред�
         })
         .when('/company',{
 
-            templateUrl: 'templates/paths/company/index.html',
+            templateUrl: './templates/paths/company/index.html',
             controller: 'companyCtrl'
 
         })
         .when('/polis',{
 
-            templateUrl: 'templates/paths/polis/index.html',
+            templateUrl: './templates/paths/polis/index.html',
             controller: 'polisCtrl as polisCtrl'
 
         })
         .when('/calculation',{
 
-            templateUrl: 'templates/paths/calculation/index.html',
+            templateUrl: './templates/paths/calculation/index.html',
             controller: 'calculationCtrl as calculation'
 
         })
@@ -75,7 +75,7 @@ app.config(function($routeProvider){//с помощью .config мы опред�
         })
         .when('/profile',{
             
-            templateUrl: '/templates/paths/profile/index.html',
+            templateUrl: './templates/paths/profile/index.html',
             controller: 'profileCtrl'
         })
         .otherwise({
@@ -85,43 +85,43 @@ app.config(function($routeProvider){//с помощью .config мы опред�
 app.directive('financeDashboard', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/finance/dashboard.html'
+        templateUrl: './templates/paths/finance/dashboard.html'
     };
 });
 app.directive('financeMatrix', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/finance/matrix.html'
+        templateUrl: './templates/paths/finance/matrix.html'
     };
 });
 app.directive('financeReturn', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/finance/return.html'
+        templateUrl: './templates/paths/finance/return.html'
     };
 });
 app.directive('financeView', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/views/finance.view.html'
+        templateUrl: './templates/views/finance.view.html'
     }
 })
 app.directive('polisEditorReturn', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/polisEditor/return.html'
+        templateUrl: './templates/paths/polisEditor/return.html'
     };
 });
 app.directive('polisEditorDashboard', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/polisEditor/dashboard.html'
+        templateUrl: './templates/paths/polisEditor/dashboard.html'
     };
 });
 app.directive('polisEditorMatrix', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/polisEditor/matrix.html'
+        templateUrl: './templates/paths/polisEditor/matrix.html'
     };
 });
 app.directive('addition', function(){
@@ -130,121 +130,121 @@ app.directive('addition', function(){
        addition: "="
      },
      restrict: 'A',
-     templateUrl: 'templates/views/addition.view.html'
+     templateUrl: './templates/views/addition.view.html'
     };
  });
 app.directive('companyView', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/views/company.view.html'
+        templateUrl: './templates/views/company.view.html'
     };
 });
 app.directive('calculationBottomView', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/calculation/bottom.view.html'
+        templateUrl: './templates/paths/calculation/bottom.view.html'
     }
 });
 app.directive('calculationBottom', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/calculation/bottom.html'
+        templateUrl: './templates/paths/calculation/bottom.html'
     }
 });
 app.directive('calculationMatrix', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/calculation/matrix.html'
+        templateUrl: './templates/paths/calculation/matrix.html'
     }
 });
 app.directive('calculationReturn', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/calculation/return.html'
+        templateUrl: './templates/paths/calculation/return.html'
     };
 });
 app.directive('calculationNav', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/calculation/navigation.html'
+        templateUrl: './templates/paths/calculation/navigation.html'
     };
 });
 app.directive('calculationDashboard', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/calculation/dashboard.html'
+        templateUrl: './templates/paths/calculation/dashboard.html'
     };
 });
 app.directive('calculationView', function () {
     return{
         restrict: 'A',
-        templateUrl: 'templates/views/calculation.view.html'
+        templateUrl: './templates/views/calculation.view.html'
     }
 });
 app.directive('polisDashboard', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/polis/dashboard.html'
+        templateUrl: './templates/paths/polis/dashboard.html'
     };
 });
 app.directive('polisMatrix', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/polis/matrix.html'
+        templateUrl: './templates/paths/polis/matrix.html'
     };
 });
 app.directive('polisReturn', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/polis/return.html'
+        templateUrl: './templates/paths/polis/return.html'
     };
 });
 app.directive('companyDashboard', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/company/dashboard.html'
+        templateUrl: './templates/paths/company/dashboard.html'
     };
 });
 app.directive('companyReturn', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/company/return.html'
+        templateUrl: './templates/paths/company/return.html'
     };
 });
 app.directive('companyMatrix', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/company/matrix.html'
+        templateUrl: './templates/paths/company/matrix.html'
     };
 });
 app.directive('companyNav', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/company/navigation.html'
+        templateUrl: './templates/paths/company/navigation.html'
     };
 });
 app.directive('karetka', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/dashboards/karetka.html'
+        templateUrl: './templates/dashboards/karetka.html'
     };
 });
 app.directive('return', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/main/return.html'
+        templateUrl: './templates/paths/main/return.html'
     };
 });
 app.directive('mainNav', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/main/navigation.html'
+        templateUrl: './templates/paths/main/navigation.html'
     };
 });
 app.directive('findCompany', function () {
     return{
         restrict: 'A',
-        templateUrl: 'templates/matrix/find_company.html',
+        templateUrl: './templates/matrix/find_company.html',
         link: function(scope, elements, attrs, ctrl){
 
         }
@@ -254,7 +254,7 @@ app.directive('findCompany', function () {
 app.directive('searchCompany', function () {
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/calculation/search-company.html',
+        templateUrl: './templates/paths/calculation/search-company.html',
         link: function(scope, elements, attrs, ctrl){
 
         }
@@ -264,55 +264,55 @@ app.directive('searchCompany', function () {
 app.directive('findCalculation', function () {
     return{
         restrict: 'A',
-        templateUrl: 'templates/matrix/find_calculation.html'
+        templateUrl: './templates/matrix/find_calculation.html'
     }
 });
 app.directive('findCalculationView', function () {
     return{
         restrict: 'A',
-        templateUrl: 'templates/views/find_calculation_view.html'
+        templateUrl: './templates/views/find_calculation_view.html'
     }
 });
 app.directive('profileDashboard', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/profile/dashboard.html'
+        templateUrl: './templates/paths/profile/dashboard.html'
     }
 });
 app.directive('profileHeader', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/profile/header.html'
+        templateUrl: './templates/paths/profile/header.html'
     }
 });
 app.directive('profileReturn', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/profile/return.html'
+        templateUrl: './templates/paths/profile/return.html'
     }
 })
 app.directive('profileMatrix', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/profile/matrix.html'
+        templateUrl: './templates/paths/profile/matrix.html'
     }
 });
 app.directive('profileNav', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/profile/navigation.html'
+        templateUrl: './templates/paths/profile/navigation.html'
     }
 });
 app.directive('profileCalcs', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/paths/profile/calcs-matrix.html'
+        templateUrl: './templates/paths/profile/calcs-matrix.html'
     }
 });
 app.directive('loading', function(){
     return{
         restrict: 'A',
-        templateUrl: 'templates/views/loading.html'
+        templateUrl: './templates/views/loading.html'
     }
 })
 

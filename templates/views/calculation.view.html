@@ -4,7 +4,7 @@
             <tr>
                 <td ng-repeat="(key,value) in process track by $index" ng-if="calculation.checkTransportProp(key)!=-1" ng-click="loadProcess(process, key)">
                    {{key=="wrapping" || key=="risk" ? value : calculation.applyFilter(value, key) }}
-                   <span ng-if="key=='amount'" class="gearwheel"><img src="img/gearwheel.png" alt="" ng-click="clicking($event, process)"></span>
+                   <span ng-if="key=='amount'" class="gearwheel"><img src="./img/gearwheel.png" alt="" ng-click="clicking($event, process)"></span>
                </td>
             </tr>
         </table>

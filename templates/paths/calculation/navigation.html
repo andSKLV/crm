@@ -1,30 +1,30 @@
 <div class="nav-container">
     <div class="nav-option hover-hint" id="home" data-name="Главное меню" ng-click="calculation.relocatePage('dashboard')">
-        <img class="nav-icon" src="img/nav/home.png" alt="Главное меню">
+        <img class="nav-icon" src="./img/nav/home.png" alt="Главное меню">
     </div>
     <div class="nav-option">
         <div class="select_HIP" ng-click="calculation.toogleMenu()" ng-if="calculation.myFactory.parks.length===0">
             <div class="hover-hint" id="karetka" data-name="Тип каретки">
-                <img ng-src="img/{{(calculation.myFactory.HIPname==='Перевозчики')?'truck.png':'call-center.png'}}" alt="" class="nav-icon hover-hint" title="Тип каретки">
+                <img ng-src="./img/{{(calculation.myFactory.HIPname==='Перевозчики')?'truck.png':'call-center.png'}}" alt="" class="nav-icon hover-hint" title="Тип каретки">
             </div>
             
             <div class="select_container select--hidden"> 
                 <div class="select_option hover-hint" id="truck" data-name="Перевозчики" ng-click="calculation.setHIP('Перевозчики')">
-                    <img src="img/truck.png" alt="">
+                    <img src="./img/truck.png" alt="">
                 </div>
                 <div class="select_option hover-hint" id="call-center" data-name="Экспедиторы" ng-click="calculation.setHIP('Экспедиторы')">
-                    <img src="img/call-center.png" alt="">
+                    <img src="./img/call-center.png" alt="">
                 </div>
             </div>
         </div>
     </div>
     <div class="nav-option hover-hint" id="save" data-name="Сохранение и привязка" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.reloadDashboard('calculationActions.json','calculationActions')">
-        <img class="nav-icon" src="img/nav/save.png" alt="">
+        <img class="nav-icon" src="./img/nav/save.png" alt="">
     </div>
     <div class="nav-option hover-hint" id="polis" data-name="Проект документа" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.relocatePage('polis')">
-        <img class="nav-icon" src="img/nav/document.png" alt="">
+        <img class="nav-icon" src="./img/nav/document.png" alt="">
     </div>
     <div class="nav-option hover-hint" id="reload" data-name="Очистить расчет" ng-if="calculation.myFactory.parks.length!==0" ng-click="calculation.myFactory.cleanCalculations();calculation.cleanCalcObj();calculation.reloadDashboard('HIP.json','HIP');">
-        <img class="nav-icon" src="img/nav/reload.png" alt="">
+        <img class="nav-icon" src="./img/nav/reload.png" alt="">
     </div>
 </div>

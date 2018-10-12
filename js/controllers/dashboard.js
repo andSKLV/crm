@@ -1,4 +1,4 @@
-import Company from "../protos/company";
+import Company from "../protos/company.js";
 
 /**
  * Created by RoGGeR on 30.05.17.
