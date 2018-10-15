@@ -112,6 +112,11 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
     }
 
     $scope.changeLocation = (value) => {
+        debugger;
+        $scope.myFactory.cameFrom = {
+            name: 'Проект документа',
+            path: $location.$$path,
+        };
         switch(value){
             case "Компания":
                 $location.path(`/company`);

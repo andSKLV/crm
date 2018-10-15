@@ -497,6 +497,10 @@ app.directive('currencyInput', function ($filter, myFactory) {
 
 app.factory('myFactory', function(){
     return{
+        cameFrom: {
+            name: null,
+            path: null,
+        },
         calcObj: {},
         companyObj: {},
         makingPolis: false,

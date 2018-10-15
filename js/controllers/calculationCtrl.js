@@ -583,6 +583,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         );
     };
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
+        this.myFactory.cameFrom = {
+            name: 'Расчет',
+            path: $location.$$path,
+        };
         value = (value==="dashboard") ? "" : value;
         $location.path(`/${value}`);
     };
