@@ -48,7 +48,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 scope.matrix.loadProcess(scope.myFactory.loadProcess.process, scope.myFactory.loadProcess.key);
                 delete scope.myFactory.loadProcess;
             }
-            scope.selectParam(0);
             /**
              * Функция для того, чтобы убрать лишнее заглубление, если поле содержит в себе только одно поле, то родителя не нужен
              * @param {Object} data

@@ -4,17 +4,22 @@
             <td style="color: rgb(146, 167, 205);">{{tooltip}}</td>
         </tr>
     </tbody>
-    <tbody ng-if="tooltip=='' && dashboard.myFactory.makingPolis==false && dashboard.myFactory.profileObj.store && dashboard.myFactory.companyObj.isSaved">
+    <tbody ng-if="tooltip==''&& (dashboard.myFactory.cameFrom.name==='Расчет') ">
+        <tr>
+            <td ng-click="changeLocation('/calculation')">Вернуться в Расчет</td>
+        </tr>
+    </tbody>
+    <tbody ng-if="tooltip==''&& (dashboard.myFactory.cameFrom.name!=='Расчет')  && dashboard.myFactory.makingPolis==false && dashboard.myFactory.profileObj.store && dashboard.myFactory.companyObj.isSaved">
         <tr>
             <td ng-click="changeLocation('/profile')">Вернуться в карту клиента</td>
         </tr>
     </tbody>
-    <tbody ng-if="tooltip=='' && dashboard.myFactory.makingPolis==false && !dashboard.myFactory.profileObj.store">
+    <tbody ng-if="tooltip==''&& (dashboard.myFactory.cameFrom.name!=='Расчет') && dashboard.myFactory.makingPolis==false && !dashboard.myFactory.profileObj.store">
         <tr>
             <td ng-click="changeLocation('/')">Вернуться в основное меню</td>
         </tr>
     </tbody>
-    <tbody ng-if="tooltip=='' && dashboard.myFactory.makingPolis==true">
+    <tbody ng-if="tooltip==''&& (dashboard.myFactory.cameFrom.name!=='Расчет') && dashboard.myFactory.makingPolis==true">
         <tr>
             <td ng-click="changeLocation('/polis')">Вернуться в Полис</td>
         </tr>
