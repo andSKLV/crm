@@ -8,14 +8,9 @@
         "model":"dashboard.nameOfCalculation"
       },
       {
-        "name":"Сохранить как новый",
-        "type":"saveCalc",
-        "function": "saveCalc"
-      },
-      {
-        "name":"Пересохранить загруженный",
-        "type":"resaveCalc",
-        "function": "resaveCalc"
+        "name":"Заменить расчет",
+        "type": "relocate_here",
+        "urlTo": "Заменить расчет"
       }
     ]
   },
@@ -43,7 +38,7 @@
         "model":"dashboard.nameOfCompany"
       },
       {
-        "name":"Создать/Перейти в редактор",
+        "name":"Создать",
         "type":"relocatePage",
         "urlTo": "company"
       }
@@ -83,5 +78,15 @@
       }
     ]
 
+  },
+  {
+    "url": "Заменить расчет",
+    "values":[
+      {
+        "name":"Введите название расчета для поиска",
+        "type":"inputSaveCalc",
+        "model":"dashboard.nameOfCalculation"
+      }
+    ]
   }
 ]
