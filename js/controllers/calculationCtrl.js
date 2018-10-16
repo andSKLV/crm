@@ -364,6 +364,29 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 break;
         }
     };
+    this.keyHandler = (e) => {
+        const saveCalc = (e) => {
+            if (!(e.code==='Enter'|| e.code===13)) return false;
+            const value = e.currentTarget.value.trim();
+            if (value===''||!value||value===' ') return false;
+            //если расчет еще не сохранен то просто сохранить
+            if (!this.myFactory.calcObj.isSaved) {
+                this.saveCalculation()
+            }
+            //если расчет сохранен, то либо пересохраняем, если имя в инпуте то же, либо сохраняем под новым
+            else {
+                if (this.myFactory.calcObj.name===value) this.saveCalculation({resave:true}); // пересохраняем старый
+                else this.saveCalculation();//сохраняем как новый
+            }
+        }
+        const input = e.currentTarget.id;
+        if (!input) return false;
+        switch (input){
+            case 'inputSaveCalc':
+                saveCalc(e);
+                break;
+        }  
+    }
     /**
      * для вывода подсказок
      */

@@ -15,7 +15,7 @@
                 <input ng-if="value.type == 'input_search'" ng-focus="calculation.myFactory.foc=false" ng-blur="calculation.myFactory.foc=true" name="value.model" ng-model="value.val" ng-controller="searchCtrl as searchCtrl" ng-change="searchCtrl.makeSearch(param)" type="text" placeholder="{{value.type=='inputForCurrency' ? 'Точное число' : value.name}}">
                 <input id="inputSaveCalc" ng-if="value.type == 'inputSaveCalc'" ng-focus="calculation.myFactory.foc=false" ng-blur="calculation.myFactory.foc=true" type="text" 
                 ng-model="calculation.nameOfCalculation" ng-controller="searchCtrl as searchCtrl" 
-                placeholder="{{value.name}}" style="color: rgb(0, 111, 167);">
+                placeholder="{{value.name}}" style="color: rgb(0, 111, 167);" ng-keypress="calculation.keyHandler($event)">
                 <input ng-if="value.type == 'inputResaveCalc'" ng-focus="calculation.myFactory.foc=false" ng-blur="calculation.myFactory.foc=true" type="text" 
                 ng-model="calculation.nameOfCalculation" ng-controller="searchCtrl as searchCtrl" 
                 placeholder="{{value.name}}" style="color: rgb(0, 111, 167);">

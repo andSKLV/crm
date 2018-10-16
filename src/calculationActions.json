@@ -8,7 +8,7 @@
         "model":"dashboard.nameOfCalculation"
       },
       {
-        "name":"Заменить расчет",
+        "name":"Заменить другой расчет",
         "type": "relocate_here",
         "urlTo": "Заменить расчет"
       }
