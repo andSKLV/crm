@@ -568,14 +568,15 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
 
             }
 
-            scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
-                return obj["name"]!=undefined;
-            }).length;
-            scope.navStyle="width:"+100/scope.currObj.length+"%;";
-
+            // scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
+            //     return obj["name"]!=undefined;
+            // }).length;
             scope.config=string;
-
             if(typeof type !="undefined") scope.myFactory.matrixType=type;
+            // если в меню сохранения расчета и расчет сохранен то заполняем импут его именем 
+            if (scope.myFactory.matrixType==='calculationActions' && scope.myFactory.document.currParam ===0 && scope.myFactory.document.selectedParam===0) {
+                setTimeout(()=>putNameInInput(scope.myFactory),0);
+            }
             },function error (response){
                 console.log(response);
             }
@@ -649,7 +650,16 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             if(this.karetka.mode=="listener") this.karetka.mode="making new process";
         }
         if (this.myFactory.matrixType==='Компания'||this.myFactory.matrixType==='calculationActions') $rootScope.search_result=[];
+        // если в меню сохранения расчета и расчет сохранен то заполняем импут его именем 
+        if (this.myFactory.matrixType==='calculationActions' && this.myFactory.document.currParam ===0 && myFactory.document.selectedParam===0) {
+            putNameInInput(this.myFactory);
+        }
     };
+    function putNameInInput (mf) {
+        if (mf.calcObj.isSaved && mf.calcObj.name.length>1) {
+            document.querySelector('#inputSaveCalc').value = mf.calcObj.name;
+        }
+    }
     /**
      * Функция перехода выше по каретке в параметр родителя
      * @param {number} index 

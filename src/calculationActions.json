@@ -84,7 +84,7 @@
     "values":[
       {
         "name":"Введите название расчета для поиска",
-        "type":"inputSaveCalc",
+        "type":"inputResaveCalc",
         "model":"dashboard.nameOfCalculation"
       }
     ]
