@@ -1,4 +1,4 @@
-<tr ng-class="{matrix_row: !dashboard.row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index">
+<tr ng-if="dashboard.myFactory.matrixType!=='calculationActions'" ng-class="{matrix_row: !dashboard.row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index">
     <td class="properties btns" width="20px" ng-if="process.multi===undefined || process.multi.show || process.multi=='deleted'">
         <input type="button" class="btnCopy"  ng-click="matrixCtrl.loadCalculation(row.id);" value="+">
         <input type="button" class="btnDelete" ng-click="matrixCtrl.deleteCalculation(row);" value="-">
@@ -9,4 +9,18 @@
     <td class="properties" ng-click="matrixCtrl.loadCalculation(row.id);" ng-if="row.fact_premia===undefined">{{row.total_price | currency:'RUB '}}</td>
     <td class="properties red"  ng-click="matrixCtrl.loadCalculation(row.id);" ng-if="row.fact_premia!==undefined">{{row.fact_premia | currency:'RUB '}}</td>
     <td class="properties" ng-click="matrixCtrl.loadCalculation(row.id);">{{row.date}}</td>
+</tr>
+
+<!-- в случае если мы в меню "расчет-> сохранить-> заменить старый расчет->" -->
+<tr ng-if="dashboard.myFactory.matrixType==='calculationActions'" ng-class="{matrix_row: !dashboard.row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index">
+    <td class="properties btns" width="20px" ng-if="process.multi===undefined || process.multi.show || process.multi=='deleted'">
+        <input type="button" class="btnCopy" value="+">
+        <input type="button" class="btnDelete" ng-click="matrixCtrl.deleteCalculation(row);" value="-">
+
+    </td>
+    <td class="properties" ng-click="matrixCtrl.updateCalculation(row.id,row.name);">{{row.name}}</td>
+    <td class="properties" ng-click="matrixCtrl.updateCalculation(row.id,row.name);">{{row.a_limit | currency:'RUB '}}</td>
+    <td class="properties" ng-click="matrixCtrl.updateCalculation(row.id,row.name);" ng-if="row.fact_premia===undefined">{{row.total_price | currency:'RUB '}}</td>
+    <td class="properties red"  ng-click="matrixCtrl.updateCalculation(row.id,row.name);" ng-if="row.fact_premia!==undefined">{{row.fact_premia | currency:'RUB '}}</td>
+    <td class="properties" ng-click="matrixCtrl.updateCalculation(row.id,row.name);">{{row.date}}</td>
 </tr>

@@ -16,9 +16,20 @@
                 <input id="inputSaveCalc" ng-if="value.type == 'inputSaveCalc'" ng-focus="calculation.myFactory.foc=false" ng-blur="calculation.myFactory.foc=true" type="text" 
                 ng-model="calculation.nameOfCalculation" ng-controller="searchCtrl as searchCtrl" 
                 placeholder="{{value.name}}" style="color: rgb(0, 111, 167);" ng-keypress="calculation.keyHandler($event)">
+                
                 <input ng-if="value.type == 'inputResaveCalc'" ng-focus="calculation.myFactory.foc=false" ng-blur="calculation.myFactory.foc=true" type="text" 
-                ng-model="calculation.nameOfCalculation" ng-controller="searchCtrl as searchCtrl" 
-                placeholder="{{value.name}}" style="color: rgb(0, 111, 167);">
+                ng-model="searchInput" ng-controller="searchCtrl as searchCtrl" 
+                placeholder="{{value.name}}" style="color: rgb(0, 111, 167);" ng-change="searchInput.length>1 ?searchCtrl.makeSearch({
+                    url:'calculationActions',
+                    values:[
+                        {
+                            model: 'name',
+                            name: 'Название',
+                            val: searchInput
+                        }
+                    ]
+                }) : false">
+
                 <input ng-if="value.type == 'inputCompany'" type="text" 
                 ng-model="calculation.nameOfCompany" ng-controller="searchCtrl as searchCtrl" 
                 ng-change="calculation.nameOfCompany.length>=1 ? 
