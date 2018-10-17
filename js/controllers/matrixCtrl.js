@@ -41,6 +41,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             let scope=this;
             myFactory.urlJSON="transortation_cals.json";
             $http.post("php/search.php", data).then(async function success(response){
+                console.log('response from DB:')
                 console.log(response.data);
                 myFactory.matrixType="HIP";
                 myFactory.parks=[];
@@ -520,7 +521,6 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                 console.error(response.data);
                 return false;
             }
-            debugger;
             const calcObj = new Calculation(myFactory);
             calcObj.parseFromResponse (save);
             calcObj.isSaved = true;

@@ -188,7 +188,7 @@ function SplineKoeff(index, mass)
  */
 function Spline(U, mass, index){
     if (isNaN(U) || U===undefined){
-        console.log("Ошибка в вычислениях, необходимо обратиться к разработчику");
+        console.error("Ошибка в вычислениях, необходимо обратиться к разработчику");
         return 1;
     }
     if (U>mass[mass.length-1][0]) {

@@ -606,7 +606,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 setTimeout(()=>putNameInInput(scope.myFactory),0);
             }
             },function error (response){
-                console.log(response);
+                console.error(response);
             }
         );
     };

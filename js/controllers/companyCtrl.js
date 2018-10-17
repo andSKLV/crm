@@ -391,7 +391,6 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
                 }
             }
             return changed;
-            debugger;
         }
     }
     function generateSaveCompanyObj(card) {

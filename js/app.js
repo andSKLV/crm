@@ -928,7 +928,6 @@ app.factory('myFactory', function(){
                 this.parks.forEach(function(park){
                     park.processes.forEach(function(process){
                         process.practicalPriceKoef=myFactory.practicalPrice.koef;
-                        console.log(process);
                     })
                 })
             }

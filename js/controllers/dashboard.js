@@ -6,7 +6,6 @@ import Company from "../protos/company.js";
 
 "use strict";
 app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location){
-    console.log(this);
     this.span=1;
     this.myFactory=myFactory;
     let scope=this;
