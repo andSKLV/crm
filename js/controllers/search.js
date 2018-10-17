@@ -96,6 +96,7 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
         scope.abort = $q.defer();
         let flag=this.isEmptyQuery(values);
         data.value=flag;
+        if (!flag) return false;
         scope.template.txt=flag.val;
         scope.template.model=flag.model;
         return $http.post("php/search.php", data,{timeout:scope.abort.promise}).then(function success (response) {
