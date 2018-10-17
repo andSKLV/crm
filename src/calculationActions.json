@@ -83,7 +83,7 @@
     "url": "Заменить другой расчет",
     "values":[
       {
-        "name":"Введите название расчета для поиска",
+        "name":"Введите название для поиска расчета, который будет заменен",
         "type":"inputResaveCalc",
         "model":"dashboard.nameOfCalculation"
       }

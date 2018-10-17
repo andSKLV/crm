@@ -1,4 +1,5 @@
 import Calculation from '../protos/calc.js';
+import Loading from '../protos/loading.js';
 
 app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location){
     this.span=1;
@@ -22,6 +23,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
          */
         const param = this.karetkaTypes[this.myFactory.HIPname];
         await $http.post(`./src/${param}`).then(function success (response) {
+            if (myFactory.isLoading) {
+                const loading = new Loading (true);
+                myFactory.isLoading = loading;
+            }
             scope.currObj = [];
             let data = replaceSingleDepth(response.data);
             data = putDepth(data);

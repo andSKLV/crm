@@ -1,5 +1,6 @@
 import Calculation from '../protos/calc.js';
 import Company from "../protos/company.js";
+import Loading from '../protos/loading.js';
 
 app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $location){
     let scope=this;
@@ -32,6 +33,8 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             if($location.path!=="/calculation"){
                 $location.path('/calculation');
             }
+            const loading = new Loading(true);
+            myFactory.isLoading = loading;
             let data ={};
             data.type="load_calculation";
             data.id=id;
@@ -352,13 +355,12 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                 calcObj.parseFromResponse(response.data);
                 calcObj.markAsLoaded();
                 await calcObj.loadLink();
+                myFactory.isLoading.hide();
+                delete myFactory.isLoading;
             },function error(response){
                 console.log(response)
             });
         }, 0);
-
-
-
     };
     this.loadCompanyProfile = async function (id){
         myFactory.companyObj.id = id;
