@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="./templates/paths/calculation/style.css">
-<div class="window-header">{{(dashboard.myFactory.matrixType!='HIP'&&(dashboard.myFactory.document.selectedParam==1||dashboard.myFactory.document.selectedParam==2))? 'Привязать ':''}}Расчет:   {{(calculation.myFactory.calculationName===undefined || calculation.myFactory.calculationName==="")? "без названия" : calculation.myFactory.calculationName}}</div>
+<div id="loading_modal" loading></div>
+<div class="window-header">{{(dashboard.myFactory.matrixType!='HIP'&&(dashboard.myFactory.document.selectedParam==1||dashboard.myFactory.document.selectedParam==2))? 'Привязать ':''}} Расчет:  {{(calculation.myFactory.calculationName===undefined || calculation.myFactory.calculationName==="")? (calculation.myFactory.calcObj.isLinked) ? 'привязанный' : "без названия" : calculation.myFactory.calculationName}}</div>
 <div ng-model="dashboard.myFactory.multi.mode" 
     ng-if="dashboard.myFactory.matrixType=='HIP'" 
     ng-click="calculation.multiClicked()" 
