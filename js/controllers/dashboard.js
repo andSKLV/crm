@@ -6,7 +6,6 @@ import Company from "../protos/company.js";
 
 "use strict";
 app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location){
-    console.log(this);
     this.span=1;
     this.myFactory=myFactory;
     let scope=this;
@@ -240,6 +239,10 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
 
 
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
+        this.myFactory.cameFrom = {
+            name: 'Главное меню',
+            path: $location.$$path,
+        };
         if (value.urlTo==='profile'&&!this.myFactory.companyObj.id) value.urlTo='company';
         $location.path(`/${value.urlTo}`);
     };

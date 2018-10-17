@@ -1,4 +1,5 @@
 import Calculation from '../protos/calc.js';
+import Loading from '../protos/loading.js';
 
 app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location){
     this.span=1;
@@ -22,6 +23,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
          */
         const param = this.karetkaTypes[this.myFactory.HIPname];
         await $http.post(`./src/${param}`).then(function success (response) {
+            if (myFactory.isLoading) {
+                const loading = new Loading (true);
+                myFactory.isLoading = loading;
+            }
             scope.currObj = [];
             let data = replaceSingleDepth(response.data);
             data = putDepth(data);
@@ -48,7 +53,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 scope.matrix.loadProcess(scope.myFactory.loadProcess.process, scope.myFactory.loadProcess.key);
                 delete scope.myFactory.loadProcess;
             }
-            scope.selectParam(0);
             /**
              * Функция для того, чтобы убрать лишнее заглубление, если поле содержит в себе только одно поле, то родителя не нужен
              * @param {Object} data
@@ -365,6 +369,29 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 break;
         }
     };
+    this.keyHandler = (e) => {
+        const saveCalc = (e) => {
+            if (!(e.code==='Enter'|| e.code===13)) return false;
+            const value = e.currentTarget.value.trim();
+            if (value===''||!value||value===' ') return false;
+            //если расчет еще не сохранен то просто сохранить
+            if (!this.myFactory.calcObj.isSaved) {
+                this.saveCalculation()
+            }
+            //если расчет сохранен, то либо пересохраняем, если имя в инпуте то же, либо сохраняем под новым
+            else {
+                if (this.myFactory.calcObj.name===value) this.saveCalculation({resave:true}); // пересохраняем старый
+                else this.saveCalculation();//сохраняем как новый
+            }
+        }
+        const input = e.currentTarget.id;
+        if (!input) return false;
+        switch (input){
+            case 'inputSaveCalc':
+                saveCalc(e);
+                break;
+        }  
+    }
     /**
      * для вывода подсказок
      */
@@ -569,20 +596,25 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
 
             }
 
-            scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
-                return obj["name"]!=undefined;
-            }).length;
-            scope.navStyle="width:"+100/scope.currObj.length+"%;";
-
+            // scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
+            //     return obj["name"]!=undefined;
+            // }).length;
             scope.config=string;
-
             if(typeof type !="undefined") scope.myFactory.matrixType=type;
+            // если в меню сохранения расчета и расчет сохранен то заполняем импут его именем 
+            if (scope.myFactory.matrixType==='calculationActions' && scope.myFactory.document.currParam ===0 && scope.myFactory.document.selectedParam===0) {
+                setTimeout(()=>putNameInInput(scope.myFactory),0);
+            }
             },function error (response){
-                console.log(response);
+                console.error(response);
             }
         );
     };
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
+        this.myFactory.cameFrom = {
+            name: 'Расчет',
+            path: $location.$$path,
+        };
         value = (value==="dashboard") ? "" : value;
         $location.path(`/${value}`);
     };
@@ -646,7 +678,16 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             if(this.karetka.mode=="listener") this.karetka.mode="making new process";
         }
         if (this.myFactory.matrixType==='Компания'||this.myFactory.matrixType==='calculationActions') $rootScope.search_result=[];
+        // если в меню сохранения расчета и расчет сохранен то заполняем импут его именем 
+        if (this.myFactory.matrixType==='calculationActions' && this.myFactory.document.currParam ===0 && myFactory.document.selectedParam===0) {
+            putNameInInput(this.myFactory);
+        }
     };
+    function putNameInInput (mf) {
+        if (mf.calcObj.isSaved && mf.calcObj.name.length>1) {
+            document.querySelector('#inputSaveCalc').value = mf.calcObj.name;
+        }
+    }
     /**
      * Функция перехода выше по каретке в параметр родителя
      * @param {number} index 

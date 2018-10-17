@@ -8,19 +8,29 @@
         "model":"dashboard.nameOfCalculation"
       },
       {
-        "name":"Сохранить как новый",
-        "type":"saveCalc",
-        "function": "saveCalc"
-      },
-      {
-        "name":"Пересохранить загруженный",
-        "type":"resaveCalc",
-        "function": "resaveCalc"
+        "name":"Заменить другой расчет",
+        "type": "relocate_here",
+        "urlTo": "Заменить другой расчет"
       }
     ]
   },
   {
-    "name": "Компания",
+    "name": "Привязать",
+    "values": [
+      {
+        "name": "Компания",
+        "type": "relocate_here",
+        "urlTo": "Компания"
+      },
+      {
+        "name": "Контакт",
+        "type": "relocate_here",
+        "urlTo": "Контакт"
+      }
+    ]
+  },
+  {
+    "url": "Компания",
     "values":[
       {
         "name":"Введите название компании",
@@ -28,14 +38,14 @@
         "model":"dashboard.nameOfCompany"
       },
       {
-        "name":"Создать/Перейти в редактор",
+        "name":"Создать",
         "type":"relocatePage",
         "urlTo": "company"
       }
     ]
   },
   {
-    "name": "Контакт",
+    "url": "Контакт",
     "values":[
       {
         "name":"",
@@ -68,5 +78,15 @@
       }
     ]
 
+  },
+  {
+    "url": "Заменить другой расчет",
+    "values":[
+      {
+        "name":"Введите название для поиска расчета, который будет заменен",
+        "type":"inputResaveCalc",
+        "model":"dashboard.nameOfCalculation"
+      }
+    ]
   }
 ]

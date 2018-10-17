@@ -497,6 +497,10 @@ app.directive('currencyInput', function ($filter, myFactory) {
 
 app.factory('myFactory', function(){
     return{
+        cameFrom: {
+            name: null,
+            path: null,
+        },
         calcObj: {},
         companyObj: {},
         makingPolis: false,
@@ -924,7 +928,6 @@ app.factory('myFactory', function(){
                 this.parks.forEach(function(park){
                     park.processes.forEach(function(process){
                         process.practicalPriceKoef=myFactory.practicalPrice.koef;
-                        console.log(process);
                     })
                 })
             }

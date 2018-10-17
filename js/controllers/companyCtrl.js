@@ -189,6 +189,10 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
         $scope.setEmptyCardParam();
     };
     $scope.changeLocation = (path) => {
+        $scope.myFactory.cameFrom = {
+            name: 'Редактор карты клиента',
+            path: $location.$$path,
+        } 
         $location.path(path);
     };
     $scope.inputHandler = (value) => {
@@ -387,7 +391,6 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
                 }
             }
             return changed;
-            debugger;
         }
     }
     function generateSaveCompanyObj(card) {

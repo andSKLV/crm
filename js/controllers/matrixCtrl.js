@@ -1,5 +1,6 @@
 import Calculation from '../protos/calc.js';
 import Company from "../protos/company.js";
+import Loading from '../protos/loading.js';
 
 app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $location){
     let scope=this;
@@ -32,12 +33,15 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             if($location.path!=="/calculation"){
                 $location.path('/calculation');
             }
+            const loading = new Loading(true);
+            myFactory.isLoading = loading;
             let data ={};
             data.type="load_calculation";
             data.id=id;
             let scope=this;
             myFactory.urlJSON="transortation_cals.json";
             $http.post("php/search.php", data).then(async function success(response){
+                console.log('response from DB:')
                 console.log(response.data);
                 myFactory.matrixType="HIP";
                 myFactory.parks=[];
@@ -352,13 +356,12 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                 calcObj.parseFromResponse(response.data);
                 calcObj.markAsLoaded();
                 await calcObj.loadLink();
+                myFactory.isLoading.hide();
+                delete myFactory.isLoading;
             },function error(response){
                 console.log(response)
             });
         }, 0);
-
-
-
     };
     this.loadCompanyProfile = async function (id){
         myFactory.companyObj.id = id;
@@ -451,6 +454,85 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             console.error(resp);
         })
     }
+    this.updateCalculation=function (id,name) {
+        let parks=[];
+        myFactory.parks.forEach(function (park) {
+            let newPark = {};
+            for (let key in park) {
+                if (key != "processes") newPark[key] = park[key];
+                else {
+                    newPark[key] = [];
+                    park.processes.forEach(function (process) {
+                        let newProcess = {};
+                        for (let prop in process) {
+                            if (prop != "multi" && prop != "park") {
+                                newProcess[prop] = process[prop];
+                            }
+                            else if (prop == "multi") {
+                                newProcess[prop] = myFactory.multi.multies.indexOf(process.multi);
+                            }
+                        }
+                        newPark[key].push(newProcess);
+                    })
+                }
+            }
+            parks.push(newPark);
+        });
+        const multies = [];
+        if (myFactory.multi.multies.length > 0) {
+            myFactory.multi.multies.forEach(function (multi) {
+                let newMulti = {};
+                for (let key in multi) {
+                    if (key != "processes") newMulti[key] = multi[key];
+                }
+                multies.push(newMulti);
+            })
+        }
+        const save = {};
+        try {
+            save.parks = JSON.stringify(parks);
+        }
+        catch {
+            let CircularJSON = window.CircularJSON;
+            save.parks = CircularJSON.stringify(parks);
+        }
+        try {
+            save.mass = JSON.stringify(multies);
+        }
+        catch {
+            let CircularJSON = window.CircularJSON;
+            save.mass = CircularJSON.stringify(multies);
+        }
+        save.payment = myFactory.payment.val;
+        save.agents = myFactory.agents.val + ";" + myFactory.agents.mode;
+        save.practicalPrice = myFactory.practicalPrice.val + ";" + myFactory.practicalPrice.koef;
+        save.a_limit = myFactory.a_limit.value;
+        save.a_limitType = myFactory.a_limit.type;
+        save.totalAmount = myFactory.totalAmount;
+        save.totalPrice = myFactory.totalPrice;
+        save.HIPname = myFactory.HIPname;
+        save.type = "update_calc";
+        save.name = name;
+        save.id = id;
+
+        return $http.post("php/save.php", save).then(async function success(response) {
+            if (isNaN(Number(response.data))) {
+                alert('Ошибка при пересохранении расчета. Пожалуйста, по возможности не закрывайте окно и обратитесь к разработчику');
+                console.error(response.data);
+                return false;
+            }
+            const calcObj = new Calculation(myFactory);
+            calcObj.parseFromResponse (save);
+            calcObj.isSaved = true;
+            myFactory.calcObj = calcObj;
+            await calcObj.loadLink();
+            myFactory.calculationName = calcObj.name;
+            alert('Успешно пересохранено');
+        }, function error(response) {
+            console.log(response);
+            }
+        );
+    };
     /**
      * Deleting serach result after choosing one of the results
      */
