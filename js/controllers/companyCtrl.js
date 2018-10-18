@@ -192,6 +192,11 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
         $scope.myFactory.cameFrom = {
             name: 'Редактор карты клиента',
             path: $location.$$path,
+        }
+        if (!$scope.myFactory.companyObj.id) {
+            // если расчет не сохранен, то записываем его в хранилище объекта при выходе
+            $scope.myFactory.companyObj = new Company();
+            $scope.myFactory.companyObj.card = $scope.clientCard;
         } 
         $location.path(path);
     };
