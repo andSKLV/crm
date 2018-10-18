@@ -199,6 +199,12 @@ app.directive('polisReturn', function(){
         templateUrl: './templates/paths/polis/return.html'
     };
 });
+app.directive('polisHeader', function(){
+    return{
+        restrict: 'A',
+        templateUrl: './templates/paths/polis/header.html'
+    };
+});
 app.directive('companyDashboard', function(){
     return{
         restrict: 'A',
@@ -246,20 +252,16 @@ app.directive('findCompany', function () {
         restrict: 'A',
         templateUrl: './templates/matrix/find_company.html',
         link: function(scope, elements, attrs, ctrl){
-
         }
     }
-
 });
 app.directive('searchCompany', function () {
     return{
         restrict: 'A',
         templateUrl: './templates/paths/calculation/search-company.html',
         link: function(scope, elements, attrs, ctrl){
-
         }
     }
-
 });
 app.directive('findCalculation', function () {
     return{

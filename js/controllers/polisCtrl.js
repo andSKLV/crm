@@ -1,4 +1,11 @@
+import Polis from '../protos/polis.js';
+
 app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootScope){
+    if (!myFactory.polisObj) {
+        const polisObj = new Polis(myFactory);
+        myFactory.polisObj = polisObj;
+    }
+    myFactory.polisObj.updateNames();
     if (myFactory.calculationName!=="" && myFactory.calculationName!==undefined) this.calculationName = myFactory.calculationName;
     else if (myFactory.calcObj.isLinked) this.calculationName = 'привязанный';
     else if (!myFactory.calcObj.isInited) this.calculationName = 'не выбран';
@@ -74,11 +81,11 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
         items2: []
     };
 
-    for (i = 0; i <= 5; i += 1) {
+    for (let i = 0; i <= 5; i += 1) {
         $scope.itemsList.items1.push({'Id': i, 'Label': 'Item A_' + i});
     }
 
-    for (i = 0; i <= 5; i += 1) {
+    for (let i = 0; i <= 5; i += 1) {
         $scope.itemsList.items2.push({'Id': i, 'Label': 'Item B_' + i});
     }
     $scope.sortableOptions = {

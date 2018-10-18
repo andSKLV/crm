@@ -371,7 +371,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     };
     this.keyHandler = (e) => {
         const saveCalc = (e) => {
-            if (!(e.code==='Enter'|| e.code===13)) return false;
+            if (!(e.code==='Enter'|| e.code===13||e.key==='Enter'|| e.key===13)) return false;
             const value = e.currentTarget.value.trim();
             if (value===''||!value||value===' ') return false;
             //если расчет еще не сохранен то просто сохранить
