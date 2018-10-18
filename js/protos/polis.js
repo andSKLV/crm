@@ -3,6 +3,8 @@ export default class Polis {
     this.isSaved = false;
     this.companyName = null;
     this.calcName = null;
+    this.isInited = false;
+    this.isRequested = false;
 
     if (mf) this.bindMyFactory(mf);
   }

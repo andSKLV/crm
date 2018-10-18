@@ -1,79 +1,70 @@
 import Polis from '../protos/polis.js';
 
 app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootScope){
-    if (!myFactory.polisObj) {
-        const polisObj = new Polis(myFactory);
-        myFactory.polisObj = polisObj;
-    }
-    myFactory.polisObj.updateNames();
-    if (myFactory.calculationName!=="" && myFactory.calculationName!==undefined) this.calculationName = myFactory.calculationName;
-    else if (myFactory.calcObj.isLinked) this.calculationName = 'привязанный';
-    else if (!myFactory.calcObj.isInited) this.calculationName = 'не выбран';
-    if (myFactory.newClientCard) this.companyName = myFactory.newClientCard['Данные компании']['Наименование организации'];
-    myFactory.parks.forEach((park)=>{
-        park.processes.forEach((process)=>{
-            process.showCars=false;
-        })
-    })
+
     this.myFactory = myFactory;
     $scope.myFactory = myFactory;
-    // FIXME: переписать на загрузку из папки src/*.json
-    $scope.currObj=[
-        {
-            "name": "Компания",
-            "type": "search/create",
-            "values": [
-                {
-                    "name": ""
-                }
-            ]
-        },
-        {
-            "name": "Расчет",
-            "type": "search/create",
-            "values": [
-                {
-                    "name": ""
-                }
-            ]
-        },
-        {
-            "name": "Оговорки и условия",
-            "type": "lists",
-            "values":[
-                {
-                    "name": "Базовые риски застрахованы",
-                    "type": "multi_button"
-                },
-                {
-                    "name": "За исключением",
-                    "type": "multi_button"
-                },
-                {
-                    "name": "Новый список",
-                    "type": "button"
-                }
-            ]
-        },
-        {
-            "name": "Финансы",
-            "type": "finance",
-            "values": [
-                {
-                    "name": "something"
-                },
-                {
-                    "name": "anything"
-                }
-            ]
-        },
-        {
-            "name": "Даты",
-            "type": "dates",
-            "values":[]
+    $scope.init = async () => {
+        const makePolsiObj = () => {
+            // создаем объект хранения для полиса, если не создан
+            if (!myFactory.polisObj) {
+                const polisObj = new Polis(myFactory);
+                myFactory.polisObj = polisObj;
+            }
         }
-    ];
-
+        const selectNames = () => {
+            //определяем имена расчета и компании для заголовка
+            if (myFactory.calculationName !== "" && myFactory.calculationName !== undefined) this.calculationName = myFactory.calculationName;
+            else if (myFactory.calcObj.isLinked) this.calculationName = 'привязанный';
+            else if (!myFactory.calcObj.isInited) this.calculationName = 'не выбран';
+            if (myFactory.newClientCard) this.companyName = myFactory.newClientCard['Данные компании']['Наименование организации'];
+            myFactory.parks.forEach((park) => {
+                park.processes.forEach((process) => {
+                    process.showCars = false;
+                })
+            })
+        }
+        const switchMakingPolis = () => {
+            if (myFactory.makingPolis !== false) {
+                switch (myFactory.makingPolis) {
+                    case "Расчет":
+                        $scope.newDashboard.setCurrentPage(1);
+                        break;
+                    case "Компания":
+                        $scope.newDashboard.setCurrentPage(0);
+                        break;
+                }
+            }
+            myFactory.makingPolis = true;
+        }
+        const clearSearchResults = () => {
+            //обнуляем  search_result
+            if (!($rootScope.search_result)) $scope.newDashboard.setCurrentPage(0);
+            if ($rootScope.search_result) $rootScope.search_result=[];
+            myFactory.polisObj.isInited = true;
+        }
+        const loadDashboardObj = () => {
+            myFactory.polisObj.isRequested = true;
+            return $http.post('/src/polis.json').then((resp) => {
+                if (!Array.isArray(resp.data) || resp.data.length < 1) {
+                    alert ('Возникла ошибка при загрузке данных. Пожалуйста, по возможности не закрывайте окно и обратитесь к разработчику');
+                    console.error(resp);
+                }
+                else {
+                    $scope.currObj = resp.data;
+                }
+            }, (err) => {
+                console.log(err);
+            })
+        }
+        makePolsiObj();
+        myFactory.polisObj.updateNames();
+        selectNames();
+        switchMakingPolis();
+        clearSearchResults();
+        if (!myFactory.polisObj||!myFactory.polisObj.isRequested) await loadDashboardObj();
+    }
+ 
 
 
     $scope.itemsList = {
@@ -174,17 +165,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
             }
         }
     }
-    if(myFactory.makingPolis!==false){
-        switch(myFactory.makingPolis){
-            case "Расчет":
-                $scope.newDashboard.setCurrentPage(1);
-                break;
-            case "Компания":
-                $scope.newDashboard.setCurrentPage(0);
-                break;
-        }
-    }  
-    myFactory.makingPolis=true;
+
     $scope.loadProcess=(process, key)=>{
         myFactory.loadProcess={
             process,
@@ -227,6 +208,6 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
 
         })
     }
-    if (!($rootScope.search_result)) $scope.newDashboard.setCurrentPage(0);
-    if ($rootScope.search_result) $rootScope.search_result=[];
+    
+    $scope.init();
 })
