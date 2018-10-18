@@ -3,6 +3,7 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
         $location.path('/dashboard');
         return;
     };
+    $scope.myFactory = myFactory;
     $scope.currObj=myFactory.polisCurrent.values;
     console.log($scope.currObj);
     $scope.delete=(value)=>{
@@ -42,6 +43,17 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
         paramNumbers++;
     }
     $scope.returnToDashboard=()=>{
+        const mf = $scope.myFactory;
+        const curr = mf.polisCurrent;
+        if (curr.name===""&&curr.values.length===0) {
+            // если объект пуст, то удаляем его
+            const i = mf.polisObj.conditions.findIndex(val=>val.$$hashKey===curr.$$hashKey);
+            if (i>=0) mf.polisObj.conditions.splice(i,1);
+        }
+        $scope.myFactory.cameFrom = {
+            name: 'Редактор полиса',
+            path: $location.$$path,
+        };
         $location.path('/polis');
     };
 });

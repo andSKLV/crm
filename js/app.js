@@ -39,7 +39,7 @@ app.config(function($routeProvider){//с помощью .config мы опред�
                             console.log(response);
                         });
                     }
-                    else $location.path('/login');
+                    else $location.path('/');
                 }
             },
             templateUrl: 'dashboard.html',
@@ -512,7 +512,7 @@ app.factory('myFactory', function(){
                 name:"",
                 values:[],
             });
-            this.polisCurrent=conditions[conditions-1];
+            this.polisCurrent=conditions[conditions.length-1];
         },
         polisCurrent:"",
         multi:{

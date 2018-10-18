@@ -76,6 +76,14 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
             }
             $scope.newDashboard.setCurrentPage(firstEmptyTab);
         }
+        const selectTabToOpen = () => {
+            if (myFactory.cameFrom.name==='Редактор полиса') {
+                debugger;
+                const additionTabInd = $scope.currObj.findIndex(val=>val.name==='Оговорки и условия');
+                $scope.newDashboard.setCurrentPage(additionTabInd);//если пришли из редактора полиса, то открываем сразу это меню
+            } 
+            else openEmptyTab();
+        }
         makePolsiObj();
         myFactory.polisObj.updateNames();
         selectNames();
@@ -85,10 +93,8 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
             if (!myFactory.polisObj.conditions) await myFactory.polisObj.loadConditions();
             await loadDashboardObj();
         } 
-        openEmptyTab();
+        selectTabToOpen ();
     }
- 
-
 
     $scope.itemsList = {
         items1: [],
