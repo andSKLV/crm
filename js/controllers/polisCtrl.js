@@ -61,28 +61,28 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
             })
         }
         /**
-         * Открываем первую пустую вкладку
+         * Выбираем какую вкладку каретки открыть
          */
-        const openEmptyTab = () => {
+        const selectTabToOpen = () => {
             if (!$scope.currObj) return false;
-            const tabsAmount = $scope.currObj.filter((val)=>val.name).length;
-            let firstEmptyTab = 0;
-            for (let i=0;i<tabsAmount;i++) {
-                // если вкладка пустая, то выбираем ее на открытие и завершаем перебор
-                if (!$scope.newDashboard.alreadySelected(i)) {
-                    firstEmptyTab = i;
-                    break;
+            let tabIndex = 0;
+
+            if (myFactory.cameFrom.name==='Редактор полиса') {
+                //если пришли из редактора полиса, то открываем сразу это меню
+                tabIndex = $scope.currObj.findIndex(val=>val.name==='Оговорки и условия');
+            } 
+            else {
+                // ищем первую незаполненную вкладку
+                const tabsAmount = $scope.currObj.filter((val)=>val.name).length;
+                for (let i=0;i<tabsAmount;i++) {
+                    // если вкладка пустая, то выбираем ее на открытие и завершаем перебор
+                    if (!$scope.newDashboard.alreadySelected(i)) {
+                        tabIndex = i;
+                        break;
+                    }
                 }
             }
-            $scope.newDashboard.setCurrentPage(firstEmptyTab);
-        }
-        const selectTabToOpen = () => {
-            if (myFactory.cameFrom.name==='Редактор полиса') {
-                debugger;
-                const additionTabInd = $scope.currObj.findIndex(val=>val.name==='Оговорки и условия');
-                $scope.newDashboard.setCurrentPage(additionTabInd);//если пришли из редактора полиса, то открываем сразу это меню
-            } 
-            else openEmptyTab();
+            $scope.newDashboard.setCurrentPage(tabIndex);
         }
         makePolsiObj();
         myFactory.polisObj.updateNames();
