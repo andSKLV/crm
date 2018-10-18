@@ -19,6 +19,11 @@ export default class Polis {
     else if (myFactory.calcObj.isLinked) this.calcName = 'привязанный';
     if (myFactory.newClientCard) this.companyName = myFactory.newClientCard['Данные компании']['Наименование организации'];
   };
+  async loadConditions () {
+    const resp = await fetch ('./src/polisConditions.json');
+    this.conditions = await resp.json();
+    return this.conditions;
+  }
   
 }
 
