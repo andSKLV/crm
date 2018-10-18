@@ -43,6 +43,9 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
             if ($rootScope.search_result) $rootScope.search_result=[];
             myFactory.polisObj.isInited = true;
         }
+        /**
+         * Загружаем из json наполнение каретки
+         */
         const loadDashboardObj = () => {
             myFactory.polisObj.isRequested = true;
             return $http.post('/src/polis.json').then((resp) => {
@@ -57,12 +60,29 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
                 console.log(err);
             })
         }
+        /**
+         * Открываем первую пустую вкладку
+         */
+        const openEmptyTab = () => {
+            if (!$scope.currObj) return false;
+            const tabsAmount = $scope.currObj.filter((val)=>val.name).length;
+            let firstEmptyTab = 0;
+            for (let i=0;i<tabsAmount;i++) {
+                // если вкладка пустая, то выбираем ее на открытие и завершаем перебор
+                if (!$scope.newDashboard.alreadySelected(i)) {
+                    firstEmptyTab = i;
+                    break;
+                }
+            }
+            $scope.newDashboard.setCurrentPage(firstEmptyTab);
+        }
         makePolsiObj();
         myFactory.polisObj.updateNames();
         selectNames();
         switchMakingPolis();
         clearSearchResults();
-        if (!myFactory.polisObj||!myFactory.polisObj.isRequested) await loadDashboardObj();
+        if (!myFactory.polisObj||!myFactory.polisObj.isRequested||!$scope.currObj||$scope.currObj.length===0) await loadDashboardObj();
+        openEmptyTab();
     }
  
 
@@ -124,7 +144,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
         }
     }
     $scope.newDashboard={
-        currentPage:0,
+        currentPage:null,
         previousPage: -1,
         toLeft(index){
             return this.previousPage<this.currentPage && this.previousPage==index;
