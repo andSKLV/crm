@@ -1,12 +1,15 @@
+<!-- Компания -->
 <div company-view class="view view_active" ng-if="newDashboard.checkCurrentPage(0)  && search_result.length==0"  ng-controller="companyCtrl as companyCtrl"></div>
 <table find-company class="matrix" ng-if="newDashboard.checkCurrentPage(0)  && search_result.length!=0"  ng-controller="matrixCtrl as matrixCtrl"></table>
 
-
+<!-- Расчет -->
 <div calculation-view ng-if="newDashboard.checkCurrentPage(1) && search_result.length==0" class="view" ng-class="{view_active: newDashboard.checkCurrentPage(1) && search_result.length==0}" ng-controller="calculationCtrl as calculation"></div>
 <table find-calculation-view  ng-if="newDashboard.checkCurrentPage(1) && search_result.length!=0" class="matrix" ng-controller="matrixCtrl as matrixCtrl"></table>
 
+<!-- Оговорки и условия -->
 <div ng-if="newDashboard.checkCurrentPage(2)">
     <div addition="addition" ng-repeat="addition in dashboard.myFactory.polisObj.conditions" ng-if="addition.included" ng-click="dashboard.myFactory.polisCurrent=addition; dashboard.relocatePage({urlTo:'polisEditor'})"></div>
 </div>
 
+<!-- Финансы -->
 <div class="view  view_active" ng-if="newDashboard.checkCurrentPage(3)" finance-view ng-click="dashboard.relocatePage({urlTo:'finance'})"></div>

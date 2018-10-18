@@ -5,7 +5,7 @@ export default class Polis {
     this.calcName = null;
     this.isInited = false;
     this.isRequested = false;
-
+    this.multi = true;
     if (mf) this.bindMyFactory(mf);
   }
   bindMyFactory (myFactory) {

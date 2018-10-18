@@ -1,4 +1,10 @@
 <link rel="stylesheet" href="./templates/paths/polis/style.css">
+<div ng-model="myFactory.polisObj.multi" 
+  ng-if="newDashboard.checkCurrentPage(2)"
+  ng-click="multiClicked()" 
+  ng-class="{alreadySelected: myFactory.polisObj.multi}" 
+  class="multi">+
+</div>
 <div ng-controller="polisCtrl as polisCtrl" polis-header></div>
 <div class="dashboard_container" polis-dashboard></div>
 <div class="return" polis-return></div>

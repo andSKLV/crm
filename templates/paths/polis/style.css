@@ -203,3 +203,10 @@ tbody{
 #home:hover::after{
     top: 12%;
 }
+.multi{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    /* display: none; */
+}

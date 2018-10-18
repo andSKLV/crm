@@ -151,8 +151,8 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
                 $location.path(`/calculation`);
                 break;
             default:
-            $location.path(value);
-            break;
+                $location.path(value);
+                break;
         }
     }
     $scope.newDashboard={
@@ -239,6 +239,10 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
             console.log(response);
 
         })
+    }
+    $scope.multiClicked = () => {
+        const polis = $scope.myFactory.polisObj;
+        polis.multi = !polis.multi;
     }
     
     $scope.init();
