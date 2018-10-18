@@ -63,7 +63,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
         /**
          * Выбираем какую вкладку каретки открыть
          */
-        const selectTabToOpen = () => {
+        const openTab = () => {
             if (!$scope.currObj) return false;
             let tabIndex = 0;
 
@@ -93,7 +93,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
             if (!myFactory.polisObj.conditions) await myFactory.polisObj.loadConditions();
             await loadDashboardObj();
         } 
-        selectTabToOpen ();
+        openTab();
     }
 
     $scope.itemsList = {
@@ -150,6 +150,9 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
             case "Расчет":
                 $location.path(`/calculation`);
                 break;
+            default:
+            $location.path(value);
+            break;
         }
     }
     $scope.newDashboard={

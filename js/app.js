@@ -205,6 +205,12 @@ app.directive('polisHeader', function(){
         templateUrl: './templates/paths/polis/header.html'
     };
 });
+app.directive('polisNav', function(){
+    return{
+        restrict: 'A',
+        templateUrl: './templates/paths/polis/navigation.html'
+    };
+});
 app.directive('companyDashboard', function(){
     return{
         restrict: 'A',
