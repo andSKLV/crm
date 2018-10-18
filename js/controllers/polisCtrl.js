@@ -160,6 +160,19 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
                 }
             })
         },
+        alreadySelected(index) {
+            switch (index) {
+                case 0:
+                    return (myFactory.newClientCard!==undefined);
+                    break;
+                case 1:
+                    return myFactory.parks.length>0
+                    break;
+                default:
+                    return false;
+                break;
+            }
+        }
     }
     if(myFactory.makingPolis!==false){
         switch(myFactory.makingPolis){
