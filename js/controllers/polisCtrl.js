@@ -71,6 +71,12 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
                 //если пришли из редактора полиса, то открываем сразу это меню
                 tabIndex = $scope.currObj.findIndex(val=>val.name==='Оговорки и условия');
             } 
+            else if (!myFactory.companyObj.card) {
+                tabIndex = 0;
+            }
+            else if (!myFactory.companyObj.isFull) {
+                tabIndex = 0;
+            }
             else {
                 // ищем первую незаполненную вкладку
                 const tabsAmount = $scope.currObj.filter((val)=>val.name).length;
