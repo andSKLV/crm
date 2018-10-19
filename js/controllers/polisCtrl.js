@@ -48,7 +48,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
          */
         const loadDashboardObj = () => {
             myFactory.polisObj.isRequested = true;
-            return $http.post('/src/polis.json').then((resp) => {
+            return $http.post('./src/polis.json').then((resp) => {
                 if (!Array.isArray(resp.data) || resp.data.length < 1) {
                     alert ('Возникла ошибка при загрузке данных. Пожалуйста, по возможности не закрывайте окно и обратитесь к разработчику');
                     console.error(resp);
@@ -192,7 +192,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
         alreadySelected(index) {
             switch (index) {
                 case 0:
-                    return (myFactory.newClientCard!==undefined);
+                    return (myFactory.companyObj.isFull);
                     break;
                 case 1:
                     return myFactory.parks.length>0
