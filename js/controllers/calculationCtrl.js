@@ -371,7 +371,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     };
     this.keyHandler = (e) => {
         const saveCalc = (e) => {
-            if (!(e.code==='Enter'|| e.code===13)) return false;
+            if (!(e.code==='Enter'|| e.code===13||e.key==='Enter'|| e.key===13)) return false;
             const value = e.currentTarget.value.trim();
             if (value===''||!value||value===' ') return false;
             //если расчет еще не сохранен то просто сохранить
@@ -684,7 +684,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         }
     };
     function putNameInInput (mf) {
-        if (mf.calcObj.isSaved && mf.calcObj.name.length>1) {
+        if (mf.calcObj.isSaved && mf.calcObj.name &&mf.calcObj.name.length>1) {
             document.querySelector('#inputSaveCalc').value = mf.calcObj.name;
         }
     }
@@ -1941,8 +1941,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
      */
     this.linkTo = async (params) => {
         const calcObj = this.myFactory.calcObj;
-        this.nameOfCalculation = '';
-        await this.saveCalculation({withoutNotify:true,withoutName:true});
+        if (!calcObj.isSaved) await this.saveCalculation({withoutNotify:true,withoutName:true});
         if (!calcObj.isSaved) {
             alert ('Ошибка привязки расчета. Пожалуйста, по возможности не закрывайте это окно и братитесь к разработчику');
             console.error('При привязке не удалось сохранить расчет');
