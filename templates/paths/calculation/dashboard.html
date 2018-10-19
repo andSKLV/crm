@@ -46,7 +46,7 @@
 <div class="nav">
     <div>
         <div  ng-repeat="param in calculation.currObj" 
-        ng-click="param.able=='none' ? '' : calculation.karetka.mode!='changing process' ? calculation.selectParam($index) : calculation.selectParam($index) " 
+        ng-click="calculation.unexpectedSave();param.able=='none' ? '' : calculation.karetka.mode!='changing process' ? calculation.selectParam($index) : calculation.selectParam($index) " 
         ng-if="param.name" 
         ng-class="[{mi_selected: calculation.myFactory.document.selectedParam===$index}, {alreadySelected : calculation.alreadySelected(param.model)},{keyFriendly : calculation.myFactory.foc}]" class="clickable">
             <div class="depth-symbol" ng-click="calculation.selectParentParam();$event.stopPropagation();" ng-if="calculation.karetkaDepth>1&&calculation.myFactory.document.selectedParam===$index">{{calculation.depthSymbol(calculation.karetkaDepth);}}</div> 
