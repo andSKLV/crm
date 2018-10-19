@@ -1941,12 +1941,17 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
      */
     this.linkTo = async (params) => {
         const calcObj = this.myFactory.calcObj;
-        if (!calcObj.isSaved) await this.saveCalculation({withoutNotify:true,withoutName:true});
+        let alreadySaved = false;
+        if (!calcObj.isSaved) {
+            await this.saveCalculation({withoutNotify:true,withoutName:true});
+            alreadySaved = true;
+        }
         if (!calcObj.isSaved) {
             alert ('Ошибка привязки расчета. Пожалуйста, по возможности не закрывайте это окно и братитесь к разработчику');
             console.error('При привязке не удалось сохранить расчет');
             return false;
         }
+        if (calcObj.isSaved && !alreadySaved) await this.saveCalculation({resave:true});
         const saveObj = {};
         saveObj.calc_id = calcObj.id;
         saveObj.company_id = '';
