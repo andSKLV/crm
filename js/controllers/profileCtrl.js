@@ -11,12 +11,12 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     if (!id) {
       alert('Ошибка открытия клиента. Пожалуйста обратиетсь к разработчику');
       return false;
-    }
-    const modal = new Loading();
-    modal.show(); // всплывающее окно о загрузке
+    } // всплывающее окно о загрузке
     const pr = new Profile();
     pr.bindFactory($scope.myFactory);
     await loadDash();
+    const modal = new Loading();
+    modal.show();
     await $scope.loadCompany(id);
     pr.store.calcLinks = await $scope.loadCalcLinks(id);
     const calcs =  await $scope.loadCalculations(pr.store.calcLinks);//загрузка расчетов
