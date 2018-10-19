@@ -1534,8 +1534,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     }
 
                     if(scope.selectNextParam()){//здесь мы имеем уже заполненный процесс, остается только добавить его в массив процессов и посчитать
-                        console.log(myFactory.multi);
-                        console.log(myFactory.process);
                         myFactory.addNewProcess();
                         myFactory.finalCalc();
                         scope.clean();
@@ -1872,7 +1870,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 multies.push(newMulti);
             })
         }
-        console.log(parks, multies);
         let save = {};
         this.myFactory.calculationName = this.nameOfCalculation;
         try {
@@ -1973,6 +1970,21 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             console.error('Ошибка привязки расчета');
         })
 
+    }
+    /**
+     * Функция сохранения расчета, если в меню сохранения было введено название, но сохранение не вызвано явно, а осущствлен переход в другую область
+     */
+    this.unexpectedSave = async () => {
+        if (this.myFactory.matrixType!=='calculationActions') return false;
+        const inp = document.querySelector('#inputSaveCalc');
+        if (!inp) return false;
+        if (inp.value===''|| inp.value===' ') return false;
+        if (this.myFactory.calcObj.isSaved) {
+            if (this.myFactory.calcObj.name!==inp.value) await this.saveCalculation();
+        }
+        else {
+            await this.saveCalculation();
+        }
     }
     function deepRemoveMulti(multi) {
         multi.processes.forEach(process => {
