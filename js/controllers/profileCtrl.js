@@ -255,6 +255,19 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
         console.error (`Clear search results problem: ${err}`);
     }
   }
+  /**
+   * для вывода подсказок
+   */
+  $scope.tooltip={
+    title:"",
+    fadeIn(title){
+      if (title==='') title = 'Без названия';
+      this.title=title;
+    },
+    fadeOut(){
+      this.title='';
+    }
+  };
 
   if (!$scope.myFactory.companyObj.id) $scope.relocate('/');
   else init();
