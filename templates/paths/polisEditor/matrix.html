@@ -2,29 +2,28 @@
     <tbody>
         <tr class="matrix_row">
             <td class="properties btns" width="20px"></td>
-            <td ng-click="dashboard.selectParam($index)" style="text-align: center;" 
-                class="polisEditorMatrixRow" ng-class="[{mi_selected: dashboard.myFactory.document.selectedParam===$index}]">
+            <td ng-click="dashboard.selectParam($index)" 
+                class="polisEditorMatrixRow polisEditorMatrixRow_header" ng-class="[{mi_selected: dashboard.myFactory.document.selectedParam===$index}]">
                     <h3>{{dashboard.myFactory.polisCurrent.name}}</h3>
             </td>
         </tr>
         <tr class="matrix_row" ng-repeat="value in currObj"  
-        ng-if="value.checked"
-        >
+        ng-if="value.checked">
             <td class="properties btns" width="20px" >
                 <input type="button" class="btnCopy" value="+" ng-click="addNew(value)">
                 <input type="button" class="btnDelete" value="-" ng-click="delete(value)">
             </td>
-            <td ng-click="dashboard.selectParam($index)" style="text-align: center;" 
-            class="polisEditorMatrixRow" ng-class="[{mi_selected: dashboard.myFactory.document.selectedParam===$index}]">
-                {{value.text}}
+            <td ng-click="dashboard.selectParam($index)" 
+            class="polisEditorMatrixRow posiEditor_condition" ng-class="[{mi_selected: dashboard.myFactory.document.selectedParam===$index}]">
+                {{$index+1}}. {{value.text}}
             </td>
         </tr>
-        <tr class="matrix_row polisEditorMatrixRow deleted" ng-repeat="value in currObj"  ng-if="!value.checked" ng-click="value.checked=true">
+        <tr class="matrix_row polisEditorMatrixRow deleted posiEditor_condition" ng-repeat="value in currObj"  ng-if="!value.checked" ng-click="value.checked=true">
             <td class="properties btns" width="20px">
                 
             </td>
             <td>
-                {{value.text}}
+                {{$index+1}}.{{value.text}}
             </td>
         </tr>
 

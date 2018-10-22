@@ -19,7 +19,7 @@
     color: var(--red);
 }
 .polisEditorMatrixRow.deleted{
-    opacity: .15;
+    opacity: .25;
 }
 .polisEditorMatrixRow.deleted:hover{
     background: var(--blue)!important;

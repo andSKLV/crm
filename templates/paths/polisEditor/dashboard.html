@@ -6,7 +6,7 @@
             ]"
             ng-show="dashboard.currentUl($index)" class="ul">
             <textarea  ng-model="dashboard.myFactory.polisCurrent.name"
-            style="width: 100%;background:rgb(230, 230, 230); resize: none; height: 100%;" autofocus></textarea>
+            class="input_polisEditor" autofocus></textarea>
         </div>
         <div ng-repeat="param in currObj" class="ul"
              ng-class="[
@@ -16,7 +16,7 @@
              ]"
              ng-show="dashboard.currentUl($index)" >      
              <textarea  ng-model="param.text"
-             style="width: 100%;background:rgb(230, 230, 230); resize: none; height: 100%;" autofocus></textarea>
+             class="input_polisEditor" autofocus></textarea>
         </div>
         <div ng-class="[
                 {mi_current: dashboard.currentUl(currObj.length+1)},
@@ -24,8 +24,7 @@
                 { mi_moveToRight: !dashboard.currentUl(currObj.length+1)}
             ]"
             ng-show="dashboard.currentUl(currObj.length+1)" class="ul">
-            <textarea  ng-model="newValue" ng-keyup="addNewValue($event)"
-            style="width: 100%;background:rgb(230, 230, 230); resize: none; height: 100%;" autofocus></textarea>
+            <textarea class="input_polisEditor" ng-model="newValue" ng-keyup="addNewValue($event)" autofocus></textarea>
         </div>
     
     </div>
