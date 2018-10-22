@@ -11,12 +11,12 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     if (!id) {
       alert('Ошибка открытия клиента. Пожалуйста обратиетсь к разработчику');
       return false;
-    }
-    const modal = new Loading();
-    modal.show(); // всплывающее окно о загрузке
+    } // всплывающее окно о загрузке
     const pr = new Profile();
     pr.bindFactory($scope.myFactory);
     await loadDash();
+    const modal = new Loading();
+    modal.show();
     await $scope.loadCompany(id);
     pr.store.calcLinks = await $scope.loadCalcLinks(id);
     const calcs =  await $scope.loadCalculations(pr.store.calcLinks);//загрузка расчетов
@@ -255,9 +255,25 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
         console.error (`Clear search results problem: ${err}`);
     }
   }
+<<<<<<< HEAD
   $scope.$on('$destroy', function () {
     $scope.myFactory.removeCellSelection ('dashboard_container',true);
   });
+=======
+  /**
+   * для вывода подсказок
+   */
+  $scope.tooltip={
+    title:"",
+    fadeIn(title){
+      if (title==='') title = 'Без названия';
+      this.title=title;
+    },
+    fadeOut(){
+      this.title='';
+    }
+  };
+>>>>>>> master
 
   if (!$scope.myFactory.companyObj.id) $scope.relocate('/');
   else init();
