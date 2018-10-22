@@ -113,7 +113,7 @@ fieldset{
     border-radius: 10px;
     border: 5px solid var(--dark-blue);
     padding: 0;
-    margin-bottom: 50px;
+    margin-bottom: 25px;
     box-shadow: 0 6px 20px 0px rgba(0, 0, 0, 0.4);
 }
 div.ul_container>div.ul>div>div.addAddition{
@@ -190,6 +190,12 @@ div.ul_container>div.ul>div>div.addAddition{
 div.matrix_container{
     margin-left: 0px;
 }
+.matrix_row{
+    cursor: pointer;
+}
+.matrix_row td p{
+    display: inline;
+}
 tbody{
     width: 100%;
 }
@@ -209,4 +215,11 @@ tbody{
     left: 10px;
     z-index: 1;
     /* display: none; */
+}
+.arrow_down_conditions{
+    position: relative;
+    float: right;
+    margin-right: 10px;
+    color: var(--red);
+    font-size: 1.3em;
 }

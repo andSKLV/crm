@@ -8,7 +8,7 @@
 
 <!-- Оговорки и условия -->
 <div ng-if="newDashboard.checkCurrentPage(2)">
-    <div addition="addition" ng-repeat="addition in dashboard.myFactory.polisObj.conditions" ng-if="addition.included" ng-click="dashboard.myFactory.polisCurrent=addition; dashboard.relocatePage({urlTo:'polisEditor'})"></div>
+    <div addition="addition" ng-repeat="addition in dashboard.myFactory.polisObj.conditions" ng-click="dashboard.myFactory.polisCurrent=addition; dashboard.relocatePage({urlTo:'polisEditor'})"></div>
 </div>
 
 <!-- Финансы -->

@@ -22,6 +22,7 @@ export default class Polis {
   async loadConditions () {
     const resp = await fetch ('./src/polisConditions.json');
     this.conditions = await resp.json();
+    this.conditions.forEach(val=>val.included = false);
     return this.conditions;
   }
   

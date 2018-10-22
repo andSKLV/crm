@@ -2,9 +2,15 @@
 <legend>{{addition.name}}:</legend>
 <table class="matrix">
     <tbody>
-        <tr class="matrix_row" ng-repeat="value in addition.values" ng-if="value.checked && value.text!==''">
+        <tr class="matrix_row" ng-repeat="value in addition.values" ng-if="addition.included&&value.checked && value.text!==''">
             <td>
                 {{value.text}}
+            </td>
+        </tr>
+        <tr class="matrix_row" ng-if="!addition.included">
+            <td>
+               <p>Всего: {{addition.values.length}} позиций</p> 
+               <div class="arrow_down_conditions" ng-click="addition.included=!addition.included;$event.stopPropagation();">&#9660</div>
             </td>
         </tr>
     </tbody>
