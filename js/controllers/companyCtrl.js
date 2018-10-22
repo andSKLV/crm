@@ -26,7 +26,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             $scope.myFactory.newClientCard = {};
             Object.assign($scope.myFactory.newClientCard, $scope.clientCard);
         }
-        myFactory.removeCellSelection ('dashboard_container');
+        myFactory.removeCellSelection ('dashboard_container',true);
     });
     function init () {
         if (!myFactory.loadCompany) {

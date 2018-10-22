@@ -334,6 +334,6 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
     // this.selectParam(0);
 
     $scope.$on('$destroy', function () {
-        myFactory.removeCellSelection ('dashboard_container');
+        myFactory.removeCellSelection ('dashboard_container',true);
     });
 });

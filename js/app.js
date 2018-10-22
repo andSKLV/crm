@@ -1349,9 +1349,10 @@ app.factory('myFactory', function(){
                 matrix.style.maxHeight = `${maxHeight}px`;
             }
         },
-        removeCellSelection (matrix = 'matrix_table') {
+        removeCellSelection (matrix = 'matrix_table',withoutAlready) {
             const selectedCell = document.querySelector(`.${matrix} .mi_selected`);
             if (selectedCell!== null) selectedCell.classList.toggle('mi_selected');
+            if (withoutAlready) return true;
             const alreadySelectedCells = document.querySelectorAll(`.${matrix} .alreadySelected`);
             alreadySelectedCells.forEach(cell=>cell.classList.toggle("alreadySelected"));
         },

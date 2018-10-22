@@ -1985,6 +1985,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.loadMatrix('HIP.json');
 
     $scope.$on('$destroy', function () {
-        myFactory.removeCellSelection ('dashboard_container');
+        myFactory.removeCellSelection ('dashboard_container',true);
     });
 });

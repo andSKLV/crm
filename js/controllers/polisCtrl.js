@@ -195,7 +195,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
                     return (myFactory.companyObj.isFull);
                     break;
                 case 1:
-                    return myFactory.parks.length>0
+                    return myFactory.parks.length>0;
                     break;
                 default:
                     return false;

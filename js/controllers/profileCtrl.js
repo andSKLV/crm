@@ -256,7 +256,7 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     }
   }
   $scope.$on('$destroy', function () {
-    $scope.myFactory.removeCellSelection ('dashboard_container');
+    $scope.myFactory.removeCellSelection ('dashboard_container',true);
   });
 
   if (!$scope.myFactory.companyObj.id) $scope.relocate('/');
