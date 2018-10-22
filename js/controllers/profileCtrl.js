@@ -255,11 +255,9 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
         console.error (`Clear search results problem: ${err}`);
     }
   }
-<<<<<<< HEAD
   $scope.$on('$destroy', function () {
     $scope.myFactory.removeCellSelection ('dashboard_container',true);
   });
-=======
   /**
    * для вывода подсказок
    */
@@ -273,7 +271,6 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
       this.title='';
     }
   };
->>>>>>> master
 
   if (!$scope.myFactory.companyObj.id) $scope.relocate('/');
   else init();
