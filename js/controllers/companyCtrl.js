@@ -26,6 +26,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             $scope.myFactory.newClientCard = {};
             Object.assign($scope.myFactory.newClientCard, $scope.clientCard);
         }
+        myFactory.removeCellSelection ('dashboard_container');
     });
     function init () {
         if (!myFactory.loadCompany) {
@@ -196,8 +197,8 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
         if (!$scope.myFactory.companyObj.id) {
             // если расчет не сохранен, то записываем его в хранилище объекта при выходе
             $scope.myFactory.companyObj = new Company();
-            $scope.myFactory.companyObj.card = $scope.clientCard;
         } 
+        $scope.myFactory.companyObj.card = $scope.clientCard;
         $location.path(path);
     };
     $scope.inputHandler = (value) => {

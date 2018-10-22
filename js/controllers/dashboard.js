@@ -5,7 +5,7 @@ import Company from "../protos/company.js";
  */
 
 "use strict";
-app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location){
+app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location,$scope){
     this.span=1;
     this.myFactory=myFactory;
     let scope=this;
@@ -332,4 +332,8 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
         if (toBeClosed===true) menu.classList.add('nav-back_container--hidden');
     }
     // this.selectParam(0);
+
+    $scope.$on('$destroy', function () {
+        myFactory.removeCellSelection ('dashboard_container');
+    });
 });

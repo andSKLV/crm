@@ -1,7 +1,7 @@
 import Calculation from '../protos/calc.js';
 import Loading from '../protos/loading.js';
 
-app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location){
+app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location, $scope){
     this.span=1;
     this.karetkaDepth = 1;
     this.myFactory=myFactory;
@@ -1983,4 +1983,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     }
 
     this.loadMatrix('HIP.json');
+
+    $scope.$on('$destroy', function () {
+        myFactory.removeCellSelection ('dashboard_container');
+    });
 });

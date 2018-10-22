@@ -35,7 +35,7 @@ export default class Company {
     _isFull = val;
   }
   get isFull () {
-    if (_isFull===null) _isFull = this.getFullness();
+    _isFull = this.getFullness();
     return _isFull;
   }
   getFullness() {
