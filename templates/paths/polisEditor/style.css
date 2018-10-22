@@ -4,6 +4,8 @@
   resize: none;
   height: 100%;
   font-size: 1em;
+  padding: 4px 8px 4px 8px;
+  border: none;
 }
 .posiEditor_condition{
   text-align: left;
@@ -11,4 +13,7 @@
 }
 .polisEditorMatrixRow_header{
   text-align: center;
+}
+div.dashboard_container {
+  width: 100%;
 }

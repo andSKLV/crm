@@ -220,6 +220,12 @@ tbody{
     position: relative;
     float: right;
     margin-right: 10px;
-    color: var(--red);
+    margin-left: 20px;
+    color: var(--dark-blue);
     font-size: 1.3em;
+    cursor: pointer;
+    bottom: 2px;
+}
+.matrix_row td {
+    padding: 4px 8px 4px 8px;
 }
