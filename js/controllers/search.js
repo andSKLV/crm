@@ -88,8 +88,10 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
             data.type="find_company";
             values[0].db="companies";
         } 
-        if(type=="calculationActions") data.type="find_calculation";
+        else if(type=="calculationActions") data.type="find_calculation";
+        else if (type=='Оговорки и условия') data.type='additions';
         else data.type=type;
+        if (data.type==='additions') return false;
         if(scope.abort){
             scope.abort.resolve();
         }
@@ -99,7 +101,7 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
         if (!flag) return false;
         scope.template.txt=flag.val;
         scope.template.model=flag.model;
-        return $http.post("php/search.php", data,{timeout:scope.abort.promise}).then(function success (response) {
+        return $http.post("./php/search.php", data,{timeout:scope.abort.promise}).then(function success (response) {
                 scope.myFactory.matrixType=type;
                 $rootScope.cacheTemplate={};
                 $rootScope.search_result=response.data;

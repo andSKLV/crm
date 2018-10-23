@@ -519,6 +519,7 @@ app.factory('myFactory', function(){
                 values:[],
             });
             this.polisCurrent=conditions[conditions.length-1];
+            this.polisCurrent.isNew = true;
         },
         polisCurrent:"",
         multi:{

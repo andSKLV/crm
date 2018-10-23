@@ -1,4 +1,4 @@
-app.controller("polisEditorCtrl", function($scope, myFactory, $location){
+app.controller("polisEditorCtrl", function($scope, myFactory, $location,$http){
     if(myFactory.polisCurrent==="" || myFactory.polisCurrent===undefined) {
         $location.path('/dashboard');
         return;
@@ -44,20 +44,45 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
         });
         paramNumbers++;
     }
-    $scope.returnToDashboard=()=>{
+    $scope.returnToDashboard = async () => {
         const mf = $scope.myFactory;
         const curr = mf.polisCurrent;
-        if (curr.name===""&&curr.values.length===0) {
+        if (curr.name === "" && curr.values.length === 0) {
             // если объект пуст, то удаляем его
-            const i = mf.polisObj.conditions.findIndex(val=>val.$$hashKey===curr.$$hashKey);
-            if (i>=0) mf.polisObj.conditions.splice(i,1);
+            const i = mf.polisObj.conditions.findIndex(val => val.$$hashKey === curr.$$hashKey);
+            if (i >= 0) mf.polisObj.conditions.splice(i, 1);
         }
+        $scope.saveAddition();
         $scope.myFactory.cameFrom = {
             name: 'Редактор полиса',
             path: $location.$$path,
         };
         $location.path('/polis');
     };
+    $scope.saveAddition = () => {
+        const pc = $scope.myFactory.polisCurrent;
+        if (!pc.isNew) return false;
+        else if (pc.name === ''||pc.values.length===0) return false;
+        else if (pc.startName===pc.name) return false;
+        //создаем строку для сохранения в базу данных с разделителем /CBL/
+        const text = pc.values.reduce((acc,val,i)=>{
+            return `${acc}${val.text}/CBL/`;
+        },'');
+        if (text.length===0) return false;
+        
+        const query = {};
+        query.type = 'addition_save';
+        query.name = pc.name;
+        query.text = text;
+        pc.isNew = false;
+        return;
+        $http.post('./php/save.php',query).then(resp=>{
+
+        },err=>{
+
+        })
+        debugger;
+    }
     $scope.newDashboard={
         TITLE_INDEX:-1,
         ADD_INDEX: ()=>{return $scope.currObj.length},
@@ -114,6 +139,7 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
     }
     $scope.init = () => {
         $scope.newDashboard.setCurrentPage('title');
+        if (!$scope.myFactory.polisCurrent.isNew) $scope.myFactory.polisCurrent.startName = $scope.myFactory.polisCurrent.name;
     }
     $scope.getCheckedConditions = () => {
         return $scope.currObj.filter(val=>val.checked).length;
