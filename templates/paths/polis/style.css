@@ -111,7 +111,7 @@ div.return{
 }
 fieldset{
     border-radius: 10px;
-    border: 5px solid var(--dark-blue);
+    border: 2px solid var(--blue);
     padding: 0;
     margin-bottom: 25px;
     box-shadow: 0 6px 20px 0px rgba(0, 0, 0, 0.4);
@@ -187,8 +187,9 @@ div.ul_container>div.ul>div>div.addAddition{
     position: relative;
     overflow: hidden;
 }
-div.matrix_container{
+div.matrix_container:not(.calc){
     margin-left: 0px;
+    height: calc(100vh - 230px);
 }
 .matrix_row{
     cursor: pointer;
@@ -216,15 +217,17 @@ tbody{
     z-index: 1;
     /* display: none; */
 }
+legend {
+    font-size: 1.2em;
+    color: var(--dark-blue);
+}
 .arrow_down_conditions{
-    position: relative;
-    float: right;
+    display: inline;
     margin-right: 10px;
     margin-left: 20px;
     color: var(--dark-blue);
-    font-size: 1.3em;
+    font-size: 1em;
     cursor: pointer;
-    bottom: 2px;
 }
 .matrix_row td {
     padding: 4px 8px 4px 8px;

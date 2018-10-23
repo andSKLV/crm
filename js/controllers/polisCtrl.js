@@ -251,6 +251,8 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
         const polis = $scope.myFactory.polisObj;
         polis.multi = !polis.multi;
     }
-    
+    $scope.deleteAddition = (ind) => {
+        debugger;
+    }
     $scope.init();
 })

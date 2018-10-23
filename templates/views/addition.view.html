@@ -8,6 +8,10 @@
             </td>
         </tr>
         <tr class="matrix_row" ng-if="!addition.included">
+            <td class="properties btns" width="20px" >
+                <input type="button" class="btnCopy" value="+" ng-click="">
+                <input type="button" class="btnDelete" value="-" ng-click="addition.delete(addition);$event.stopPropagation();">
+            </td>
             <td>
                <p>Всего: {{addition.chechedCount}} позиций</p> 
             </td>

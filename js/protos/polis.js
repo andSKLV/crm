@@ -22,7 +22,10 @@ export default class Polis {
   async loadConditions () {
     const resp = await fetch ('./src/polisConditions.json');
     this.conditions = await resp.json();
-    this.conditions.forEach(val=>val.included = false);
+    this.conditions.forEach(val=>{
+      val.included = false;
+      val.delete = (cond) => {return this.deleteAddition(cond);}
+    });
     return this.conditions;
   }
   updateConditionsCheck() {
@@ -32,5 +35,11 @@ export default class Polis {
       cond.chechedCount = counter;
     })
   }
+  deleteAddition (condition) {
+    if (condition.name==='Базовые риски'||condition.name==='Страхование по полису не распространяется на следующие грузы') return false;
+    this.conditions = this.conditions.filter(cond=>cond.name!==condition.name);
+    debugger;
+  }
+  
 }
 
