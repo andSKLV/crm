@@ -20,6 +20,11 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
             $scope.newValue="";
         } 
     }
+    $scope.inputHandler = (e,i) => {
+        if (e.keyCode===13) {
+            $scope.newDashboard.setCurrentPage($scope.newDashboard.next(i));
+        }
+    }
     $scope.$on("$destroy",()=>{
         const mass=[];
         $scope.currObj.forEach((val)=>{
@@ -60,7 +65,7 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
     $scope.newDashboard={
         TITLE_INDEX:-1,
         ADD_INDEX: ()=>{return $scope.currObj.length},
-        currentPage:null,
+        currentPage: -1,
         previousPage: -1,
         toLeft(index){
             return this.previousPage<this.currentPage && this.previousPage==index;
@@ -74,6 +79,12 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
         fromRight(index){
             return this.previousPage<this.currentPage && this.currentPage==index;
         },
+        next(ind){
+            const nextI = ind + 1;
+            if (nextI>$scope.currObj.length) return ind;
+            if (nextI===$scope.currObj.length) return this.ADD_INDEX;
+            else return nextI;
+        },
         checkCurrentPage(index){
             if (index === 'add') index = this.ADD_INDEX;
             if (index === 'title') index = this.TITLE_INDEX;
@@ -84,11 +95,12 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
             if (index === 'title') index = this.TITLE_INDEX;
             this.previousPage=this.currentPage;
             this.currentPage=index;
-            $scope.currObj.forEach( param=>{
-                if(param.type=='search/create'){
-                    param.values[0].name="";
-                }
-            })
+            // $scope.currObj.forEach( param=>{
+            //     if(param.type=='search/create'){
+            //         param.values[0].name="";
+            //     }
+            // })
+            setTimeout(()=> document.querySelector('.input_polisEditor').focus(),400);
         },
         alreadySelected(index) {
             switch (index) {

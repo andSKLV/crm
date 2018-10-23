@@ -6,7 +6,7 @@
             ]"
             ng-if="newDashboard.checkCurrentPage('title')" class="ul">
             <textarea  ng-model="dashboard.myFactory.polisCurrent.name"
-            class="input_polisEditor" autofocus></textarea>
+            class="input_polisEditor" autofocus ng-keyup="inputHandler($event,newDashboard.TITLE_INDEX)"></textarea>
         </div>
         <div ng-repeat="param in currObj" class="ul"
              ng-class="[
@@ -16,7 +16,7 @@
              ]"
              ng-if="$index==newDashboard.currentPage" >      
              <textarea  ng-model="param.text"
-             class="input_polisEditor" autofocus></textarea>
+             class="input_polisEditor" autofocus ng-keyup="inputHandler($event,$index)"></textarea>
         </div>
         <div ng-class="[
                 {mi_current: dashboard.currentUl(currObj.length+1)},

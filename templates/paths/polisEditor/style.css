@@ -3,7 +3,7 @@
   background:var(--gray);
   resize: none;
   height: 100%;
-  font-size: 1.3em;
+  font-size: 1.2em;
   padding: 4px 8px 4px 8px;
   border: none;
 }
@@ -13,6 +13,12 @@
 }
 .polisEditorMatrixRow_header{
   text-align: center;
+  background-color: var(--blue);
+  color: white;
+}
+.polisEditorMatrixRow_header h3{
+  position: relative;
+  left: 1%;
 }
 div.dashboard_container {
   width: 100%;

@@ -189,7 +189,7 @@ div.ul_container>div.ul>div>div.addAddition{
 }
 div.matrix_container:not(.calc){
     margin-left: 0px;
-    height: calc(100vh - 230px);
+    height: calc(100vh - 280px);
 }
 .matrix_row{
     cursor: pointer;
