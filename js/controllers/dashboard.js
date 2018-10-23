@@ -332,9 +332,7 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
         if (toBeClosed===true) menu.classList.add('nav-back_container--hidden');
     }
     // this.selectParam(0);
-    this.deleteAddition = ind => {
-        debugger;
-    }
+
     $scope.$on('$destroy', function () {
         myFactory.removeCellSelection ('dashboard_container',true);
     });

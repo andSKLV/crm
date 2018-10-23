@@ -38,7 +38,6 @@ export default class Polis {
   deleteAddition (condition) {
     if (condition.name==='Базовые риски'||condition.name==='Страхование по полису не распространяется на следующие грузы') return false;
     this.conditions = this.conditions.filter(cond=>cond.name!==condition.name);
-    debugger;
   }
   
 }
