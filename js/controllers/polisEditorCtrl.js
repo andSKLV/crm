@@ -115,6 +115,8 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
     $scope.init = () => {
         $scope.newDashboard.setCurrentPage('title');
     }
-
+    $scope.getCheckedConditions = () => {
+        return $scope.currObj.filter(val=>val.checked).length;
+    }
     $scope.init();
 });

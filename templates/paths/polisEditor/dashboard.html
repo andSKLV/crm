@@ -41,7 +41,7 @@
             </div>
             <div    ng-click="newDashboard.setCurrentPage('add')"
                     ng-class="[{mi_selected: newDashboard.checkCurrentPage('add')}]">
-                +
+                {{(getCheckedConditions()>3)?'+':'Добавить'}}
             </div>
         </div>
     </div>
