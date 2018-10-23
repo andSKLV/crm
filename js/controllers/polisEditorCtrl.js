@@ -5,7 +5,6 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
     };
     $scope.myFactory = myFactory;
     $scope.currObj=myFactory.polisCurrent.values;
-    console.log($scope.currObj);
     $scope.delete=(value)=>{
         if(value.text==="") $scope.currObj.splice($scope.currObj.indexOf(value), 1);
         else value.checked=false;
@@ -35,8 +34,6 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
                 $scope.currObj.splice($scope.currObj.indexOf(value), 1);
             })
         }
-
-
     })
     let paramNumbers=1;
     $scope.addNew=(value)=>{
@@ -61,11 +58,10 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
         };
         $location.path('/polis');
     };
-
     $scope.newDashboard={
         TITLE_INDEX:-1,
         ADD_INDEX: ()=>{return $scope.currObj.length},
-        currentPage: -1,
+        currentPage: null,
         previousPage: -1,
         toLeft(index){
             return this.previousPage<this.currentPage && this.previousPage==index;
@@ -116,4 +112,9 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
             }
         }
     }
+    $scope.init = () => {
+        $scope.newDashboard.setCurrentPage('title');
+    }
+
+    $scope.init();
 });
