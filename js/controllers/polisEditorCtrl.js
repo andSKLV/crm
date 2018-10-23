@@ -58,6 +58,8 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
     };
 
     $scope.newDashboard={
+        TITLE_INDEX:-1,
+        ADD_INDEX: ()=>{return $scope.currObj.length},
         currentPage:null,
         previousPage: -1,
         toLeft(index){
@@ -73,9 +75,13 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
             return this.previousPage<this.currentPage && this.currentPage==index;
         },
         checkCurrentPage(index){
+            if (index === 'add') index = this.ADD_INDEX;
+            if (index === 'title') index = this.TITLE_INDEX;
             return index===this.currentPage;
         },
         setCurrentPage(index){
+            if (index === 'add') index = this.ADD_INDEX;
+            if (index === 'title') index = this.TITLE_INDEX;
             this.previousPage=this.currentPage;
             this.currentPage=index;
             $scope.currObj.forEach( param=>{

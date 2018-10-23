@@ -4,7 +4,7 @@
                 {mi_moveFromRight: dashboard.currentUl($index)},
                 { mi_moveToRight: !dashboard.currentUl($index)}
             ]"
-            ng-if="$index==newDashboard.currentPage" class="ul">
+            ng-if="newDashboard.checkCurrentPage('title')" class="ul">
             <textarea  ng-model="dashboard.myFactory.polisCurrent.name"
             class="input_polisEditor" autofocus></textarea>
         </div>
@@ -23,31 +23,24 @@
                 {mi_moveFromRight: dashboard.currentUl(currObj.length+1)},
                 { mi_moveToRight: !dashboard.currentUl(currObj.length+1)}
             ]"
-            ng-show="dashboard.currentUl(currObj.length+1)" class="ul">
+            ng-show="newDashboard.checkCurrentPage('add')" class="ul">
             <textarea class="input_polisEditor" ng-model="newValue" ng-keyup="addNewValue($event)" autofocus></textarea>
         </div>
     
     </div>
     <div class="nav">
         <div>
-            <div    ng-click="newDashboard.setCurrentPage($index)"
-                        ng-class="[
-                        {mi_selected: dashboard.myFactory.document.selectedParam===$index}
-                ]">
+            <div ng-click="newDashboard.setCurrentPage('title')" ng-class="{mi_selected: newDashboard.checkCurrentPage('title')}">
                Название списка
            </div>
-            <div    ng-repeat="param in currObj"
-                    ng-click="newDashboard.setCurrentPage($index)"
+            <div ng-repeat="param in currObj"
+                 ng-click="newDashboard.setCurrentPage($index)"
                     ng-if="param.checked"
-                    ng-class="[
-                        {mi_selected: dashboard.myFactory.document.selectedParam===$index}
-                    ]">
+                    ng-class="[{mi_selected: newDashboard.checkCurrentPage($index)}]">
                 {{$index+1}}
             </div>
-            <div    ng-click="newDashboard.setCurrentPage($index+1)"
-                    ng-class="[
-                    {mi_selected: dashboard.myFactory.document.selectedParam===currObj.length+1}
-                    ]">
+            <div    ng-click="newDashboard.setCurrentPage('add')"
+                    ng-class="[{mi_selected: newDashboard.checkCurrentPage('add')}]">
                 +
             </div>
         </div>
