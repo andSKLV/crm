@@ -4,7 +4,7 @@
                 {mi_moveFromRight: dashboard.currentUl($index)},
                 { mi_moveToRight: !dashboard.currentUl($index)}
             ]"
-            ng-show="dashboard.currentUl($index)" class="ul">
+            ng-if="$index==newDashboard.currentPage" class="ul">
             <textarea  ng-model="dashboard.myFactory.polisCurrent.name"
             class="input_polisEditor" autofocus></textarea>
         </div>
@@ -14,7 +14,7 @@
                 {mi_moveFromRight: dashboard.currentUl($index)},
                 { mi_moveToRight: !dashboard.currentUl($index)}
              ]"
-             ng-show="dashboard.currentUl($index)" >      
+             ng-if="$index==newDashboard.currentPage" >      
              <textarea  ng-model="param.text"
              class="input_polisEditor" autofocus></textarea>
         </div>
@@ -30,21 +30,21 @@
     </div>
     <div class="nav">
         <div>
-            <div    ng-click="dashboard.selectParam($index) "
+            <div    ng-click="newDashboard.setCurrentPage($index)"
                         ng-class="[
                         {mi_selected: dashboard.myFactory.document.selectedParam===$index}
                 ]">
                Название списка
            </div>
             <div    ng-repeat="param in currObj"
-                    ng-click="dashboard.selectParam($index) "
+                    ng-click="newDashboard.setCurrentPage($index)"
                     ng-if="param.checked"
                     ng-class="[
                         {mi_selected: dashboard.myFactory.document.selectedParam===$index}
                     ]">
                 {{$index+1}}
             </div>
-            <div    ng-click="dashboard.selectParam(currObj.length+1) "
+            <div    ng-click="newDashboard.setCurrentPage($index+1)"
                     ng-class="[
                     {mi_selected: dashboard.myFactory.document.selectedParam===currObj.length+1}
                     ]">

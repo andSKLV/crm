@@ -3,7 +3,7 @@
   background:var(--gray);
   resize: none;
   height: 100%;
-  font-size: 1em;
+  font-size: 1.3vw;
   padding: 4px 8px 4px 8px;
   border: none;
 }

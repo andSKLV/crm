@@ -56,4 +56,46 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location){
         };
         $location.path('/polis');
     };
+
+    $scope.newDashboard={
+        currentPage:null,
+        previousPage: -1,
+        toLeft(index){
+            return this.previousPage<this.currentPage && this.previousPage==index;
+        },
+        toRight(index){
+            return this.previousPage>this.currentPage && this.previousPage==index;
+        },
+        fromLeft(index){
+            return this.previousPage>this.currentPage && this.currentPage==index;
+        },
+        fromRight(index){
+            return this.previousPage<this.currentPage && this.currentPage==index;
+        },
+        checkCurrentPage(index){
+            return index===this.currentPage;
+        },
+        setCurrentPage(index){
+            this.previousPage=this.currentPage;
+            this.currentPage=index;
+            $scope.currObj.forEach( param=>{
+                if(param.type=='search/create'){
+                    param.values[0].name="";
+                }
+            })
+        },
+        alreadySelected(index) {
+            switch (index) {
+                case 0:
+                    return (myFactory.companyObj.isFull);
+                    break;
+                case 1:
+                    return myFactory.parks.length>0;
+                    break;
+                default:
+                    return false;
+                break;
+            }
+        }
+    }
 });
