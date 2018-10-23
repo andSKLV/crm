@@ -24,7 +24,6 @@ export default class Polis {
     this.conditions = await resp.json();
     this.conditions.forEach(val=>{
       val.included = false;
-      val.delete = (cond) => {return this.deleteAddition(cond);}
     });
     return this.conditions;
   }
@@ -33,6 +32,7 @@ export default class Polis {
       let counter = 0;
       cond.values.forEach(val=>{if (val.checked) counter++});
       cond.chechedCount = counter;
+      cond.delete = (cond) => {return this.deleteAddition(cond);}
     })
   }
   deleteAddition (condition) {
