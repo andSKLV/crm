@@ -98,7 +98,8 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
         if (!myFactory.polisObj||!myFactory.polisObj.isRequested||!$scope.currObj||$scope.currObj.length===0) {
             if (!myFactory.polisObj.conditions) await myFactory.polisObj.loadConditions();
             await loadDashboardObj();
-        } 
+        };
+        myFactory.polisObj.updateConditionsCheck();
         openTab();
     }
 

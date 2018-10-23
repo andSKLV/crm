@@ -25,6 +25,12 @@ export default class Polis {
     this.conditions.forEach(val=>val.included = false);
     return this.conditions;
   }
-  
+  updateConditionsCheck() {
+    this.conditions.forEach(cond=>{
+      let counter = 0;
+      cond.values.forEach(val=>{if (val.checked) counter++});
+      cond.chechedCount = counter;
+    })
+  }
 }
 
