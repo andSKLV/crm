@@ -1,6 +1,6 @@
 import Polis from '../protos/polis.js';
 
-app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootScope){
+app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootScope,$timeout){
 
     this.myFactory = myFactory;
     $scope.myFactory = myFactory;
@@ -157,6 +157,9 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
             case "Расчет":
                 $location.path(`/calculation`);
                 break;
+            case 'Оговорки и условия':
+                $scope.myFactory.addNewPolisProperty();
+                $timeout(()=>$location.path(`/polisEditor`),0);
             default:
                 $location.path(value);
                 break;

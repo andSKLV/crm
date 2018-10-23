@@ -19,19 +19,10 @@
     },
     {
         "name": "Оговорки и условия",
-        "type": "lists",
-        "values":[
+        "type": "search/create",
+        "values": [
             {
-                "name": "Базовые риски застрахованы",
-                "type": "multi_button"
-            },
-            {
-                "name": "За исключением",
-                "type": "multi_button"
-            },
-            {
-                "name": "Новый список",
-                "type": "button"
+                "name": ""
             }
         ]
     },

@@ -79,7 +79,7 @@ app.config(function($routeProvider){//с помощью .config мы опред�
             controller: 'profileCtrl'
         })
         .otherwise({
-            redirectTo: '/login'
+            redirectTo: '/'
         });
 });
 app.directive('financeDashboard', function(){
