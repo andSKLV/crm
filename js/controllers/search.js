@@ -89,9 +89,9 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
             values[0].db="companies";
         } 
         else if(type=="calculationActions") data.type="find_calculation";
-        else if (type=='Оговорки и условия') data.type='additions';
+        else if (type=='Оговорки и условия') data.type='find_addition';
         else data.type=type;
-        if (data.type==='additions') return false;
+        
         if(scope.abort){
             scope.abort.resolve();
         }
@@ -101,28 +101,51 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
         if (!flag) return false;
         scope.template.txt=flag.val;
         scope.template.model=flag.model;
-        return $http.post("./php/search.php", data,{timeout:scope.abort.promise}).then(function success (response) {
-                scope.myFactory.matrixType=type;
-                $rootScope.cacheTemplate={};
-                $rootScope.search_result=response.data;
-                if(type!=="Компания"&&type!=="find_company"){
-                    $rootScope.search_result.forEach(row=>{
-                        if(row.fact_premia.indexOf(" ")!==-1){
-                            let fact_price=row.fact_premia.split(" ");
-                            if(fact_price[0]=="undefined" || fact_price[0]==0) delete row.fact_premia;
-                            else row.fact_premia=fact_price[0];
-                        }
-                        else if(row.fact_premia.indexOf(";")!==-1){
-                            let fact_price=row.fact_premia.split(";");
-                            if(fact_price[0]=="" || fact_price[0]==0) delete row.fact_premia;
-                            else row.fact_premia=fact_price[0];
-                        }
-
-                    });
-                }   
-            },function error (response){
-                if (response.data!==null) console.log(response);
+        return $http.post("./php/search.php", data, { timeout: scope.abort.promise }).then(function success(response) {
+            scope.myFactory.matrixType = type;
+            $rootScope.cacheTemplate = {};
+            if (type === 'Оговорки и условия') {
+                $rootScope.search_result = parseText(response.data,'text');
+                return true;
             }
+            $rootScope.search_result = response.data;
+            if (type !== "Компания" && type !== "find_company") {
+                $rootScope.search_result.forEach(row => {
+                    if (row.fact_premia.indexOf(" ") !== -1) {
+                        let fact_price = row.fact_premia.split(" ");
+                        if (fact_price[0] == "undefined" || fact_price[0] == 0) delete row.fact_premia;
+                        else row.fact_premia = fact_price[0];
+                    }
+                    else if (row.fact_premia.indexOf(";") !== -1) {
+                        let fact_price = row.fact_premia.split(";");
+                        if (fact_price[0] == "" || fact_price[0] == 0) delete row.fact_premia;
+                        else row.fact_premia = fact_price[0];
+                    }
+
+                });
+            }
+            /**
+             * Function of splitting text response to array by splitter
+             * @param {Array} data array with response data
+             * @param {string} fieldName name of field with text that need to be parsed 
+             */
+            function parseText(data, fieldName) {
+                if (!Array.isArray(data)) {
+                    console.error('expected array ' + data);
+                    return null;
+                }
+                const _splitter = '/CBL/';
+                const result = data.map(part=>{
+                    //разделяем строку по разделителям, удаляем последний пустой элемент, это связано с алгоритмом формирования строки
+                    part[fieldName] = part[fieldName].split(_splitter);
+                    part[fieldName].pop()
+                    return part;
+                })
+                return result;
+            }
+        }, function error(response) {
+            if (response.data !== null) console.log(response);
+        }
         );
     };
     this.clean=function(){//очищаем все результаты поиска

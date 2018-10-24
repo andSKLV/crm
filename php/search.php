@@ -80,7 +80,17 @@
            $resultJson[]=$row;
         }
         echo json_encode($resultJson);
-	}
+    }
+    else if ($data['type']=="find_addition") {
+        $query = "SELECT id, name, text, date FROM additions WHERE LOWER(".$value['model'].") RLIKE LOWER('".$value['val']."')";
+        $result = mysqli_query($link, $query) or die(mysqli_error($link));
+        $resultJson = array();
+
+        while($row=mysqli_fetch_array($result, MYSQLI_ASSOC)){
+           $resultJson[]=$row;
+        }
+        echo json_encode($resultJson);
+    }
 	else if($data['type']=="load_calculation"){
 	    $query="SELECT * FROM saved WHERE id=".$data['id'];
 	    $result = mysqli_query($link, $query) or die(mysqli_error());
