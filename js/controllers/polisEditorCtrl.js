@@ -114,6 +114,10 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location,$http){
         },
         setCurrentPage(index){
             if ($scope.myFactory.polisCurrent.name.trim() === '') index = 'title'; // если имя не задано, то нельзя переключиться
+            // если оговорки из загруженных, то нельзя менять их структуру, поэтому при очистке поля нельзя переключиться, пока оно не будет заполнено
+            if (!$scope.myFactory.polisCurrent.isNew &&
+                this.currentPage!==null && Number(this.currentPage)>this.TITLE_INDEX && Number(this.currentPage)<this.ADD_INDEX() &&
+                $scope.myFactory.polisCurrent.values[this.currentPage].text==='') index=this.currentPage; 
             if (index === 'add') index = this.ADD_INDEX;
             if (index === 'title') index = this.TITLE_INDEX;
             this.previousPage=this.currentPage;
