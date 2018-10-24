@@ -47,19 +47,19 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location,$http){
     $scope.returnToDashboard = async () => {
         const mf = $scope.myFactory;
         const curr = mf.polisCurrent;
-        if (curr.name === "" && curr.values.length === 0) {
-            // если объект пуст, то удаляем его
-            const i = mf.polisObj.conditions.findIndex(val => val.$$hashKey === curr.$$hashKey);
+        const i = mf.polisObj.conditions.findIndex(val => val.$$hashKey === curr.$$hashKey);
+        if (curr.name === "" || curr.values.length === 0) {
+            // если объект пуст, то удаляем его или без имени
             if (i >= 0) mf.polisObj.conditions.splice(i, 1);
         }
-        $scope.saveAddition();
+        $scope.saveAddition(i);
         $scope.myFactory.cameFrom = {
             name: 'Редактор полиса',
             path: $location.$$path,
         };
         $location.path('/polis');
     };
-    $scope.saveAddition = () => {
+    $scope.saveAddition = (ind) => {
         const pc = $scope.myFactory.polisCurrent;
         if (!pc.isNew) return false;
         else if (pc.name === ''||pc.values.length===0) return false;
@@ -75,10 +75,10 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location,$http){
         query.name = pc.name;
         query.text = text;
         pc.isNew = false;
-        return;
         $http.post('./php/save.php',query).then(resp=>{
-            console.log(resp.data);
-            debugger;
+            const id = resp.data;
+            if (Number.isNaN(Number(id))===NaN) console.error('ошибка сохранения оговорок ' + resp.data);
+            else $scope.myFactory.polisObj.conditions[ind].id = resp.data;
         },err=>{
 
         })

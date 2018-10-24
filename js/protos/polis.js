@@ -6,13 +6,13 @@ export default class Polis {
     this.isInited = false;
     this.isRequested = false;
     this.multi = true;
+    this.additions = [];
     if (mf) this.bindMyFactory(mf);
   }
   bindMyFactory (myFactory) {
     this.factory = myFactory;
     this.updateNames ();
   };
-
   updateNames () {
     const myFactory = this.factory;
     if (myFactory.calculationName!=="" && myFactory.calculationName!==undefined) this.calcName = myFactory.calculationName;
@@ -39,6 +39,9 @@ export default class Polis {
     if (condition.name==='Базовые риски'||condition.name==='Страхование по полису не распространяется на следующие грузы') return false;
     this.conditions = this.conditions.filter(cond=>cond.name!==condition.name);
   }
-  
+  applyStartAdditions () {
+    //стартовые дополнения 
+    this.additions = {'1':[],'2':[]};
+  }
 }
 
