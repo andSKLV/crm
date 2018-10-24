@@ -64,7 +64,7 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location,$http){
         if (!pc.isNew) return false;
         else if (pc.name === ''||pc.values.length===0) return false;
         else if (pc.startName===pc.name) return false;
-        //создаем строку для сохранения в базу данных с разделителем /CBL/
+        // создаем строку для сохранения в базу данных с разделителем /CBL/
         const text = pc.values.reduce((acc,val,i)=>{
             return `${acc}${val.text}/CBL/`;
         },'');
@@ -77,7 +77,8 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location,$http){
         pc.isNew = false;
         return;
         $http.post('./php/save.php',query).then(resp=>{
-
+            console.log(resp.data);
+            debugger;
         },err=>{
 
         })
@@ -112,15 +113,11 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location,$http){
             return index===this.currentPage;
         },
         setCurrentPage(index){
+            if ($scope.myFactory.polisCurrent.name.trim() === '') index = 'title'; // если имя не задано, то нельзя переключиться
             if (index === 'add') index = this.ADD_INDEX;
             if (index === 'title') index = this.TITLE_INDEX;
             this.previousPage=this.currentPage;
             this.currentPage=index;
-            // $scope.currObj.forEach( param=>{
-            //     if(param.type=='search/create'){
-            //         param.values[0].name="";
-            //     }
-            // })
             setTimeout(()=> document.querySelector('.input_polisEditor').focus(),400);
         },
         alreadySelected(index) {

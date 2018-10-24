@@ -60,5 +60,11 @@
     $result = mysqli_query($link, $query) or die(mysqli_error($link));
     echo mysqli_insert_id($link);
   }
+  else if ($data['type']=="addition_save"){
+    $date=date("Y-m-d");
+    $query = "INSERT INTO additions VALUES ('','".$data['name']."','".$data['text']."','".$date."')";
+    $result = mysqli_query($link, $query) or die(mysqli_error($link));
+    echo mysqli_insert_id($link);
+  }
 
 ?>

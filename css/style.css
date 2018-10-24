@@ -45,6 +45,7 @@ div.matrix_container{
     margin-right: 0px;
     width: auto;
     height: auto;
+    overflow-x: hidden;
   }
 div.matrix_container.calc{
     overflow: auto;
