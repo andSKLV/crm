@@ -125,10 +125,6 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             console.log(1)
         }
     };
-
-
-
-
     $scope.returnToDashboard = () => {
         $location.path('/');
     };
@@ -165,8 +161,30 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 break;
         }
     }
-    $scope.loadAddition = ind => {
-
+    /**
+     * Функция загрузки объекта дополнения в окно редактирования дополнений
+     * @param {obj} data - объект дополнения выгруженный из базы данных
+     */
+    $scope.loadAddition = data => {
+        const addition = data;
+        const conditions = $scope.myFactory.polisObj.conditions;
+        const val = [];
+        // формируем текстовые значения в нужную структуру
+        data.text.forEach(txt => {
+            const obj = {};
+            obj.checked = true;
+            obj.text = txt;
+            val.push(obj);
+        })
+        //добавляем новое дополнение
+        conditions.push({
+            name: data.name,
+            values: val,
+            id: data.id,
+            isNew: false,
+        });
+        $scope.myFactory.polisCurrent = conditions[conditions.length - 1];
+        $timeout(() => $location.path(`/polisEditor`), 0);
     }
     $scope.newDashboard = {
         currentPage: null,
