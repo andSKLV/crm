@@ -1,6 +1,6 @@
 import Polis from '../protos/polis.js';
 
-app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootScope,$timeout){
+app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $rootScope, $timeout) {
 
     this.myFactory = myFactory;
     $scope.myFactory = myFactory;
@@ -40,7 +40,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
         const clearSearchResults = () => {
             //обнуляем  search_result
             if (!($rootScope.search_result)) $scope.newDashboard.setCurrentPage(0);
-            if ($rootScope.search_result) $rootScope.search_result=[];
+            if ($rootScope.search_result) $rootScope.search_result = [];
             myFactory.polisObj.isInited = true;
         }
         /**
@@ -50,7 +50,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
             myFactory.polisObj.isRequested = true;
             return $http.post('./src/polis.json').then((resp) => {
                 if (!Array.isArray(resp.data) || resp.data.length < 1) {
-                    alert ('Возникла ошибка при загрузке данных. Пожалуйста, по возможности не закрывайте окно и обратитесь к разработчику');
+                    alert('Возникла ошибка при загрузке данных. Пожалуйста, по возможности не закрывайте окно и обратитесь к разработчику');
                     console.error(resp);
                 }
                 else {
@@ -67,10 +67,10 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
             if (!$scope.currObj) return false;
             let tabIndex = 0;
 
-            if (myFactory.cameFrom.name==='Редактор полиса') {
+            if (myFactory.cameFrom.name === 'Редактор полиса') {
                 //если пришли из редактора полиса, то открываем сразу это меню
-                tabIndex = $scope.currObj.findIndex(val=>val.name==='Оговорки и условия');
-            } 
+                tabIndex = $scope.currObj.findIndex(val => val.name === 'Оговорки и условия');
+            }
             else if (!myFactory.companyObj.card) {
                 tabIndex = 0;
             }
@@ -79,8 +79,8 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
             }
             else {
                 // ищем первую незаполненную вкладку
-                const tabsAmount = $scope.currObj.filter((val)=>val.name).length;
-                for (let i=0;i<tabsAmount;i++) {
+                const tabsAmount = $scope.currObj.filter((val) => val.name).length;
+                for (let i = 0; i < tabsAmount; i++) {
                     // если вкладка пустая, то выбираем ее на открытие и завершаем перебор
                     if (!$scope.newDashboard.alreadySelected(i)) {
                         tabIndex = i;
@@ -95,7 +95,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
         selectNames();
         switchMakingPolis();
         clearSearchResults();
-        if (!myFactory.polisObj||!myFactory.polisObj.isRequested||!$scope.currObj||$scope.currObj.length===0) {
+        if (!myFactory.polisObj || !myFactory.polisObj.isRequested || !$scope.currObj || $scope.currObj.length === 0) {
             if (!myFactory.polisObj.conditions) await myFactory.polisObj.loadConditions();
             await loadDashboardObj();
         };
@@ -109,11 +109,11 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
     };
 
     for (let i = 0; i <= 5; i += 1) {
-        $scope.itemsList.items1.push({'Id': i, 'Label': 'Item A_' + i});
+        $scope.itemsList.items1.push({ 'Id': i, 'Label': 'Item A_' + i });
     }
 
     for (let i = 0; i <= 5; i += 1) {
-        $scope.itemsList.items2.push({'Id': i, 'Label': 'Item B_' + i});
+        $scope.itemsList.items2.push({ 'Id': i, 'Label': 'Item B_' + i });
     }
     $scope.sortableOptions = {
         containment: '#horizontal-container',
@@ -129,19 +129,19 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
 
 
 
-    $scope.returnToDashboard=()=>{
+    $scope.returnToDashboard = () => {
         $location.path('/');
     };
-    $scope.clicking=(event, process)=>{
+    $scope.clicking = (event, process) => {
         event.stopImmediatePropagation();
-        myFactory.parks.forEach((park)=>{
-            park.processes.forEach((process)=>{
-                process.showCars=false;
+        myFactory.parks.forEach((park) => {
+            park.processes.forEach((process) => {
+                process.showCars = false;
             })
         })
-        process.showCars=!process.showCars;
+        process.showCars = !process.showCars;
     }
-    $scope.console=(param)=>{
+    $scope.console = (param) => {
         console.dir($scope.itemsList.items1);
     }
 
@@ -150,7 +150,7 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
             name: 'Проект документа',
             path: $location.$$path,
         };
-        switch(value){
+        switch (value) {
             case "Компания":
                 $location.path(`/company`);
                 break;
@@ -159,37 +159,40 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
                 break;
             case 'Оговорки и условия':
                 $scope.myFactory.addNewPolisProperty();
-                $timeout(()=>$location.path(`/polisEditor`),0);
+                $timeout(() => $location.path(`/polisEditor`), 0);
             default:
                 $location.path(value);
                 break;
         }
     }
-    $scope.newDashboard={
-        currentPage:null,
+    $scope.loadAddition = ind => {
+
+    }
+    $scope.newDashboard = {
+        currentPage: null,
         previousPage: -1,
-        toLeft(index){
-            return this.previousPage<this.currentPage && this.previousPage==index;
+        toLeft(index) {
+            return this.previousPage < this.currentPage && this.previousPage == index;
         },
-        toRight(index){
-            return this.previousPage>this.currentPage && this.previousPage==index;
+        toRight(index) {
+            return this.previousPage > this.currentPage && this.previousPage == index;
         },
-        fromLeft(index){
-            return this.previousPage>this.currentPage && this.currentPage==index;
+        fromLeft(index) {
+            return this.previousPage > this.currentPage && this.currentPage == index;
         },
-        fromRight(index){
-            return this.previousPage<this.currentPage && this.currentPage==index;
+        fromRight(index) {
+            return this.previousPage < this.currentPage && this.currentPage == index;
         },
-        checkCurrentPage(index){
-            return index===this.currentPage;
+        checkCurrentPage(index) {
+            return index === this.currentPage;
         },
-        setCurrentPage(index){
-            this.previousPage=this.currentPage;
-            this.currentPage=index;
-            $rootScope.search_result=[];
-            $scope.currObj.forEach( param=>{
-                if(param.type=='search/create'){
-                    param.values[0].name="";
+        setCurrentPage(index) {
+            this.previousPage = this.currentPage;
+            this.currentPage = index;
+            $rootScope.search_result = [];
+            $scope.currObj.forEach(param => {
+                if (param.type == 'search/create') {
+                    param.values[0].name = "";
                 }
             })
         },
@@ -199,53 +202,53 @@ app.controller("polisCtrl",function(myFactory, $http, $location, $scope, $rootSc
                     return (myFactory.companyObj.isFull);
                     break;
                 case 1:
-                    return myFactory.parks.length>0;
+                    return myFactory.parks.length > 0;
                     break;
                 default:
                     return false;
-                break;
+                    break;
             }
         }
     }
 
-    $scope.loadProcess=(process, key)=>{
-        myFactory.loadProcess={
+    $scope.loadProcess = (process, key) => {
+        myFactory.loadProcess = {
             process,
             key
         }
         $location.path(`/calculation`);
     }
-    $scope.loadClient=(key)=>{
-        myFactory.loadClient=key;
+    $scope.loadClient = (key) => {
+        myFactory.loadClient = key;
     }
-    this.makePDF=()=>{
-        const getRisks=()=>{
-            return new Promise((resolve, reject)=>{
+    this.makePDF = () => {
+        const getRisks = () => {
+            return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();
-                xhr.addEventListener('readystatechange', ()=>{
-                    if(xhr.readyState==4){
+                xhr.addEventListener('readystatechange', () => {
+                    if (xhr.readyState == 4) {
                         resolve(JSON.parse(xhr.responseText));
-                        
+
                     }
                 })
                 xhr.open("GET", "./src/HIP.json", true);
                 xhr.send();
             })
         };
-        getRisks().then((data)=>{
-            let risks=[];
-            data.forEach(({model, values})=>{
-                if(model=="risk"){
-                    values.forEach((value)=>{
-                        if(value.action===undefined && value.type==="risk") risks.push(value);
+        getRisks().then((data) => {
+            let risks = [];
+            data.forEach(({ model, values }) => {
+                if (model == "risk") {
+                    values.forEach((value) => {
+                        if (value.action === undefined && value.type === "risk") risks.push(value);
                     })
                 }
             })
             console.log(risks);
-            
+
             polis.makePDF(myFactory, risks);
             return null;
-        },function error (response){
+        }, function error(response) {
             console.log(response);
 
         })
