@@ -61,28 +61,26 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location,$http){
     };
     $scope.saveAddition = (ind) => {
         const pc = $scope.myFactory.polisCurrent;
-        if (!pc.isNew) return false;
-        else if (pc.name === ''||pc.values.length===0) return false;
-        else if (pc.startName===pc.name) return false;
+        if (!pc.isNew && pc.startName === pc.name) return false;
+        else if (pc.name === '' || pc.values.length === 0) return false;
         // создаем строку для сохранения в базу данных с разделителем /CBL/
-        const text = pc.values.reduce((acc,val,i)=>{
+        const text = pc.values.reduce((acc, val, i) => {
             return `${acc}${val.text}/CBL/`;
-        },'');
-        if (text.length===0) return false;
-        
+        }, '');
+        if (text.length === 0) return false;
+
         const query = {};
         query.type = 'addition_save';
         query.name = pc.name;
         query.text = text;
         pc.isNew = false;
-        $http.post('./php/save.php',query).then(resp=>{
+        $http.post('./php/save.php', query).then(resp => {
             const id = resp.data;
-            if (Number.isNaN(Number(id))===NaN) console.error('ошибка сохранения оговорок ' + resp.data);
+            if (Number.isNaN(Number(id)) === NaN) console.error('ошибка сохранения оговорок ' + resp.data);
             else $scope.myFactory.polisObj.conditions[ind].id = resp.data;
-        },err=>{
+        }, err => {
 
         })
-        debugger;
     }
     $scope.newDashboard={
         TITLE_INDEX:-1,
@@ -117,7 +115,8 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location,$http){
             // если оговорки из загруженных, то нельзя менять их структуру, поэтому при очистке поля нельзя переключиться, пока оно не будет заполнено
             if (!$scope.myFactory.polisCurrent.isNew &&
                 this.currentPage!==null && Number(this.currentPage)>this.TITLE_INDEX && Number(this.currentPage)<this.ADD_INDEX() &&
-                $scope.myFactory.polisCurrent.values[this.currentPage].text==='') index=this.currentPage; 
+                $scope.myFactory.polisCurrent.values[this.currentPage].text==='' &&
+                $scope.myFactory.polisCurrent.startName===$scope.myFactory.polisCurrent.name) index=this.currentPage; 
             if (index === 'add') index = this.ADD_INDEX;
             if (index === 'title') index = this.TITLE_INDEX;
             this.previousPage=this.currentPage;

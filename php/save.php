@@ -66,5 +66,11 @@
     $result = mysqli_query($link, $query) or die(mysqli_error($link));
     echo mysqli_insert_id($link);
   }
+  if($data["type"]=="addition_delete"){
+    $id=$data['id'];
+    $query = "DELETE FROM additions WHERE id = '".$id."'";
+    $result = mysqli_query($link, $query) or die(mysqli_error());
+    if ($result) echo "success";
+  }
 
 ?>

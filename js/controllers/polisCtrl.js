@@ -275,5 +275,23 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         const polis = $scope.myFactory.polisObj;
         polis.multi = !polis.multi;
     }
+    $scope.deleteAdditionFromDB = id => {
+        if (id < 3) return false;
+        const query = {};
+        query.type = 'addition_delete';
+        query.id = id;
+        $http.post('./php/save.php', query).then(resp => {
+            if (resp.data!=='success') {
+                alert('Ошибка удаления. Пожалуйста, по возможности не закрывайте окно и обратитесь к разработчику');
+                console.error(resp.data);
+            }
+            else $rootScope.search_result = $rootScope.search_result.filter(val=>val.id!==id);
+        }, err => {
+            console.error(err);
+        });
+        debugger;
+    }
+
+
     $scope.init();
 })
