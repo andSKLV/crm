@@ -6,6 +6,8 @@ export default class Polis {
     this.isInited = false;
     this.isRequested = false;
     this.multi = true;
+    this.additionsSeen = false;
+    this.financeSeen = false;
     if (mf) this.bindMyFactory(mf);
   }
   bindMyFactory (myFactory) {

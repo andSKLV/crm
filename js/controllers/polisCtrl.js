@@ -207,6 +207,8 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         setCurrentPage(index) {
             this.previousPage = this.currentPage;
             this.currentPage = index;
+            if (index===2) $scope.myFactory.polisObj.additionsSeen = true;
+            if (index===3) $scope.myFactory.polisObj.financeSeen = true;
             $rootScope.search_result = [];
             $scope.currObj.forEach(param => {
                 if (param.type == 'search/create') {
@@ -221,6 +223,12 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     break;
                 case 1:
                     return myFactory.parks.length > 0;
+                    break;
+                case 2:
+                    return myFactory.polisObj.additionsSeen;
+                    break;
+                case 3:
+                    return myFactory.polisObj.financeSeen && myFactory.payment.array && myFactory.payment.array.length>0;
                     break;
                 default:
                     return false;
