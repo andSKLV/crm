@@ -29,8 +29,7 @@ export default class Polis {
     let url;
     switch (str) {
       case 'Экспедиторы':
-        return false;
-        // url = 'polisConditions.json'; //FIXME: заменить, когда появятся
+        url = 'polisConditions-conf';
         break;
       case 'Перевозчики':
         url = 'polisConditions'
