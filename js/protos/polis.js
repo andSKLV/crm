@@ -8,6 +8,7 @@ export default class Polis {
     this.multi = true;
     this.additionsSeen = false;
     this.financeSeen = false;
+    this.type = 'Перевозчики';
     if (mf) this.bindMyFactory(mf);
   }
   bindMyFactory (myFactory) {
@@ -20,8 +21,26 @@ export default class Polis {
     else if (myFactory.calcObj.isLinked) this.calcName = 'привязанный';
     if (myFactory.newClientCard) this.companyName = myFactory.newClientCard['Данные компании']['Наименование организации'];
   };
-  async loadConditions () {
-    const resp = await fetch ('./src/polisConditions.json');
+  /**
+   * Функция загрузки стартовых оговорок из json
+   * @param {str} str  название загружаемых оговорок: Перевозчики либо Экспедиторы
+   */
+  async loadConditions (str) {
+    let url;
+    switch (str) {
+      case 'Экспедиторы':
+        return false;
+        // url = 'polisConditions.json'; //FIXME: заменить, когда появятся
+        break;
+      case 'Перевозчики':
+        url = 'polisConditions'
+        break;
+      default:
+        console.error('Ошибка загрузки оговорок. Ожидался Перевозчики или Экспедиторы, пришел '+str);
+        return false;
+        break;
+    }
+    const resp = await fetch (`./src/${url}.json`);
     this.conditions = await resp.json();
     this.conditions.forEach(val=>{
       val.included = false;
@@ -29,6 +48,7 @@ export default class Polis {
     return this.conditions;
   }
   updateConditionsCheck() {
+    if (!this.conditions) return false;
     this.conditions.forEach(cond=>{
       let counter = 0;
       cond.values.forEach(val=>{if (val.checked) counter++});

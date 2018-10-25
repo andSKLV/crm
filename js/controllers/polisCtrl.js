@@ -96,9 +96,20 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         switchMakingPolis();
         clearSearchResults();
         if (!myFactory.polisObj || !myFactory.polisObj.isRequested || !$scope.currObj || $scope.currObj.length === 0) {
-            if (!myFactory.polisObj.conditions) await myFactory.polisObj.loadConditions();
+            if (!myFactory.polisObj.conditions) {
+                const type = (myFactory.calcObj.factory) ? myFactory.calcObj.factory.HIPname : 'Перевозчики';
+                await myFactory.polisObj.loadConditions(type);
+            } 
             await loadDashboardObj();
         };
+        //если уже есть расчет и его тип не совпадает с типом оговорок, то загружаем новые оговорки
+        if (myFactory.calcObj.factory && myFactory.polisObj.type !== myFactory.calcObj.factory.HIPname) {
+            if (myFactory.polisObj.conditions) delete myFactory.polisObj.conditions; // если были какие то оговорки, то их нужно удалить, так как нужно загрузить новые
+            await myFactory.polisObj.loadConditions(myFactory.calcObj.factory.HIPname);
+            debugger;
+            myFactory.polisObj.type = myFactory.calcObj.factory.HIPname;
+            myFactory.polisObj.additionsSeen = false;
+        }
         myFactory.polisObj.updateConditionsCheck();
         openTab();
     }

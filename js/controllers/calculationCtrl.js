@@ -1828,7 +1828,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         menu.classList.toggle('select--hidden');
     }
     this.cleanCalcObj = () => {
-        this.myFactory.calcObj = new Calculation ();
+        this.myFactory.calcObj = new Calculation (this.myFactory);
     }
     /**
      * сохраняем расчет в БД
