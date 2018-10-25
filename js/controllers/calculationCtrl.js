@@ -37,7 +37,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             });
             pack=pack[0];
             scope.myFactory.packages=pack.values;
-            if(myFactory.parks.length!=0) scope.selectParam("");
+            if(myFactory.parks.length!=0) scope.selectParam(0);
             else{
                 scope.selectParam(0);
                 scope.karetka.mode="making new process";
@@ -588,7 +588,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 });
                 pack=pack[0];
                 scope.myFactory.packages=pack.values;
-                if(myFactory.parks.length!=0) scope.selectParam("");
+                if(myFactory.parks.length!=0) scope.selectParam(0);
                 else{
                     scope.selectParam(0);
                     scope.karetka.mode="making new process";
