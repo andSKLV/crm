@@ -698,9 +698,9 @@ app.factory('myFactory', function(){
                     return `${day}.${month}.${year}`
                 }
                 const array = [];
-                const date = (startDate.length===10) ? new Date(startDate) : new Date();
                 let payment = addSpaces(Math.round(price / this.val));
                 for (let i = 0; i < this.val; i++) {
+                    let date = (startDate.length===10) ? new Date(startDate) : new Date();
                     date.setMonth(date.getMonth() + i * (12 / this.val));
                     date = getCurrentDate(date);
                     array.push({
