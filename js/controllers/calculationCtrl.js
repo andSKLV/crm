@@ -593,9 +593,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     scope.selectParam(0);
                     scope.karetka.mode="making new process";
                 }
-
             }
-
             // scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
             //     return obj["name"]!=undefined;
             // }).length;
@@ -605,9 +603,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             if (scope.myFactory.matrixType==='calculationActions' && scope.myFactory.document.currParam ===0 && scope.myFactory.document.selectedParam===0) {
                 setTimeout(()=>putNameInInput(scope.myFactory),0);
             }
-            },function error (response){
-                console.error(response);
-            }
+        },function error (response){
+            console.error(response);
+        }
         );
     };
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
