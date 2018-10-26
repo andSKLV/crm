@@ -90,11 +90,14 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             }
             $scope.newDashboard.setCurrentPage(tabIndex);
         }
+
         makePolsiObj();
         myFactory.polisObj.updateNames();
         selectNames();
         switchMakingPolis();
         clearSearchResults();
+
+        //по необходимости загружаем каретку и "оговорки"
         if (!myFactory.polisObj || !myFactory.polisObj.isRequested || !$scope.currObj || $scope.currObj.length === 0) {
             if (!myFactory.polisObj.conditions) {
                 const type = (myFactory.calcObj.factory) ? myFactory.calcObj.factory.HIPname : 'Перевозчики';
@@ -102,18 +105,30 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             } 
             await loadDashboardObj();
         };
+
         //если уже есть расчет и его тип не совпадает с типом оговорок, то загружаем новые оговорки
         if (myFactory.calcObj.factory && myFactory.polisObj.type !== myFactory.calcObj.factory.HIPname) {
             if (myFactory.polisObj.conditions) delete myFactory.polisObj.conditions; // если были какие то оговорки, то их нужно удалить, так как нужно загрузить новые
             await myFactory.polisObj.loadConditions(myFactory.calcObj.factory.HIPname);
-            debugger;
             myFactory.polisObj.type = myFactory.calcObj.factory.HIPname;
             myFactory.polisObj.additionsSeen = false;
         }
+
+        //если есть расчет, то расчитываем финансы
+        if (myFactory.parks && myFactory.parks.length>0 && !myFactory.payment.manual) {
+            $scope.calcFinances ();
+        }
+
         myFactory.polisObj.updateConditionsCheck();
         openTab();
     }
-
+    /**
+     * Функция создания массива с предварительными платежами
+     */
+    $scope.calcFinances = () => {
+        const startDate = myFactory.polisObj.dates.start || '';
+        myFactory.payment.makeArray(myFactory.totalPrice,startDate);
+    }
     $scope.itemsList = {
         items1: [],
         items2: []

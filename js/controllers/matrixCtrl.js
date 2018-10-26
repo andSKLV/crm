@@ -41,8 +41,6 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             let scope=this;
             myFactory.urlJSON="transortation_cals.json";
             $http.post("php/search.php", data).then(async function success(response){
-                console.log('response from DB:')
-                console.log(response.data);
                 myFactory.matrixType="HIP";
                 myFactory.parks=[];
                 let mass=JSON.parse(response.data.processes);

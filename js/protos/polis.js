@@ -9,6 +9,11 @@ export default class Polis {
     this.additionsSeen = false;
     this.financeSeen = false;
     this.type = 'Перевозчики';
+    this.dates = {
+      start: null,
+      end: null,
+      changes: [],
+    }
     if (mf) this.bindMyFactory(mf);
   }
   bindMyFactory (myFactory) {

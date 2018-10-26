@@ -676,6 +676,7 @@ app.factory('myFactory', function(){
             val:0,
             hand:false,
             mode:"ON",
+            manual: false,
             changeMode:function(){
                 if(this.mode=="ON"){
                     this.mode="OFF";
@@ -1326,7 +1327,7 @@ app.factory('myFactory', function(){
             this.parks.forEach(function (park) {
                 park.getValues();
             });
-            this.payment.makeArray(this.totalPrice);
+            // this.payment.makeArray(this.totalPrice); // проверка на то, чтоы вызывать это меню только в окне создания полиса
             this.fixHeight();
             //риски
             //базовую премию
