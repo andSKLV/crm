@@ -31,10 +31,7 @@
         "type": "finance",
         "values": [
             {
-                "name": "something"
-            },
-            {
-                "name": "anything"
+                "name": "Редактировать"
             }
         ]
     },

@@ -30,7 +30,7 @@
         </div>
         <!-- финансовый блок -->
         <div ng-if="param.type=='finance'">
-            <div ng-repeat="value in param.values">{{value.name}}</div>
+            <div ng-repeat="value in param.values" ng-click="dashboard.relocatePage({urlTo:'finance'})">{{value.name}}</div>
         </div>
 
         <!-- Даты, пока не придумал -->
