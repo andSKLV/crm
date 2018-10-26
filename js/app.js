@@ -688,31 +688,30 @@ app.factory('myFactory', function(){
              * функция создает массив из этапов платежей, необходимо для дальнейшего управления финансами полиса
              * @param {number} price 
              */
-            makeArray(price){
-                const getCurrentDate=(date)=>{
-                    let day=date.getDay();
-                    let month=date.getMonth()+1;
-                    let year=date.getFullYear();
-                    if(day<10) day=`0${day}`;
-                    if(month<10) month=`0${month}`;
+            makeArray(price, startDate = '') {
+                const getCurrentDate = (date) => {
+                    let day = date.getDate();
+                    let month = date.getMonth() + 1;
+                    let year = date.getFullYear();
+                    if (day < 10) day = `0${day}`;
+                    if (month < 10) month = `0${month}`;
                     return `${day}.${month}.${year}`
                 }
-                let array=[];
-                let payment=addSpaces(Math.round(price / this.val));
-                for(let i=0; i<this.val; i++){
-                    let date=new Date();
-                    
-                    date.setMonth(date.getMonth() + i * (12/this.val));
-                    date=getCurrentDate(date);
+                const array = [];
+                const date = (startDate.length===10) ? new Date(startDate) : new Date();
+                let payment = addSpaces(Math.round(price / this.val));
+                for (let i = 0; i < this.val; i++) {
+                    date.setMonth(date.getMonth() + i * (12 / this.val));
+                    date = getCurrentDate(date);
                     array.push({
-                        price: payment,
+                        price: '0',
                         date,
                         debt: payment,
                         debtDate: date,
                         payments: []
                     })
                 }
-                this.array=array;
+                this.array = array;
             }
         },
         agents:{
