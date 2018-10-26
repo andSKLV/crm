@@ -677,6 +677,9 @@ app.factory('myFactory', function(){
             hand:false,
             mode:"ON",
             manual: false,
+            totalPrice: null,
+            leftPrice: null,
+            payedPrice: 0,
             changeMode:function(){
                 if(this.mode=="ON"){
                     this.mode="OFF";
@@ -698,15 +701,17 @@ app.factory('myFactory', function(){
                     if (month < 10) month = `0${month}`;
                     return `${day}.${month}.${year}`
                 }
+                this.totalPrice = price;
                 const array = [];
                 let payment = addSpaces(Math.round(price / this.val));
+                this.leftPrice = addSpaces((Math.round(price / this.val))*this.val);
                 for (let i = 0; i < this.val; i++) {
                     let date = (startDate.length===10) ? new Date(startDate) : new Date();
                     date.setMonth(date.getMonth() + i * (12 / this.val));
                     date = getCurrentDate(date);
                     array.push({
                         price: '0',
-                        date,
+                        date: '',
                         debt: payment,
                         debtDate: date,
                         payments: []

@@ -1071,3 +1071,8 @@ div.matrix-header{
     width: 20px;
     margin: 3px;
 }
+.properties_header {
+    background-color: var(--blue);
+    color: white;
+    height: 1lh;
+}
