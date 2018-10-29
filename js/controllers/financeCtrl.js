@@ -1,4 +1,5 @@
-app.controller("financeCtrl", function($scope, $http, $location){
+app.controller("financeCtrl", function($scope, $http, $location,myFactory){
+    $scope.myFactory = myFactory;
     /**
      * newDashboard нужно для отображения необходимого содержимого и анимации
      */
@@ -62,7 +63,11 @@ app.controller("financeCtrl", function($scope, $http, $location){
         {
             "name": "Дата",
             "type": "dates",
-            "values":[]
+            "values":[
+                {
+                    "name": "date"
+                }
+            ]
         }
     ];
     $scope.returnToDashboard=()=>{
