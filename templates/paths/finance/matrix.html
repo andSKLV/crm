@@ -4,9 +4,9 @@
             <input type="button" class="btnCopy"  ng-click="" value="+">
             <input type="button" class="btnDelete" ng-click="" value="-">
         </td>
-        <td class="properties" ng-click="loadProcess(value,value.date)">{{value.date}}</td>
-        <td class="properties">{{value.price}}</td>
-        <td class="properties">{{value.debtDate}}</td>
-        <td class="properties">{{value.debt}}</td>
+        <td class="properties" ng-class="{mi_selected : value.changing && newDashboard.checkCurrentPage(0)}" ng-click="loadProcess(value,0)">{{value.date}}</td>
+        <td class="properties" ng-class="{mi_selected : value.changing && newDashboard.checkCurrentPage(1)}" ng-click="loadProcess(value,1)">{{value.price}}</td>
+        <td class="properties" ng-class="{mi_selected : value.changing && newDashboard.checkCurrentPage(2)}" ng-click="loadProcess(value,2)">{{value.debtDate}}</td>
+        <td class="properties" ng-class="{mi_selected : value.changing && newDashboard.checkCurrentPage(3)}" ng-click="loadProcess(value,3)">{{value.debt}}</td>
     </tr>
 </table>

@@ -714,7 +714,6 @@ app.factory('myFactory', function(){
                         date: '',
                         debt: payment,
                         debtDate: date,
-                        payments: []
                     })
                 }
                 this.array = array;

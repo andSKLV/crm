@@ -5,7 +5,8 @@
     "values": [
       {
         "name": "Выберите дату платежа",
-        "type": "date"
+        "type": "date",
+        "control": "date"
       }
     ]
   },
@@ -15,7 +16,8 @@
     "values": [
       {
         "name": "Введите сумму платежа",
-        "type": "input"
+        "type": "input",
+        "control": "price"
       },
       {
         "name": "Равная расчетному долгу",
@@ -29,7 +31,8 @@
     "values":[
       {
         "name": "Дата долга",
-        "type": "date"
+        "type": "date",
+        "control": "debtDate"
       }
     ]
   },
@@ -39,7 +42,8 @@
     "values": [
       {
         "name": "Введите сумму долга",
-        "type": "input"
+        "type": "input",
+        "control": "debt"
       },
       {
         "name": "Равная расчетному долгу",

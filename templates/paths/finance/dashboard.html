@@ -10,8 +10,11 @@
         <div>
             <div ng-repeat="val in param.values">
                 <div ng-if="val.type==='asDebt'">{{val.name}}</div>
-                <input class="company_dashboard_inputs" tabindex="0" ng-keydown="keydownHandler($event, param, val,dashboard.clickedOnTopOfDashboard)" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="{{val.name}}" ng-if="val.type=='date'"  ng-change="inputHandler(clientCard[param.name][val.name])" ng-model="clientCard[param.name][val.name]" ng-click="loadToDashboard(val.name)">
-                <input ng-if="val.type==='input'" placeholder="{{val.name}}">
+                <input ng-if="val.type=='date'" class="company_dashboard_inputs"
+                type="text" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="{{val.name}}" 
+                ng-keydown="keydownHandler($event, param, val,dashboard.clickedOnTopOfDashboard)"
+                ng-change="inputHandler(clientCard[param.name][val.name])" ng-model="newDashboard.currPayment[val.control]" ng-click="loadToDashboard(val.name)">
+                <input ng-if="val.type==='input'" placeholder="{{val.name}}" ng-model="newDashboard.currPayment[val.control]">
             </div>
         </div>
 

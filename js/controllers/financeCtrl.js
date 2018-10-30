@@ -3,13 +3,12 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
     $scope.init = async () => {
         $scope.fake();
         await $scope.loadDashboard();
-        
+
     }
     $scope.loadDashboard = () => {
         return $http.post('./src/finance.json').then((resp) => {
             console.log(resp.data);
             $scope.currObj = resp.data;
-            debugger;
         }, err => {
 
         })
@@ -18,8 +17,10 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
      * newDashboard нужно для отображения необходимого содержимого и анимации
      */
     $scope.newDashboard = {
+        mode: 'new',
         currentPage: 0,
         previousPage: -1,
+        currPayment: null,
         toLeft(index) {
             return this.previousPage < this.currentPage && this.previousPage == index;
         },
@@ -46,33 +47,33 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
     //------------------
     /**
      * функция загрузки процесса из матрицы в каретку
-     * @param {process} process новый процесс, который был создан при копировании
-     * @param {string} prop значение процесса
+     * @param {process} payment новый процесс, который был создан при копировании
+     * @param {number} index номер таба, который переключаем
      */
-    $scope.loadProcess = (process, prop) => {
+    $scope.loadProcess = (payment, index) => {
         // убираем все остальные строки ченджинг
-        console.log($scope);
-        return false;
-        myFactory.parks.forEach(function (park) {
-            delete park.changing;
-            park.processes.forEach(function (process) {
-                delete process.changing;
-            })
-        });
-        // добавляем строку в ченджинг
-        process.changing = true;//для выделения строки которую меняем
-        scope.karetka.mode = "changing process";
-        // делаем все прошлые выделенные ячейки невыделенными, т.е. убираем выделения
-        // переписать на ремув селекшн
-        for (let i = 0; i < scope.currObj.length; i++) {
-            for (let j = 0; j < scope.currObj[i].values.length; j++) delete scope.currObj[i].values[j].selected;//selected параметр позволяет подсветить то значение, которое выбрано в процессе
-        }
-        // ставим индекс выбранной ячейки
-        scope.myFactory.document.currParam = transportProp.indexOf(prop);
-        scope.myFactory.document.selectedParam = transportProp.indexOf(prop);
+        const dsh = $scope.newDashboard;
+        const mf = $scope.myFactory;
+        const pay = mf.payment;
 
-        // заменяем проц с которым работаем
-        myFactory.process = process;
+        const selectPaymentOnMatrix = () => {
+            // переназначаем выделенный объект 
+            if (dsh.currPayment) dsh.currPayment.changing = false;
+            dsh.currPayment = payment;
+            payment.changing = true;
+        }
+
+        dsh.mode = 'change';
+        dsh.setCurrentPage(index);
+        selectPaymentOnMatrix();
+
+        return false;
+
+
+        scope.karetka.mode = "changing process";
+
+
+
         // проходим по всем параметрам в проце
         for (let key in process) {
             // если параметр входит в транспортные пропсы, а не является чем то вспомогательным для расчетов типа multi, baseRate и тд
@@ -112,29 +113,20 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
                 }
             }
         }
-        // если это поле с инпутами и инпут был нестандартный, то при загрузке проца курсор сразу в инпут
-        if (prop == 'cost' || prop == 'amount' || prop == 'limit' || prop == 'franchise') {
-            const clickedParam = scope.currObj.find(obj => obj['model'] == prop);
-            // является ли стандартным значением
-            const isCommon = clickedParam.values.some(val => val.name === process[prop]);
-            // ставим фокус на конкретный инпут
-            const name = `#inputForCurrency-${prop}`;
-            // таймаут для того чтобы успела пройти анимация
-            if (!isCommon) setTimeout(() => document.querySelector(name).focus(), 700);
-        }
+
     }
     //-------------------
 
     $scope.fake = () => {
         const sc = $scope.myFactory.payment;
-        sc.array = [{"price":"0","date":"","debt":"48 551","debtDate":"30.10.2018","payments":[],"$$hashKey":"object:298"},{"price":"0","date":"","debt":"48 551","debtDate":"30.12.2018","payments":[],"$$hashKey":"object:299"},{"price":"0","date":"","debt":"48 551","debtDate":"02.03.2019","payments":[],"$$hashKey":"object:300"},{"price":"0","date":"","debt":"48 551","debtDate":"30.04.2019","payments":[],"$$hashKey":"object:301"},{"price":"0","date":"","debt":"48 551","debtDate":"30.06.2019","payments":[],"$$hashKey":"object:302"},{"price":"0","date":"","debt":"48 551","debtDate":"30.08.2019","payments":[],"$$hashKey":"object:303"}];
+        sc.array = [{ "price": "0", "date": "", "debt": "48 551", "debtDate": "30.10.2018", "payments": [], "$$hashKey": "object:298" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.12.2018", "payments": [], "$$hashKey": "object:299" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "02.03.2019", "payments": [], "$$hashKey": "object:300" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.04.2019", "payments": [], "$$hashKey": "object:301" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.06.2019", "payments": [], "$$hashKey": "object:302" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.08.2019", "payments": [], "$$hashKey": "object:303" }];
         sc.hand = false;
         sc.koef = 1.0704058245275336;
         sc.leftPrice = "291 306";
         sc.manual = false;
         sc.payedPrice = 0;
         sc.totalPrice = 291305.891949874;
-        sc.val= 6;
+        sc.val = 6;
     }
     $scope.init();
 })
