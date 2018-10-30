@@ -315,3 +315,6 @@ function addSpaces(nStr) {
     }
     return x1 + x2;
 }
+function intFromStr (str) {
+    return parseInt(str.split(' ').join(''));
+}

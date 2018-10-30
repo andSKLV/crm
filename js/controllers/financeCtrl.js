@@ -1,24 +1,30 @@
 app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
     $scope.myFactory = myFactory;
     $scope.init = async () => {
+        const priceToString = () => {
+            $scope.myFactory.payment.totalPrice = Math.round(
+                $scope.myFactory.payment.totalPrice
+            ).toString();
+        };
         $scope.fake();
         $scope.writeCalculatedDebts();
+        priceToString();
         await $scope.loadDashboard();
-
-    }
+    };
     $scope.loadDashboard = () => {
-        return $http.post('./src/finance.json').then((resp) => {
-            console.log(resp.data);
-            $scope.currObj = resp.data;
-        }, err => {
-
-        })
-    }
+        return $http.post("./src/finance.json").then(
+            resp => {
+                console.log(resp.data);
+                $scope.currObj = resp.data;
+            },
+            err => { }
+        );
+    };
     /**
      * newDashboard нужно для отображения необходимого содержимого и анимации
      */
     $scope.newDashboard = {
-        mode: 'new',
+        mode: "new",
         currentPage: 0,
         previousPage: -1,
         currPayment: null,
@@ -40,10 +46,10 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         setCurrentPage(index) {
             this.previousPage = this.currentPage;
             this.currentPage = index;
-        },
-    }
+        }
+    };
     $scope.returnToDashboard = () => {
-        $location.path('/polis');
+        $location.path("/polis");
     };
     //------------------
     /**
@@ -58,36 +64,37 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         const pay = mf.payment;
 
         const selectPaymentOnMatrix = () => {
-            // переназначаем выделенный объект 
+            // переназначаем выделенный объект
             if (dsh.currPayment) dsh.currPayment.changing = false;
-            if (dsh.currPayment.debt!==dsh.currPayment.calcDebt) dsh.currPayment.manual = true;
             dsh.currPayment = payment;
             payment.changing = true;
-        }
+        };
 
-        dsh.mode = 'change';
+        dsh.mode = "change";
         dsh.setCurrentPage(index);
         selectPaymentOnMatrix();
 
         return false;
 
-
         scope.karetka.mode = "changing process";
-
-
 
         // проходим по всем параметрам в проце
         for (let key in process) {
             // если параметр входит в транспортные пропсы, а не является чем то вспомогательным для расчетов типа multi, baseRate и тд
             if (transportProp.indexOf(key) != -1) {
-                if (key == 'cost' || key == 'amount' || key == 'limit' || key == 'franchise') {
+                if (
+                    key == "cost" ||
+                    key == "amount" ||
+                    key == "limit" ||
+                    key == "franchise"
+                ) {
                     // если это один из перечисленных, то выбираем выбираем его в скоупе
-                    const karetkaParam = scope.currObj.find(obj => obj['model'] == key);
+                    const karetkaParam = scope.currObj.find(obj => obj["model"] == key);
                     // перебираем все возможные значения каретки, чтобы выделить подходящее
                     for (let i = 0; i < karetkaParam.values.length; i++) {
                         // если это инпут у количества груза и еще и тягачи, то пересчитываем рейсы в тягачи
                         if (karetkaParam.values[i].name == "input") {
-                            if (key == 'amount' && scope.myFactory.amountType == "Тягачей") {
+                            if (key == "amount" && scope.myFactory.amountType == "Тягачей") {
                                 karetkaParam.selected = process[key] / TRACTOR;
                             }
                             // а если цена или рейсы, то просто вставляем цену проца
@@ -98,10 +105,8 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
                             karetkaParam.values[i].selected = true;
                             break;
                         }
-
                     }
-                }
-                else {
+                } else {
                     for (let i = 0; i < scope.currObj.length; i++) {
                         for (let j = 0; j < scope.currObj[i].values.length; j++) {
                             if (scope.currObj[i].values[j].name == process[key]) {
@@ -115,15 +120,104 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
                 }
             }
         }
-
-    }
+    };
     //-------------------
+    /**
+     * Функция пересчета оставшихся платежей, чтобы итоговая сумма не менялась
+     */
     $scope.recalculateDebt = () => {
+        const pay = $scope.myFactory.payment;
+        const notPayed = intFromStr(pay.leftPrice);
+        let manualPrice = 0;
+        const notPayedCounter = pay.array.filter(p => {
+            if (p.manual) manualPrice+=intFromStr(p.debt); // если сумма введена вручную, то ее нужно вычесть из общей, т к она не попадает под распределение
+            if (!p.manual && !p.payed) return true;
+        }).length; // количество платежей, которые можно пересчитать - они не должны быть заданы в ручныю либо оплачены
+        let newDebt = Math.round((notPayed-manualPrice)/notPayedCounter); // пересчитанная часть долга
+        newDebt = addSpaces(newDebt);
+        // вставляем пересчитанные значения 
+        pay.array.forEach(p=>{
+            if (!p.manual && !p.payed) {
+                p.calcDebt = newDebt;
+                p.debt = newDebt;
+            }
+        })
+        const s = pay.array.reduce((acc,p)=>{return acc+=intFromStr(p.debt)},0);
         debugger;
-    }
+    };
+    /**
+     * Функция проверки изменился ли долг после ввода, если да, то меняем значение "ручной ввод" на true
+     * @param {obj} curr - текущий объект платежа
+     */
+    $scope.switchManual = curr => {
+        const calced = intFromStr(curr.calcDebt);
+        const input = intFromStr(curr.debt);
+        if (calced !== input) curr.manual = true;
+    };
+    $scope.endChange = (val, control) => {
+        const pay = $scope.myFactory.payment;
+        const curr = $scope.newDashboard.currPayment;
+        if (!curr) return false; //выходиим если прошлого объекта нет
+        switch (control) {
+            case "debt":
+                $scope.switchManual(curr);
+                $scope.recalculateDebt();
+                break;
+        }
+        debugger;
+    };
     $scope.fake = () => {
         const sc = $scope.myFactory.payment;
-        sc.array = [{ "price": "0", "date": "", "debt": "48 551", "debtDate": "30.10.2018", "payments": [], "$$hashKey": "object:298" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.12.2018", "payments": [], "$$hashKey": "object:299" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "02.03.2019", "payments": [], "$$hashKey": "object:300" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.04.2019", "payments": [], "$$hashKey": "object:301" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.06.2019", "payments": [], "$$hashKey": "object:302" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.08.2019", "payments": [], "$$hashKey": "object:303" }];
+        sc.array = [
+            {
+                price: "0",
+                date: "",
+                debt: "48 551",
+                debtDate: "30.10.2018",
+                payments: [],
+                $$hashKey: "object:298"
+            },
+            {
+                price: "0",
+                date: "",
+                debt: "48 551",
+                debtDate: "30.12.2018",
+                payments: [],
+                $$hashKey: "object:299"
+            },
+            {
+                price: "0",
+                date: "",
+                debt: "48 551",
+                debtDate: "02.03.2019",
+                payments: [],
+                $$hashKey: "object:300"
+            },
+            {
+                price: "0",
+                date: "",
+                debt: "48 551",
+                debtDate: "30.04.2019",
+                payments: [],
+                $$hashKey: "object:301"
+            },
+            {
+                price: "0",
+                date: "",
+                debt: "48 551",
+                debtDate: "30.06.2019",
+                payments: [],
+                $$hashKey: "object:302"
+            },
+            {
+                price: "0",
+                date: "",
+                debt: "48 551",
+                debtDate: "30.08.2019",
+                payments: [],
+                $$hashKey: "object:303"
+            }
+        ];
         sc.hand = false;
         sc.koef = 1.0704058245275336;
         sc.leftPrice = "291 306";
@@ -131,11 +225,12 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         sc.payedPrice = 0;
         sc.totalPrice = 291305.891949874;
         sc.val = 6;
-    }
+    };
     $scope.writeCalculatedDebts = () => {
-        $scope.myFactory.payment.array.forEach(p=>{
+        $scope.myFactory.payment.array.forEach(p => {
             p.calcDebt = p.debt;
-        })
-    }
+            p.payed = false;
+        });
+    };
     $scope.init();
-})
+});

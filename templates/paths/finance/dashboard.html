@@ -14,7 +14,7 @@
                 type="text" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="{{val.name}}" 
                 ng-keydown="keydownHandler($event, param, val,dashboard.clickedOnTopOfDashboard)"
                 ng-change="inputHandler(clientCard[param.name][val.name])" ng-model="newDashboard.currPayment[val.control]" ng-click="loadToDashboard(val.name)">
-                <input ng-if="val.type==='input'" placeholder="{{val.name}}" ng-model="newDashboard.currPayment[val.control]">
+                <input ng-if="val.type==='input'" placeholder="{{val.name}}" ng-model="newDashboard.currPayment[val.control]" ng-blur="endChange(val,val.control)">
             </div>
         </div>
 
