@@ -7,7 +7,6 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
             ).toString());
         };
         $scope.fake();
-        $scope.writeCalculatedDebts();
         priceToString();
         $scope.chechDebtEqual();
         await $scope.loadDashboard();
@@ -55,10 +54,10 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
     //------------------
     /**
      * функция загрузки процесса из матрицы в каретку
-     * @param {process} payment новый процесс, который был создан при копировании
+     * @param {payment} payment новый процесс, который был создан при копировании
      * @param {number} index номер таба, который переключаем
      */
-    $scope.loadProcess = (payment, index) => {
+    $scope.loadPayment = (payment, index) => {
         // убираем все остальные строки ченджинг
         const dsh = $scope.newDashboard;
         const mf = $scope.myFactory;
@@ -178,78 +177,58 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
                 $scope.switchManual(curr);
                 $scope.recalculateDebt();
                 break;
+            case 'price':
+                $scope.applyPayment(val, curr);
+                break;
         }
         debugger;
     };
+    $scope.applyPayment = (val, curr) => {
+        if (curr.price==="0") return false;
+        const pays = $scope.myFactory.payment;
+        const expected = intFromStr(curr.debt);
+        const payed = intFromStr(curr.price);
+        const diff = expected - payed;
+        curr.payed = true;
+        if (diff) {
+            curr.debt = curr.price;
+            pays.array.find(p=>{
+                if (!p.payed&&!p.manul) {
+                    let debt = intFromStr(p.debt);
+                    debt+=diff;
+                    debt = addSpaces(debt);
+                    p.debt = debt;
+                    return true;
+                }
+            })
+        }
+        debugger;
+        $scope.recalculateLeft ();
+        
+        
+    }
+    /**
+     * Пересчет общего долга: общая сумма - уплоченное
+     */
+    $scope.recalculateLeft = () => {
+        const pay = $scope.myFactory.payment;
+        const payedSum = pay.array.reduce((acc,p)=>{
+            return acc+=intFromStr(p.price);
+        },0)
+        const total = pay.totalPrice;
+        let intTotal = intFromStr(total);
+        intLeft = intTotal - payedSum;
+        pay.leftPrice = addSpaces(intLeft);
+    }
     $scope.fake = () => {
         const sc = $scope.myFactory.payment;
-        sc.array = [
-            {
-                price: "0",
-                date: "",
-                debt: "48 551",
-                debtDate: "30.10.2018",
-                payments: [],
-                $$hashKey: "object:298"
-            },
-            {
-                price: "0",
-                date: "",
-                debt: "48 551",
-                debtDate: "30.12.2018",
-                payments: [],
-                $$hashKey: "object:299"
-            },
-            {
-                price: "0",
-                date: "",
-                debt: "48 551",
-                debtDate: "02.03.2019",
-                payments: [],
-                $$hashKey: "object:300"
-            },
-            {
-                price: "0",
-                date: "",
-                debt: "48 551",
-                debtDate: "30.04.2019",
-                payments: [],
-                $$hashKey: "object:301"
-            },
-            {
-                price: "0",
-                date: "",
-                debt: "48 551",
-                debtDate: "30.06.2019",
-                payments: [],
-                $$hashKey: "object:302"
-            },
-            {
-                price: "0",
-                date: "",
-                debt: "48 551",
-                debtDate: "30.08.2019",
-                payments: [],
-                $$hashKey: "object:303"
-            }
-        ];
+        sc.array = [{"price":"0","date":"","debt":"48 551","debtDate":"30.10.2018","manual":false,"$$hashKey":"object:473"},{"price":"0","date":"","debt":"48 551","debtDate":"30.12.2018","manual":false,"$$hashKey":"object:474"},{"price":"0","date":"","debt":"48 551","debtDate":"02.03.2019","manual":false,"$$hashKey":"object:475"},{"price":"0","date":"","debt":"48 551","debtDate":"30.04.2019","manual":false,"$$hashKey":"object:476"},{"price":"0","date":"","debt":"48 551","debtDate":"30.06.2019","manual":false,"$$hashKey":"object:477"},{"price":"0","date":"","debt":"48 551","debtDate":"30.08.2019","manual":false,"$$hashKey":"object:478"}];
         sc.hand = false;
         sc.koef = 1.0704058245275336;
         sc.leftPrice = "291 306";
-        sc.manual = false;
-        sc.payedPrice = 0;
         sc.totalPrice = 291305.891949874;
         sc.val = 6;
-    };
-    $scope.writeCalculatedDebts = () => {
-        let calcDebt;
-        $scope.myFactory.payment.array.find(p=>{
-            if (!p.manual&&!p.payed) {
-                calcDebt = p.debt;
-                return true;
-            }
-        })
-        $scope.myFactory.payment.calcDebt = calcDebt;
+        sc.calcDebt = "48 551";
     };
     $scope.init();
 });

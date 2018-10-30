@@ -1,13 +1,13 @@
 <table class="matrix">
-    <tr ng-repeat="value in dashboard.myFactory.payment.array">
+    <tr ng-repeat="value in dashboard.myFactory.payment.array" ng-class="{payment_payed: value.payed}">
         <td class="properties btns" width="20px">
             <input type="button" class="btnCopy"  ng-click="" value="+">
             <input type="button" class="btnDelete" ng-click="" value="-">
         </td>
-        <td class="properties" ng-class="{mi_selected : value.changing && newDashboard.checkCurrentPage(0)}" ng-click="loadProcess(value,0)">{{value.date}}</td>
-        <td class="properties" ng-class="{mi_selected : value.changing && newDashboard.checkCurrentPage(1)}" ng-click="loadProcess(value,1)">{{value.price}}</td>
-        <td class="properties" ng-class="{mi_selected : value.changing && newDashboard.checkCurrentPage(2)}" ng-click="loadProcess(value,2)">{{value.debtDate}}</td>
-        <td class="properties" ng-class="{mi_selected : value.changing && newDashboard.checkCurrentPage(3)}" ng-click="loadProcess(value,3)">{{value.debt}}</td>
+        <td class="properties" ng-class="{mi_selected : value.changing && newDashboard.checkCurrentPage(0)}" ng-click="loadPayment(value,0)">{{value.date}}</td>
+        <td class="properties" ng-class="{mi_selected : value.changing && newDashboard.checkCurrentPage(1)}" ng-click="loadPayment(value,1)">{{value.price}}</td>
+        <td class="properties" ng-class="{mi_selected : value.changing && newDashboard.checkCurrentPage(2)}" ng-click="loadPayment(value,2)">{{value.debtDate}}</td>
+        <td class="properties" ng-class="{mi_selected : value.changing && newDashboard.checkCurrentPage(3)}" ng-click="loadPayment(value,3)">{{value.debt}}</td>
     </tr>
     <tr>
         <td class="properties btns properties_header" width="20px">

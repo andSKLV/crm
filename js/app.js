@@ -678,7 +678,7 @@ app.factory('myFactory', function(){
             mode:"ON",
             totalPrice: null,
             leftPrice: null,
-            payedPrice: 0,
+            calcDebt: null,
             changeMode:function(){
                 if(this.mode=="ON"){
                     this.mode="OFF";
@@ -703,6 +703,7 @@ app.factory('myFactory', function(){
                 this.totalPrice = price;
                 const array = [];
                 let payment = addSpaces(Math.round(price / this.val));
+                this.calcDebt = payment;
                 this.leftPrice = addSpaces((Math.round(price / this.val))*this.val);
                 for (let i = 0; i < this.val; i++) {
                     let date = (startDate.length===10) ? new Date(startDate) : new Date();

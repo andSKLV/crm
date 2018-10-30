@@ -188,3 +188,11 @@ div.ul_container>div.ul>div>div.addAddition{
     position: relative;
     overflow: hidden;
 }
+.window-header {
+    margin-left:20px;
+    width:calc(100% - 20px);
+}
+.payment_payed{
+    background-color: var(--tooltip-gray)!important;
+    opacity: 0.8;
+}
