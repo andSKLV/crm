@@ -9,6 +9,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         $scope.fake();
         $scope.writeCalculatedDebts();
         priceToString();
+        $scope.chechDebtEqual();
         await $scope.loadDashboard();
     };
     $scope.loadDashboard = () => {
@@ -142,9 +143,24 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
                 p.debt = newDebt;
             }
         })
-        const s = pay.array.reduce((acc,p)=>{return acc+=intFromStr(p.debt)},0);
-        debugger;
+        $scope.chechDebtEqual();
     };
+    /**
+     * проверка итоговой суммы и пересчитанной суммы. из-за округлений может не сходиться на рубль
+     * добавляем разницу к следующему не оплаченному и не введенному в ручную
+     */
+    $scope.chechDebtEqual = () => {
+        const pay = $scope.myFactory.payment;
+        const s = pay.array.reduce((acc,p)=>{return acc+=intFromStr(p.debt)},0);
+        const total = intFromStr(pay.totalPrice);
+        const diff = total - s;
+        if (diff) {
+            const fisrtDebt = pay.array.find(p=>{return (!p.manul&&!p.payed)});
+            const int = intFromStr(fisrtDebt.debt) + diff;
+            fisrtDebt.debt = addSpaces(int);
+            fisrtDebt.calcDebt = fisrtDebt.debt;
+        }
+    }
     /**
      * Функция проверки изменился ли долг после ввода, если да, то меняем значение "ручной ввод" на true
      * @param {obj} curr - текущий объект платежа
