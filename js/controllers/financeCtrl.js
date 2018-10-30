@@ -2,9 +2,9 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
     $scope.myFactory = myFactory;
     $scope.init = async () => {
         const priceToString = () => {
-            $scope.myFactory.payment.totalPrice = Math.round(
+            $scope.myFactory.payment.totalPrice = addSpaces(Math.round(
                 $scope.myFactory.payment.totalPrice
-            ).toString();
+            ).toString());
         };
         $scope.fake();
         $scope.writeCalculatedDebts();
@@ -139,10 +139,10 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         // вставляем пересчитанные значения 
         pay.array.forEach(p=>{
             if (!p.manual && !p.payed) {
-                p.calcDebt = newDebt;
                 p.debt = newDebt;
             }
         })
+        pay.calcDebt = newDebt;
         $scope.chechDebtEqual();
     };
     /**
@@ -158,7 +158,6 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
             const fisrtDebt = pay.array.find(p=>{return (!p.manul&&!p.payed)});
             const int = intFromStr(fisrtDebt.debt) + diff;
             fisrtDebt.debt = addSpaces(int);
-            fisrtDebt.calcDebt = fisrtDebt.debt;
         }
     }
     /**
@@ -166,9 +165,9 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
      * @param {obj} curr - текущий объект платежа
      */
     $scope.switchManual = curr => {
-        const calced = intFromStr(curr.calcDebt);
+        const calced = intFromStr($scope.myFactory.payment.calcDebt);
         const input = intFromStr(curr.debt);
-        if (calced !== input) curr.manual = true;
+        if (Math.abs(calced - input)>1) curr.manual = true;
     };
     $scope.endChange = (val, control) => {
         const pay = $scope.myFactory.payment;
@@ -243,10 +242,14 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         sc.val = 6;
     };
     $scope.writeCalculatedDebts = () => {
-        $scope.myFactory.payment.array.forEach(p => {
-            p.calcDebt = p.debt;
-            p.payed = false;
-        });
+        let calcDebt;
+        $scope.myFactory.payment.array.find(p=>{
+            if (!p.manual&&!p.payed) {
+                calcDebt = p.debt;
+                return true;
+            }
+        })
+        $scope.myFactory.payment.calcDebt = calcDebt;
     };
     $scope.init();
 });
