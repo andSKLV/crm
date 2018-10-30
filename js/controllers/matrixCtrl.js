@@ -15,7 +15,8 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         data.type="delete_calculation";
         data.id=id;
         $http.post("php/save.php", data).then(function success(response){
-            console.log(response, "success");
+           if (resp.data==="Успешно удалено") console.log('calculation successfully deleted');
+           else console.error('problem with deleting', response);
         },function error(response){
             console.log(response)
         });
