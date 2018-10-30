@@ -21,7 +21,8 @@
       },
       {
         "name": "Равная расчетному долгу",
-        "type": "asDebt"
+        "type": "asDebt",
+        "control": "price"
       }
     ]
   },
@@ -44,10 +45,6 @@
         "name": "Введите сумму долга",
         "type": "input",
         "control": "debt"
-      },
-      {
-        "name": "Равная расчетному долгу",
-        "type": "asDebt"
       }
     ]
   }

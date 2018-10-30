@@ -8,7 +8,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         };
         $scope.fake();
         priceToString();
-        $scope.chechDebtEqual();
+        $scope.checkDebtEqual();
         await $scope.loadDashboard();
     };
     $scope.loadDashboard = () => {
@@ -133,6 +133,12 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
             if (p.manual) manualPrice+=intFromStr(p.debt); // если сумма введена вручную, то ее нужно вычесть из общей, т к она не попадает под распределение
             if (!p.manual && !p.payed) return true;
         }).length; // количество платежей, которые можно пересчитать - они не должны быть заданы в ручныю либо оплачены
+        if (notPayedCounter===0) {
+            const newVal = notPayed-manualPrice + intFromStr($scope.newDashboard.currPayment.debt);
+            $scope.newDashboard.currPayment.debt = addSpaces(newVal);
+            $scope.newDashboard.currPayment.manual = false;
+            return false;
+        }
         let newDebt = Math.round((notPayed-manualPrice)/notPayedCounter); // пересчитанная часть долга
         newDebt = addSpaces(newDebt);
         // вставляем пересчитанные значения 
@@ -142,19 +148,19 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
             }
         })
         pay.calcDebt = newDebt;
-        $scope.chechDebtEqual();
+        $scope.checkDebtEqual();
     };
     /**
      * проверка итоговой суммы и пересчитанной суммы. из-за округлений может не сходиться на рубль
      * добавляем разницу к следующему не оплаченному и не введенному в ручную
      */
-    $scope.chechDebtEqual = () => {
+    $scope.checkDebtEqual = () => {
         const pay = $scope.myFactory.payment;
         const s = pay.array.reduce((acc,p)=>{return acc+=intFromStr(p.debt)},0);
         const total = intFromStr(pay.totalPrice);
         const diff = total - s;
         if (diff) {
-            const fisrtDebt = pay.array.find(p=>{return (!p.manul&&!p.payed)});
+            const fisrtDebt = pay.array.find(p=>{return (!p.manual&&!p.payed)});
             const int = intFromStr(fisrtDebt.debt) + diff;
             fisrtDebt.debt = addSpaces(int);
         }
@@ -168,22 +174,26 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         const input = intFromStr(curr.debt);
         if (Math.abs(calced - input)>1) curr.manual = true;
     };
+    $scope.applyDebt = (curr) => {
+        $scope.switchManual(curr);
+        curr.debt = addSpaces (curr.debt);
+        $scope.recalculateDebt();
+    }
     $scope.endChange = (val, control) => {
         const pay = $scope.myFactory.payment;
         const curr = $scope.newDashboard.currPayment;
         if (!curr) return false; //выходиим если прошлого объекта нет
         switch (control) {
             case "debt":
-                $scope.switchManual(curr);
-                $scope.recalculateDebt();
+                $scope.applyDebt (curr);
                 break;
             case 'price':
-                $scope.applyPayment(val, curr);
+                $scope.applyPayment(curr);
                 break;
         }
         debugger;
     };
-    $scope.applyPayment = (val, curr) => {
+    $scope.applyPayment = (curr) => {
         if (curr.price==="0") return false;
         const pays = $scope.myFactory.payment;
         const expected = intFromStr(curr.debt);
@@ -220,6 +230,23 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         intLeft = intTotal - payedSum;
         pay.leftPrice = addSpaces(intLeft);
     }
+    $scope.setAsDebt = (val) => {
+        const pays = $scope.myFactory.payment;
+        const curr = $scope.newDashboard.currPayment;
+        switch (val) {
+            case 'price':
+                curr.price = curr.debt;
+                $scope.applyPayment(curr);
+                $scope.recalculateDebt();
+                break;
+            case 'debt':
+                break;
+        }
+        debugger;
+    }
+
+
+
     $scope.fake = () => {
         const sc = $scope.myFactory.payment;
         sc.array = [{"price":"0","date":"","debt":"48 551","debtDate":"30.10.2018","manual":false,"$$hashKey":"object:473"},{"price":"0","date":"","debt":"48 551","debtDate":"30.12.2018","manual":false,"$$hashKey":"object:474"},{"price":"0","date":"","debt":"48 551","debtDate":"02.03.2019","manual":false,"$$hashKey":"object:475"},{"price":"0","date":"","debt":"48 551","debtDate":"30.04.2019","manual":false,"$$hashKey":"object:476"},{"price":"0","date":"","debt":"48 551","debtDate":"30.06.2019","manual":false,"$$hashKey":"object:477"},{"price":"0","date":"","debt":"48 551","debtDate":"30.08.2019","manual":false,"$$hashKey":"object:478"}];

@@ -9,7 +9,7 @@
     ng-repeat="param in currObj">
         <div>
             <div ng-repeat="val in param.values">
-                <div ng-if="val.type==='asDebt'">{{val.name}}</div>
+                <div ng-if="val.type==='asDebt'" ng-click="setAsDebt(val.control)">{{val.name}}</div>
                 <input ng-if="val.type=='date'" class="input_date"
                 type="text" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="{{val.name}}" 
                 ng-keydown="keydownHandler($event, param, val,dashboard.clickedOnTopOfDashboard)"
