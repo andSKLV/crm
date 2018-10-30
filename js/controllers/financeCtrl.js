@@ -2,6 +2,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
     $scope.myFactory = myFactory;
     $scope.init = async () => {
         $scope.fake();
+        $scope.writeCalculatedDebts();
         await $scope.loadDashboard();
 
     }
@@ -59,6 +60,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         const selectPaymentOnMatrix = () => {
             // переназначаем выделенный объект 
             if (dsh.currPayment) dsh.currPayment.changing = false;
+            if (dsh.currPayment.debt!==dsh.currPayment.calcDebt) dsh.currPayment.manual = true;
             dsh.currPayment = payment;
             payment.changing = true;
         }
@@ -116,7 +118,9 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
 
     }
     //-------------------
-
+    $scope.recalculateDebt = () => {
+        debugger;
+    }
     $scope.fake = () => {
         const sc = $scope.myFactory.payment;
         sc.array = [{ "price": "0", "date": "", "debt": "48 551", "debtDate": "30.10.2018", "payments": [], "$$hashKey": "object:298" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.12.2018", "payments": [], "$$hashKey": "object:299" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "02.03.2019", "payments": [], "$$hashKey": "object:300" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.04.2019", "payments": [], "$$hashKey": "object:301" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.06.2019", "payments": [], "$$hashKey": "object:302" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.08.2019", "payments": [], "$$hashKey": "object:303" }];
@@ -127,6 +131,11 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         sc.payedPrice = 0;
         sc.totalPrice = 291305.891949874;
         sc.val = 6;
+    }
+    $scope.writeCalculatedDebts = () => {
+        $scope.myFactory.payment.array.forEach(p=>{
+            p.calcDebt = p.debt;
+        })
     }
     $scope.init();
 })

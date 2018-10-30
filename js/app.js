@@ -676,7 +676,6 @@ app.factory('myFactory', function(){
             val:0,
             hand:false,
             mode:"ON",
-            manual: false,
             totalPrice: null,
             leftPrice: null,
             payedPrice: 0,
@@ -714,6 +713,7 @@ app.factory('myFactory', function(){
                         date: '',
                         debt: payment,
                         debtDate: date,
+                        manual: false,
                     })
                 }
                 this.array = array;
