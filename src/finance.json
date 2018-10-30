@@ -1,19 +1,35 @@
 [
   {
-    "name": "Сумма",
+    "name": "Дата внесения",
     "type": "search/create",
     "values": [
       {
-        "name": "adsf"
+        "name": "Выберите дату платежа",
+        "type": "date"
       }
     ]
   },
   {
-    "name": "Дата",
+    "name": "Сумма внесения",
     "type": "search/create",
     "values": [
       {
-        "name": "asq11"
+        "name": "Введите сумму платежа",
+        "type": "input"
+      },
+      {
+        "name": "Равная расчетному долгу",
+        "type": "asDebt"
+      }
+    ]
+  },
+  {
+    "name": "Дата долга",
+    "type": "dates",
+    "values":[
+      {
+        "name": "Дата долга",
+        "type": "date"
       }
     ]
   },
@@ -22,19 +38,12 @@
     "type": "finance",
     "values": [
       {
-        "name": "something"
+        "name": "Введите сумму долга",
+        "type": "input"
       },
       {
-        "name": "anything"
-      }
-    ]
-  },
-  {
-    "name": "Дата",
-    "type": "dates",
-    "values":[
-      {
-        "name": "date"
+        "name": "Равная расчетному долгу",
+        "type": "asDebt"
       }
     ]
   }
