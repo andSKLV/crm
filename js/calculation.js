@@ -318,3 +318,8 @@ function addSpaces(nStr) {
 function intFromStr (str) {
     return parseInt(str.split(' ').join(''));
 }
+function delay (ms=100) {
+    return new Promise ((resolve,reject)=>{
+        setTimeout (resolve,ms);
+    })
+}

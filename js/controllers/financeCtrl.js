@@ -2,9 +2,9 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
     $scope.myFactory = myFactory;
     $scope.init = async () => {
         const priceToString = () => {
-            $scope.myFactory.payment.totalPrice = addSpaces(Math.round(
-                $scope.myFactory.payment.totalPrice
-            ).toString());
+            $scope.myFactory.payment.totalPrice = addSpaces(
+                Math.round($scope.myFactory.payment.totalPrice).toString()
+            );
         };
         $scope.fake();
         priceToString();
@@ -43,9 +43,11 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         checkCurrentPage(index) {
             return index === this.currentPage;
         },
-        setCurrentPage(index) {
+        async setCurrentPage(index) {
             this.previousPage = this.currentPage;
             this.currentPage = index;
+            await delay ();
+            $scope.inputFocus(index);
         }
     };
     $scope.returnToDashboard = () => {
@@ -69,14 +71,34 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
             dsh.currPayment = payment;
             payment.changing = true;
         };
+        const inputFocus = tab => {
+
+        }
         dsh.mode = "change";
         dsh.setCurrentPage(index);
         selectPaymentOnMatrix();
-        return false;
-        // ----------
-        scope.karetka.mode = "changing process";
+        // inputFocus(index);
     };
-
+    $scope.inputFocus = tab => {
+        let el;
+        switch (tab) {
+            case 0:
+                el = document.querySelector('#input_date');
+                break;
+            case 1:
+                el = document.querySelector('#input_price');
+                break;
+            case 2:
+            el = document.querySelector('#input_debtDate');
+                break;
+            case 3:
+            el = document.querySelector('#input_debt');
+                break;
+            default:
+                return false;
+        }
+        el.focus();
+    }
     /**
      * Функция пересчета оставшихся платежей, чтобы итоговая сумма не менялась
      */
@@ -89,19 +111,22 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
             if (!p.manual && !p.payed) return true;
         }).length; // количество платежей, которые можно пересчитать - они не должны быть заданы в ручныю либо оплачены
         if (notPayedCounter === 0) {
-            const newVal = notPayed - manualPrice + intFromStr($scope.newDashboard.currPayment.debt);
+            const newVal =
+                notPayed -
+                manualPrice +
+                intFromStr($scope.newDashboard.currPayment.debt);
             $scope.newDashboard.currPayment.debt = addSpaces(newVal);
             $scope.newDashboard.currPayment.manual = false;
             return false;
         }
         let newDebt = Math.round((notPayed - manualPrice) / notPayedCounter); // пересчитанная часть долга
         newDebt = addSpaces(newDebt);
-        // вставляем пересчитанные значения 
+        // вставляем пересчитанные значения
         pay.array.forEach(p => {
             if (!p.manual && !p.payed) {
                 p.debt = newDebt;
             }
-        })
+        });
         pay.calcDebt = newDebt;
         $scope.checkDebtEqual();
     };
@@ -111,15 +136,19 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
      */
     $scope.checkDebtEqual = () => {
         const pay = $scope.myFactory.payment;
-        const s = pay.array.reduce((acc, p) => { return acc += intFromStr(p.debt) }, 0);
+        const s = pay.array.reduce((acc, p) => {
+            return (acc += intFromStr(p.debt));
+        }, 0);
         const total = intFromStr(pay.totalPrice);
         const diff = total - s;
         if (diff) {
-            const fisrtDebt = pay.array.find(p => { return (!p.manual && !p.payed) });
+            const fisrtDebt = pay.array.find(p => {
+                return !p.manual && !p.payed;
+            });
             const int = intFromStr(fisrtDebt.debt) + diff;
             fisrtDebt.debt = addSpaces(int);
         }
-    }
+    };
     /**
      * Функция проверки изменился ли долг после ввода, если да, то меняем значение "ручной ввод" на true
      * @param {obj} curr - текущий объект платежа
@@ -129,11 +158,11 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         const input = intFromStr(curr.debt);
         if (Math.abs(calced - input) > 1) curr.manual = true;
     };
-    $scope.applyDebt = (curr) => {
+    $scope.applyDebt = curr => {
         $scope.switchManual(curr);
         curr.debt = addSpaces(curr.debt);
         $scope.recalculateDebt();
-    }
+    };
     $scope.endChange = (val, control) => {
         const pay = $scope.myFactory.payment;
         const curr = $scope.newDashboard.currPayment;
@@ -142,13 +171,34 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
             case "debt":
                 $scope.applyDebt(curr);
                 break;
-            case 'price':
+            case "price":
                 $scope.applyPayment(curr);
+                break;
+            case "debtDate":
+                $scope.applyDate(curr, control);
+                break;
+            case "date":
+                $scope.applyDate(curr, control);
                 break;
         }
         debugger;
+
     };
-    $scope.applyPayment = (curr) => {
+    $scope.applyDate = (curr, control) => {
+        debugger;
+        const changing = curr[control];
+        if (changing==='') return false;
+        if (/\d{2}.\d{2}.\d{4}/.test(changing)) return false;
+        if (/\d{4}-\d{2}-\d{2}/.test(changing)) {
+            const newDate = changing.replace(/(\d{4})-(\d{2})-(\d{2})/,`$3.$2.$1`);
+            debugger;
+            curr[control] = newDate;
+            
+        };
+        // const test = changing.test(/\d*-/)
+        debugger;
+    };
+    $scope.applyPayment = curr => {
         if (curr.price === "0") return false;
         const pays = $scope.myFactory.payment;
         const expected = intFromStr(curr.debt);
@@ -165,46 +215,90 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
                     p.debt = debt;
                     return true;
                 }
-            })
+            });
         }
         debugger;
         $scope.recalculateLeft();
-
-
-    }
+    };
     /**
      * Пересчет общего долга: общая сумма - уплоченное
      */
     $scope.recalculateLeft = () => {
         const pay = $scope.myFactory.payment;
         const payedSum = pay.array.reduce((acc, p) => {
-            return acc += intFromStr(p.price);
-        }, 0)
+            return (acc += intFromStr(p.price));
+        }, 0);
         const total = pay.totalPrice;
         let intTotal = intFromStr(total);
         intLeft = intTotal - payedSum;
         pay.leftPrice = addSpaces(intLeft);
-    }
-    $scope.setAsDebt = (val) => {
+    };
+    $scope.setAsDebt = val => {
         const pays = $scope.myFactory.payment;
         const curr = $scope.newDashboard.currPayment;
         switch (val) {
-            case 'price':
+            case "price":
                 curr.price = curr.debt;
                 $scope.applyPayment(curr);
-                $scope.recalculateDebt();
                 break;
-            case 'debt':
+            case "debt":
                 break;
         }
         debugger;
-    }
-
-
+    };
 
     $scope.fake = () => {
         const sc = $scope.myFactory.payment;
-        sc.array = [{ "price": "0", "date": "", "debt": "48 551", "debtDate": "30.10.2018", "manual": false, "$$hashKey": "object:473" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.12.2018", "manual": false, "$$hashKey": "object:474" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "02.03.2019", "manual": false, "$$hashKey": "object:475" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.04.2019", "manual": false, "$$hashKey": "object:476" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.06.2019", "manual": false, "$$hashKey": "object:477" }, { "price": "0", "date": "", "debt": "48 551", "debtDate": "30.08.2019", "manual": false, "$$hashKey": "object:478" }];
+        sc.array = [
+            {
+                price: "0",
+                date: "",
+                debt: "48 551",
+                debtDate: "30.10.2018",
+                manual: false,
+                $$hashKey: "object:473"
+            },
+            {
+                price: "0",
+                date: "",
+                debt: "48 551",
+                debtDate: "30.12.2018",
+                manual: false,
+                $$hashKey: "object:474"
+            },
+            {
+                price: "0",
+                date: "",
+                debt: "48 551",
+                debtDate: "02.03.2019",
+                manual: false,
+                $$hashKey: "object:475"
+            },
+            {
+                price: "0",
+                date: "",
+                debt: "48 551",
+                debtDate: "30.04.2019",
+                manual: false,
+                $$hashKey: "object:476"
+            },
+            {
+                price: "0",
+                date: "",
+                debt: "48 551",
+                debtDate: "30.06.2019",
+                manual: false,
+                $$hashKey: "object:477"
+            },
+            {
+                price: "0",
+                date: "",
+                debt: "48 551",
+                debtDate: "30.08.2019",
+                manual: false,
+                $$hashKey: "object:478"
+            }
+        ];
         sc.hand = false;
         sc.koef = 1.0704058245275336;
         sc.leftPrice = "291 306";
