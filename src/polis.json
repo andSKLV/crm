@@ -27,6 +27,11 @@
         ]
     },
     {
+        "name": "Даты",
+        "type": "dates",
+        "values":[]
+    },
+    {
         "name": "Финансы",
         "type": "finance",
         "values": [
@@ -34,10 +39,5 @@
                 "name": "Редактировать"
             }
         ]
-    },
-    {
-        "name": "Даты",
-        "type": "dates",
-        "values":[]
     }
 ]

@@ -1075,5 +1075,5 @@ div.matrix-header{
 .properties_header {
     background-color: var(--blue);
     color: white;
-    height: 1lh;
+    height: 35px!important;
 }
