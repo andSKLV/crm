@@ -9,7 +9,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
                 Math.round($scope.myFactory.payment.totalPrice).toString()
             );
         };
-        $scope.fake();
+        // $scope.fake();
         priceToString();
         $scope.checkDebtEqual();
         await $scope.loadDashboard();
@@ -56,6 +56,10 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         }
     };
     $scope.returnToDashboard = () => {
+        $scope.myFactory.cameFrom = {
+            name: 'Редактирование финансов',
+            path: $location.$$path,
+        };
         $location.path("/polis");
     };
     /**
@@ -339,6 +343,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         sc.leftPrice = "291 306";
         sc.totalPrice = 291305.891949874;
         sc.val = 6;
+        sc.payed = '0';
         sc.calcDebt = "48 551";
     };
 

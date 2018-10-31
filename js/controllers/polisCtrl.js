@@ -66,10 +66,13 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         const openTab = () => {
             if (!$scope.currObj) return false;
             let tabIndex = 0;
-
             if (myFactory.cameFrom.name === 'Редактор полиса') {
                 //если пришли из редактора полиса, то открываем сразу это меню
                 tabIndex = $scope.currObj.findIndex(val => val.name === 'Оговорки и условия');
+            }
+            else if (myFactory.cameFrom.name === 'Редактирование финансов') {
+                //если пришли из редактора полиса, то открываем сразу это меню
+                tabIndex = $scope.currObj.findIndex(val => val.name === 'Финансы');
             }
             else if (!myFactory.companyObj.card) {
                 tabIndex = 0;
@@ -127,7 +130,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      */
     $scope.calcFinances = () => {
         const startDate = myFactory.polisObj.dates.start || '';
-        myFactory.payment.makeArray(myFactory.totalPrice,startDate);
+        if (!myFactory.payment.array) myFactory.payment.makeArray(myFactory.totalPrice,startDate);
     }
     $scope.itemsList = {
         items1: [],
