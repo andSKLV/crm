@@ -114,10 +114,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
             if (!p.manual && !p.payed) return true;
         }).length; // количество платежей, которые можно пересчитать - они не должны быть заданы в ручныю либо оплачены
         if (notPayedCounter === 0) {
-            const newVal =
-                notPayed -
-                manualPrice +
-                intFromStr($scope.newDashboard.currPayment.debt);
+            const newVal = notPayed - manualPrice + intFromStr($scope.newDashboard.currPayment.debt);
             $scope.newDashboard.currPayment.debt = addSpaces(newVal);
             $scope.newDashboard.currPayment.manual = false;
             return false;
@@ -135,9 +132,11 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
     };
     /**
      * проверка итоговой суммы и пересчитанной суммы. из-за округлений может не сходиться на рубль
+     * //TODO: отключена из-за некорректной работы после изменений
      * добавляем разницу к следующему не оплаченному и не введенному в ручную
      */
     $scope.checkDebtEqual = () => {
+        return false;//заглушка
         const pay = $scope.myFactory.payment;
         const s = pay.array.reduce((acc, p) => {
             return (acc += intFromStr(p.debt));
@@ -211,14 +210,20 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         if (curr.price==='') {
             curr.price = addSpaces(0);
         }
-        if (curr.price === "0" && curr.debt!== '0') return false;
+        if (curr.price === "0" && curr.debt!== '0' && !curr.payed) return false;
         const pays = $scope.myFactory.payment;
         const expected = intFromStr(curr.debt);
         const payed = intFromStr(curr.price);
         const diff = expected - payed;
+        if (curr.payed) {
+            const diffStr = addSpaces(diff);
+            curr.debt = diffStr;
+            $scope.recalculateLeft();
+            return true;
+        }
+        curr.debt = '0';
         curr.payed = true;
-        if (diff) {
-            curr.debt = curr.price;
+        if (diff<0) {
             pays.array.find(p => {
                 if (!p.payed && !p.manul) {
                     let debt = intFromStr(p.debt);
@@ -228,6 +233,18 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
                     return true;
                 }
             });
+        }
+        else if (diff>0) {
+            const diffStr = addSpaces(diff);
+            const newPayment = {
+                price: '0',
+                date: '',
+                debt: diffStr,
+                debtDate: curr.debtDate,
+                manual: true,
+            };
+            const i = pays.array.indexOf(curr);
+            pays.array.splice(i+1,0,newPayment);
         }
         $scope.recalculateLeft();
     };
@@ -243,6 +260,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         let intTotal = intFromStr(total);
         intLeft = intTotal - payedSum;
         pay.leftPrice = addSpaces(intLeft);
+        pay.payed = addSpaces(payedSum);
     };
     /**
      * Устанаваливает значение платежа или даты как в долге
@@ -254,7 +272,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         switch (control) {
             case "price":
                 curr.price = curr.debt;
-                $scope.applyPayment(control);
+                $scope.applyPayment(curr);
                 break;
             case "date":
                 curr.date = curr.debtDate;

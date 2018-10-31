@@ -8,8 +8,8 @@
     ]" ng-if="$index==newDashboard.previousPage || $index==newDashboard.currentPage" 
     ng-repeat="param in currObj">
         <div>
-            <div ng-repeat="val in param.values">
-                <div ng-if="val.type==='asDebt'" ng-click="setAsDebt(val.control)">{{val.name}}</div>
+            <div ng-repeat="val in param.values" ng-click="(val.type==='asDebt') ?setAsDebt(val.control) : ''">
+                {{(val.type==='asDebt') ? val.name: ''}}
                 <input ng-if="val.type=='date'" id="input_{{val.control}}"
                 type="text" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="{{val.name}}" 
                 ng-keydown="keydownHandler($event, param, val,dashboard.clickedOnTopOfDashboard)"
