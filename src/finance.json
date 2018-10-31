@@ -7,6 +7,11 @@
         "name": "Выберите дату платежа",
         "type": "date",
         "control": "date"
+      },
+      {
+        "name": "В день долга",
+        "type": "asDebt",
+        "control": "date"
       }
     ]
   },

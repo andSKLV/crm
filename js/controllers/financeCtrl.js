@@ -1,5 +1,8 @@
 app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
     $scope.myFactory = myFactory;
+    /**
+     * Инициализация, запускается каждый раз при открытии окна финансы
+     */
     $scope.init = async () => {
         const priceToString = () => {
             $scope.myFactory.payment.totalPrice = addSpaces(
@@ -11,10 +14,12 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         $scope.checkDebtEqual();
         await $scope.loadDashboard();
     };
+    /**
+     * Загрузка объекта каретки
+     */
     $scope.loadDashboard = () => {
         return $http.post("./src/finance.json").then(
             resp => {
-                console.log(resp.data);
                 $scope.currObj = resp.data;
             },
             err => { }
@@ -46,14 +51,13 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         async setCurrentPage(index) {
             this.previousPage = this.currentPage;
             this.currentPage = index;
-            await delay ();
+            await delay();
             $scope.inputFocus(index);
         }
     };
     $scope.returnToDashboard = () => {
         $location.path("/polis");
     };
-    //------------------
     /**
      * функция загрузки процесса из матрицы в каретку
      * @param {payment} payment новый процесс, который был создан при копировании
@@ -77,7 +81,6 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         dsh.mode = "change";
         dsh.setCurrentPage(index);
         selectPaymentOnMatrix();
-        // inputFocus(index);
     };
     $scope.inputFocus = tab => {
         let el;
@@ -89,10 +92,10 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
                 el = document.querySelector('#input_price');
                 break;
             case 2:
-            el = document.querySelector('#input_debtDate');
+                el = document.querySelector('#input_debtDate');
                 break;
             case 3:
-            el = document.querySelector('#input_debt');
+                el = document.querySelector('#input_debt');
                 break;
             default:
                 return false;
@@ -159,10 +162,18 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         if (Math.abs(calced - input) > 1) curr.manual = true;
     };
     $scope.applyDebt = curr => {
+        if (curr.debt==='') {
+            curr.debt = 0;
+        }
         $scope.switchManual(curr);
         curr.debt = addSpaces(curr.debt);
         $scope.recalculateDebt();
     };
+    /**
+     * Функция активируется на leave focus с inputa, применяется для обработки введенного значения и дальнейшего действия
+     * @param {obj} val - объект, который был нажат
+     * @param {String} control - название столбца: date,price,debtdate,debt 
+     */
     $scope.endChange = (val, control) => {
         const pay = $scope.myFactory.payment;
         const curr = $scope.newDashboard.currPayment;
@@ -181,25 +192,26 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
                 $scope.applyDate(curr, control);
                 break;
         }
-        debugger;
-
     };
+    /**
+     * Преобразование даты в формате ГГГГ-ММ-ДД в ДД.ММ.ГГГГ
+     * @param {object} curr - текущий изменяемый платеж 
+     * @param {String} control - название столбца: date/debtdate
+     */
     $scope.applyDate = (curr, control) => {
-        debugger;
         const changing = curr[control];
-        if (changing==='') return false;
+        if (changing === '') return false;
         if (/\d{2}.\d{2}.\d{4}/.test(changing)) return false;
         if (/\d{4}-\d{2}-\d{2}/.test(changing)) {
-            const newDate = changing.replace(/(\d{4})-(\d{2})-(\d{2})/,`$3.$2.$1`);
-            debugger;
+            const newDate = changing.replace(/(\d{4})-(\d{2})-(\d{2})/, `$3.$2.$1`);
             curr[control] = newDate;
-            
-        };
-        // const test = changing.test(/\d*-/)
-        debugger;
+        }
     };
     $scope.applyPayment = curr => {
-        if (curr.price === "0") return false;
+        if (curr.price==='') {
+            curr.price = addSpaces(0);
+        }
+        if (curr.price === "0" && curr.debt!== '0') return false;
         const pays = $scope.myFactory.payment;
         const expected = intFromStr(curr.debt);
         const payed = intFromStr(curr.price);
@@ -217,7 +229,6 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
                 }
             });
         }
-        debugger;
         $scope.recalculateLeft();
     };
     /**
@@ -233,18 +244,23 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         intLeft = intTotal - payedSum;
         pay.leftPrice = addSpaces(intLeft);
     };
-    $scope.setAsDebt = val => {
+    /**
+     * Устанаваливает значение платежа или даты как в долге
+     * @param {String} control - название столбца: date,price,debtdate,debt 
+     */
+    $scope.setAsDebt = control => {
         const pays = $scope.myFactory.payment;
         const curr = $scope.newDashboard.currPayment;
-        switch (val) {
+        switch (control) {
             case "price":
                 curr.price = curr.debt;
-                $scope.applyPayment(curr);
+                $scope.applyPayment(control);
                 break;
-            case "debt":
+            case "date":
+                curr.date = curr.debtDate;
+                $scope.applyDate(curr, control);
                 break;
         }
-        debugger;
     };
 
     $scope.fake = () => {
@@ -306,5 +322,6 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         sc.val = 6;
         sc.calcDebt = "48 551";
     };
+
     $scope.init();
 });
