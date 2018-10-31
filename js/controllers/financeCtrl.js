@@ -183,6 +183,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
                 break;
             case "price":
                 $scope.applyPayment(curr);
+                $scope.recalculateDebt ();
                 break;
             case "debtDate":
                 $scope.applyDate(curr, control);
@@ -216,8 +217,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         const payed = intFromStr(curr.price);
         const diff = expected - payed;
         if (curr.payed) {
-            const diffStr = addSpaces(diff);
-            curr.debt = diffStr;
+            curr.debt = '0';
             $scope.recalculateLeft();
             return true;
         }
@@ -273,6 +273,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
             case "price":
                 curr.price = curr.debt;
                 $scope.applyPayment(curr);
+                $scope.recalculateDebt ();
                 break;
             case "date":
                 curr.date = curr.debtDate;
