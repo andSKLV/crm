@@ -243,7 +243,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             this.previousPage = this.currentPage;
             this.currentPage = index;
             if (index===2) $scope.myFactory.polisObj.additionsSeen = true;
-            if (index===4 && $scope.myFactory.payment.array && $scope.myFactory.payment.array.length>0) $scope.myFactory.polisObj.financeSeen = true;
+            if (index===4 && $scope.myFactory.payment.array && $scope.myFactory.payment.array.length>0 && $scope.myFactory.payment.visited) $scope.myFactory.polisObj.financeSeen = true;
             $rootScope.search_result = [];
             $scope.currObj.forEach(param => {
                 if (param.type == 'search/create') {
