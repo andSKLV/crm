@@ -680,6 +680,7 @@ app.factory('myFactory', function(){
             leftPrice: null,
             calcDebt: null,
             payed: '0',
+            visited: false,
             changeMode:function(){
                 if(this.mode=="ON"){
                     this.mode="OFF";

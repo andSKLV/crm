@@ -130,7 +130,13 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      */
     $scope.calcFinances = () => {
         const startDate = myFactory.polisObj.dates.start || '';
+        if (myFactory.parks.length===0) return false;
         if (!myFactory.payment.array) myFactory.payment.makeArray(myFactory.totalPrice,startDate);
+        else {
+            const payTotal = ((typeof myFactory.payment.totalPrice)==='string') ? myFactory.payment.totalPrice : addSpaces(Math.round(myFactory.payment.totalPrice));
+            const calcTotal = addSpaces(Math.round(myFactory.totalPrice));
+            if (payTotal!==calcTotal) myFactory.payment.makeArray(myFactory.totalPrice,startDate);
+        }
     }
     $scope.itemsList = {
         items1: [],
