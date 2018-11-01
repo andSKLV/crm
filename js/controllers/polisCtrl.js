@@ -105,7 +105,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             if (!myFactory.polisObj.conditions) {
                 const type = (myFactory.calcObj.factory) ? myFactory.calcObj.factory.HIPname : 'Перевозчики';
                 await myFactory.polisObj.loadConditions(type);
-            } 
+            }
             await loadDashboardObj();
         };
 
@@ -118,8 +118,8 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         }
 
         //если есть расчет, то расчитываем финансы
-        if (myFactory.parks && myFactory.parks.length>0 && !myFactory.payment.manual) {
-            $scope.calcFinances ();
+        if (myFactory.parks && myFactory.parks.length > 0 && !myFactory.payment.manual) {
+            $scope.calcFinances();
         }
 
         myFactory.polisObj.updateConditionsCheck();
@@ -130,12 +130,12 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      */
     $scope.calcFinances = () => {
         const startDate = myFactory.polisObj.dates.start || '';
-        if (myFactory.parks.length===0) return false;
-        if (!myFactory.payment.array) myFactory.payment.makeArray(myFactory.totalPrice,startDate);
+        if (myFactory.parks.length === 0) return false;
+        if (!myFactory.payment.array) myFactory.payment.makeArray(myFactory.totalPrice, startDate);
         else {
-            const payTotal = ((typeof myFactory.payment.totalPrice)==='string') ? myFactory.payment.totalPrice : addSpaces(Math.round(myFactory.payment.totalPrice));
+            const payTotal = ((typeof myFactory.payment.totalPrice) === 'string') ? myFactory.payment.totalPrice : addSpaces(Math.round(myFactory.payment.totalPrice));
             const calcTotal = addSpaces(Math.round(myFactory.totalPrice));
-            if (payTotal!==calcTotal) myFactory.payment.makeArray(myFactory.totalPrice,startDate);
+            if (payTotal !== calcTotal) myFactory.payment.makeArray(myFactory.totalPrice, startDate);
         }
     }
     $scope.itemsList = {
@@ -239,8 +239,8 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         setCurrentPage(index) {
             this.previousPage = this.currentPage;
             this.currentPage = index;
-            if (index===2) $scope.myFactory.polisObj.additionsSeen = true;
-            if (index===4 && $scope.myFactory.payment.array && $scope.myFactory.payment.array.length>0) $scope.myFactory.polisObj.financeSeen = true;
+            if (index === 2) $scope.myFactory.polisObj.additionsSeen = true;
+            if (index === 4 && $scope.myFactory.payment.array && $scope.myFactory.payment.array.length > 0) $scope.myFactory.polisObj.financeSeen = true;
             $rootScope.search_result = [];
             $scope.currObj.forEach(param => {
                 if (param.type == 'search/create') {
@@ -263,15 +263,15 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     return false;
                     break;
                 case 4:
-                    return myFactory.polisObj.financeSeen && myFactory.payment.array && myFactory.payment.array.length>0;
+                    return myFactory.polisObj.financeSeen && myFactory.payment.array && myFactory.payment.array.length > 0;
                     break;
                 default:
                     return false;
                     break;
             }
         },
-        allSelected () {
-            for (let i=0;i<5;i++) {
+        allSelected() {
+            for (let i = 0; i < 5; i++) {
                 if (!$scope.newDashboard.alreadySelected(i)) return false;
             }
             return true;
@@ -330,11 +330,11 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         query.type = 'addition_delete';
         query.id = id;
         $http.post('./php/save.php', query).then(resp => {
-            if (resp.data!=='success') {
+            if (resp.data !== 'success') {
                 alert('Ошибка удаления. Пожалуйста, по возможности не закрывайте окно и обратитесь к разработчику');
                 console.error(resp.data);
             }
-            else $rootScope.search_result = $rootScope.search_result.filter(val=>val.id!==id);
+            else $rootScope.search_result = $rootScope.search_result.filter(val => val.id !== id);
         }, err => {
             console.error(err);
         });
@@ -352,12 +352,12 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         }
         const changeDateView = dateStr => {
             const reg = /(\d+)-(\d+)-(\d+)/;
-            const newDate = dateStr.replace(reg,`$3.$2.$1`);
+            const newDate = dateStr.replace(reg, `$3.$2.$1`);
             return newDate;
         }
         const makeDateFromStr = dateStr => {
             const dates = dateStr.match(/(\d+).(\d+).(\d+)/);
-            const newDate = new Date(dates[3],Number(dates[2])-1,dates[1]);
+            const newDate = new Date(dates[3], Number(dates[2]) - 1, dates[1]);
             return newDate;
         }
 
@@ -365,8 +365,8 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             case 'start':
                 if (valiDate(dates.start)) {
                     dates.start = changeDateView(dates.start);
-                    dates.startDate = makeDateFromStr (dates.start);
-                    $scope.setEndByTime(dates.startDate,dates.time);
+                    dates.startDate = makeDateFromStr(dates.start);
+                    $scope.setEndByTime(dates.startDate, dates.time);
                 }
                 else {
                     dates.start = null;
@@ -376,8 +376,8 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             case 'end':
                 if (valiDate(dates.end)) {
                     dates.end = changeDateView(dates.end);
-                    dates.endDate = makeDateFromStr (dates.end);
-                    if (dates.endDate<dates.startDate) {
+                    dates.endDate = makeDateFromStr(dates.end);
+                    if (dates.endDate < dates.startDate) {
                         dates.end = null;
                         dates.endDate = null;
                         return false;
@@ -391,7 +391,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 break;
             case 'time':
                 if (!dates.startDate) return false;
-                $scope.setEndByTime(dates.startDate,dates.time);
+                $scope.setEndByTime(dates.startDate, dates.time);
                 break;
             default:
                 return false;
@@ -402,9 +402,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      * @param {Date} start 
      * @param {string} time - Год, 6 месяцев или вручную 
      */
-    $scope.setEndByTime = (start,time) => {
+    $scope.setEndByTime = (start, time) => {
         const setEnd = month => {
-            const end = new Date (start.getFullYear(),start.getMonth()+month, start.getDate());
+            const end = new Date(start.getFullYear(), start.getMonth() + month, start.getDate());
             $scope.myFactory.polisObj.dates.endDate = end;
             $scope.myFactory.polisObj.dates.end = parseDate(end);
         }
@@ -438,7 +438,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         switch (control) {
             case "today":
                 const today = todayStart();
-                $scope.setEndByTime(today,$scope.myFactory.polisObj.dates.time);
+                $scope.setEndByTime(today, $scope.myFactory.polisObj.dates.time);
                 break;
             default:
                 return false;
@@ -449,9 +449,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      * @param {Date} date 
      * @returns {string} dd.mm.yyyy
      */
-    function parseDate (date) {
+    function parseDate(date) {
         let day = date.getDate();
-        let month = date.getMonth()+1;
+        let month = date.getMonth() + 1;
         let year = date.getFullYear();
         if (day < 10) day = `0${day}`;
         if (month < 10) month = `0${month}`;
