@@ -147,9 +147,6 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         $scope.itemsList.items1.push({ 'Id': i, 'Label': 'Item A_' + i });
     }
 
-    for (let i = 0; i <= 5; i += 1) {
-        $scope.itemsList.items2.push({ 'Id': i, 'Label': 'Item B_' + i });
-    }
     $scope.sortableOptions = {
         containment: '#horizontal-container',
         //restrict move across columns. move only within column.
@@ -243,7 +240,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             this.previousPage = this.currentPage;
             this.currentPage = index;
             if (index===2) $scope.myFactory.polisObj.additionsSeen = true;
-            if (index===4 && $scope.myFactory.payment.array && $scope.myFactory.payment.array.length>0 && $scope.myFactory.payment.visited) $scope.myFactory.polisObj.financeSeen = true;
+            if (index===4 && $scope.myFactory.payment.array && $scope.myFactory.payment.array.length>0) $scope.myFactory.polisObj.financeSeen = true;
             $rootScope.search_result = [];
             $scope.currObj.forEach(param => {
                 if (param.type == 'search/create') {
@@ -262,6 +259,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 case 2:
                     return myFactory.polisObj.additionsSeen;
                     break;
+                case 3:
+                    return false;
+                    break;
                 case 4:
                     return myFactory.polisObj.financeSeen && myFactory.payment.array && myFactory.payment.array.length>0;
                     break;
@@ -269,6 +269,12 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     return false;
                     break;
             }
+        },
+        allSelected () {
+            for (let i=0;i<5;i++) {
+                if (!$scope.newDashboard.alreadySelected(i)) return false;
+            }
+            return true;
         }
     }
 

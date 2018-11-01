@@ -39,7 +39,7 @@
                 <div ng-repeat="item in itemsList.items1" as-sortable-item>
                     <div as-sortable-item-handle>{{item.Label}}</div>
                 </div>
-                <div ng-click="polisCtrl.makePDF()">make polis</div>
+                
         </div>
         
     </div>
@@ -55,5 +55,6 @@
              ]">
             {{param.name}}
         </div>
+        <div ng-if="newDashboard.allSelected()"ng-click="polisCtrl.makePDF()">Преобразовать в документ</div>
     </div>
 </div>

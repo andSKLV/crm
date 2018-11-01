@@ -54,7 +54,7 @@ div.matrix_container.calc{
     margin-left: 30px;
 }
 div.matrix_container:not(.calc){
-    margin-left: 45px;
+    margin-left: 0px;
     height: calc(100vh - 280px);
 }
 #find_company_matrix td{
@@ -1076,4 +1076,8 @@ div.matrix-header{
     background-color: var(--blue);
     color: white;
     height: 35px!important;
+}
+.nomarginleft {
+    margin-left: 0px!important;
+    width: 100%!important;
 }
