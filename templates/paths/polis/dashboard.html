@@ -51,7 +51,8 @@
                 ng-model="myFactory.polisObj.dates[val.control]" 
                 ng-blur="endChange(val.control)">
                 <select class="company_dashboard_inputs" ng-if="val.type=='select'" ng-change="endChange(val.control)" ng-model="myFactory.polisObj.dates[val.control]">
-                        <option ng-repeat="option in val.values" value="{{option}}">{{option}}</option>
+                    <option value="" disabled selected>Срок документа</option>    
+                    <option ng-repeat="option in val.values" value="{{option}}">{{option}}</option>
                 </select>
             </div>
         </div>

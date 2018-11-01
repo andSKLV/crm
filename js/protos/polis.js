@@ -11,7 +11,9 @@ export default class Polis {
     this.type = 'Перевозчики';
     this.dates = {
       start: null,
+      startDate: null,
       end: null,
+      endDate: null,
       changes: [],
       time: 'Год',
     }

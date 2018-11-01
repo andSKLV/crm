@@ -344,17 +344,118 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      * Функция запускается после ухода с инпута в дэшборде
      * @param {string} control - control инпута, чтобы разделять какой именно изменился
      */
-    $scope.endChange = (control) => {
-        console.log($scope);
-        debugger;
+    $scope.endChange = control => {
+        const dates = $scope.myFactory.polisObj.dates;
+        const valiDate = dateStr => {
+            const reg = /(2[01][012][0-9])-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])/;
+            return reg.test(dateStr);
+        }
+        const changeDateView = dateStr => {
+            const reg = /(\d+)-(\d+)-(\d+)/;
+            const newDate = dateStr.replace(reg,`$3.$2.$1`);
+            return newDate;
+        }
+        const makeDateFromStr = dateStr => {
+            const dates = dateStr.match(/(\d+).(\d+).(\d+)/);
+            const newDate = new Date(dates[3],Number(dates[2])-1,dates[1]);
+            return newDate;
+        }
+
+        switch (control) {
+            case 'start':
+                if (valiDate(dates.start)) {
+                    dates.start = changeDateView(dates.start);
+                    dates.startDate = makeDateFromStr (dates.start);
+                    $scope.setEndByTime(dates.startDate,dates.time);
+                }
+                else {
+                    dates.start = null;
+                    dates.startDate = null;
+                }
+                break;
+            case 'end':
+                if (valiDate(dates.end)) {
+                    dates.end = changeDateView(dates.end);
+                    dates.endDate = makeDateFromStr (dates.end);
+                    if (dates.endDate<dates.startDate) {
+                        dates.end = null;
+                        dates.endDate = null;
+                        return false;
+                    }
+                    dates.time = 'Вручную';
+                }
+                else {
+                    dates.end = null;
+                    dates.endDate = null;
+                }
+                break;
+            case 'time':
+                if (!dates.startDate) return false;
+                $scope.setEndByTime(dates.startDate,dates.time);
+                break;
+            default:
+                return false;
+        }
+    }
+    /**
+     * установка даты окончания в зависимости от выбранного срока действия
+     * @param {Date} start 
+     * @param {string} time - Год, 6 месяцев или вручную 
+     */
+    $scope.setEndByTime = (start,time) => {
+        const setEnd = month => {
+            const end = new Date (start.getFullYear(),start.getMonth()+month, start.getDate());
+            $scope.myFactory.polisObj.dates.endDate = end;
+            $scope.myFactory.polisObj.dates.end = parseDate(end);
+        }
+        switch (time) {
+            case 'Год':
+                setEnd(12);
+                break;
+            case '6 месяцев':
+                setEnd(6);
+                break;
+            case 'Вручную':
+                $scope.myFactory.polisObj.dates.time = 'Вручную';
+                break;
+            default:
+                console.log(time);
+                debugger;
+                break;
+        }
     }
     /**
      * Функция вызывается когда был клик по кнопке в дэшборде, в описании которой есть тип btn
      * @param {string} control - control кнопки, чтобы разделять какая именно нажата
      */
     $scope.btnClick = control => {
-        console.log($scope);
-        debugger;
+        const todayStart = () => {
+            const today = new Date();
+            $scope.myFactory.polisObj.dates.start = parseDate(today);
+            $scope.myFactory.polisObj.dates.startDate = today;
+            return today;
+        };
+        switch (control) {
+            case "today":
+                const today = todayStart();
+                $scope.setEndByTime(today,$scope.myFactory.polisObj.dates.time);
+                break;
+            default:
+                return false;
+        }
+    };
+    /**
+     * Преобразование объекта даты в строку
+     * @param {Date} date 
+     * @returns {string} dd.mm.yyyy
+     */
+    function parseDate (date) {
+        let day = date.getDate();
+        let month = date.getMonth()+1;
+        let year = date.getFullYear();
+        if (day < 10) day = `0${day}`;
+        if (month < 10) month = `0${month}`;
+        return `${day}.${month}.${year}`;
     }
 
 
