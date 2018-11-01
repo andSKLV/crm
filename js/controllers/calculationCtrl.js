@@ -9,6 +9,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.search_params=[];
     this.isArray = angular.isArray;
     this.config="HIP.json";
+    this.myFactory.matrixType = 'HIP';
     this.karetkaTypes = {
         'Перевозчики':'HIP.json',
         'Экспедиторы': 'HIP-conf.json',
