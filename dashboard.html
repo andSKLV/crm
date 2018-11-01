@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="templates/paths/main/style.css">
 <div id="loading_modal" loading></div>
-<div class="window-header">Главное меню. Юр. лицо: {{(dashboard.myFactory.newClientCard&&dashboard.myFactory.newClientCard['Данные компании']['Наименование организации']!=='')?dashboard.myFactory.newClientCard['Данные компании']['Наименование организации']:' не заполнено'}}. Расчет: {{(dashboard.myFactory.parks.length>0) ? (dashboard.myFactory.calculationName&&dashboard.myFactory.calculationName!=='')?dashboard.myFactory.calculationName: dashboard.myFactory.calcObj.isLinked?'привязанный':'без названия' : 'не создан'}}.</div>
-<div class="dashboard_container" karetka  tabindex="0" ng-keypress="dashboard.keyboard($event)" ng-focus="dashboard.myFactory.foc=true; dashboard.consolelog('focus')" ng-blur="dashboard.myFactory.foc=false"></div>
+<div class="window-header nomarginleft">Главное меню. Юр. лицо: {{(dashboard.myFactory.newClientCard&&dashboard.myFactory.newClientCard['Данные компании']['Наименование организации']!=='')?dashboard.myFactory.newClientCard['Данные компании']['Наименование организации']:' не заполнено'}}. Расчет: {{(dashboard.myFactory.parks.length>0) ? (dashboard.myFactory.calculationName&&dashboard.myFactory.calculationName!=='')?dashboard.myFactory.calculationName: dashboard.myFactory.calcObj.isLinked?'привязанный':'без названия' : 'не создан'}}.</div>
+<div class="dashboard_container nomarginleft" karetka  tabindex="0" ng-keypress="dashboard.keyboard($event)" ng-focus="dashboard.myFactory.foc=true; dashboard.consolelog('focus')" ng-blur="dashboard.myFactory.foc=false"></div>
 <div id="tooltip_box" return></div>
 <div class="matrix_container" ng-controller="matrixCtrl as matrixCtrl" ng-class="{calc: dashboard.myFactory.matrixType=='HIP'}">
     <table class="matrix" ng-if="dashboard.myFactory.matrixType=='find_company'" find-company></table>
