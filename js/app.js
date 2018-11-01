@@ -692,7 +692,7 @@ app.factory('myFactory', function(){
              * функция создает массив из этапов платежей, необходимо для дальнейшего управления финансами полиса
              * @param {number} price 
              */
-            makeArray(price, startDate = '') {
+            makeArray(price, { start = '', end = '', time = '' }) {
                 const getCurrentDate = (date) => {
                     let day = date.getDate();
                     let month = date.getMonth() + 1;
@@ -701,14 +701,34 @@ app.factory('myFactory', function(){
                     if (month < 10) month = `0${month}`;
                     return `${day}.${month}.${year}`
                 }
+                const chooseLong = (start, end, time) => {
+                    switch (time) {
+                        case 'Год':
+                            return 12
+                        case '6 месяцев':
+                            return 6;
+                        case 'Вручную':
+                            //возвращаем примерное количество месяцев
+                            return Math.ceil((new Date(end)-new Date(start))/(30*86400000));
+                        default:
+                            return 12;
+                            break;
+                    }
+                }
                 this.totalPrice = price;
+                this.datesWhenCreated = { start, end, time }; //записываем значение, чтобы потом сравнивать и если что обновлять финансы
+
+                let payment = addSpaces(Math.round(price / this.val)); //рассчитываем цену одного платежа
+                this.calcDebt = payment; //устанавливаем долг равный полной цене
+                this.leftPrice = addSpaces((Math.round(price / this.val)) * this.val);
+                start = start.replace(/(\d+).(\d+).(\d+)/, '$2.$1.$3'); // меняем местами месяц и день в дате, чтобы js воспринимал нормально дату
+                end = end.replace(/(\d+).(\d+).(\d+)/, '$2.$1.$3');
                 const array = [];
-                let payment = addSpaces(Math.round(price / this.val));
-                this.calcDebt = payment;
-                this.leftPrice = addSpaces((Math.round(price / this.val))*this.val);
+                const long = chooseLong(start, end, time); //выбираем продолжительность
+
                 for (let i = 0; i < this.val; i++) {
-                    let date = (startDate.length===10) ? new Date(startDate) : new Date();
-                    date.setMonth(date.getMonth() + i * (12 / this.val));
+                    let date = (start.length===10) ? new Date(start) : new Date();
+                    date.setMonth(date.getMonth() + i * (long / this.val));
                     date = getCurrentDate(date);
                     array.push({
                         price: '0',

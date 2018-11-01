@@ -129,23 +129,23 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      * Функция создания массива с предварительными платежами
      */
     $scope.calcFinances = () => {
-        const startDate = myFactory.polisObj.dates.start || '';
-        if (myFactory.parks.length === 0) return false;
-        if (!myFactory.payment.array) myFactory.payment.makeArray(myFactory.totalPrice, startDate);
+        if (myFactory.parks.length === 0 || !(myFactory.polisObj.dates.start || myFactory.polisObj.dates.end)) return false;
+        if (!myFactory.payment.array) myFactory.payment.makeArray(myFactory.totalPrice, myFactory.polisObj.dates);
         else {
             const payTotal = ((typeof myFactory.payment.totalPrice) === 'string') ? myFactory.payment.totalPrice : addSpaces(Math.round(myFactory.payment.totalPrice));
             const calcTotal = addSpaces(Math.round(myFactory.totalPrice));
-            if (payTotal !== calcTotal) myFactory.payment.makeArray(myFactory.totalPrice, startDate);
+            if (payTotal !== calcTotal) myFactory.payment.makeArray(myFactory.totalPrice, myFactory.polisObj.dates);
         }
     }
-    $scope.itemsList = {
-        items1: [],
-        items2: []
-    };
+    //Удалено за ненадобностью. Какой то драгбл контейнер
+    // $scope.itemsList = {
+    //     items1: [],
+    //     items2: []
+    // };
 
-    for (let i = 0; i <= 5; i += 1) {
-        $scope.itemsList.items1.push({ 'Id': i, 'Label': 'Item A_' + i });
-    }
+    // for (let i = 0; i <= 5; i += 1) {
+    //     $scope.itemsList.items1.push({ 'Id': i, 'Label': 'Item A_' + i });
+    // }
 
     $scope.sortableOptions = {
         containment: '#horizontal-container',
@@ -240,6 +240,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             this.previousPage = this.currentPage;
             this.currentPage = index;
             if (index === 2) $scope.myFactory.polisObj.additionsSeen = true;
+            if (index===4) $scope.calcFinances();
             if (index === 4 && $scope.myFactory.payment.array && $scope.myFactory.payment.array.length > 0) $scope.myFactory.polisObj.financeSeen = true;
             $rootScope.search_result = [];
             $scope.currObj.forEach(param => {
@@ -260,7 +261,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     return myFactory.polisObj.additionsSeen;
                     break;
                 case 3:
-                    return false;
+                    return myFactory.polisObj.dates.start && myFactory.polisObj.dates.end;
                     break;
                 case 4:
                     return myFactory.polisObj.financeSeen && myFactory.payment.array && myFactory.payment.array.length > 0;
