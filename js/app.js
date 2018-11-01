@@ -726,6 +726,8 @@ app.factory('myFactory', function(){
                 const array = [];
                 const long = chooseLong(start, end, time); //выбираем продолжительность
 
+                if (long<this.val) console.warn('Продолжительность договора меньше чем этапов платежей'); // пока неизвестно, что с этим делать
+
                 for (let i = 0; i < this.val; i++) {
                     let date = (start.length===10) ? new Date(start) : new Date();
                     date.setMonth(date.getMonth() + i * (long / this.val));

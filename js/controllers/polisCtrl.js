@@ -116,12 +116,6 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             myFactory.polisObj.type = myFactory.calcObj.factory.HIPname;
             myFactory.polisObj.additionsSeen = false;
         }
-
-        //если есть расчет, то расчитываем финансы
-        if (myFactory.parks && myFactory.parks.length > 0 && !myFactory.payment.manual) {
-            $scope.calcFinances();
-        }
-
         myFactory.polisObj.updateConditionsCheck();
         openTab();
     }
@@ -129,12 +123,25 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      * Функция создания массива с предварительными платежами
      */
     $scope.calcFinances = () => {
+        const checkDiffInDates = () => {
+            const dates = $scope.myFactory.polisObj.dates;
+            const paymentDates = $scope.myFactory.payment.datesWhenCreated;
+            let flag = false;
+            for (let key in paymentDates) {
+                if (paymentDates[key]!==dates[key]) flag = true;
+            }
+            return flag;
+        }
+
         if (myFactory.parks.length === 0 || !(myFactory.polisObj.dates.start || myFactory.polisObj.dates.end)) return false;
         if (!myFactory.payment.array) myFactory.payment.makeArray(myFactory.totalPrice, myFactory.polisObj.dates);
         else {
+            let needToCreate = false;
             const payTotal = ((typeof myFactory.payment.totalPrice) === 'string') ? myFactory.payment.totalPrice : addSpaces(Math.round(myFactory.payment.totalPrice));
             const calcTotal = addSpaces(Math.round(myFactory.totalPrice));
-            if (payTotal !== calcTotal) myFactory.payment.makeArray(myFactory.totalPrice, myFactory.polisObj.dates);
+            if (payTotal !== calcTotal) needToCreate = true; //если сумма расчета изменилась, то нужно пересчитать финансы
+            if (checkDiffInDates()) needToCreate = true; //если изменились даты или продолжительность договора - надо пересчитать
+            if (needToCreate) myFactory.payment.makeArray(myFactory.totalPrice, myFactory.polisObj.dates);
         }
     }
     //Удалено за ненадобностью. Какой то драгбл контейнер
