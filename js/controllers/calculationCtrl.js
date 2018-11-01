@@ -38,9 +38,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             });
             pack=pack[0];
             scope.myFactory.packages=pack.values;
-            if(myFactory.parks.length!=0) scope.selectParam(0);
-            else{
-                scope.selectParam(0);
+            scope.myFactory.removeCellSelection('dashboard_container');
+            scope.selectParam(0);
+            if(myFactory.parks.length===0) {
                 scope.karetka.mode="making new process";
             }
             scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
