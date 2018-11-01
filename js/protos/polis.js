@@ -13,6 +13,7 @@ export default class Polis {
       start: null,
       end: null,
       changes: [],
+      time: 'Год',
     }
     if (mf) this.bindMyFactory(mf);
   }

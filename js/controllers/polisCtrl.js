@@ -340,6 +340,22 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         });
         debugger;
     }
+    /**
+     * Функция запускается после ухода с инпута в дэшборде
+     * @param {string} control - control инпута, чтобы разделять какой именно изменился
+     */
+    $scope.endChange = (control) => {
+        console.log($scope);
+        debugger;
+    }
+    /**
+     * Функция вызывается когда был клик по кнопке в дэшборде, в описании которой есть тип btn
+     * @param {string} control - control кнопки, чтобы разделять какая именно нажата
+     */
+    $scope.btnClick = control => {
+        console.log($scope);
+        debugger;
+    }
 
 
     $scope.init();

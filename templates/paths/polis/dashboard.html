@@ -30,18 +30,31 @@
         </div>
         <!-- финансовый блок -->
         <div ng-if="param.type=='finance'">
-            <div ng-repeat="value in param.values" ng-click="dashboard.relocatePage({urlTo:'finance'})">{{value.name}}</div>
+            <div ng-if="dashboard.myFactory.parks.length===0">Финансовый блок не доступен пока не добавлен расчет</div>
+            <div ng-if="dashboard.myFactory.parks.length>0" ng-repeat="value in param.values" ng-click="dashboard.relocatePage({urlTo:'finance'})">{{value.name}}</div>
         </div>
 
         <!-- Даты, пока не придумал -->
-        <div id="horizontal-container"  ng-if="param.type=='dates'" class="sortable-row" as-sortable="sortableOptions" data-ng-model="itemsList.items1">
+        <!-- <div id="horizontal-container"  ng-if="param.type=='dates'" class="sortable-row" as-sortable="sortableOptions" data-ng-model="itemsList.items1">
           
                 <div ng-repeat="item in itemsList.items1" as-sortable-item>
                     <div as-sortable-item-handle>{{item.Label}}</div>
                 </div>
                 
+        </div> -->
+        <div ng-if="param.type=='dates'" >
+            <div ng-repeat="val in param.values" ng-click="(val.type=='btn')?btnClick(val.control):''">
+                {{(val.type=='btn')? val.name : ''}}
+                <input ng-if="val.type=='date'" id="input_{{val.control}}"
+                type="text" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="{{val.name}}" 
+                ng-keydown="keydownHandler($event, param, val)"
+                ng-model="myFactory.polisObj.dates[val.control]" 
+                ng-blur="endChange(val.control)">
+                <select class="company_dashboard_inputs" ng-if="val.type=='select'" ng-change="endChange(val.control)" ng-model="myFactory.polisObj.dates[val.control]">
+                        <option ng-repeat="option in val.values" value="{{option}}">{{option}}</option>
+                </select>
+            </div>
         </div>
-        
     </div>
 
 </div>

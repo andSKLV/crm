@@ -29,7 +29,29 @@
     {
         "name": "Даты",
         "type": "dates",
-        "values":[]
+        "values":[
+            {
+                "name": "Дата начала",
+                "type": "date",
+                "control": "start"
+            },
+            {
+                "name": "Сегодня",
+                "type": "btn",
+                "control": "today"
+            },
+            {
+                "name": "Дата окончания",
+                "type": "date",
+                "control": "end"
+            },
+            {
+                "name": "Срок",
+                "type":"select",
+                "values":["Год","6 месяцев"],
+                "control": "time"
+            }
+        ]
     },
     {
         "name": "Финансы",
