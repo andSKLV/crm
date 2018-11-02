@@ -919,7 +919,7 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
 .window-header {
     display: table;
     margin: auto;
-    background: var(--blue);
+    background: var(--dark-blue);
     color: white;
     text-align: center;
     width: 100%;
