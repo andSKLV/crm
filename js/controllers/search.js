@@ -1,50 +1,47 @@
-app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
-    this.myFactory=myFactory;
-
-    $rootScope.cacheTemplate={};
-    let scope=this;
-
-    this.makeSearch=(param)=>{
+app.controller('searchCtrl', function ($rootScope, $http, $q, $location, myFactory) {
+    this.myFactory = myFactory;
+    $rootScope.cacheTemplate = {};
+    let scope = this;
+    
+    this.makeSearch = (param) => {
         this.isEmptyQuery(param.values) ? this.isEmptyObject(this.template) ? this.search(param.values, param.url) : this.checkTemplate(param.values) ? this.searchFilter(param.values) : this.search(param.values, param.url) : this.clean();
     }
-    this.searchForPolis= async ({type, value}) => {
-        if(value=="" || value.length<=2) this.clean();
-        if($rootScope.search_result.length==0) scope.template={};
-        if(this.isEmptyObject(this.template)){
+    this.searchForPolis = async ({ type, value }) => {
+        if (value == "" || value.length <= 2) this.clean();
+        if ($rootScope.search_result.length == 0) scope.template = {};
+        if (this.isEmptyObject(this.template)) {
             await this.search(
                 [{
-                    model:"name",
-                    name:"Название",
+                    model: "name",
+                    name: "Название",
                     val: value
                 }]
                 , type
             );
         }
-        else{
-            if(this.checkTemplate([{
-                model:"name",
-                name:"Название",
+        else {
+            if (this.checkTemplate([{
+                model: "name",
+                name: "Название",
                 val: value
-            }])){
+            }])) {
                 this.searchFilter([{
-                    model:"name",
-                    name:"Название",
+                    model: "name",
+                    name: "Название",
                     val: value
                 }])
             }
-            else{
+            else {
                 await this.search(
                     [{
-                        model:"name",
-                        name:"Название",
+                        model: "name",
+                        name: "Название",
                         val: value
                     }]
                     , type
                 );
             }
         }
-        
-
     }
     this.isEmptyObject = (obj) => {//функция проверки объекта на пустоту
         for (let i in obj) {
@@ -54,53 +51,48 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
         }
         return true;
     };
-
-    this.searchFilter=function(values){
-        for(let i=0; i<values.length; i++){
-            let obj=values[i];
-            if(obj.val=="") $rootScope.cacheTemplate[obj.model]=undefined;
-            else if(obj.model=="contact"){
-                $rootScope.cacheTemplate.contact={};
-                if(isNaN(obj.val)) $rootScope.cacheTemplate.contact["name"]=obj.val;
-                else $rootScope.cacheTemplate.contact["phone"]=obj.val;
+    this.searchFilter = function (values) {
+        for (let i = 0; i < values.length; i++) {
+            let obj = values[i];
+            if (obj.val == "") $rootScope.cacheTemplate[obj.model] = undefined;
+            else if (obj.model == "contact") {
+                $rootScope.cacheTemplate.contact = {};
+                if (isNaN(obj.val)) $rootScope.cacheTemplate.contact["name"] = obj.val;
+                else $rootScope.cacheTemplate.contact["phone"] = obj.val;
             }
-            else $rootScope.cacheTemplate[obj.model]=obj.val;
+            else $rootScope.cacheTemplate[obj.model] = obj.val;
         }
-
     };
-    this.template={};//объект шаблон, необходимый для запроса к бд и дальнейшему решению искать ли в кэше или заново обращаться к бд
-    this.checkTemplate=function(values){//проверка шаблона
+    this.template = {};//объект шаблон, необходимый для запроса к бд и дальнейшему решению искать ли в кэше или заново обращаться к бд
+    this.checkTemplate = function (values) {//проверка шаблона
         let obj;
-        for(let i=0;i<values.length;i++){
-            if(values[i].model===scope.template.model){
-
-                obj=values[i];
-                i=values.length;
+        for (let i = 0; i < values.length; i++) {
+            if (values[i].model === scope.template.model) {
+                obj = values[i];
+                i = values.length;
             }
-
         }
-        if(obj) return obj.val.search(scope.template.txt)==0;
+        if (obj) return obj.val.search(scope.template.txt) == 0;
         else return false;
     };
-    this.search = function( values , type) {
-        let data={};
-        if(type=="Компания"){
-            data.type="find_company";
-            values[0].db="companies";
-        } 
-        else if(type=="calculationActions") data.type="find_calculation";
-        else if (type=='Оговорки и условия') data.type='find_addition';
-        else data.type=type;
-        
-        if(scope.abort){
+    this.search = function (values, type) {
+        let data = {};
+        if (type == "Компания") {
+            data.type = "find_company";
+            values[0].db = "companies";
+        }
+        else if (type == "calculationActions") data.type = "find_calculation";
+        else if (type == 'Оговорки и условия') data.type = 'find_addition';
+        else data.type = type;
+        if (scope.abort) {
             scope.abort.resolve();
         }
         scope.abort = $q.defer();
-        let flag=this.isEmptyQuery(values);
-        data.value=flag;
+        let flag = this.isEmptyQuery(values);
+        data.value = flag;
         if (!flag) return false;
-        scope.template.txt=flag.val;
-        scope.template.model=flag.model;
+        scope.template.txt = flag.val;
+        scope.template.model = flag.model;
         return $http.post("./php/search.php", data, { timeout: scope.abort.promise }).then(function success(response) {
             scope.myFactory.matrixType = type;
             $rootScope.cacheTemplate = {};
@@ -109,7 +101,7 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
                 response.data.reverse();
             }
             if (type === 'Оговорки и условия') {
-                $rootScope.search_result = parseText(response.data,'text');
+                $rootScope.search_result = parseText(response.data, 'text');
                 return true;
             }
             $rootScope.search_result = response.data;
@@ -125,7 +117,6 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
                         if (fact_price[0] == "" || fact_price[0] == 0) delete row.fact_premia;
                         else row.fact_premia = fact_price[0];
                     }
-
                 });
             }
             /**
@@ -139,7 +130,7 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
                     return null;
                 }
                 const _splitter = '/CBL/';
-                const result = data.map(part=>{
+                const result = data.map(part => {
                     //разделяем строку по разделителям, удаляем последний пустой элемент, это связано с алгоритмом формирования строки
                     part[fieldName] = part[fieldName].split(_splitter);
                     part[fieldName].pop()
@@ -152,20 +143,16 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
         }
         );
     };
-    this.clean=function(){//очищаем все результаты поиска
-        $rootScope.search_result=[];//<==== обнуляется массив
-        scope.template={};
+    this.clean = function () {//очищаем все результаты поиска
+        $rootScope.search_result = [];//<==== обнуляется массив
+        scope.template = {};
     };
-    this.isEmptyQuery=function(values){
-
-        let data={};
-        data.values=values;
-        let flag = data.values.find(function(element){// функция проверяет введено ли хоть в одно поле поиска значение, если нет - обнуляется массив
-            return element.val != '' && element.val!=undefined && element.val.length>1
+    this.isEmptyQuery = function (values) {
+        let data = {};
+        data.values = values;
+        let flag = data.values.find(function (element) {// функция проверяет введено ли хоть в одно поле поиска значение, если нет - обнуляется массив
+            return element.val != '' && element.val != undefined && element.val.length > 1
         });
         return flag;
     };
-    
-
-
 });
