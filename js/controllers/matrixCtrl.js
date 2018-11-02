@@ -90,7 +90,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                     }
                     // если сохраненный расчет был не перевозчиком
                     if (response.data.HIPname!==''&&response.data!=='Перевозчики') {
-                        const HIP_name = myFactory.scop.karetkaTypes[response.data.HIPname]; //достаем название файла конфигурации каретки
+                        const HIP_name = myFactory.karetkaTypes[response.data.HIPname]; //достаем название файла конфигурации каретки
                         await loadRisks(HIP_name); //загрузка новых рисков
                         myFactory.HIPname = response.data.HIPname;
                         myFactory.scop.loadMatrix();// перезагружаем матрицу
@@ -296,7 +296,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                     });
                     // если сохраненный расчет был не перевозчиком
                     if (response.data.HIPname!==''&&response.data!=='Перевозчики') {
-                        const HIP_name = myFactory.scop.karetkaTypes[response.data.HIPname]; //достаем название файла конфигурации каретки
+                        const HIP_name = myFactory.karetkaTypes[response.data.HIPname]; //достаем название файла конфигурации каретки
                         await loadRisks(HIP_name); //загрузка новых рисков
                         myFactory.HIPname = response.data.HIPname;
                         myFactory.scop.loadMatrix();// перезагружаем матрицу

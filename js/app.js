@@ -636,6 +636,10 @@ app.factory("myFactory", function () {
             name: null,
             path: null
         },
+        karetkaTypes: {
+            'Перевозчики':'HIP.json',
+            'Экспедиторы': 'HIP-conf.json',
+        },
         calcObj: {},
         companyObj: {},
         makingPolis: false,

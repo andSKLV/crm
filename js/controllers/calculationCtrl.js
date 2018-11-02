@@ -10,10 +10,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.isArray = angular.isArray;
     this.config="HIP.json";
     this.myFactory.matrixType = 'HIP';
-    this.karetkaTypes = {
-        'Перевозчики':'HIP.json',
-        'Экспедиторы': 'HIP-conf.json',
-    }
     if (this.myFactory.HIPname===undefined) this.myFactory.HIPname = 'Перевозчики';
     this.myFactory.scop = this;
     if (!this.myFactory.calcObj.isInited) this.myFactory.calcObj = new Calculation(this.myFactory);
@@ -22,7 +18,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         /**
          * Инициализация каретки
          */
-        const param = this.karetkaTypes[this.myFactory.HIPname];
+        const param = this.myFactory.karetkaTypes[this.myFactory.HIPname];
         await $http.post(`./src/${param}`).then(function success (response) {
             if (myFactory.isLoading) {
                 const loading = new Loading (true);
@@ -1803,7 +1799,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
      * @param {string} param - перевозчики, экспедиторы
      */
     this.setHIP = async function (param) {
-        const HIP_name = this.karetkaTypes[param];
+        const HIP_name = this.myFactory.karetkaTypes[param];
         if (this.HIPname===param) {
             // если выбран тот же параметр, то просто закрываем меню
             // toogleMenu ведет себя неадекватно с ангуляром, поэтому сделано так
