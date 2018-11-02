@@ -104,6 +104,10 @@ app.controller('searchCtrl', function($rootScope,$http,$q,$location,myFactory){
         return $http.post("./php/search.php", data, { timeout: scope.abort.promise }).then(function success(response) {
             scope.myFactory.matrixType = type;
             $rootScope.cacheTemplate = {};
+            if (Array.isArray(response.data)) {
+                //переворачиваем массив, чтобы он шел от недавно созданного к более старому
+                response.data.reverse();
+            }
             if (type === 'Оговорки и условия') {
                 $rootScope.search_result = parseText(response.data,'text');
                 return true;
