@@ -1,6 +1,6 @@
 [
     {
-        "name": "Компания22",
+        "name": "Компания",
         "type": "search/create",
         "values": [
             {
@@ -19,19 +19,37 @@
     },
     {
         "name": "Оговорки и условия",
-        "type": "lists",
+        "type": "search/create",
+        "values": [
+            {
+                "name": ""
+            }
+        ]
+    },
+    {
+        "name": "Даты",
+        "type": "dates",
         "values":[
             {
-                "name": "Базовые риски застрахованы",
-                "type": "multi_button"
+                "name": "Дата начала",
+                "type": "date",
+                "control": "start"
             },
             {
-                "name": "За исключением",
-                "type": "multi_button"
+                "name": "Сегодня",
+                "type": "btn",
+                "control": "today"
             },
             {
-                "name": "Новый список",
-                "type": "button"
+                "name": "Дата окончания",
+                "type": "date",
+                "control": "end"
+            },
+            {
+                "name": "Срок",
+                "type":"select",
+                "values":["Год","6 месяцев","Вручную"],
+                "control": "time"
             }
         ]
     },
@@ -40,16 +58,8 @@
         "type": "finance",
         "values": [
             {
-                "name": "something"
-            },
-            {
-                "name": "anything"
+                "name": "Редактировать"
             }
         ]
-    },
-    {
-        "name": "Даты",
-        "type": "dates",
-        "values":[]
     }
 ]

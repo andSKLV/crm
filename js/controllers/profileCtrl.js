@@ -61,7 +61,20 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
     query.model = 'company_id';
     query.id = id;
     return $http.post('php/load.php',query).then(resp=>{
-      if (Array.isArray(resp.data)) return resp.data;
+      if (Array.isArray(resp.data)) {
+        const was = {};
+        // выбираем только уникальные айдишники, без повторов
+        const uniq = resp.data.filter(link=>{
+          if (!was[link.calc_id]) {
+            was[link.calc_id] = true;
+            return true;
+          }
+          else return false;
+        })
+        //переворачиваем для хронологического порядка
+        uniq.reverse();
+        return uniq;
+      } 
       else alert ('Возникли проблемы с загрузкой привязанных расчетов. Обратитесь к разработчику');
     },err=>{
       console.error(err);
@@ -181,7 +194,6 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
       console.error(err);
     })
   }
-
   $scope.newDashboard = {
     currentPage: 0,
     previousPage: -1,
@@ -204,10 +216,6 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
       const mf = $scope.myFactory;
       this.previousPage = this.currentPage;
       this.currentPage = index;
-    },
-    getIndex(param) {
-      // FIXME:
-      // this.setCurrentPage($scope.clientCard.indexOf(param));
     }
   }
   $scope.loadToDashboard = (key) => {//обратный переход для карточки клиента
@@ -255,6 +263,9 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
         console.error (`Clear search results problem: ${err}`);
     }
   }
+  $scope.$on('$destroy', function () {
+    $scope.myFactory.removeCellSelection ('dashboard_container',true);
+  });
   /**
    * для вывода подсказок
    */

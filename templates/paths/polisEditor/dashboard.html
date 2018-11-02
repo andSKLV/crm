@@ -4,9 +4,9 @@
                 {mi_moveFromRight: dashboard.currentUl($index)},
                 { mi_moveToRight: !dashboard.currentUl($index)}
             ]"
-            ng-show="dashboard.currentUl($index)" class="ul">
+            ng-if="newDashboard.checkCurrentPage('title')" class="ul">
             <textarea  ng-model="dashboard.myFactory.polisCurrent.name"
-            style="width: 100%;background:rgb(230, 230, 230); resize: none; height: 100%;" autofocus></textarea>
+            class="input_polisEditor" autofocus ng-keyup="inputHandler($event,newDashboard.TITLE_INDEX)"></textarea>
         </div>
         <div ng-repeat="param in currObj" class="ul"
              ng-class="[
@@ -14,42 +14,34 @@
                 {mi_moveFromRight: dashboard.currentUl($index)},
                 { mi_moveToRight: !dashboard.currentUl($index)}
              ]"
-             ng-show="dashboard.currentUl($index)" >      
+             ng-if="$index==newDashboard.currentPage" >      
              <textarea  ng-model="param.text"
-             style="width: 100%;background:rgb(230, 230, 230); resize: none; height: 100%;" autofocus></textarea>
+             class="input_polisEditor" autofocus ng-keyup="inputHandler($event,$index)"></textarea>
         </div>
         <div ng-class="[
                 {mi_current: dashboard.currentUl(currObj.length+1)},
                 {mi_moveFromRight: dashboard.currentUl(currObj.length+1)},
                 { mi_moveToRight: !dashboard.currentUl(currObj.length+1)}
             ]"
-            ng-show="dashboard.currentUl(currObj.length+1)" class="ul">
-            <textarea  ng-model="newValue" ng-keyup="addNewValue($event)"
-            style="width: 100%;background:rgb(230, 230, 230); resize: none; height: 100%;" autofocus></textarea>
+            ng-show="newDashboard.checkCurrentPage('add')" class="ul">
+            <textarea class="input_polisEditor" ng-model="newValue" ng-keyup="addNewValue($event)" autofocus></textarea>
         </div>
     
     </div>
     <div class="nav">
         <div>
-            <div    ng-click="dashboard.selectParam($index) "
-                        ng-class="[
-                        {mi_selected: dashboard.myFactory.document.selectedParam===$index}
-                ]">
+            <div ng-click="newDashboard.setCurrentPage('title')" ng-class="{mi_selected: newDashboard.checkCurrentPage('title')}">
                Название списка
            </div>
-            <div    ng-repeat="param in currObj"
-                    ng-click="dashboard.selectParam($index) "
+            <div ng-repeat="param in currObj"
+                 ng-click="newDashboard.setCurrentPage($index)"
                     ng-if="param.checked"
-                    ng-class="[
-                        {mi_selected: dashboard.myFactory.document.selectedParam===$index}
-                    ]">
+                    ng-class="[{mi_selected: newDashboard.checkCurrentPage($index)}]">
                 {{$index+1}}
             </div>
-            <div    ng-click="dashboard.selectParam(currObj.length+1) "
-                    ng-class="[
-                    {mi_selected: dashboard.myFactory.document.selectedParam===currObj.length+1}
-                    ]">
-                +
+            <div    ng-click="newDashboard.setCurrentPage('add')"
+                    ng-class="[{mi_selected: newDashboard.checkCurrentPage('add')}]">
+                {{(getCheckedConditions()>3)?'+':'Добавить'}}
             </div>
         </div>
     </div>

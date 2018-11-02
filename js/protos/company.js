@@ -1,3 +1,4 @@
+let _isFull = null;
 export default class Company {
   constructor(){
     this.id = null;
@@ -29,6 +30,24 @@ export default class Company {
     this.name = card['Данные компании']['Наименование организации'];
     delete savedObj.type;
     this.responses.card = savedObj;
+  }
+  set isFull (val) {
+    _isFull = val;
+  }
+  get isFull () {
+    _isFull = this.getFullness();
+    return _isFull;
+  }
+  getFullness() {
+    const card = this.card;
+    for (let outobj in card) {
+      const field = card[outobj];
+      for (let inobj in field) {
+        const val = field[inobj];
+        if (val==='') return false;
+      }
+    }
+    return true;
   }
 }
 /**

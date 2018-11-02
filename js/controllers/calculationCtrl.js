@@ -1,7 +1,7 @@
 import Calculation from '../protos/calc.js';
 import Loading from '../protos/loading.js';
 
-app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location){
+app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location, $scope){
     this.span=1;
     this.karetkaDepth = 1;
     this.myFactory=myFactory;
@@ -9,6 +9,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.search_params=[];
     this.isArray = angular.isArray;
     this.config="HIP.json";
+    this.myFactory.matrixType = 'HIP';
     this.karetkaTypes = {
         'Перевозчики':'HIP.json',
         'Экспедиторы': 'HIP-conf.json',
@@ -37,9 +38,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             });
             pack=pack[0];
             scope.myFactory.packages=pack.values;
-            if(myFactory.parks.length!=0) scope.selectParam("");
-            else{
-                scope.selectParam(0);
+            scope.myFactory.removeCellSelection('dashboard_container');
+            scope.selectParam(0);
+            if(myFactory.parks.length===0) {
                 scope.karetka.mode="making new process";
             }
             scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
@@ -588,14 +589,12 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 });
                 pack=pack[0];
                 scope.myFactory.packages=pack.values;
-                if(myFactory.parks.length!=0) scope.selectParam("");
+                if(myFactory.parks.length!=0) scope.selectParam(0);
                 else{
                     scope.selectParam(0);
                     scope.karetka.mode="making new process";
                 }
-
             }
-
             // scope.myFactory.keyCodes.qwerty.length=scope.currObj.filter(function (obj) {
             //     return obj["name"]!=undefined;
             // }).length;
@@ -605,9 +604,9 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             if (scope.myFactory.matrixType==='calculationActions' && scope.myFactory.document.currParam ===0 && scope.myFactory.document.selectedParam===0) {
                 setTimeout(()=>putNameInInput(scope.myFactory),0);
             }
-            },function error (response){
-                console.error(response);
-            }
+        },function error (response){
+            console.error(response);
+        }
         );
     };
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
@@ -1828,7 +1827,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         menu.classList.toggle('select--hidden');
     }
     this.cleanCalcObj = () => {
-        this.myFactory.calcObj = new Calculation ();
+        this.myFactory.calcObj = new Calculation (this.myFactory);
     }
     /**
      * сохраняем расчет в БД
@@ -1999,4 +1998,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     }
 
     this.loadMatrix('HIP.json');
+
+    $scope.$on('$destroy', function () {
+        myFactory.removeCellSelection ('dashboard_container',true);
+    });
 });

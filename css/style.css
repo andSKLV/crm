@@ -19,7 +19,7 @@
     color: var(--red);
 }
 .polisEditorMatrixRow.deleted{
-    opacity: .15;
+    opacity: .25;
 }
 .polisEditorMatrixRow.deleted:hover{
     background: var(--blue)!important;
@@ -45,6 +45,7 @@ div.matrix_container{
     margin-right: 0px;
     width: auto;
     height: auto;
+    overflow-x: hidden;
   }
 div.matrix_container.calc{
     overflow: auto;
@@ -53,6 +54,7 @@ div.matrix_container.calc{
     margin-left: 30px;
 }
 div.matrix_container:not(.calc){
+    margin-left: 0px;
     height: calc(100vh - 280px);
 }
 #find_company_matrix td{
@@ -390,7 +392,7 @@ div#tooltip_box{
 }
 
 div#tooltip_box>table,div#tooltip_box>table>tbody,div#tooltip_box>table>tbody>tr{
-    height: 100%;
+    height: 99%;
     display: block;
 }
 div#tooltip_box>table>tbody>tr>td:not(.tooltip_span){
@@ -922,8 +924,8 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     text-align: center;
     width: 100%;
     overflow: hidden;
-    -webkit-animation: moveFromRight 350ms ease-in-out both;
-    animation: moveFromRight 350ms ease-in-out both;
+    -webkit-animation: moveFromRight 150ms ease-in-out both;
+    animation: moveFromRight 150ms ease-in-out both;
 }
 .disable{
     color: black;
@@ -1057,7 +1059,7 @@ div.matrix-header{
     cursor: pointer;
 }
 .btn-func{
-    /* height: 30px; */
+    height: 50%;
     border-bottom: 1px solid white;
     border-top: 1px solid white;
 }
@@ -1069,4 +1071,13 @@ div.matrix-header{
     height: 20px;
     width: 20px;
     margin: 3px;
+}
+.properties_header {
+    background-color: var(--blue);
+    color: white;
+    height: 35px!important;
+}
+.nomarginleft {
+    margin-left: 0px!important;
+    width: 100%!important;
 }

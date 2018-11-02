@@ -111,9 +111,9 @@ div.return{
 }
 fieldset{
     border-radius: 10px;
-    border: 5px solid var(--dark-blue);
+    border: 2px solid var(--blue);
     padding: 0;
-    margin-bottom: 50px;
+    margin-bottom: 25px;
     box-shadow: 0 6px 20px 0px rgba(0, 0, 0, 0.4);
 }
 div.ul_container>div.ul>div>div.addAddition{
@@ -155,27 +155,27 @@ div.ul_container>div.ul>div>div.addAddition{
 }
 .ul_move_to_left{
     animation-name: move-to-left;
-    animation-duration: 300ms;
+    animation-duration: 150ms;
     animation-fill-mode: both;
     animation-timing-function: linear;
 }
 .ul_move_from_left{
 
     animation-name: move-from-left;
-    animation-duration: 300ms;
+    animation-duration: 150ms;
     animation-fill-mode: both;
     animation-timing-function: linear;
 }
 .ul_move_to_right{
     animation-name: move-to-right;
-    animation-duration: 300ms;
+    animation-duration: 150ms;
     animation-fill-mode: both;
     animation-timing-function: linear;
 }
 .ul_move_from_right{
 
     animation-name: move-from-right;
-    animation-duration: 300ms;
+    animation-duration: 150ms;
     animation-fill-mode: both;
     animation-timing-function: linear;
 }
@@ -187,9 +187,48 @@ div.ul_container>div.ul>div>div.addAddition{
     position: relative;
     overflow: hidden;
 }
-div.matrix_container{
+div.matrix_container:not(.calc){
     margin-left: 0px;
+    height: calc(100vh - 280px);
+}
+.matrix_row{
+    cursor: pointer;
+}
+.matrix_row td p{
+    display: inline;
 }
 tbody{
     width: 100%;
+}
+
+#save:hover::after{
+    top: 41%;
+}
+#reload:hover::after{
+    top: 66%;
+} 
+#home:hover::after{
+    top: 12%;
+}
+.multi{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    /* display: none; */
+}
+legend {
+    font-size: 1.2em;
+    color: var(--dark-blue);
+}
+.arrow_down_conditions{
+    display: inline;
+    margin-right: 10px;
+    margin-left: 20px;
+    color: var(--dark-blue);
+    font-size: 1em;
+    cursor: pointer;
+}
+.matrix_row td {
+    padding: 4px 8px 4px 8px;
 }

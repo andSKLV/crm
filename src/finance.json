@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Дата внесения",
+    "type": "search/create",
+    "values": [
+      {
+        "name": "Выберите дату платежа",
+        "type": "date",
+        "control": "date"
+      },
+      {
+        "name": "В день долга",
+        "type": "asDebt",
+        "control": "date"
+      }
+    ]
+  },
+  {
+    "name": "Сумма внесения",
+    "type": "search/create",
+    "values": [
+      {
+        "name": "Введите сумму платежа",
+        "type": "input",
+        "control": "price"
+      },
+      {
+        "name": "Равная расчетному долгу",
+        "type": "asDebt",
+        "control": "price"
+      }
+    ]
+  },
+  {
+    "name": "Дата долга",
+    "type": "dates",
+    "values":[
+      {
+        "name": "Дата долга",
+        "type": "date",
+        "control": "debtDate"
+      }
+    ]
+  },
+  {
+    "name": "Долг",
+    "type": "finance",
+    "values": [
+      {
+        "name": "Введите сумму долга",
+        "type": "input",
+        "control": "debt"
+      }
+    ]
+  }
+]

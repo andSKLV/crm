@@ -218,7 +218,7 @@ class PolisMaker{
      */
     makeParagraphs(myFactory) {
         const paragraphs=[];
-        myFactory.polis.forEach((obj,i)=>{
+        myFactory.polisObj.conditions.forEach((obj,i)=>{
             if(obj.name==="Базовые риски"){
                 return;
             }

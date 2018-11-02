@@ -1,0 +1,25 @@
+.input_polisEditor{
+  width: 100%;
+  background:var(--gray);
+  resize: none;
+  height: 100%;
+  font-size: 1.2em;
+  padding: 4px 8px 4px 8px;
+  border: none;
+}
+.posiEditor_condition{
+  text-align: left;
+  padding: 4px 8px 4px 8px;
+}
+.polisEditorMatrixRow_header{
+  text-align: center;
+  background-color: var(--blue);
+  color: white;
+}
+.polisEditorMatrixRow_header h3{
+  position: relative;
+  left: 1%;
+}
+div.dashboard_container {
+  width: 100%;
+}

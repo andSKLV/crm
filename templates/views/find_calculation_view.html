@@ -2,7 +2,6 @@
     <td class="properties btns" width="20px" ng-if="process.multi===undefined || process.multi.show || process.multi=='deleted'">
         <input type="button" class="btnCopy"  ng-click="matrixCtrl.loadCalculation(row.id); calculation.reloadDashboard('HIP.json','HIP')" value="+">
         <input type="button" class="btnDelete" ng-click="matrixCtrl.deleteCalculation(row); calculation.reloadDashboard('HIP.json','HIP')" value="-">
-
     </td>
     <td class="properties" ng-click="matrixCtrl.loadCalculation(row.id); calculation.reloadDashboard('HIP.json','HIP')">{{row.name}}</td>
     <td class="properties" ng-click="matrixCtrl.loadCalculation(row.id); calculation.reloadDashboard('HIP.json','HIP')">{{row.a_limit | currency:'RUB '}}</td>
