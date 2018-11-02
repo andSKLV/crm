@@ -827,7 +827,7 @@ app.factory("myFactory", function () {
              * функция создает массив из этапов платежей, необходимо для дальнейшего управления финансами полиса
              * @param {number} price
              */
-            makeArray(price, { start = "", end = "", time = "" }) {
+            makeArray(price, { start = "", end = "", time = "", startDate = ''}) {
                 const getCurrentDate = date => {
                     let day = date.getDate();
                     let month = date.getMonth() + 1;
@@ -867,7 +867,7 @@ app.factory("myFactory", function () {
                     console.warn("Продолжительность договора меньше чем этапов платежей"); // пока неизвестно, что с этим делать
 
                 for (let i = 0; i < this.val; i++) {
-                    let date = start.length === 10 ? new Date(start) : new Date();
+                    let date = start.length === 10 ? startDate : new Date();
                     date.setMonth(date.getMonth() + i * (long / this.val));
                     date = getCurrentDate(date);
                     array.push({

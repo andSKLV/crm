@@ -141,19 +141,19 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
      */
     $scope.checkDebtEqual = () => {
         return false;//заглушка
-        const pay = $scope.myFactory.payment;
-        const s = pay.array.reduce((acc, p) => {
-            return (acc += intFromStr(p.debt));
-        }, 0);
-        const total = intFromStr(pay.totalPrice);
-        const diff = total - s;
-        if (diff) {
-            const fisrtDebt = pay.array.find(p => {
-                return !p.manual && !p.payed;
-            });
-            const int = intFromStr(fisrtDebt.debt) + diff;
-            fisrtDebt.debt = addSpaces(int);
-        }
+        // const pay = $scope.myFactory.payment;
+        // const s = pay.array.reduce((acc, p) => {
+        //     return (acc += intFromStr(p.debt));
+        // }, 0);
+        // const total = intFromStr(pay.totalPrice);
+        // const diff = total - s;
+        // if (diff) {
+        //     const fisrtDebt = pay.array.find(p => {
+        //         return !p.manual && !p.payed;
+        //     });
+        //     const int = intFromStr(fisrtDebt.debt) + diff;
+        //     fisrtDebt.debt = addSpaces(int);
+        // }
     };
     /**
      * Функция проверки изменился ли долг после ввода, если да, то меняем значение "ручной ввод" на true

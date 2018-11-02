@@ -33,6 +33,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             $rootScope.cacheTemplate = {};
             if($location.path!=="/calculation"){
                 $location.path('/calculation');
+                delay(200);
             }
             const loading = new Loading(true);
             myFactory.isLoading = loading;
