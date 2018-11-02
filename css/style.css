@@ -492,6 +492,7 @@ input[currency-input]:hover,input[currency-input]:focus{
     border-top:2px solid var(--gray)!important;
 }
 .ul_container{
+    background-color: var(--gray);
     height: 50%;
 }
 .multi_close{
