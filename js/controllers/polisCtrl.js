@@ -128,7 +128,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             const paymentDates = $scope.myFactory.payment.datesWhenCreated;
             let flag = false;
             for (let key in paymentDates) {
-                if (paymentDates[key]!==dates[key]) flag = true;
+                if (paymentDates[key] !== dates[key]) flag = true;
             }
             return flag;
         }
@@ -247,7 +247,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             this.previousPage = this.currentPage;
             this.currentPage = index;
             if (index === 2) $scope.myFactory.polisObj.additionsSeen = true;
-            if (index===4) $scope.calcFinances();
+            if (index === 4) $scope.calcFinances();
             if (index === 4 && $scope.myFactory.payment.array && $scope.myFactory.payment.array.length > 0) $scope.myFactory.polisObj.financeSeen = true;
             $rootScope.search_result = [];
             $scope.currObj.forEach(param => {
@@ -346,7 +346,6 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         }, err => {
             console.error(err);
         });
-        debugger;
     }
     /**
      * Функция запускается после ухода с инпута в дэшборде
