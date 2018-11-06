@@ -611,6 +611,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             path: $location.$$path,
         };
         value = (value==="dashboard") ? "" : value;
+        if (value[0]==='/') value = value.slice(1);
         $location.path(`/${value}`);
     };
     this.relocateHere=function(url){//переход в углубление вверху каретки

@@ -291,6 +291,10 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             process,
             key
         }
+        myFactory.cameFrom = {
+            name: "Проект документа",
+            path: '/polis',
+        }
         $location.path(`/calculation`);
     }
     $scope.loadClient = (key) => {
