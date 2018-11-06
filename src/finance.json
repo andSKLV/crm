@@ -9,7 +9,7 @@
         "control": "date"
       },
       {
-        "name": "В день долга",
+        "name": "Совпадает с датой долга",
         "type": "asDebt",
         "control": "date"
       }
@@ -25,7 +25,7 @@
         "control": "price"
       },
       {
-        "name": "Равная расчетному долгу",
+        "name": "Совпадает с суммой долга",
         "type": "asDebt",
         "control": "price"
       }
