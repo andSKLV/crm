@@ -364,6 +364,19 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         }, 0);
     };
     this.loadCompanyProfile = async function (id){
+        debugger;
+        if ($location.$$path==='/polis') myFactory.cameFrom = {
+            name: 'Проекту документа',
+            path: $location.$$path,
+        }
+        else if ($location.$$path==='/') myFactory.cameFrom = {
+            name: 'Основное меню',
+            path: $location.$$path,
+        }
+        else myFactory.cameFrom = {
+            name: 'прошлая вкладка',
+            path: $location.$$path,
+        }
         myFactory.companyObj.id = id;
         $location.path('/profile');
     }
