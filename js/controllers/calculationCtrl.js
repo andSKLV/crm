@@ -1993,9 +1993,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi), 1);
     }
 
-    this.loadMatrix('HIP.json');
+    if ($location.$$path==='/calculation') this.loadMatrix('HIP.json');
 
-    $scope.$on('$destroy', function () {
-        myFactory.removeCellSelection ('dashboard_container',true);
-    });
 });
