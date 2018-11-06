@@ -870,7 +870,7 @@ app.factory("myFactory", function () {
                     date.setMonth(date.getMonth() + i*(long / this.val));
                     date = getCurrentDate(date);
                     array.push({
-                        price: "0",
+                        price: "",
                         date: "",
                         debt: payment,
                         debtDate: date,
