@@ -74,6 +74,12 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 //если пришли из редактора полиса, то открываем сразу это меню
                 tabIndex = $scope.currObj.findIndex(val => val.name === 'Финансы');
             }
+            else if (myFactory.cameFrom.name === 'Расчет') {
+                tabIndex = $scope.currObj.findIndex(val => val.name === 'Расчет');
+            }
+            else if (myFactory.cameFrom.name === 'Редактор карты клиента' || 'Карту клиента') {
+                tabIndex = $scope.currObj.findIndex(val => val.name === 'Компания');
+            }
             else if (!myFactory.companyObj.card) {
                 tabIndex = 0;
             }
