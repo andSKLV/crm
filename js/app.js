@@ -1378,11 +1378,12 @@ app.factory("myFactory", function () {
                 });
                 if (park.processes.length > 0) park.replaceBase(); //Базовый риск ставим на первое место
             });
-            this.parks.forEach(function (park) {
-                //
-                if (park.processes.length == 0)
-                    myFactory.parks.splice(myFactory.parks.indexOf(park), 1);
-            });
+            const toSplice = [];
+            for (let i = 0; i < this.parks.length; i++) {
+                const park = this.parks[i];
+                if (park.processes.length == 0) toSplice.push(park); //выбираем для удаления пустые парки
+            }
+            toSplice.forEach(park=>myFactory.parks.splice(myFactory.parks.indexOf(park), 1)); // удаляем пустые парки
             for (let i = 0; i < mass.length; i++) {
                 this.process = mass[i];
                 this.addNewProcess("replacing");
