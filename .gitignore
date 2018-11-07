@@ -5,6 +5,7 @@ connect
 .idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
+.vscode
 node_modules/.bin/babylon
 node_modules/.bin/jsdoc
 node_modules/.bin/marked
