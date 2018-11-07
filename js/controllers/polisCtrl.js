@@ -123,6 +123,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             myFactory.polisObj.additionsSeen = false;
         }
         myFactory.polisObj.updateConditionsCheck();
+        delay (50);
         openTab();
     }
     /**
@@ -222,12 +223,6 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             val.push(obj);
         })
         //добавляем новое дополнение
-        // conditions.push({
-        //     name: data.name,
-        //     values: val,
-        //     id: data.id,
-        //     isNew: false,
-        // });
         const newAddition = {
             name: data.name,
             values: val,
