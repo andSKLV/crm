@@ -1,6 +1,5 @@
 node_modules
-php/db_connect.php
-php/db_connect_host.php
+connect
 .idea/Documents.iml
 .idea/misc.xml
 .idea/modules.xml
