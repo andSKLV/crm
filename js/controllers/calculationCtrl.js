@@ -1986,6 +1986,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             await this.saveCalculation();
         }
     }
+    this.blurHandler = ev => {
+        const inp = ev.currentTarget;
+        if (inp.value==="") putNameInInput(this.myFactory);
+    }
     function deepRemoveMulti(multi) {
         multi.processes.forEach(process => {
             if (process.constructor.name === "Process") delete process.multi;
