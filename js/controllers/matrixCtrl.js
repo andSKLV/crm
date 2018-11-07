@@ -15,7 +15,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         data.type="delete_calculation";
         data.id=id;
         $http.post("php/save.php", data).then(function success(response){
-           if (resp.data==="Успешно удалено") console.log('calculation successfully deleted');
+           if (response.data==="Успешно удалено") console.log('calculation successfully deleted');
            else console.error('problem with deleting', response);
         },function error(response){
             console.log(response)
@@ -546,6 +546,18 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             }
         );
     };
+    /**
+     * Функция вставки названия выбранного названия в новый расчет
+     * @param {string} name - название старого расчета 
+     */
+    this.setCalculationNameAs= (name) => {
+        const date = new Date();
+        let hh = date.getHours();
+        hh = (hh<10) ? `0${hh}` : `${hh}`;
+        let min = date.getMinutes();
+        min = (min<10) ? `0${min}` : `${min}`;
+        document.querySelector('#inputSaveCalc').value = `${name} ${hh}:${min}`;
+    }
     /**
      * Deleting serach result after choosing one of the results
      */

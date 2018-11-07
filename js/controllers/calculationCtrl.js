@@ -681,7 +681,15 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     };
     function putNameInInput (mf) {
         if (mf.calcObj.isSaved && mf.calcObj.name &&mf.calcObj.name.length>1) {
-            document.querySelector('#inputSaveCalc').value = mf.calcObj.name;
+            const date = new Date();
+            let hh = date.getHours();
+            hh = (hh<10) ? `0${hh}` : `${hh}`;
+            let min = date.getMinutes();
+            min = (min<10) ? `0${min}` : `${min}`;
+            const name = mf.calcObj.name;
+            const fullName = `${name} ${hh}:${min}`
+            mf.scop.nameOfCalculation = fullName;
+            document.querySelector('#inputSaveCalc').value = fullName;
         }
     }
     /**
