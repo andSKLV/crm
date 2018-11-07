@@ -222,13 +222,19 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             val.push(obj);
         })
         //добавляем новое дополнение
-        conditions.push({
+        // conditions.push({
+        //     name: data.name,
+        //     values: val,
+        //     id: data.id,
+        //     isNew: false,
+        // });
+        const newAddition = {
             name: data.name,
             values: val,
             id: data.id,
             isNew: false,
-        });
-        $scope.myFactory.polisCurrent = conditions[conditions.length - 1];
+        }
+        $scope.myFactory.polisCurrent = newAddition;
         $timeout(() => $location.path(`/polisEditor`), 0);
     }
     $scope.newDashboard = {

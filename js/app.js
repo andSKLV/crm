@@ -125,6 +125,12 @@ app.directive("polisEditorMatrix", function () {
         templateUrl: "./templates/paths/polisEditor/matrix.html"
     };
 });
+app.directive("polisEditorNav", function () {
+    return {
+        restrict: "A",
+        templateUrl: "./templates/paths/polisEditor/navigation.html"
+    };
+});
 app.directive("addition", function () {
     return {
         scope: {

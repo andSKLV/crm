@@ -23,3 +23,12 @@
 div.dashboard_container {
   width: 100%;
 }
+#add:hover::after{
+  top: 10%;
+}
+#reload:hover::after{
+  top: 76%;
+} 
+#save:hover::after{
+  top: 41%;
+}
