@@ -928,6 +928,11 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     -webkit-animation: moveFromRight 150ms ease-in-out both;
     animation: moveFromRight 150ms ease-in-out both;
 }
+.disabled{
+    color: black;
+    opacity: 0.3;
+    background: rgba(0, 0, 0, 0.4)!important;
+}
 .disable{
     color: black;
     opacity: 0.3;

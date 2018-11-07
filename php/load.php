@@ -1,7 +1,7 @@
 <?
 
 	header("Content-Type: text/html; charset=utf-8");
-	include_once('db_connect.php');
+	include_once('../connect/db_connect.php');
 	$data = json_decode(file_get_contents('php://input'), true);
 
 	if($data['type']=="company_calculations"){

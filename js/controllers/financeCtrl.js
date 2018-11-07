@@ -9,7 +9,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
                 Math.round($scope.myFactory.payment.totalPrice).toString()
             );
         };
-        // $scope.fake();
+
         priceToString();
         $scope.checkDebtEqual();
         await $scope.loadDashboard();
@@ -30,7 +30,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
      */
     $scope.newDashboard = {
         mode: "new",
-        currentPage: 0,
+        currentPage: ($scope.myFactory.polisObj.isSaved) ? 0 : 2,
         previousPage: -1,
         currPayment: null,
         toLeft(index) {
@@ -72,7 +72,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
         const dsh = $scope.newDashboard;
         const mf = $scope.myFactory;
         const pay = mf.payment;
-
+        if (!mf.polisObj.isSaved && index<2) return false; // если полис еще не сохранен, то внесения не работают
         const selectPaymentOnMatrix = () => {
             // переназначаем выделенный объект
             if (dsh.currPayment) dsh.currPayment.changing = false;
@@ -213,7 +213,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
     };
     $scope.applyPayment = curr => {
         if (curr.price==='') {
-            curr.price = addSpaces(0);
+            return false;
         }
         if (curr.price === "0" && curr.debt!== '0' && !curr.payed) return false;
         const pays = $scope.myFactory.payment;
@@ -284,67 +284,6 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
                 $scope.applyDate(curr, control);
                 break;
         }
-    };
-
-    $scope.fake = () => {
-        const sc = $scope.myFactory.payment;
-        sc.array = [
-            {
-                price: "0",
-                date: "",
-                debt: "48 551",
-                debtDate: "30.10.2018",
-                manual: false,
-                $$hashKey: "object:473"
-            },
-            {
-                price: "0",
-                date: "",
-                debt: "48 551",
-                debtDate: "30.12.2018",
-                manual: false,
-                $$hashKey: "object:474"
-            },
-            {
-                price: "0",
-                date: "",
-                debt: "48 551",
-                debtDate: "02.03.2019",
-                manual: false,
-                $$hashKey: "object:475"
-            },
-            {
-                price: "0",
-                date: "",
-                debt: "48 551",
-                debtDate: "30.04.2019",
-                manual: false,
-                $$hashKey: "object:476"
-            },
-            {
-                price: "0",
-                date: "",
-                debt: "48 551",
-                debtDate: "30.06.2019",
-                manual: false,
-                $$hashKey: "object:477"
-            },
-            {
-                price: "0",
-                date: "",
-                debt: "48 551",
-                debtDate: "30.08.2019",
-                manual: false,
-                $$hashKey: "object:478"
-            }
-        ];
-        sc.hand = false;
-        sc.koef = 1.0704058245275336;
-        sc.leftPrice = "291 306";
-        sc.totalPrice = 291305.891949874;
-        sc.val = 6;
-        sc.payed = '0';
-        sc.calcDebt = "48 551";
     };
 
     $scope.init();

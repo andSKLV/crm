@@ -74,6 +74,12 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 //если пришли из редактора полиса, то открываем сразу это меню
                 tabIndex = $scope.currObj.findIndex(val => val.name === 'Финансы');
             }
+            else if (myFactory.cameFrom.name === 'Расчет') {
+                tabIndex = $scope.currObj.findIndex(val => val.name === 'Расчет');
+            }
+            else if (myFactory.cameFrom.name === 'Редактор карты клиента' || 'Карту клиента') {
+                tabIndex = $scope.currObj.findIndex(val => val.name === 'Компания');
+            }
             else if (!myFactory.companyObj.card) {
                 tabIndex = 0;
             }
@@ -117,6 +123,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             myFactory.polisObj.additionsSeen = false;
         }
         myFactory.polisObj.updateConditionsCheck();
+        delay (50);
         openTab();
     }
     /**
@@ -216,13 +223,13 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             val.push(obj);
         })
         //добавляем новое дополнение
-        conditions.push({
+        const newAddition = {
             name: data.name,
             values: val,
             id: data.id,
             isNew: false,
-        });
-        $scope.myFactory.polisCurrent = conditions[conditions.length - 1];
+        }
+        $scope.myFactory.polisCurrent = newAddition;
         $timeout(() => $location.path(`/polisEditor`), 0);
     }
     $scope.newDashboard = {
@@ -290,6 +297,10 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         myFactory.loadProcess = {
             process,
             key
+        }
+        myFactory.cameFrom = {
+            name: "Проект документа",
+            path: '/polis',
         }
         $location.path(`/calculation`);
     }

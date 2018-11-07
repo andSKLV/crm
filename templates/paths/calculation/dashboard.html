@@ -13,9 +13,18 @@
                 calculation.myFactory.document.currency : ""}}
                 <input ng-if="value.type == 'inputForCurrency'" ng-focus="calculation.myFactory.foc=false" ng-blur="calculation.myFactory.foc=true" type="text" param="{{param.model}}" ng-model="param.selected" placeholder="{{value.type=='inputForCurrency' ? 'Точное число' : value.name}}" style="color: #35bfff;" currency-input="{{param}}" id="inputForCurrency-{{param.model}}">
                 <input ng-if="value.type == 'input_search'" ng-focus="calculation.myFactory.foc=false" ng-blur="calculation.myFactory.foc=true" name="value.model" ng-model="value.val" ng-controller="searchCtrl as searchCtrl" ng-change="searchCtrl.makeSearch(param)" type="text" placeholder="{{value.type=='inputForCurrency' ? 'Точное число' : value.name}}">
-                <input id="inputSaveCalc" ng-if="value.type == 'inputSaveCalc'" ng-focus="calculation.myFactory.foc=false" ng-blur="calculation.myFactory.foc=true" type="text" 
+                <input id="inputSaveCalc" ng-if="value.type == 'inputSaveCalc'" ng-focus="calculation.myFactory.foc=false" ng-blur="calculation.myFactory.foc=true;calculation.blurHandler($event);" type="text" 
                 ng-model="calculation.nameOfCalculation" ng-controller="searchCtrl as searchCtrl" 
-                placeholder="{{value.name}}" style="color: rgb(0, 111, 167);" ng-keypress="calculation.keyHandler($event)">
+                placeholder="{{value.name}}" style="color: rgb(0, 111, 167);" ng-keypress="calculation.keyHandler($event)"                 ng-change="searchCtrl.makeSearch({
+                    url:'calculationActions',
+                    values:[
+                        {
+                            model: 'name',
+                            name: 'Название',
+                            val: calculation.nameOfCalculation
+                        }
+                    ]
+                })">
                 
                 <input ng-if="value.type == 'inputResaveCalc'" ng-focus="calculation.myFactory.foc=false" ng-blur="calculation.myFactory.foc=true" type="text" 
                 ng-model="searchInput" ng-controller="searchCtrl as searchCtrl" 

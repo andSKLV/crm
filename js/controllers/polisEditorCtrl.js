@@ -44,7 +44,7 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location,$http){
         });
         paramNumbers++;
     }
-    $scope.returnToDashboard = async () => {
+    $scope.returnToPolis = async () => {
         const mf = $scope.myFactory;
         const curr = mf.polisCurrent;
         const i = mf.polisObj.conditions.findIndex(val => val.$$hashKey === curr.$$hashKey);
@@ -68,7 +68,9 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location,$http){
             return `${acc}${val.text}/CBL/`;
         }, '');
         if (text.length === 0) return false;
-
+        $scope.saveToDB (pc,text,ind);
+    }
+    $scope.saveToDB = (pc,text,ind) => {
         const query = {};
         query.type = 'addition_save';
         query.name = pc.name;
@@ -77,10 +79,11 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location,$http){
         $http.post('./php/save.php', query).then(resp => {
             const id = resp.data;
             if (Number.isNaN(Number(id)) === NaN) console.error('ошибка сохранения оговорок ' + resp.data);
-            else $scope.myFactory.polisObj.conditions[ind].id = resp.data;
-        }, err => {
-
-        })
+            else {
+                $scope.myFactory.polisObj.conditions[ind].id = resp.data;
+                alert('Дополнение сохранено');
+            }
+        }, err => console.error(resp))
     }
     $scope.newDashboard={
         TITLE_INDEX:-1,
@@ -143,6 +146,13 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location,$http){
     }
     $scope.getCheckedConditions = () => {
         return $scope.currObj.filter(val=>val.checked).length;
+    }
+    /**
+     * Функция добавления данного дополнения к полису, т е его выбор 
+     */
+    $scope.applyAddition = () => {
+        if ($scope.myFactory.polisObj.conditions.includes($scope.myFactory.polisCurrent)) return false;
+        $scope.myFactory.polisObj.conditions.push($scope.myFactory.polisCurrent);
     }
     $scope.init();
 });

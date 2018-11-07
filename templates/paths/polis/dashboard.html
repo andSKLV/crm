@@ -30,8 +30,8 @@
         </div>
         <!-- финансовый блок -->
         <div ng-if="param.type=='finance'">
-            <div ng-if="dashboard.myFactory.parks.length===0">Финансовый блок не доступен пока не добавлен расчет</div>
-            <div ng-if="dashboard.myFactory.parks.length>0" ng-repeat="value in param.values" ng-click="dashboard.relocatePage({urlTo:'finance'})">{{value.name}}</div>
+            <div ng-if="dashboard.myFactory.parks.length===0 || !myFactory.polisObj.dates.start || !myFactory.polisObj.dates.start">Финансовый блок не доступен пока не добавлен расчет</div>
+            <div ng-if="dashboard.myFactory.parks.length>0 && myFactory.polisObj.dates.start && myFactory.polisObj.dates.start" ng-repeat="value in param.values" ng-click="dashboard.relocatePage({urlTo:'finance'})">{{value.name}}</div>
         </div>
 
         <!-- Даты, пока не придумал -->

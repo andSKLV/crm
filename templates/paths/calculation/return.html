@@ -9,7 +9,8 @@
             <td ng-click="calculation.clean()">Выйти из режима изменения</td>
         </tr>
         <tr class="" ng-switch-default="">
-            <td ng-click="calculation.reloadDashboard('calculationActions.json','calculationActions')" ng-class="[{mi_current: calculation.myFactory.document.currParam===''}, {mi_moveFromRight: calculation.myFactory.document.currParam===''},{ mi_moveToRight: !calculation.myFactory.document.currParam===''}]" ng-show="calculation.myFactory.document.currParam==='' && calculation.myFactory.parks.length!==0">Сохранение и привязка</td>
+            <td ng-click="calculation.reloadDashboard('calculationActions.json','calculationActions')" ng-class="[{mi_current: calculation.myFactory.document.currParam===''}, {mi_moveFromRight: calculation.myFactory.document.currParam===''},{ mi_moveToRight: !calculation.myFactory.document.currParam===''}]" ng-show="(calculation.myFactory.document.currParam==='' && calculation.myFactory.parks.length!==0) || (calculation.myFactory.document.currParam!=='' && calculation.myFactory.parks.length!==0 && !calculation.myFactory.cameFrom.name)">Сохранение и привязка</td>
+            <td ng-click="calculation.relocatePage(calculation.myFactory.cameFrom.path)" ng-class="[{mi_current: calculation.myFactory.document.currParam===''}, {mi_moveFromRight: calculation.myFactory.document.currParam===''},{ mi_moveToRight: !calculation.myFactory.document.currParam===''}]" ng-show="calculation.myFactory.document.currParam!=='' && calculation.myFactory.parks.length!==0 && calculation.myFactory.cameFrom.name">Вернуться в {{calculation.myFactory.cameFrom.name}}</td>
         </tr>
     </tbody>
     <tbody ng-if="calculation.config=='calculationActions.json'">

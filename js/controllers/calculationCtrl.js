@@ -611,6 +611,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             path: $location.$$path,
         };
         value = (value==="dashboard") ? "" : value;
+        if (value[0]==='/') value = value.slice(1);
         $location.path(`/${value}`);
     };
     this.relocateHere=function(url){//переход в углубление вверху каретки
@@ -680,7 +681,15 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     };
     function putNameInInput (mf) {
         if (mf.calcObj.isSaved && mf.calcObj.name &&mf.calcObj.name.length>1) {
-            document.querySelector('#inputSaveCalc').value = mf.calcObj.name;
+            const date = new Date();
+            let hh = date.getHours();
+            hh = (hh<10) ? `0${hh}` : `${hh}`;
+            let min = date.getMinutes();
+            min = (min<10) ? `0${min}` : `${min}`;
+            const name = mf.calcObj.name;
+            const fullName = `${name} ${hh}:${min}`
+            mf.scop.nameOfCalculation = fullName;
+            document.querySelector('#inputSaveCalc').value = fullName;
         }
     }
     /**
@@ -1985,6 +1994,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             await this.saveCalculation();
         }
     }
+    this.blurHandler = ev => {
+        const inp = ev.currentTarget;
+        if (inp.value==="") putNameInInput(this.myFactory);
+    }
     function deepRemoveMulti(multi) {
         multi.processes.forEach(process => {
             if (process.constructor.name === "Process") delete process.multi;
@@ -1993,9 +2006,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi), 1);
     }
 
-    this.loadMatrix('HIP.json');
+    if ($location.$$path==='/calculation') this.loadMatrix('HIP.json');
 
-    $scope.$on('$destroy', function () {
-        myFactory.removeCellSelection ('dashboard_container',true);
-    });
 });
