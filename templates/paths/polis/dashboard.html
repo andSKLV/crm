@@ -43,7 +43,7 @@
                 
         </div> -->
         <div ng-if="param.type=='dates'" >
-            <div ng-repeat="val in param.values" ng-click="(val.type=='btn-switch')?switchBtnClick(val):''">
+            <div ng-repeat="val in param.values" ng-click="(val.type=='btn-switch')?switchBtnClick(val):''" class="properties">
                 {{(val.type=='btn-switch')? val.name+val.selected : ''}}
                 <input ng-if="val.type=='date'" id="input_{{val.control}}"
                 type="text" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="{{val.name}}" 
@@ -59,6 +59,7 @@
     <div>
         <div ng-repeat="param in currObj"
              ng-click="newDashboard.setCurrentPage($index)"
+             class="properties"
              ng-class="[
                 {mi_selected: newDashboard.checkCurrentPage($index)},
                 {alreadySelected: newDashboard.alreadySelected($index)}

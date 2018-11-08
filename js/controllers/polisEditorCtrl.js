@@ -151,7 +151,7 @@ app.controller("polisEditorCtrl", function($scope, myFactory, $location,$http){
      * Функция добавления данного дополнения к полису, т е его выбор 
      */
     $scope.applyAddition = () => {
-        if ($scope.myFactory.polisObj.conditions.includes($scope.myFactory.polisCurrent)) return false;
+        if (!$scope.myFactory.polisObj.conditions.every(cond=>cond.name!==$scope.myFactory.polisCurrent.name)) return false;
         $scope.myFactory.polisObj.conditions.push($scope.myFactory.polisCurrent);
     }
     $scope.init();
