@@ -43,17 +43,13 @@
                 
         </div> -->
         <div ng-if="param.type=='dates'" >
-            <div ng-repeat="val in param.values" ng-click="(val.type=='btn')?btnClick(val.control):''">
-                {{(val.type=='btn')? val.name : ''}}
+            <div ng-repeat="val in param.values" ng-click="(val.type=='btn-switch')?switchBtnClick(val):''">
+                {{(val.type=='btn-switch')? val.name+val.selected : ''}}
                 <input ng-if="val.type=='date'" id="input_{{val.control}}"
                 type="text" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="{{val.name}}" 
                 ng-keydown="keydownHandler($event, param, val)"
                 ng-model="myFactory.polisObj.dates[val.control]" 
                 ng-blur="endChange(val.control)">
-                <select class="company_dashboard_inputs" ng-if="val.type=='select'" ng-change="endChange(val.control)" ng-model="myFactory.polisObj.dates[val.control]">
-                    <option value="" disabled selected>Срок документа</option>    
-                    <option ng-repeat="option in val.values" value="{{option}}">{{option}}</option>
-                </select>
             </div>
         </div>
     </div>

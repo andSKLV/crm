@@ -99,7 +99,12 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             }
             $scope.newDashboard.setCurrentPage(tabIndex);
         }
-
+        const setInitialDates = () => {
+            const setDay = new Date();
+            $scope.myFactory.polisObj.dates.start = parseDate(setDay);
+            $scope.myFactory.polisObj.dates.startDate = setDay;
+            $scope.setEndByTime(setDay, $scope.myFactory.polisObj.dates.time);
+        }
         makePolsiObj();
         myFactory.polisObj.updateNames();
         selectNames();
@@ -122,6 +127,10 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             myFactory.polisObj.type = myFactory.calcObj.factory.HIPname;
             myFactory.polisObj.additionsSeen = false;
         }
+        
+        // если даты не назначены, то ставим их сегодняшним днем начало
+        if (!$scope.myFactory.polisObj.dates.start && !$scope.myFactory.polisObj.dates.end) setInitialDates ();
+
         myFactory.polisObj.updateConditionsCheck();
         delay (50);
         openTab();
@@ -235,6 +244,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
     $scope.newDashboard = {
         currentPage: null,
         previousPage: -1,
+
         toLeft(index) {
             return this.previousPage < this.currentPage && this.previousPage == index;
         },
@@ -254,12 +264,23 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             this.previousPage = this.currentPage;
             this.currentPage = index;
             if (index === 2) $scope.myFactory.polisObj.additionsSeen = true;
+            if (index === 3) $scope.myFactory.polisObj.datesSeen = true;
             if (index === 4) $scope.calcFinances();
             if (index === 4 && $scope.myFactory.payment.array && $scope.myFactory.payment.array.length > 0) $scope.myFactory.polisObj.financeSeen = true;
             $rootScope.search_result = [];
             $scope.currObj.forEach(param => {
                 if (param.type == 'search/create') {
                     param.values[0].name = "";
+                }
+            })
+            $scope.currObj[index].values.forEach(val=>{
+                if (val.type==='btn-switch') {
+                    val.selected = val.values[0];
+                    val.switch = () => {
+                        const i = val.values.indexOf(val.selected);
+                        const setInd = (i===val.values.length-1) ? 0 : i+1;
+                        val.selected = val.values[setInd];
+                    }
                 }
             })
         },
@@ -275,7 +296,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     return myFactory.polisObj.additionsSeen;
                     break;
                 case 3:
-                    return myFactory.polisObj.dates.start && myFactory.polisObj.dates.end;
+                    return myFactory.polisObj.dates.start && myFactory.polisObj.dates.end && myFactory.polisObj.datesSeen;
                     break;
                 case 4:
                     return myFactory.polisObj.financeSeen && myFactory.payment.array && myFactory.payment.array.length > 0;
@@ -378,13 +399,15 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             const newDate = new Date(dates[3], Number(dates[2]) - 1, dates[1]);
             return newDate;
         }
-
+        const BTN_SWITCH_TODAY = $scope.currObj[$scope.newDashboard.currentPage].values.filter(val=>(val.type==='btn-switch'&&val.control==='today'))[0];
+        const BTN_SWITCH_TIME = $scope.currObj[$scope.newDashboard.currentPage].values.filter(val=>(val.type==='btn-switch'&&val.control==='time'))[0];
         switch (control) {
             case 'start':
                 if (valiDate(dates.start)) {
                     dates.start = changeDateView(dates.start);
                     dates.startDate = makeDateFromStr(dates.start);
                     $scope.setEndByTime(dates.startDate, dates.time);
+                    BTN_SWITCH_TODAY.selected = ' '; //выставляем значение в ячейку btn-switch
                 }
                 else {
                     dates.start = null;
@@ -400,16 +423,15 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                         dates.endDate = null;
                         return false;
                     }
+                    //выставляем значение в ячейку btn-switch
+                    BTN_SWITCH_TIME.selected = ' ';
+                    BTN_SWITCH_TIME.name = 'Дата окончания: '
                     dates.time = 'Вручную';
                 }
                 else {
                     dates.end = null;
                     dates.endDate = null;
                 }
-                break;
-            case 'time':
-                if (!dates.startDate) return false;
-                $scope.setEndByTime(dates.startDate, dates.time);
                 break;
             default:
                 return false;
@@ -421,6 +443,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      * @param {string} time - Год, 6 месяцев или вручную 
      */
     $scope.setEndByTime = (start, time) => {
+        if (!start) return false;
         const setEnd = month => {
             const end = new Date(start.getFullYear(), start.getMonth() + month, start.getDate());
             $scope.myFactory.polisObj.dates.endDate = end;
@@ -443,25 +466,32 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         }
     }
     /**
-     * Функция вызывается когда был клик по кнопке в дэшборде, в описании которой есть тип btn
-     * @param {string} control - control кнопки, чтобы разделять какая именно нажата
+     * Функция переключения кнопки  btn-switch
+     * @param {obj} control объект по которому кликнули
      */
-    $scope.btnClick = control => {
-        const todayStart = () => {
-            const today = new Date();
-            $scope.myFactory.polisObj.dates.start = parseDate(today);
-            $scope.myFactory.polisObj.dates.startDate = today;
-            return today;
-        };
-        switch (control) {
-            case "today":
-                const today = todayStart();
-                $scope.setEndByTime(today, $scope.myFactory.polisObj.dates.time);
-                break;
-            default:
-                return false;
+    $scope.switchBtnClick = control => {
+        const dates = $scope.myFactory.polisObj.dates;
+        control.switch();
+        if (control.control==='today') setStartDay(control);
+        if (control.control==='time') {
+            dates.time = control.selected;
+            control.name = 'Срок: '; //на всякий случай возвращаем исходное имя, так как оно может меняться, если инпут вручную
+            $scope.setEndByTime(dates.startDate, dates.time);
         }
-    };
+        /**
+         * Функция выставления дня начала по переключению кнопки
+         * @param {obj} control 
+         */
+        function setStartDay (control) {
+            const ind = control.values.indexOf(control.selected);
+            let setDay = new Date();
+            const dd = setDay.getDate();
+            setDay.setDate(dd+ind);
+            $scope.myFactory.polisObj.dates.start = parseDate(setDay);
+            $scope.myFactory.polisObj.dates.startDate = setDay;
+            $scope.setEndByTime(setDay, $scope.myFactory.polisObj.dates.time);
+        }   
+    }
     /**
      * Преобразование объекта даты в строку
      * @param {Date} date 

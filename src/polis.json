@@ -31,25 +31,26 @@
         "type": "dates",
         "values":[
             {
+                "name": "Дата начала: ",
+                "type": "btn-switch",
+                "control": "today",
+                "values": ["Сегодня","Завтра","Послезавтра"]
+            },
+            {
                 "name": "Дата начала",
                 "type": "date",
                 "control": "start"
             },
             {
-                "name": "Сегодня",
-                "type": "btn",
-                "control": "today"
+                "name": "Срок: ",
+                "type":"btn-switch",
+                "values":["Год","6 месяцев"],
+                "control": "time"
             },
             {
                 "name": "Дата окончания",
                 "type": "date",
                 "control": "end"
-            },
-            {
-                "name": "Срок",
-                "type":"select",
-                "values":["Год","6 месяцев","Вручную"],
-                "control": "time"
             }
         ]
     },
