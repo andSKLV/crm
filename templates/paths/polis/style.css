@@ -232,3 +232,16 @@ legend {
 .matrix_row td {
     padding: 4px 8px 4px 8px;
 }
+ul.park li table .td_cars{
+    height: 35px;
+}
+.input_cars{
+    width: 99%;
+    height: 100%;
+    border: none;
+    line-height: 1;
+    background: var(--gray);
+    text-align: center;
+    font-family: Lato, Calibri, Arial, sans-serif;
+    font-size: 1em;
+}

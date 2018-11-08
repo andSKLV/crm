@@ -8,20 +8,19 @@
                </td>
             </tr>
         </table>
-        {{process.showCars}}
         <table ng-if="process.showCars" class="cars-list">
             <tr ng-repeat="car in process.cars">
                 <td class='td_cars'>
-                    <input class='input_cars' type="text" ng-model="car.number" >
+                    <input class='input_cars' type="text" ng-model="car.model" placeholder="Марка автомобиля">
                 </td>
                 <td class='td_cars'>
-                    <input class='input_cars' type="text" ng-model="car.autNumber">
+                    <input class='input_cars' type="text" ng-model="car.autNumber" placeholder="Гос. номер">
                 </td>
                 <td class='td_cars'>
-                    <input class='input_cars' type="text" ng-model="car.VIN">
+                    <input class='input_cars' type="text" ng-model="car.VIN" placeholder="VIN">
                 </td>
                 <td class='td_cars'>
-                    <input  class='input_cars' type="text" ng-model="car.prodYear">
+                    <input  class='input_cars' type="text" ng-model="car.prodYear" placeholder="Год производства">
                 </td>
             </tr>
         </table>
