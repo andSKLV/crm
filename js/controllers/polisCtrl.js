@@ -160,6 +160,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             // назначаем каждому процессу в парке машины
             park.processes.forEach(pr=>{
                 pr.cars = [];
+                pr.showCars = false;
                 for (let i = 0; i < pr.amount/24; i++) {
                     const car = pr.park.carGroup.cars[i];
                     car.process = pr;

@@ -38,7 +38,7 @@ ul.park{
     margin: 0;
     
 }
-ul.park li table{
+/* ul.park li table{
     width: 100%;
     table-layout: fixed;
 }
@@ -47,7 +47,7 @@ ul.park li table td{
     text-align: center;
     background: rgb(230, 230, 230);
     position: relative;
-}
+} */
 ul.cars-list{
     padding: 0;
 }

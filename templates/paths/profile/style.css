@@ -39,4 +39,15 @@ div.dashboard_container{
 .back:hover{
   color: var(--dark-blue);
 }
-
+ul.park li table .td_cars{
+  height: 35px;
+}
+.input_cars{
+  width: 99%;
+  height: 100%;
+  border: none;
+  line-height: 1;
+  background: var(--gray);
+  text-align: center;
+  font-family: Lato, Calibri, Arial, sans-serif;
+}
