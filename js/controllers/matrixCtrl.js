@@ -62,7 +62,8 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                         });
                         let newPark=new Park(array[0]);//создаем парк с помощью первого процесса new Park
                         
-                        if(array.length>1) array.splice(0,1);//choosePark()
+                        // if(array.length>1) array.splice(0,1);//choosePark()
+                        if(array.length>1) newPark.processes.splice(0,1);
                         myFactory.choosePark(array, newPark, 0); 
 
                         for(let key in park){//копируем все свойства парка в созданный парк
@@ -119,7 +120,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                         myFactory.payment.val=response.data.payment*1;
                         myFactory.finalCalc();
                     }
-
+                    
                     if(response.data.fact_premia!=";Р" && response.data.fact_premia!=";1"){
                         let price=response.data.fact_premia.split(";");
                         myFactory.practicalPrice.val=price[0]*1;
