@@ -340,6 +340,29 @@ app.directive("ngRightClick", function ($parse) {
         });
     };
 });
+app.directive("importSheetJs", function SheetJSImportDirective() {
+    return {
+      scope: { opts: '=' },
+      link: function ($scope, $elm) {
+        $elm.on('change', function (changeEvent) {
+          const reader = new FileReader();
+  
+          reader.onload = function (e) {
+            /* read workbook */
+            const bstr = e.target.result;
+            const workbook = XLSX.read(bstr, {type:'binary'});
+            const firstList = workbook.Sheets[workbook.SheetNames[0]];
+            excelLoaded(firstList);
+          };
+  
+          reader.readAsBinaryString(changeEvent.target.files[0]);
+        });
+      }
+    };
+    function excelLoaded () {
+        debugger;
+    }
+});
 
 app.directive("currencyInput", function ($filter, myFactory) {
     return {
