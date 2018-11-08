@@ -1,4 +1,5 @@
 import Polis from '../protos/polis.js';
+import {Car, CarGroup} from "../protos/car.js";
 
 app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $rootScope, $timeout) {
 
@@ -132,8 +133,26 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         if (!$scope.myFactory.polisObj.dates.start && !$scope.myFactory.polisObj.dates.end) setInitialDates ();
 
         myFactory.polisObj.updateConditionsCheck();
+        //FIXME: working here
+        if (myFactory.parks.length>0) $scope.createCars ();
+
         delay (50);
         openTab();
+    }
+    $scope.createCars = () => {
+        debugger;
+        const mf = $scope.myFactory;
+        mf.parks.forEach(park=>{
+            let max = -Infinity;
+            park.processes.forEach(pr=>{
+                max = Math.max(max,pr.amount/24);
+            })
+            debugger;
+        })
+
+
+
+        debugger;
     }
     /**
      * Функция создания массива с предварительными платежами
