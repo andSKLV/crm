@@ -466,6 +466,19 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         }
     }
     /**
+     * keyHandler на нажатие энтера в инпутах ввода даты
+     * @param {obj} event - event нажатия
+     * @param {*} param - объект dashboard , текщая вкладка
+     * @param {obj} val - объект на котором нажали
+     */
+    $scope.keyHandler = (event, param, val) => {
+        if (event.keyCode !== 13) return false;
+        if (param.type==='dates') {
+            const inputId = `#input_${val.control}`;
+            document.querySelector(inputId).blur();
+        }
+    }
+    /**
      * Функция переключения кнопки  btn-switch
      * @param {obj} control объект по которому кликнули
      */

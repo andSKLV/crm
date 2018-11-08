@@ -47,7 +47,7 @@
                 {{(val.type=='btn-switch')? val.name+val.selected : ''}}
                 <input ng-if="val.type=='date'" id="input_{{val.control}}"
                 type="text" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="{{val.name}}" 
-                ng-keydown="keydownHandler($event, param, val)"
+                ng-keydown="keyHandler($event, param, val)"
                 ng-model="myFactory.polisObj.dates[val.control]" 
                 ng-blur="endChange(val.control)">
             </div>
