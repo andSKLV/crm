@@ -2,6 +2,7 @@ export class Car {
   constructor () {
     this.id = null;
     this.process= null;
+    this.park = null;
     this.group = {
       id: null,
       obj: null,
@@ -27,5 +28,8 @@ export class CarGroup {
   constructor() {
     this.id = null;
     this.cars = [];
+  }
+  add(car) {
+    this.cars.push(car);
   }
 }

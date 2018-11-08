@@ -140,12 +140,31 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         openTab();
     }
     $scope.createCars = () => {
-        debugger;
+
         const mf = $scope.myFactory;
         mf.parks.forEach(park=>{
             let max = -Infinity;
+            //считаем максимальное количество машин в парке
             park.processes.forEach(pr=>{
                 max = Math.max(max,pr.amount/24);
+            })
+            const carGroup = new CarGroup();
+            carGroup.park = park;
+            park.carGroup = carGroup;
+            // создаем максимальное количество машин и добавляем в парк
+            for (let i = 0; i < max; i++) {
+                const car = new Car();
+                car.id = `id${i}-${Date.now()}`;
+                carGroup.add(car);
+            }
+            // назначаем каждому процессу в парке машины
+            park.processes.forEach(pr=>{
+                pr.cars = [];
+                for (let i = 0; i < pr.amount/24; i++) {
+                    const car = pr.park.carGroup.cars[i];
+                    car.process = pr;
+                    pr.cars.push(car);
+                }
             })
             debugger;
         })
