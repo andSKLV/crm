@@ -681,6 +681,15 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     };
     function putNameInInput (mf) {
         if (mf.calcObj.isSaved && mf.calcObj.name &&mf.calcObj.name.length>1) {
+            const name = mf.calcObj.name;
+            document.querySelector('#inputSaveCalc').value = name;
+        }
+    }
+    $scope.putFullName = () => {
+        putFullNameInInput (this.myFactory);
+    }
+    function putFullNameInInput (mf) {
+        if (mf.calcObj.isSaved && mf.calcObj.name &&mf.calcObj.name.length>1) {
             const date = new Date();
             let hh = date.getHours();
             hh = (hh<10) ? `0${hh}` : `${hh}`;
@@ -689,7 +698,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             const name = mf.calcObj.name;
             const fullName = `${name} ${hh}:${min}`
             mf.scop.nameOfCalculation = fullName;
-            document.querySelector('#inputSaveCalc').value = fullName;
+            document.querySelector('#inputSaveCalc').value = name;
         }
     }
     /**
