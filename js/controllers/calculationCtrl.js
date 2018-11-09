@@ -695,7 +695,11 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             hh = (hh<10) ? `0${hh}` : `${hh}`;
             let min = date.getMinutes();
             min = (min<10) ? `0${min}` : `${min}`;
-            const name = mf.calcObj.name;
+            let name = mf.calcObj.name;
+            const dateExist = name.match(/\d\d:\d\d/);
+            if (dateExist) {
+                name = name.slice(0,dateExist.index);
+            }
             const fullName = `${name} ${hh}:${min}`
             mf.scop.nameOfCalculation = fullName;
             document.querySelector('#inputSaveCalc').value = name;
