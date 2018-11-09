@@ -183,6 +183,14 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         debugger;
     }
     /**
+     * Функция обновления имени в селекторе
+     * необходима для того, чтобы не оставалось старых значений селектора
+     * @param {Car} car - объект машины, у которой меняли инпут 
+     */
+    $scope.updateSelectorAutNumber = car => {
+        car.selectorAutNumber = car.data.autNumber;
+    }
+    /**
      * Функция замены машины в проце по выбору в select
      * @param {process} process - проц, в котором проходит замена
      * @param {car} car - объект машины, которой меняем
