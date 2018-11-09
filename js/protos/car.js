@@ -1,7 +1,6 @@
 export class Car {
   constructor () {
     this.id = null;
-    this.process= null;
     this.park = null;
     this.group = {
       id: null,
@@ -31,5 +30,6 @@ export class CarGroup {
   }
   add(car) {
     this.cars.push(car);
+    car.group.obj = this;
   }
 }

@@ -236,9 +236,7 @@ ul.park li table .td_cars{
     height: 35px;
 }
 .input_cars{
-    width: 85%;
     display: inline;
-    height: 100%;
     border: none;
     line-height: 1;
     background: var(--gray);
@@ -246,9 +244,6 @@ ul.park li table .td_cars{
     font-family: Lato, Calibri, Arial, sans-serif;
     font-size: 1em;
     color: var(--dark-blue);
-}
-.td_cars{
-
 }
 
 .open_cars{

@@ -158,24 +158,54 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 const car = new Car();
                 car.id = `id${i}-${Date.now()}`;
                 car.data.autNumber = `${parkInd}aaa${i}`;
+                car.data.model =`model${parkInd}-${i}`;
                 carGroup.add(car);
             }
             // назначаем каждому процессу в парке машины
             park.processes.forEach(pr=>{
                 pr.cars = [];
                 pr.showCars = false;
+                if ((pr.amount/24)===max) pr.isFull = true;
                 for (let i = 0; i < pr.amount/24; i++) {
                     const car = pr.park.carGroup.cars[i];
-                    car.process = pr;
                     pr.cars.push(car);
-                    if ((i+1)===max) pr.isFull = true;
+                    //добавляем поле селектора, для того чтобы привязать к модели ng-change машины
+                    car.selectorAutNumber = car.data.autNumber; 
                 }
+            })
+            park.processes.forEach(pr=>{
+                if (!pr.isFull) pr.carSelector = ''; //вспомогательный ничего не значащий объект, нужен чтобы поставить ng-change на выбор машины
             })
         })
 
 
 
         debugger;
+    }
+    /**
+     * Функция замены машины в проце по выбору в select
+     * @param {process} process - проц, в котором проходит замена
+     * @param {car} car - объект машины, которой меняем
+     * @param {array} group - массив машин этого парка
+     */
+    $scope.changeCar = (process, car, group) => {
+        if (!car.selectorAutNumber) {
+            //событие вызывается также на изменение имени в инпуте, этот случай надо отсекать
+            car.selectorAutNumber = car.data.autNumber;
+            return false; 
+        }
+        const nextCar = group.find(c=>c.data.autNumber===car.selectorAutNumber);
+        const oldCarIndex = process.cars.indexOf(car);
+        car.selectorAutNumber = car.data.autNumber;
+        if (process.cars.includes(nextCar)) {
+            //если в проце уже есть эта машина, тогда меняем их местами
+            const nextCarIndex = process.cars.indexOf(nextCar);
+            [process.cars[oldCarIndex],process.cars[nextCarIndex]] = [process.cars[nextCarIndex],process.cars[oldCarIndex]];
+        }
+        else {
+            //меняем на выбранную машину
+            process.cars[oldCarIndex] = nextCar;
+        }
     }
     /**
      * Функция создания массива с предварительными платежами

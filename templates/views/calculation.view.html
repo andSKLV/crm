@@ -9,22 +9,22 @@
             </tr>
         </table>
         <table ng-if="process.showCars" class="cars-list">
-            <tr ng-repeat="car in process.cars">
+            <tr ng-repeat="car in process.cars track by $index">
                 <td class='td_cars'>
-                    <input class='input_cars' type="text" ng-model="car.model" placeholder="Марка автомобиля">
+                    <input class='input_cars' type="text" ng-model="car.data.model" placeholder="Марка автомобиля">
                 </td>
                 <td class='td_cars'>
                     <input ng-if="process.isFull" class='input_cars' type="text" ng-model="car.data.autNumber" placeholder="Гос. номер">
-                    <select class="open_cars" ng-if="!process.isFull">
-                        <option disabled selected>{{car.data.autNumber || 'Гос. номер'}}</option>
-                        <option ng-repeat="aCar in process.park.carGroup.cars" value="{{aCar.data.autNumber}}">{{aCar.data.autNumber}}</option>
+                    <select class="open_cars" ng-if="!process.isFull" ng-model="process.cars[$index].selectorAutNumber" ng-change="changeCar(process, process.cars[$index],park.carGroup.cars)">
+                        <option disabled selected>{{aCar.data.autNumber || 'Гос. номер'}}</option>
+                        <option ng-repeat="aCar in process.park.carGroup.cars" value="{{aCar.data.autNumber}}" ng-selected="console.log('yo')">{{aCar.data.autNumber}}</option>
                     </select>
                 </td>
                 <td class='td_cars'>
-                    <input class='input_cars' type="text" ng-model="car.VIN" placeholder="VIN">
+                    <input class='input_cars' type="text" ng-model="car.data.VIN" placeholder="VIN">
                 </td>
                 <td class='td_cars'>
-                    <input  class='input_cars' type="text" ng-model="car.prodYear" placeholder="Год производства">
+                    <input  class='input_cars' type="text" ng-model="car.data.prodYear" placeholder="Год производства">
                 </td>
             </tr>
         </table>
