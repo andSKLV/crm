@@ -142,7 +142,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
     $scope.createCars = () => {
 
         const mf = $scope.myFactory;
-        mf.parks.forEach(park=>{
+        //FIXME: delete parkINd
+        mf.parks.forEach((park,parkInd)=>{
+            if (park.carGroup) return false;
             let max = -Infinity;
             //считаем максимальное количество машин в парке
             park.processes.forEach(pr=>{
@@ -155,6 +157,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             for (let i = 0; i < max; i++) {
                 const car = new Car();
                 car.id = `id${i}-${Date.now()}`;
+                car.data.autNumber = `${parkInd}aaa${i}`;
                 carGroup.add(car);
             }
             // назначаем каждому процессу в парке машины
@@ -165,9 +168,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     const car = pr.park.carGroup.cars[i];
                     car.process = pr;
                     pr.cars.push(car);
+                    if ((i+1)===max) pr.isFull = true;
                 }
             })
-            debugger;
         })
 
 

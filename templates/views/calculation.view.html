@@ -14,7 +14,11 @@
                     <input class='input_cars' type="text" ng-model="car.model" placeholder="Марка автомобиля">
                 </td>
                 <td class='td_cars'>
-                    <input class='input_cars' type="text" ng-model="car.autNumber" placeholder="Гос. номер">
+                    <input ng-if="process.isFull" class='input_cars' type="text" ng-model="car.data.autNumber" placeholder="Гос. номер">
+                    <select class="open_cars" ng-if="!process.isFull">
+                        <option disabled selected>{{car.data.autNumber || 'Гос. номер'}}</option>
+                        <option ng-repeat="aCar in process.park.carGroup.cars" value="{{aCar.data.autNumber}}">{{aCar.data.autNumber}}</option>
+                    </select>
                 </td>
                 <td class='td_cars'>
                     <input class='input_cars' type="text" ng-model="car.VIN" placeholder="VIN">
