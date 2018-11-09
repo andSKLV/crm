@@ -696,13 +696,13 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             let min = date.getMinutes();
             min = (min<10) ? `0${min}` : `${min}`;
             let name = mf.calcObj.name;
-            const dateExist = name.match(/\d\d:\d\d/);
+            const dateExist = name.match(/ \d\d:\d\d/);
             if (dateExist) {
                 name = name.slice(0,dateExist.index);
             }
             const fullName = `${name} ${hh}:${min}`
             mf.scop.nameOfCalculation = fullName;
-            document.querySelector('#inputSaveCalc').value = name;
+            document.querySelector('#inputSaveCalc').value = fullName;
         }
     }
     /**
