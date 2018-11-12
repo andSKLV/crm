@@ -210,7 +210,7 @@ div.ul_container>div.ul>div>div.addAddition{
 }
 div.matrix_container:not(.calc){
     margin-left: 0px;
-    height: calc(100vh - 280px);
+    height: calc(100vh - 250px);
 }
 .matrix_row{
     cursor: pointer;
@@ -265,6 +265,7 @@ ul.park li table .td_cars{
     font-family: Lato, Calibri, Arial, sans-serif;
     font-size: 1em;
     color: var(--dark-blue);
+    width: 100%;
 }
 
 .open_cars{

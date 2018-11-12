@@ -6,9 +6,9 @@
                    {{key=="wrapping" || key=="risk" ? value : calculation.applyFilter(value, key) }}
                    <span ng-if="key=='amount'" class="gearwheel"><img src="./img/gearwheel.png" alt="" ng-click="process.showCars = !process.showCars;$event.stopPropagation();"></span>
                    <span ng-if="key=='amount'&& process.isFull && process.showCars" class='excel' ng-click="showFilepickModal($event);$event.stopPropagation();"><img src="./img/excel.png" alt="excel"></span>
-                   <div class="choose_excel select--hidden" ng-if="key=='amount'&& process.isFull && process.showCars">
+                   <div class="choose_excel select--hidden" ng-if="key=='amount'&& process.isFull && process.showCars" ng-click="$event.stopPropagation();">
                        choose excel
-                        <input type="file" import-sheet-js="" multiple="false"  />
+                        <input type="file" import-sheet-js="{{myFactory.parks.indexOf(park)}}" multiple="false"  />
                    </div>
                </td>
             </tr>

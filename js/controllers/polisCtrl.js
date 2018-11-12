@@ -139,11 +139,12 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         delay (50);
         openTab();
     }
+    /**
+     * Функция первоначального создания машин при загрузке "чистого" расчета в полис
+     */
     $scope.createCars = () => {
-
         const mf = $scope.myFactory;
-        //FIXME: delete parkINd
-        mf.parks.forEach((park,parkInd)=>{
+        mf.parks.forEach(park=>{
             if (park.carGroup) return false;
             let max = -Infinity;
             //считаем максимальное количество машин в парке
@@ -156,9 +157,6 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             // создаем максимальное количество машин и добавляем в парк
             for (let i = 0; i < max; i++) {
                 const car = new Car();
-                car.id = `id${i}-${Date.now()}`;
-                car.data.autNumber = `${parkInd}aaa${i}`;
-                car.data.model =`model${parkInd}-${i}`;
                 carGroup.add(car);
             }
             // назначаем каждому процессу в парке машины
@@ -177,10 +175,21 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 if (!pr.isFull) pr.carSelector = ''; //вспомогательный ничего не значащий объект, нужен чтобы поставить ng-change на выбор машины
             })
         })
+        mf.setCarsFromExcel = (cars,park, parkIndex) => {
+            park.carGroup.cars.forEach((car,index)=>{
+                const excelCar = cars[index];
+                for (let key in excelCar) {
+                    car.data[key] = excelCar[key];
+                }
+                car.selectorAutNumber = car.data.autNumber;
+            })
+            const parkUI = document.querySelectorAll('.park')[parkIndex];
+            const inpUI = parkUI.querySelector('.input_cars');
+            inpUI.focus();
+            delay(50);
+            inpUI.blur();
+        }
 
-
-
-        debugger;
     }
     /**
      * Функция обновления имени в селекторе
@@ -275,10 +284,13 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
     $scope.console = (param) => {
         console.dir($scope.itemsList.items1);
     }
+    /**
+     * Функция вкл/откл отображения поп апа выбора файла экселя с парком машин
+     * @param {event} ev 
+     */
     $scope.showFilepickModal = (ev) => {
         const excelModal = ev.currentTarget.nextElementSibling;
         excelModal.classList.toggle('select--hidden');
-        debugger;
     }
     $scope.changeLocation = (value) => {
         $scope.myFactory.cameFrom = {
@@ -397,7 +409,6 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             return true;
         }
     }
-
     $scope.loadProcess = (process, key) => {
         myFactory.loadProcess = {
             process,
