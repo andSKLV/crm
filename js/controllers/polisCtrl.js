@@ -275,7 +275,11 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
     $scope.console = (param) => {
         console.dir($scope.itemsList.items1);
     }
-
+    $scope.showFilepickModal = (ev) => {
+        const excelModal = ev.currentTarget.nextElementSibling;
+        excelModal.classList.toggle('select--hidden');
+        debugger;
+    }
     $scope.changeLocation = (value) => {
         $scope.myFactory.cameFrom = {
             name: 'Проект документа',

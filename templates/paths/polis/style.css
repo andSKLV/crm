@@ -26,12 +26,33 @@ div.return a:hover{
 }
 
 span.gearwheel{
+    cursor: pointer;
     position: absolute;
-    right: 0px;
-    top: 0px;
+    right: 4px;
+    top: 4px;
 }
 span.gearwheel img{
     width: 20px;
+}
+.excel{
+    cursor: pointer;
+    position: absolute;
+    right: 4px;
+    top: 32px;
+}
+.excel img {
+    width: 20px;
+}
+.choose_excel{
+    z-index: 100;
+    position: absolute;
+    top: 5%;
+    left: 100%;
+    background-color: white;
+    border: 1px solid var(--dark-blue);
+    border-radius: 5px;
+    padding: 6px;
+
 }
 ul.park{
     list-style: none;

@@ -5,6 +5,11 @@
                 <td ng-repeat="(key,value) in process track by $index" ng-if="calculation.checkTransportProp(key)!=-1" ng-click="loadProcess(process, key)">
                    {{key=="wrapping" || key=="risk" ? value : calculation.applyFilter(value, key) }}
                    <span ng-if="key=='amount'" class="gearwheel"><img src="./img/gearwheel.png" alt="" ng-click="process.showCars = !process.showCars;$event.stopPropagation();"></span>
+                   <span ng-if="key=='amount'&& process.isFull && process.showCars" class='excel' ng-click="showFilepickModal($event);$event.stopPropagation();"><img src="./img/excel.png" alt="excel"></span>
+                   <div class="choose_excel select--hidden" ng-if="key=='amount'&& process.isFull && process.showCars">
+                       choose excel
+                        <input type="file" import-sheet-js="" multiple="false"  />
+                   </div>
                </td>
             </tr>
         </table>

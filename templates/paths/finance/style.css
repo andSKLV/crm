@@ -24,14 +24,6 @@ div.return a:hover{
     display: block;
 }
 
-span.gearwheel{
-    position: absolute;
-    right: 0px;
-    top: 0px;
-}
-span.gearwheel img{
-    width: 20px;
-}
 ul.park{
     list-style: none;
     padding: 0;
