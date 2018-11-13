@@ -8,7 +8,7 @@
                    <span ng-if="key=='amount'&& process.isFull && process.showCars" class='excel' ng-click="showFilepickModal($event);$event.stopPropagation();"><img src="./img/excel.png" alt="excel"></span>
                    <div class="choose_excel select--hidden" ng-if="key=='amount'&& process.isFull && process.showCars" ng-click="$event.stopPropagation();">
                        Выберите Excel таблицу с данными автомобилей
-                        <input type="file" import-sheet-js="{{myFactory.parks.indexOf(park)}}" multiple="false"  />
+                        <input type="file" import-sheet-js="{{myFactory.parks.indexOf(park)}}" multiple="false" accept=".xls,.xlsx"/>
                    </div>
                </td>
             </tr>

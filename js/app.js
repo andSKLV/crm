@@ -404,10 +404,10 @@ app.directive("importSheetJs", function SheetJSImportDirective(myFactory) {
         const cars = [];
         for (let i=startRow;i<=endRow;i++) {
             const car = {
-                model: list[`B${i}`].w.trim(),
-                autNumber: list[`C${i}`].w,
-                VIN: list[`D${i}`].w,
-                prodYear: list[`E${i}`].w,
+                model: (list[`B${i}`]) ? list[`B${i}`].w.trim() : '',
+                autNumber: (list[`C${i}`]) ? list[`C${i}`].w : '',
+                VIN: (list[`D${i}`]) ? list[`D${i}`].w : '',
+                prodYear: (list[`E${i}`]) ? list[`E${i}`].w : '',
             }
             cars.push(car);
         }
