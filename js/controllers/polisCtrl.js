@@ -78,7 +78,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             else if (myFactory.cameFrom.name === 'Расчет') {
                 tabIndex = $scope.currObj.findIndex(val => val.name === 'Расчет');
             }
-            else if (myFactory.cameFrom.name === 'Редактор карты клиента' || 'Карту клиента') {
+            else if (myFactory.cameFrom.name === 'Редактор карты клиента' || myFactory.cameFrom.name === 'Карту клиента') {
                 tabIndex = $scope.currObj.findIndex(val => val.name === 'Компания');
             }
             else if (!myFactory.companyObj.card) {
@@ -133,10 +133,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         if (!$scope.myFactory.polisObj.dates.start && !$scope.myFactory.polisObj.dates.end) setInitialDates ();
 
         myFactory.polisObj.updateConditionsCheck();
-        //FIXME: working here
         if (myFactory.parks.length>0) $scope.createCars ();
-
-        await delay (50);
         openTab();
     }
     /**
@@ -364,6 +361,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             if (index === 4) $scope.calcFinances();
             if (index === 4 && $scope.myFactory.payment.array && $scope.myFactory.payment.array.length > 0) $scope.myFactory.polisObj.financeSeen = true;
             $rootScope.search_result = [];
+            if (!$scope.currObj) {
+                return false; // происходит из-за повторной инициализации
+            }
             $scope.currObj.forEach(param => {
                 if (param.type == 'search/create') {
                     param.values[0].name = "";

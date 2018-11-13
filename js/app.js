@@ -423,9 +423,7 @@ app.directive("currencyInput", function ($filter, myFactory) {
                 return plainNumber;
             });
             $element.bind("click", $event => {
-                console.log($element);
                 $event.target.select();
-                console.log($event.target);
             });
             $element.bind('blur',$event=>{
                 if ($attrs["currencyInput"] == "a_limit") {
