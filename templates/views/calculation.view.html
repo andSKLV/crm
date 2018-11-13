@@ -2,12 +2,12 @@
     <li ng-repeat="process in park.processes track by $index">
         <table>
             <tr>
-                <td ng-repeat="(key,value) in process track by $index" ng-if="calculation.checkTransportProp(key)!=-1" ng-click="loadProcess(process, key)">
+                <td ng-repeat="(key,value) in process track by $index" ng-if="calculation.checkTransportProp(key)!=-1" ng-click="(process.showCars)?'':loadProcess(process, key)">
                    {{key=="wrapping" || key=="risk" ? value : calculation.applyFilter(value, key) }}
                    <span ng-if="key=='amount'" class="gearwheel"><img src="./img/gearwheel.png" alt="" ng-click="process.showCars = !process.showCars;$event.stopPropagation();"></span>
                    <span ng-if="key=='amount'&& process.isFull && process.showCars" class='excel' ng-click="showFilepickModal($event);$event.stopPropagation();"><img src="./img/excel.png" alt="excel"></span>
                    <div class="choose_excel select--hidden" ng-if="key=='amount'&& process.isFull && process.showCars" ng-click="$event.stopPropagation();">
-                       choose excel
+                       Выберите Excel таблицу с данными автомобилей
                         <input type="file" import-sheet-js="{{myFactory.parks.indexOf(park)}}" multiple="false"  />
                    </div>
                </td>

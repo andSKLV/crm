@@ -46,13 +46,13 @@ span.gearwheel img{
 .choose_excel{
     z-index: 100;
     position: absolute;
-    top: 5%;
+    top: 0%;
     left: 100%;
     background-color: white;
     border: 1px solid var(--dark-blue);
     border-radius: 5px;
     padding: 6px;
-
+    font-size: 0.85em;
 }
 ul.park{
     list-style: none;
