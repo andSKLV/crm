@@ -345,19 +345,32 @@ app.directive("importSheetJs", function SheetJSImportDirective(myFactory) {
         scope: { opts: '=' },
         link: function ($scope, $elm, $attrs) {
             $elm.on('change', function (changeEvent) {
-                $scope.changeE = changeEvent;
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    /* read workbook */
-                    const park = myFactory.parks[$attrs.importSheetJs];
-                    const bstr = e.target.result;
-                    const workbook = XLSX.read(bstr, { type: 'binary' });
-                    const firstList = workbook.Sheets[workbook.SheetNames[0]];
-                    $scope.changeE.target.parentNode.classList.toggle('select--hidden'); //закрываем попап с выбором файла
-                    const cars = prepareList(firstList);//преобразовываем полученные данные в вид массива с машинами
-                    myFactory.setCarsFromExcel(cars,park,$attrs.importSheetJs);// применяем данные машины
-                };
-                reader.readAsBinaryString(changeEvent.target.files[0]);
+                try {
+                    $scope.changeE = changeEvent;
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        /* read workbook */
+                        try {
+                            const park = myFactory.parks[$attrs.importSheetJs];
+                            const bstr = e.target.result;
+                            const workbook = XLSX.read(bstr, { type: 'binary' });
+                            const firstList = workbook.Sheets[workbook.SheetNames[0]];
+                            $scope.changeE.target.parentNode.classList.toggle('select--hidden'); //закрываем попап с выбором файла
+                            const cars = prepareList(firstList);//преобразовываем полученные данные в вид массива с машинами
+                            myFactory.setCarsFromExcel(cars,park,$attrs.importSheetJs);// применяем данные машины
+                        }
+                        catch (e) {
+                            alert('Выбран несоответствующий файл. Пожалуйста, выберите файл формата xls или xlsx');
+                            console.error(e);
+                        }
+                    };
+                    reader.readAsBinaryString(changeEvent.target.files[0]);
+                }
+                catch (e) {
+                    alert('Выбран несоответствующий файл. Пожалуйста, выберите файл формата xls или xlsx');
+                    console.error(e);
+                }
+                
             });
         }
     };
