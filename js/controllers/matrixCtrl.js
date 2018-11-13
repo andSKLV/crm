@@ -29,11 +29,11 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
      * @param {number} id 
      */
     this.loadCalculation=function(id){ //нажимаем на строку расчета в результате поиска
-        $timeout(function () {
+        $timeout(async function () {
             $rootScope.cacheTemplate = {};
             if($location.path!=="/calculation"){
                 $location.path('/calculation');
-                delay(200);
+                await delay(200);
             }
             const loading = new Loading(true);
             myFactory.isLoading = loading;
@@ -120,7 +120,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                         myFactory.payment.val=response.data.payment*1;
                         myFactory.finalCalc();
                     }
-
+                    
                     if(response.data.fact_premia!=";Р" && response.data.fact_premia!=";1"){
                         let price=response.data.fact_premia.split(";");
                         myFactory.practicalPrice.val=price[0]*1;

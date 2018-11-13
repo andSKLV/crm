@@ -2,40 +2,37 @@
     <li ng-repeat="process in park.processes track by $index">
         <table>
             <tr>
-                <td ng-repeat="(key,value) in process track by $index" ng-if="calculation.checkTransportProp(key)!=-1" ng-click="loadProcess(process, key)">
+                <td ng-repeat="(key,value) in process track by $index" ng-if="calculation.checkTransportProp(key)!=-1" ng-click="(process.showCars)?'':loadProcess(process, key)">
                    {{key=="wrapping" || key=="risk" ? value : calculation.applyFilter(value, key) }}
-                   <span ng-if="key=='amount'" class="gearwheel"><img src="./img/gearwheel.png" alt="" ng-click="clicking($event, process)"></span>
+                   <span ng-if="key=='amount'" class="gearwheel"><img src="./img/gearwheel.png" alt="" ng-click="process.showCars = !process.showCars;$event.stopPropagation();"></span>
+                   <span ng-if="key=='amount'&& process.isFull && process.showCars" class='excel' ng-click="showFilepickModal($event);$event.stopPropagation();"><img src="./img/excel.png" alt="excel"></span>
+                   <div class="choose_excel select--hidden" ng-if="key=='amount'&& process.isFull && process.showCars" ng-click="$event.stopPropagation();">
+                       Выберите Excel таблицу с данными автомобилей
+                        <input type="file" import-sheet-js="{{myFactory.parks.indexOf(park)}}" multiple="false"  />
+                   </div>
                </td>
             </tr>
         </table>
-        <ul ng-if="process.showCars" class="cars-list">
-            <li ng-repeat="car in park.cars"><input type="checkbox" ng-checked="process.amount==park.amount" id="{{calculation.getUniqueId(process, $index)}}"><label for="{{calculation.getUniqueId(process, $index)}}"></label>
-                <table>
-                    <tr>
-                        <td>
-                            <input type="text" ng-model="car.number" ng-keypress="console()">
-                        </td>
-                        <td>
-                            <input type="text">
-                        </td>
-                        <td>
-                            <input type="text">
-                        </td>
-                        <td>
-                            <input type="text">
-                        </td>
-                        <td>
-                            <input type="text">
-                        </td>
-                        <td>
-                            <input type="text">
-                        </td>
-                    </tr>
-                </table>
-                
-            </li>
-        </ul>
-        
+        <table ng-if="process.showCars" class="cars-list">
+            <tr ng-repeat="car in process.cars track by $index">
+                <td class='td_cars'>
+                    <input class='input_cars' type="text" ng-model="car.data.model" placeholder="Марка автомобиля">
+                </td>
+                <td class='td_cars'>
+                    <input ng-if="process.isFull" class='input_cars' type="text" ng-model="car.data.autNumber" placeholder="Гос. номер" ng-blur="updateSelectorAutNumber(car)">
+                    <select class="open_cars" ng-if="!process.isFull" ng-model="process.cars[$index].selectorAutNumber" ng-change="changeCar(process, process.cars[$index],park.carGroup.cars)">
+                        <option disabled selected>{{aCar.data.autNumber || 'Гос. номер'}}</option>
+                        <option ng-repeat="aCar in process.park.carGroup.cars" value="{{aCar.data.autNumber}}" ng-selected="console.log('yo')">{{aCar.data.autNumber}}</option>
+                    </select>
+                </td>
+                <td class='td_cars'>
+                    <input class='input_cars' type="text" ng-model="car.data.VIN" placeholder="VIN">
+                </td>
+                <td class='td_cars'>
+                    <input  class='input_cars' type="text" ng-model="car.data.prodYear" placeholder="Год производства">
+                </td>
+            </tr>
+        </table>
     </li>
 </ul>
 <div ng-if="dashboard.myFactory.matrixType=='HIP' && dashboard.myFactory.totalPrice!=undefined && dashboard.myFactory.totalPrice!=0" calculation-bottom-view></div>

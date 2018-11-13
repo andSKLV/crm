@@ -570,7 +570,6 @@ div.calc>div>table.matrix>tbody>tr>td:not(.btns):hover,
     color: white;
     background: var(--light-blue);
     opacity: 1;
-    
 }
 .html {
     background-color: var(--dark-blue);

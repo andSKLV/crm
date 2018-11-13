@@ -340,6 +340,80 @@ app.directive("ngRightClick", function ($parse) {
         });
     };
 });
+app.directive("importSheetJs", function SheetJSImportDirective(myFactory) {
+    return {
+        scope: { opts: '=' },
+        link: function ($scope, $elm, $attrs) {
+            $elm.on('change', function (changeEvent) {
+                try {
+                    $scope.changeE = changeEvent;
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        /* read workbook */
+                        try {
+                            const park = myFactory.parks[$attrs.importSheetJs];
+                            const bstr = e.target.result;
+                            const workbook = XLSX.read(bstr, { type: 'binary' });
+                            const firstList = workbook.Sheets[workbook.SheetNames[0]];
+                            $scope.changeE.target.parentNode.classList.toggle('select--hidden'); //закрываем попап с выбором файла
+                            const cars = prepareList(firstList);//преобразовываем полученные данные в вид массива с машинами
+                            myFactory.setCarsFromExcel(cars,park,$attrs.importSheetJs);// применяем данные машины
+                        }
+                        catch (e) {
+                            alert('Выбран несоответствующий файл. Пожалуйста, выберите файл формата xls или xlsx');
+                            console.error(e);
+                        }
+                    };
+                    reader.readAsBinaryString(changeEvent.target.files[0]);
+                }
+                catch (e) {
+                    alert('Выбран несоответствующий файл. Пожалуйста, выберите файл формата xls или xlsx');
+                    console.error(e);
+                }
+                
+            });
+        }
+    };
+    /**
+     * 
+     * @param {object} list - объект данных, полученных из эксель
+     * Правила для Экселя: в столбце А стоит нумерация строк с машинами
+     * Столбец B C D E это марка, номер, вин и год соответственно
+     * @returns {Array} массив с машинами
+     */
+    function prepareList (list) {
+        const validList = [];
+        let startRow = 0;
+        let endRow = 0;
+        const lastRowInFile = parseInt(list['!ref'].match(/.:[A-Z]+(\d*)/)[1]);
+        let countStarted = false;
+        //определяем строки первой и последней машин
+        for (let i=1;i<=lastRowInFile;i++) {
+            const key = `A${i}`;
+            if (list[key]&&list[key].v===1) {
+                // если в ячейке стоит 1, значит это первая машина и это первая строка
+                startRow = i;
+                countStarted = true;
+            }
+            if (!list[key]&&countStarted) {
+                // если значение в столбце А пустое,а отсчет уже начат, значит таблица закончилась
+                endRow = i-1;
+                break;
+            }
+        }
+        const cars = [];
+        for (let i=startRow;i<=endRow;i++) {
+            const car = {
+                model: list[`B${i}`].w.trim(),
+                autNumber: list[`C${i}`].w,
+                VIN: list[`D${i}`].w,
+                prodYear: list[`E${i}`].w,
+            }
+            cars.push(car);
+        }
+        return cars;
+    }
+});
 
 app.directive("currencyInput", function ($filter, myFactory) {
     return {
@@ -362,9 +436,7 @@ app.directive("currencyInput", function ($filter, myFactory) {
                 return plainNumber;
             });
             $element.bind("click", $event => {
-                console.log($element);
                 $event.target.select();
-                console.log($event.target);
             });
             $element.bind('blur',$event=>{
                 if ($attrs["currencyInput"] == "a_limit") {
@@ -487,7 +559,6 @@ app.directive("currencyInput", function ($filter, myFactory) {
                     }
                     if ($scope.calculation.karetka.mode == "changing process")
                         delete myFactory.process.changing;
-                    $scope.calculation.clean();
                 }
             })
             $element.bind("keydown keypress", $event => {

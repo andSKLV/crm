@@ -1,4 +1,5 @@
 import Polis from '../protos/polis.js';
+import {Car, CarGroup} from "../protos/car.js";
 
 app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $rootScope, $timeout) {
 
@@ -77,7 +78,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             else if (myFactory.cameFrom.name === 'Расчет') {
                 tabIndex = $scope.currObj.findIndex(val => val.name === 'Расчет');
             }
-            else if (myFactory.cameFrom.name === 'Редактор карты клиента' || 'Карту клиента') {
+            else if (myFactory.cameFrom.name === 'Редактор карты клиента' || myFactory.cameFrom.name === 'Карту клиента') {
                 tabIndex = $scope.currObj.findIndex(val => val.name === 'Компания');
             }
             else if (!myFactory.companyObj.card) {
@@ -132,8 +133,93 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         if (!$scope.myFactory.polisObj.dates.start && !$scope.myFactory.polisObj.dates.end) setInitialDates ();
 
         myFactory.polisObj.updateConditionsCheck();
-        delay (50);
+        if (myFactory.parks.length>0) $scope.createCars ();
         openTab();
+    }
+    /**
+     * Функция первоначального создания машин при загрузке "чистого" расчета в полис
+     */
+    $scope.createCars = () => {
+        const mf = $scope.myFactory;
+        mf.parks.forEach(park=>{
+            if (park.carGroup) return false;
+            let max = -Infinity;
+            //считаем максимальное количество машин в парке
+            park.processes.forEach(pr=>{
+                max = Math.max(max,pr.amount/24);
+            })
+            const carGroup = new CarGroup();
+            carGroup.park = park;
+            park.carGroup = carGroup;
+            // создаем максимальное количество машин и добавляем в парк
+            for (let i = 0; i < max; i++) {
+                const car = new Car();
+                carGroup.add(car);
+            }
+            // назначаем каждому процессу в парке машины
+            park.processes.forEach(pr=>{
+                pr.cars = [];
+                pr.showCars = false;
+                if ((pr.amount/24)===max) pr.isFull = true;
+                for (let i = 0; i < pr.amount/24; i++) {
+                    const car = pr.park.carGroup.cars[i];
+                    pr.cars.push(car);
+                    //добавляем поле селектора, для того чтобы привязать к модели ng-change машины
+                    car.selectorAutNumber = car.data.autNumber; 
+                }
+            })
+            park.processes.forEach(pr=>{
+                if (!pr.isFull) pr.carSelector = ''; //вспомогательный ничего не значащий объект, нужен чтобы поставить ng-change на выбор машины
+            })
+        })
+        mf.setCarsFromExcel = async (cars,park, parkIndex) => {
+            park.carGroup.cars.forEach((car,index)=>{
+                const excelCar = cars[index];
+                for (let key in excelCar) {
+                    car.data[key] = excelCar[key];
+                }
+                car.selectorAutNumber = car.data.autNumber;
+            })
+            const parkUI = document.querySelectorAll('.park')[parkIndex];
+            const inpUI = parkUI.querySelector('.input_cars');
+            inpUI.focus();
+            await delay(50);
+            inpUI.blur();
+        }
+
+    }
+    /**
+     * Функция обновления имени в селекторе
+     * необходима для того, чтобы не оставалось старых значений селектора
+     * @param {Car} car - объект машины, у которой меняли инпут 
+     */
+    $scope.updateSelectorAutNumber = car => {
+        car.selectorAutNumber = car.data.autNumber;
+    }
+    /**
+     * Функция замены машины в проце по выбору в select
+     * @param {process} process - проц, в котором проходит замена
+     * @param {car} car - объект машины, которой меняем
+     * @param {array} group - массив машин этого парка
+     */
+    $scope.changeCar = (process, car, group) => {
+        if (!car.selectorAutNumber) {
+            //событие вызывается также на изменение имени в инпуте, этот случай надо отсекать
+            car.selectorAutNumber = car.data.autNumber;
+            return false; 
+        }
+        const nextCar = group.find(c=>c.data.autNumber===car.selectorAutNumber);
+        const oldCarIndex = process.cars.indexOf(car);
+        car.selectorAutNumber = car.data.autNumber;
+        if (process.cars.includes(nextCar)) {
+            //если в проце уже есть эта машина, тогда меняем их местами
+            const nextCarIndex = process.cars.indexOf(nextCar);
+            [process.cars[oldCarIndex],process.cars[nextCarIndex]] = [process.cars[nextCarIndex],process.cars[oldCarIndex]];
+        }
+        else {
+            //меняем на выбранную машину
+            process.cars[oldCarIndex] = nextCar;
+        }
     }
     /**
      * Функция создания массива с предварительными платежами
@@ -195,7 +281,14 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
     $scope.console = (param) => {
         console.dir($scope.itemsList.items1);
     }
-
+    /**
+     * Функция вкл/откл отображения поп апа выбора файла экселя с парком машин
+     * @param {event} ev 
+     */
+    $scope.showFilepickModal = (ev) => {
+        const excelModal = ev.currentTarget.nextElementSibling;
+        excelModal.classList.toggle('select--hidden');
+    }
     $scope.changeLocation = (value) => {
         $scope.myFactory.cameFrom = {
             name: 'Проект документа',
@@ -268,6 +361,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             if (index === 4) $scope.calcFinances();
             if (index === 4 && $scope.myFactory.payment.array && $scope.myFactory.payment.array.length > 0) $scope.myFactory.polisObj.financeSeen = true;
             $rootScope.search_result = [];
+            if (!$scope.currObj) {
+                return false; // происходит из-за повторной инициализации
+            }
             $scope.currObj.forEach(param => {
                 if (param.type == 'search/create') {
                     param.values[0].name = "";
@@ -313,7 +409,6 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             return true;
         }
     }
-
     $scope.loadProcess = (process, key) => {
         myFactory.loadProcess = {
             process,

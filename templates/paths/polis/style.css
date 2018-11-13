@@ -26,12 +26,33 @@ div.return a:hover{
 }
 
 span.gearwheel{
+    cursor: pointer;
     position: absolute;
-    right: 0px;
-    top: 0px;
+    right: 4px;
+    top: 4px;
 }
 span.gearwheel img{
     width: 20px;
+}
+.excel{
+    cursor: pointer;
+    position: absolute;
+    right: 4px;
+    top: 32px;
+}
+.excel img {
+    width: 20px;
+}
+.choose_excel{
+    z-index: 100;
+    position: absolute;
+    top: 0%;
+    left: 100%;
+    background-color: white;
+    border: 1px solid var(--dark-blue);
+    border-radius: 5px;
+    padding: 6px;
+    font-size: 0.85em;
 }
 ul.park{
     list-style: none;
@@ -189,7 +210,7 @@ div.ul_container>div.ul>div>div.addAddition{
 }
 div.matrix_container:not(.calc){
     margin-left: 0px;
-    height: calc(100vh - 280px);
+    height: calc(100vh - 250px);
 }
 .matrix_row{
     cursor: pointer;
@@ -231,4 +252,29 @@ legend {
 }
 .matrix_row td {
     padding: 4px 8px 4px 8px;
+}
+ul.park li table .td_cars{
+    height: 35px;
+}
+.input_cars{
+    display: inline;
+    border: none;
+    line-height: 1;
+    background: var(--gray);
+    text-align: center;
+    font-family: Lato, Calibri, Arial, sans-serif;
+    font-size: 1em;
+    color: var(--dark-blue);
+    width: 100%;
+}
+
+.open_cars{
+    width: 99%;
+    height: 100%;
+    border: none;
+    line-height: 1;
+    background: var(--gray);
+    text-align: center;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+    color: var(--dark-blue);
 }
