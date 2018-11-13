@@ -136,7 +136,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         //FIXME: working here
         if (myFactory.parks.length>0) $scope.createCars ();
 
-        delay (50);
+        await delay (50);
         openTab();
     }
     /**
@@ -175,7 +175,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 if (!pr.isFull) pr.carSelector = ''; //вспомогательный ничего не значащий объект, нужен чтобы поставить ng-change на выбор машины
             })
         })
-        mf.setCarsFromExcel = (cars,park, parkIndex) => {
+        mf.setCarsFromExcel = async (cars,park, parkIndex) => {
             park.carGroup.cars.forEach((car,index)=>{
                 const excelCar = cars[index];
                 for (let key in excelCar) {
@@ -186,7 +186,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             const parkUI = document.querySelectorAll('.park')[parkIndex];
             const inpUI = parkUI.querySelector('.input_cars');
             inpUI.focus();
-            delay(50);
+            await delay(50);
             inpUI.blur();
         }
 
