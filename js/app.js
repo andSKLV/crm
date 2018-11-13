@@ -548,7 +548,6 @@ app.directive("currencyInput", function ($filter, myFactory) {
                     }
                     if ($scope.calculation.karetka.mode == "changing process")
                         delete myFactory.process.changing;
-                    $scope.calculation.clean();
                 }
             })
             $element.bind("keydown keypress", $event => {
