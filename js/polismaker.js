@@ -854,7 +854,11 @@ class PolisMaker{
                 }
             }
         )
-        pdfMake.createPdf(docDefinition).download('optionalName.pdf');
+        // pdfMake.createPdf(docDefinition).download('optionalName.pdf');
+        console.log(JSON.stringify(docDefinition),null,'    '); // временно для вставки в редактор
+        const win = window.open('', '_blank');
+        delay(500).then(()=>pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+
     }
 }
 const polis = new PolisMaker();
