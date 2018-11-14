@@ -54,16 +54,17 @@ class PolisMaker{
         const listContent=[];
         let listCount=1;
         lists.forEach((list)=>{
-            listContent.push(
-                "\n", 
-                "\n"
-            );
+            // FIXME: ненужные переносы строки
+            // listContent.push(
+            //     "\n", 
+            //     "\n"
+            // );
             
             let table={
                 style: 'table',
                 table: {
                     headerRows: 2,
-                    widths:[68,68,68,94,68,68],
+                    widths:[71,71,71,97,71,71],
                     body: [
                         [
                             {
@@ -85,7 +86,7 @@ class PolisMaker{
                                 style:"firstHeader",
                             },
                             {
-                                text:`Количество, ${myFactory.amountType}`,
+                                text:`Количество ${myFactory.amountType}`,
                                 style:"firstHeader", 
                             },
                             {
@@ -137,7 +138,7 @@ class PolisMaker{
                         row.push(
                             {
                                 text: this.addSpaces(process[property]),
-                                alignment: 'right',
+                                // alignment: 'right',
                             });
                     }
                     else{
@@ -152,7 +153,7 @@ class PolisMaker{
                 style: 'table',
                 table: {
                     headerRows: 1,
-                    widths:[113,113,113,113],
+                    widths:[103,143,93,131],
                     body: [
                         [
                             {
@@ -179,16 +180,14 @@ class PolisMaker{
                 }
             }
             tableContent=table.table.body;
-            // FIXME: здесь видимо данные по машинам
+            // данные по машинам
             for(const car of list.cars){
                 tableContent.push(
                     [
-                        {
-                            text: 123
-                        },
-                        "first",
-                        "second",
-                        "third"
+                        car.data.autNumber,
+                        car.data.VIN,
+                        car.data.prodYear,
+                        car.data.model,
                     ]
                 )
             }
@@ -224,7 +223,7 @@ class PolisMaker{
                 return;
             }
             let paragraph={};
-            paragraph.widths=[30, 430];
+            paragraph.widths=[30, 459];
             paragraph.layout={
                 hLineColor: '#e6e6e6',
                 vLineColor: '#e6e6e6',
@@ -274,46 +273,9 @@ class PolisMaker{
          * @return {object}
          */
         const prepareListToPDF=({list, included, baseRisk})=>{
-            // const ul=[];
-            // if(included){
-            //     if(baseRisk.included) ul.push(...baseRisk.ToPDF);
-            //     for(const risk of list){
-            //         ul.push(
-            //             `${risk.name} - ${risk.title.toLowerCase()}. \n Относится к Перечню: ${risk.list.toString()}.\n`
-            //         )
-            //     }
-            //     return [
-            //         {
-            //             text: '1.0 Определения застрахованных рисков:\n',
-            //             decoration: 'underline',
-            //             fontSize:16
-            //         },
-            //         {
-            //             ul
-            //         }
-            //     ]
-            // }
-            // else{
-            //     if(!baseRisk.included) ul.push(...baseRisk.ToPDF);
-            //     for(const risk of list){
-            //         ul.push(
-            //             `${risk.name} - ${risk.title.toLowerCase()}. `
-            //         )
-            //     }
-            //     return [
-            //         {
-            //             text: '1.1 Определения не заявленных на страхование рисков:\n',
-            //             decoration: 'underline',
-            //             fontSize:16
-            //         },
-            //         {
-            //             ul
-            //         }
-            //     ]
-            // }
-
             const table={
-                widths:[30, 430],
+                headerRows: 1,
+                widths:[30, 459],
                 layout:{
                     hLineColor: '#e6e6e6',
                     vLineColor: '#e6e6e6',
@@ -477,7 +439,7 @@ class PolisMaker{
     makePDF(myFactory, risks){
         console.log(myFactory.parks);
         let docDefinition = {
-            pageMargins: [ 50, 100, 50, 30 ],
+            pageMargins: [ 50, 60, 50, 30 ],
             content: [
                 {
                     table: {
@@ -549,7 +511,7 @@ class PolisMaker{
                                     
                                 },
                                 {
-                                    text:"00.00.2018 – 00.00.2019",
+                                    text:`${myFactory.polisObj.dates.start} - ${myFactory.polisObj.dates.end}`,
                                     alignment: 'center',
                                     bold: true,
                                     colSpan:2
@@ -578,11 +540,11 @@ class PolisMaker{
                                 {
                                     text:[
                                         { 
-                                            text:`${myFactory.newClientCard["Данные компании"]["Форма организации"]} ${myFactory.newClientCard["Данные компании"]["Наименование организации"]}\n`,
+                                            text:`${myFactory.newClientCard["Данные компании"]["Форма организации"]} ${myFactory.newClientCard["Данные компании"]["Наименование организации"].toUpperCase()}\n`,
                                             bold: true,
                                         },
                                         { 
-                                            text:"Большой Сампсониевский пр., 1, корп. 5, Санкт-Петербург, 190000",
+                                            text:"**Здесь должен быть адрес компании**",
                                             fontSize: 10,
                                         }
                                         
@@ -678,7 +640,7 @@ class PolisMaker{
                                     
                                 },
                                 {
-                                    text:"00.00.2018",
+                                    text:`${parseDate(new Date())}`,
                                     bold: true,
                                     colSpan: 2,
                                     alignment:'center'
@@ -809,7 +771,8 @@ class PolisMaker{
         docDefinition.content.push(
             {
                 pageBreak: 'before',
-                text: "Под действия настоящего Полиса подпадают следующие Перечни транспортных средств, на закрепленных ниже условиях:"
+                text: " Под действия  настоящего  Полиса подпадают  следующие  Перечни  транспортных средств, на закрепленных ниже условиях:",
+                alignment: 'justify',
             },
             "\n",
             ...this.makeTables(myFactory),
@@ -820,7 +783,7 @@ class PolisMaker{
             {
                 table: {
                     headerRows: 1,
-                    widths:[230, 230],
+                    widths:[245, 245],
                     body: [
                         
                         [
@@ -849,7 +812,7 @@ class PolisMaker{
                                         text:"__________________________________\n",
                                     },
                                     {
-                                        text:`${myFactory.newClientCard["Данные компании"]["Форма организации"]} ${myFactory.newClientCard["Данные компании"]["Наименование организации"]}\n`,
+                                        text:`${myFactory.newClientCard["Данные компании"]["Форма организации"]} ${myFactory.newClientCard["Данные компании"]["Наименование организации"].toUpperCase()}\n`,
                                         fontSize:7
                                     },
                                     {
