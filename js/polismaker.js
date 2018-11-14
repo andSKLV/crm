@@ -179,15 +179,16 @@ class PolisMaker{
                 }
             }
             tableContent=table.table.body;
+            // FIXME: здесь видимо данные по машинам
             for(const car of list.cars){
                 tableContent.push(
                     [
                         {
                             text: 123
                         },
-                        "",
-                        "",
-                        ""
+                        "first",
+                        "second",
+                        "third"
                     ]
                 )
             }
@@ -398,10 +399,11 @@ class PolisMaker{
          * Начинаем с базовых рисков
          * Если они включены(по умолчанию включены)
          */
-        let baseRisk=Object.assign({},myFactory.polis.filter((paragraph)=>{
+        let baseRisk=Object.assign({},myFactory.polisObj.conditions.filter((paragraph)=>{
             return paragraph.name=="Базовые риски";
         })[0]);
         baseRisk.ToPDF=["Базовые риски:"];
+        // FIXME: заменить просто на baseRisk
         if(baseRisk.included){
             /**
              * если базовые риски включены - значит они в этом массиве не нужны, удаляем их 

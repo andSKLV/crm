@@ -187,7 +187,7 @@ app.controller('profileCtrl', function ($scope,$rootScope, $http, $q, $location,
         console.error(resp.data);
         return null;
       }
-      if (resp.data.length!==links.length) console.error(`Размер полученных данных не совпадает с запрошенными`);
+      if (resp.data.length!==links.length) console.warn(`Размер полученных данных не совпадает с запрошенными`);
       return resp.data;
 
     },err=>{

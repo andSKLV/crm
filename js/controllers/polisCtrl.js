@@ -424,6 +424,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         myFactory.loadClient = key;
     }
     this.makePDF = () => {
+        /**
+         * Функция загрузки рисков. Еще раз, зачем? FIXME:
+         */
         const getRisks = () => {
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();

@@ -1,7 +1,7 @@
 <table style="text-align: center; width:100%;" class="animate-switch-container">
     <tbody>
-        <tr ng-if="myFactory.cameFrom.path==='/polis'">
-            <td class='back' ng-click="relocate(myFactory.cameFrom.path)">Вернуться в {{myFactory.cameFrom.name}}</td>
+        <tr ng-if="myFactory.cameFrom.path==='/polis' && tooltip.title====''">
+            <td class='back' ng-click="relocate(myFactory.cameFrom.path)">Вернуться к {{myFactory.cameFrom.name}}</td>
         </tr>
         <tr ng-if="myFactory.cameFrom.path!=='/polis' && tooltip.title===''">
             <td class='back' ng-click="relocate('/')">Вернуться в основное меню</td>
