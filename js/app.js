@@ -351,13 +351,15 @@ app.directive("importSheetJs", function SheetJSImportDirective(myFactory) {
                     reader.onload = function (e) {
                         /* read workbook */
                         try {
-                            const park = myFactory.parks[$attrs.importSheetJs];
+                            const parkInd = $attrs.importSheetJs.match(/\d+/gi)[0];
+                            const procInd = $attrs.importSheetJs.match(/\d+/gi)[1];
+                            const park = myFactory.parks[parkInd];
                             const bstr = e.target.result;
                             const workbook = XLSX.read(bstr, { type: 'binary' });
                             const firstList = workbook.Sheets[workbook.SheetNames[0]];
                             $scope.changeE.target.parentNode.classList.toggle('select--hidden'); //закрываем попап с выбором файла
                             const cars = prepareList(firstList);//преобразовываем полученные данные в вид массива с машинами
-                            myFactory.setCarsFromExcel(cars,park,$attrs.importSheetJs);// применяем данные машины
+                            myFactory.setCarsFromExcel(cars,park,parkInd,procInd);// применяем данные машины
                         }
                         catch (e) {
                             alert('Выбран несоответствующий файл. Пожалуйста, выберите файл формата xls или xlsx');

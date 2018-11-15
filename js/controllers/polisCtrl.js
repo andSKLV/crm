@@ -172,7 +172,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 if (!pr.isFull) pr.carSelector = ''; //вспомогательный ничего не значащий объект, нужен чтобы поставить ng-change на выбор машины
             })
         })
-        mf.setCarsFromExcel = async (cars,park, parkIndex) => {
+        mf.setCarsFromExcel = async (cars,park, parkIndex, procIndex) => {
             park.carGroup.cars.forEach((car,index)=>{
                 const excelCar = cars[index];
                 for (let key in excelCar) {
@@ -181,7 +181,8 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 car.selectorAutNumber = car.data.autNumber;
             })
             const parkUI = document.querySelectorAll('.park')[parkIndex];
-            const inpUI = parkUI.querySelector('.input_cars');
+            const procUI = parkUI.querySelectorAll('li')[procIndex];
+            const inpUI = procUI.querySelector('.input_cars');
             inpUI.focus();
             await delay(50);
             inpUI.blur();

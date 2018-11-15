@@ -54,12 +54,6 @@ class PolisMaker{
         const listContent=[];
         let listCount=1;
         lists.forEach((list)=>{
-            // FIXME: ненужные переносы строки
-            // listContent.push(
-            //     "\n", 
-            //     "\n"
-            // );
-            
             let table={
                 style: 'table',
                 table: {
@@ -326,7 +320,7 @@ class PolisMaker{
                     {}
                 ])
                 let count=1;
-                if(!baseRisk.included){
+                if(!baseRisk){
                     table.body.push([
                         {
                             text: `1.0.${count}`
@@ -366,7 +360,8 @@ class PolisMaker{
         })[0]);
         baseRisk.ToPDF=["Базовые риски:"];
         // FIXME: заменить просто на baseRisk
-        if(baseRisk.included){
+        //здесь все посложнее будет
+        if(baseRisk){
             /**
              * если базовые риски включены - значит они в этом массиве не нужны, удаляем их 
              */
@@ -855,7 +850,8 @@ class PolisMaker{
             }
         )
         // pdfMake.createPdf(docDefinition).download('optionalName.pdf');
-        console.log(JSON.stringify(docDefinition),null,'    '); // временно для вставки в редактор
+        console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
+        debugger;
         const win = window.open('', '_blank');
         delay(500).then(()=>pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
 
