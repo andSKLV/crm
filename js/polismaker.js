@@ -279,54 +279,20 @@ class PolisMaker{
             if(included){
                 table.body.push([
                     {
-                        text: '1.0 Определения застрахованных рисков:',
+                        text: '1.1 Определения застрахованных рисков:',
                         style: "firstHeader",
                         colSpan: 2
                     },
                     {}
                 ])
                 let count=1;
-                if(baseRisk.included){
+                if(baseRisk.ToPDFinclude){
                     table.body.push([
                         {
-                            text: `1.0.${count}`
+                            text: `1.1.${count}`
                         },
                         {
-                            stack: baseRisk.ToPDF
-                        }
-                    ]);
-                    count++;
-                } 
-                for(const risk of list){
-                    table.body.push([
-                        {
-                            text: `1.0.${count}`
-                        },
-                        {
-                            text: `${risk.name} - ${risk.title.toLowerCase()}. `
-                        }
-                        
-                    ])
-                    count++;
-                }
-            }
-            else{
-                table.body.push([
-                    {
-                        text: '1.1 Определения не заявленных на страхование рисков:',
-                        style: "firstHeader",
-                        colSpan: 2
-                    },
-                    {}
-                ])
-                let count=1;
-                if(!baseRisk){
-                    table.body.push([
-                        {
-                            text: `1.0.${count}`
-                        },
-                        {
-                            stack: baseRisk.ToPDF
+                            stack: baseRisk.ToPDFinclude
                         }
                     ]);
                     count++;
@@ -344,12 +310,46 @@ class PolisMaker{
                     count++;
                 }
             }
+            else{
+                table.body.push([
+                    {
+                        text: '1.2 Определения не заявленных на страхование рисков:',
+                        style: "firstHeader",
+                        colSpan: 2
+                    },
+                    {}
+                ])
+                let count=1;
+                if(baseRisk.ToPDFnotInclude){
+                    table.body.push([
+                        {
+                            text: `1.2.${count}`
+                        },
+                        {
+                            stack: baseRisk.ToPDFnotInclude
+                        }
+                    ]);
+                    count++;
+                } 
+                for(const risk of list){
+                    table.body.push([
+                        {
+                            text: `1.2.${count}`
+                        },
+                        {
+                            text: `${risk.name} - ${risk.title.toLowerCase()}. `
+                        }
+                        
+                    ])
+                    count++;
+                }
+            }
             return {
                 table
             };
         }
         let content=[];
-        
+        debugger;
         /** 
          * После таблиц с номерами авто и рисками идет перечисление застрахованных и незастрахованных рисков 
          * Начинаем с базовых рисков
@@ -358,7 +358,8 @@ class PolisMaker{
         let baseRisk=Object.assign({},myFactory.polisObj.conditions.filter((paragraph)=>{
             return paragraph.name=="Базовые риски";
         })[0]);
-        baseRisk.ToPDF=["Базовые риски:"];
+        baseRisk.ToPDFinclude=["Базовые риски:"];
+        baseRisk.ToPDFnotInclude = ['Базовые риски:'];
         // FIXME: заменить просто на baseRisk
         //здесь все посложнее будет
         if(baseRisk){
@@ -371,17 +372,27 @@ class PolisMaker{
             /**
              * Сначала отбираем те параметры базовых рисков, которые включены, а затем делаем из них массив строк
              */
-            baseRisk.values=baseRisk.values.filter(({checked})=>{
-                return checked==true;
-            }).map((value)=>{
-                return value.text;
+            const baseInclude = [];
+            const baseNotInlude = [];
+            
+            baseRisk.values.forEach((val)=>{
+                if (val.checked) baseInclude.push(val.text) 
+                else baseNotInlude.push(val.text);
             });
-            baseRisk.ToPDF.push(
+            baseRisk.ToPDFinclude.push(
                 {
                     type: 'square',
-                    ul: baseRisk.values
+                    ul: baseInclude,
                 }
             )
+            baseRisk.ToPDFnotInclude.push(
+                {
+                    type: 'square',
+                    ul: baseNotInlude,
+                }
+            )
+            if (baseInclude.length===0) delete baseRisk.ToPDFinclude;
+            if (baseNotInlude.length===0) delete baseRisk.ToPDFnotInclude;
         }
         /**
          * Дальше перечисляем сначала те риски, которые застрахованы, а также к каким перечням(спискам) машин они относятся
@@ -850,7 +861,7 @@ class PolisMaker{
             }
         )
         // pdfMake.createPdf(docDefinition).download('optionalName.pdf');
-        console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
+        // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
         debugger;
         const win = window.open('', '_blank');
         delay(500).then(()=>pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
