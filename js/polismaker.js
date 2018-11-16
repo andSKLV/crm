@@ -2,6 +2,9 @@
  * Класс для работы с PDF
  */
 class PolisMaker{
+    constructor () {
+        this.carsTables = [];
+    }
     /**
      * Перераспределяем машины по спискам
      * @param {object} myFactory объект с практически всеми нужными данными
@@ -57,12 +60,12 @@ class PolisMaker{
             let table={
                 style: 'table',
                 table: {
-                    headerRows: 2,
+                    headerRows: 1,
                     widths:[71,71,71,97,71,71],
                     body: [
                         [
                             {
-                                text: `Перечень ${listCount}`,
+                                text: `Условия страхования транспортных средств Перечня ${listCount} (см. Приложение 1)`,
                                 alignment:'center',
                                 bold: true,
                                 colSpan: 6,
@@ -106,7 +109,6 @@ class PolisMaker{
                     
                 }
             }
-            listCount++;
             let tableContent=table.table.body;
             list.processes.forEach((process, i)=>{
                 let row=[];
@@ -143,11 +145,12 @@ class PolisMaker{
                 tableContent.push(row);
             })
             listContent.push(table, "\n");
+            this.carsTables.push('\n',`Перечень ${listCount}`);
             table={
                 style: 'table',
                 table: {
                     headerRows: 1,
-                    widths:[103,143,93,131],
+                    widths:[93,143,73,161],
                     body: [
                         [
                             {
@@ -169,9 +172,6 @@ class PolisMaker{
                         ]
                     ]
                 },
-                layout: {
-                    
-                }
             }
             tableContent=table.table.body;
             // данные по машинам
@@ -185,8 +185,18 @@ class PolisMaker{
                     ]
                 )
             }
-            listContent.push(table);
+            let layout = {};
+            if (tableContent.length>3) {
+                table.table.layout = {
+                    fillColor: function (i, node) {
+                        return (i % 2 === 0) ? '#CCCCCC' : null;
+                    }
+                }
+            }
+            this.carsTables.push(table);
+            listCount++;
         })
+        
         return listContent;
     }
     /**
@@ -218,6 +228,7 @@ class PolisMaker{
             }
             let paragraph={};
             paragraph.widths=[30, 459];
+            paragraph.keepWithHeaderRows=1;
             paragraph.layout={
                 hLineColor: '#e6e6e6',
                 vLineColor: '#e6e6e6',
@@ -243,8 +254,15 @@ class PolisMaker{
                 paragraph.body.push(arr);
                 paragraph.headerRows= 1;
             });
+            let layout = {};
+            if (paragraph.body.length>3) layout = {
+                fillColor: function (i, node) {
+                    return (i % 2 === 0) ? '#CCCCCC' : null;
+                }
+            }
             paragraphs.push({
-                table:paragraph
+                table:paragraph,
+                layout
             },"\n");
             
         });
@@ -270,10 +288,6 @@ class PolisMaker{
             const table={
                 headerRows: 1,
                 widths:[30, 459],
-                layout:{
-                    hLineColor: '#e6e6e6',
-                    vLineColor: '#e6e6e6',
-                },
                 body:[]
             };
             if(included){
@@ -281,7 +295,7 @@ class PolisMaker{
                     {
                         text: '1.1 Определения застрахованных рисков:',
                         style: "firstHeader",
-                        colSpan: 2
+                        colSpan: 2,
                     },
                     {}
                 ])
@@ -344,12 +358,18 @@ class PolisMaker{
                     count++;
                 }
             }
+            let layout = {};
+            if (table.body.length>3) layout = {
+                fillColor: function (i, node) {
+                    return (i % 2 === 0) ? '#CCCCCC' : null;
+                }
+            }
             return {
-                table
+                table,
+                layout,
             };
         }
         let content=[];
-        debugger;
         /** 
          * После таблиц с номерами авто и рисками идет перечисление застрахованных и незастрахованных рисков 
          * Начинаем с базовых рисков
@@ -360,8 +380,6 @@ class PolisMaker{
         })[0]);
         baseRisk.ToPDFinclude=["Базовые риски:"];
         baseRisk.ToPDFnotInclude = ['Базовые риски:'];
-        // FIXME: заменить просто на baseRisk
-        //здесь все посложнее будет
         if(baseRisk){
             /**
              * если базовые риски включены - значит они в этом массиве не нужны, удаляем их 
@@ -431,10 +449,6 @@ class PolisMaker{
                 baseRisk
             }), "\n"
         );
-        
-        
-        
-
         return content;
     }
     /**
@@ -781,15 +795,18 @@ class PolisMaker{
                 alignment: 'justify',
             },
             "\n",
-            ...this.makeTables(myFactory),
+            ...this.makeTables(myFactory), //перечни условий страхования
             "\n",
-            ...this.makeRisksList(myFactory, risks),
-            ...this.makeParagraphs(myFactory),
+            ...this.makeRisksList(myFactory, risks), //таблицы заявленных/не заявленных рисков
+            ...this.makeParagraphs(myFactory), //таблицы оговорок
             "\n",
+            //таблица для подписей
             {
                 table: {
                     headerRows: 1,
                     widths:[245, 245],
+                    dontBreakRows: true,
+                    keepWithHeaderRows: 1,
                     body: [
                         
                         [
@@ -808,7 +825,7 @@ class PolisMaker{
                             {
                                 text:[
                                     {
-                                        text:"ООО «..»\n",
+                                        text:`${myFactory.newClientCard["Данные компании"]["Форма организации"]} «${myFactory.newClientCard["Данные компании"]["Наименование организации"].toUpperCase()}»\n`,
                                         bold: true
                                     },
                                     {
@@ -818,7 +835,7 @@ class PolisMaker{
                                         text:"__________________________________\n",
                                     },
                                     {
-                                        text:`${myFactory.newClientCard["Данные компании"]["Форма организации"]} ${myFactory.newClientCard["Данные компании"]["Наименование организации"].toUpperCase()}\n`,
+                                        text:`${myFactory.newClientCard["Генеральный директор"]["ФИО директора"]}\n`,
                                         fontSize:7
                                     },
                                     {
@@ -858,11 +875,18 @@ class PolisMaker{
                     hLineColor: '#e6e6e6',
                     vLineColor: '#e6e6e6',
                 }
-            }
+            },
+            {
+                pageBreak: 'before',
+                text: "ПРИЛОЖЕНИЕ 1 - Перечни транспортных средств, застрахованных по отдельным условиям страхования",
+                alignment: 'justify',
+                bold: true,
+            },
+            "\n",
+            ...this.carsTables,
         )
         // pdfMake.createPdf(docDefinition).download('optionalName.pdf');
-        // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
-        debugger;
+        console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
         const win = window.open('', '_blank');
         delay(500).then(()=>pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
 
