@@ -52,80 +52,83 @@ class PolisMaker{
     makeTables(myFactory) {
         let body=[];
         const lists=this.makeCarLists(myFactory);
-        
-        console.log(lists);
         const listContent=[];
         let listCount=1;
-        lists.forEach((list)=>{
-            let table={
-                style: 'table',
-                table: {
-                    headerRows: 1,
-                    widths:[71,71,71,97,71,71],
-                    body: [
-                        [
-                            {
-                                text: `Условия страхования транспортных средств Перечня ${listCount} (см. Приложение 1)`,
-                                alignment:'center',
-                                bold: true,
-                                colSpan: 6,
-                                border: [false, false, false, false],
-                            },
-                            {},
-                            {},
-                            {},
-                            {},
-                            {},
-                        ],
-                        [
-                            {
-                                text:'Страховая стоимость, руб.', 
-                                style:"firstHeader",
-                            },
-                            {
-                                text:`Количество ${myFactory.amountType}`,
-                                style:"firstHeader", 
-                            },
-                            {
-                                text:'Тип грузового отсека', 
-                                style:"firstHeader",
-                            },
-                            {
-                                text:'Застрахованные риски', 
-                                style:"firstHeader",
-                            },
-                            {
-                                text:'Лимит по случаю, руб.', 
-                                style:"firstHeader",
-                            },
-                            {
-                                text:'Франшиза по случаю, руб.',
-                                style:"firstHeader",
-                            }
-                        ]
+        let table={
+            style: 'table',
+            table: {
+                headerRows: 1,
+                widths:[55,60,65,60,97,60,60],
+                body: [
+                    [   {
+                            text: 'Перечень ТС',
+                            style: 'firstHeader',
+                            border: [false, false, false, false],
+                        },
+                        {
+                            text:'Страховая стоимость, руб.', 
+                            style:"firstHeader",
+                            border: [false, false, false, false],
+                        },
+                        {
+                            text:`Количество ${myFactory.amountType}`,
+                            style:"firstHeader", 
+                            border: [false, false, false, false],
+                        },
+                        {
+                            text:'Тип грузового отсека', 
+                            style:"firstHeader",
+                            border: [false, false, false, false],
+                        },
+                        {
+                            text:'Застрахованные риски', 
+                            style:"firstHeader",
+                            border: [false, false, false, false],
+                        },
+                        {
+                            text:'Лимит по случаю, руб.', 
+                            style:"firstHeader",
+                            border: [false, false, false, false],
+                        },
+                        {
+                            text:'Франшиза по случаю, руб.',
+                            style:"firstHeader",
+                            border: [false, false, false, false],
+                        }
                     ]
-                },
-                layout: {
-                    
+                ]
+            },
+            layout: {
+                fillColor: function (i, node) {
+                    return (i % 2 === 0) ? '#e6e6e6' : null;
                 }
             }
+        }
+        lists.forEach((list)=>{
             let tableContent=table.table.body;
             list.processes.forEach((process, i)=>{
-                let row=[];
-                let properties=["cost", "amount", "wrapping", "risk", "limit", "franchise"];
+                const row=[];
+                const listCountCell = {
+                    text: listCount,
+                    border: [false,false,false,false]
+                };
+                row.push(listCountCell);
+                const properties=["cost", "amount", "wrapping", "risk", "limit", "franchise"];
                 properties.forEach((property)=>{
                     if(property=="amount"){
                         if(myFactory.amountType=="Тягачей"){
                             row.push(
                                 {
-                                    text: `${process[property] / 24}`
+                                    text: `${process[property] / 24}`,
+                                    border: [false, false, false, false],
                                 }
                             );
                         }
                         else{
                             row.push(
                                 {
-                                    text: `${process[property]}`
+                                    text: `${process[property]}`,
+                                    border: [false, false, false, false],
                                 }
                             );
                         }
@@ -134,19 +137,24 @@ class PolisMaker{
                         row.push(
                             {
                                 text: this.addSpaces(process[property]),
+                                border: [false, false, false, false],
                                 // alignment: 'right',
                             });
                     }
                     else{
-                        row.push(process[property]);
+                        row.push({
+                            text: process[property],
+                            border: [false, false, false, false],
+                        });
                     }
 
                 })
                 tableContent.push(row);
             })
-            listContent.push(table, "\n");
+
+            
             this.carsTables.push('\n',`Перечень ${listCount}`);
-            table={
+            const tableCar={
                 style: 'table',
                 table: {
                     headerRows: 1,
@@ -173,10 +181,10 @@ class PolisMaker{
                     ]
                 },
             }
-            tableContent=table.table.body;
+            const tableContentCar=tableCar.table.body;
             // данные по машинам
             for(const car of list.cars){
-                tableContent.push(
+                tableContentCar.push(
                     [
                         car.data.autNumber,
                         car.data.VIN,
@@ -185,16 +193,15 @@ class PolisMaker{
                     ]
                 )
             }
-            let layout = {};
-            table.table.layout = {
+            tableContentCar.layout = {
                 fillColor: function (i, node) {
                     return (i % 2 === 0) ? '#e6e6e6' : null;
                 }
             }
-            this.carsTables.push(table);
+            this.carsTables.push(tableCar);
             listCount++;
         })
-        
+        listContent.push(table, "\n");
         return listContent;
     }
     /**
@@ -801,7 +808,7 @@ class PolisMaker{
         docDefinition.content.push(
             {
                 pageBreak: 'before',
-                text: " Под действия  настоящего  Полиса подпадают  следующие  Перечни  транспортных средств, на закрепленных ниже условиях:",
+                text:  `\u0009 Под действия настоящего  Полиса подпадают Перечни транспортных средств (см.\u00A0Приложение 1), на закрепленных ниже условиях:`,
                 alignment: 'justify',
             },
             "\n",
