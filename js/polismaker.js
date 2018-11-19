@@ -483,7 +483,29 @@ class PolisMaker{
                         widths:[150, 150, 150],
                         body: [
                             [
-                            
+                                {
+                                    text: [
+                                        '\n',
+                                        '\n'
+                                    ],
+                                    border: [false,false,false,false]
+                                },
+                                {
+                                    text: [
+                                        '\n',
+                                        '\n'
+                                    ],
+                                    border: [false,false,false,false]
+                                },
+                                {
+                                    text: [
+                                        '\n',
+                                        '\n'
+                                    ],
+                                    border: [false,false,false,false]
+                                }
+                            ],
+                            [
                                 { 
                                     text: [
                                         "ПОЛИС CMR/ТТН - СТРАХОВАНИЯ ПЕРЕВОЗЧИКА \n", 
@@ -496,10 +518,6 @@ class PolisMaker{
                                 },
                                 {},
                                 {}
-                                
-                                
-                                    
-                                
                             ],
                             [
                                 {
@@ -511,6 +529,23 @@ class PolisMaker{
                                 {},
                                 {}
                             ],
+                            
+                            
+                        ],
+                        style: 'table',
+                    },
+                    layout: {// цвет границы 
+                        hLineColor: '#e6e6e6',
+                        vLineColor: '#e6e6e6',
+                    }
+                },
+                '\n',
+                '\n',
+                {
+                    table: {
+                        headerRows: 1,
+                        widths:[150, 150, 150],
+                        body: [
                             [
                                 {
                                     text: "СТРАХОВЩИК",
@@ -563,6 +598,7 @@ class PolisMaker{
                     }
                 },
                 "\n",
+                '\n',
                 {
                     table: {
                         headerRows: 1,
@@ -612,6 +648,7 @@ class PolisMaker{
                     }
                 },
                 "\n",
+                '\n',
                 {
                     table: {
                         headerRows: 1,
@@ -691,6 +728,7 @@ class PolisMaker{
                     }
                 },
                 "\n",
+                '\n',
                 {
                     table: {
                         headerRows: 1,
@@ -712,6 +750,7 @@ class PolisMaker{
                     }
                 },
                 "\n",
+                '\n',
                 {
                     table: {
                         headerRows: 1,
@@ -808,7 +847,7 @@ class PolisMaker{
         docDefinition.content.push(
             {
                 pageBreak: 'before',
-                text:  `\u0009 Под действия настоящего  Полиса подпадают Перечни транспортных средств (см.\u00A0Приложение 1), на закрепленных ниже условиях:`,
+                text:  ` Под действия настоящего  Полиса подпадают Перечни транспортных средств (см.\u00A0Приложение 1), на закрепленных ниже условиях:`,
                 alignment: 'justify',
             },
             "\n",
