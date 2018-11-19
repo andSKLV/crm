@@ -14,7 +14,14 @@ class PolisMaker{
         let lists=[];
         myFactory.parks.forEach((park, parkNumber)=>{    
             park.processes.forEach((process, i)=>{
-                if(i==0 || !this.areEquivalent(park.processes[i]["cars"],park.processes[i-1]["cars"]) ){
+                let wasIndex = null;
+                for (let k=0;k<i;k++) {
+                    if (this.areEquivalent(park.processes[i]["cars"],park.processes[k]["cars"])) {
+                        wasIndex = k;
+                        break;
+                    }
+                }
+                if(i==0 || wasIndex===null){
                     lists.push(
                         {
                             cars: park.processes[i]["cars"],
@@ -24,8 +31,8 @@ class PolisMaker{
                     )
                 }
                 else{
-                    lists[lists.length-1].processes.push(park.processes[i]);
-                    lists[lists.length-1].risks.push(park.processes[i].risk);
+                    lists[wasIndex].processes.push(park.processes[i]);
+                    lists[wasIndex].risks.push(park.processes[i].risk);
                 }              
             });
         });
@@ -58,10 +65,10 @@ class PolisMaker{
             style: 'table',
             table: {
                 headerRows: 1,
-                widths:[55,60,65,60,97,60,60],
+                widths:[54,61,65,60,97,60,60],
                 body: [
                     [   {
-                            text: 'Перечень ТС',
+                            text: 'Перечень ТС №',
                             style: 'firstHeader',
                             border: [false, false, false, false],
                         },
@@ -247,10 +254,6 @@ class PolisMaker{
             let paragraph={};
             paragraph.widths=[30, 459];
             paragraph.keepWithHeaderRows=1;
-            // paragraph.layout={
-            //     hLineColor: '#e6e6e6',
-            //     vLineColor: '#e6e6e6',
-            // };
             paragraph.body=[
                 [       
                     { 
@@ -266,7 +269,7 @@ class PolisMaker{
             mass.forEach((param, num)=>{
                 let arr=[];
                 arr.push({
-                    text:`${i+1}.${num+1}.`,
+                    text:`${i+1}.${num+1}`,
                     border: [false,false,false,false],
                 },{
                     text:param.text,
@@ -768,6 +771,8 @@ class PolisMaker{
                 },
                 "\n",
                 '\n',
+                '\n',
+                '\n',
                 {
                     table: {
                         headerRows: 1,
@@ -1013,7 +1018,6 @@ class PolisMaker{
                 alignment: 'justify',
                 bold: true,
             },
-            "\n",
             ...this.carsTables,
         )
         // pdfMake.createPdf(docDefinition).download('optionalName.pdf');
