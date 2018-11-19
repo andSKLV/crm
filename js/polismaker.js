@@ -186,11 +186,9 @@ class PolisMaker{
                 )
             }
             let layout = {};
-            if (tableContent.length>3) {
-                table.table.layout = {
-                    fillColor: function (i, node) {
-                        return (i % 2 === 0) ? '#CCCCCC' : null;
-                    }
+            table.table.layout = {
+                fillColor: function (i, node) {
+                    return (i % 2 === 0) ? '#e6e6e6' : null;
                 }
             }
             this.carsTables.push(table);
@@ -229,16 +227,17 @@ class PolisMaker{
             let paragraph={};
             paragraph.widths=[30, 459];
             paragraph.keepWithHeaderRows=1;
-            paragraph.layout={
-                hLineColor: '#e6e6e6',
-                vLineColor: '#e6e6e6',
-            };
+            // paragraph.layout={
+            //     hLineColor: '#e6e6e6',
+            //     vLineColor: '#e6e6e6',
+            // };
             paragraph.body=[
                 [       
                     { 
                         text: `${i+1}. ${obj.name}:`,
                         style: "firstHeader",
-                        colSpan:2      
+                        colSpan:2,
+                        border: [false,false,false,false],
                     },
                     {},
                 ]
@@ -247,17 +246,18 @@ class PolisMaker{
             mass.forEach((param, num)=>{
                 let arr=[];
                 arr.push({
-                    text:`${i+1}.${num+1}.`
+                    text:`${i+1}.${num+1}.`,
+                    border: [false,false,false,false],
                 },{
-                    text:param.text
+                    text:param.text,
+                    border: [false,false,false,false],
                 })
                 paragraph.body.push(arr);
                 paragraph.headerRows= 1;
             });
-            let layout = {};
-            if (paragraph.body.length>3) layout = {
+            let layout = {
                 fillColor: function (i, node) {
-                    return (i % 2 === 0) ? '#CCCCCC' : null;
+                    return (i % 2 === 0) ? '#e6e6e6' : null;
                 }
             }
             paragraphs.push({
@@ -296,6 +296,7 @@ class PolisMaker{
                         text: '1.1 Определения застрахованных рисков:',
                         style: "firstHeader",
                         colSpan: 2,
+                        border: [false,false,false,false],
                     },
                     {}
                 ])
@@ -303,10 +304,12 @@ class PolisMaker{
                 if(baseRisk.ToPDFinclude){
                     table.body.push([
                         {
-                            text: `1.1.${count}`
+                            text: `1.1.${count}`,
+                            border: [false,false,false,false],
                         },
                         {
-                            stack: baseRisk.ToPDFinclude
+                            stack: baseRisk.ToPDFinclude,
+                            border: [false,false,false,false]
                         }
                     ]);
                     count++;
@@ -314,10 +317,12 @@ class PolisMaker{
                 for(const risk of list){
                     table.body.push([
                         {
-                            text: `1.1.${count}`
+                            text: `1.1.${count}`,
+                            border: [false,false,false,false],
                         },
                         {
-                            text: `${risk.name} - ${risk.title.toLowerCase()}. `
+                            text: `${risk.name} - ${risk.title.toLowerCase()}. `,
+                            border: [false,false,false,false],
                         }
                         
                     ])
@@ -329,7 +334,8 @@ class PolisMaker{
                     {
                         text: '1.2 Определения не заявленных на страхование рисков:',
                         style: "firstHeader",
-                        colSpan: 2
+                        colSpan: 2,
+                        border: [false,false,false,false],
                     },
                     {}
                 ])
@@ -337,31 +343,34 @@ class PolisMaker{
                 if(baseRisk.ToPDFnotInclude){
                     table.body.push([
                         {
-                            text: `1.2.${count}`
+                            text: `1.2.${count}`,
+                            border: [false,false,false,false],
                         },
                         {
-                            stack: baseRisk.ToPDFnotInclude
-                        }
+                            stack: baseRisk.ToPDFnotInclude,
+                            border: [false,false,false,false]
+                        },
                     ]);
                     count++;
                 } 
                 for(const risk of list){
                     table.body.push([
                         {
-                            text: `1.2.${count}`
+                            text: `1.2.${count}`,
+                            border: [false,false,false,false],
                         },
                         {
-                            text: `${risk.name} - ${risk.title.toLowerCase()}. `
+                            text: `${risk.name} - ${risk.title.toLowerCase()}. `,
+                            border: [false,false,false,false],
                         }
                         
                     ])
                     count++;
                 }
             }
-            let layout = {};
-            if (table.body.length>3) layout = {
+            let layout = {
                 fillColor: function (i, node) {
-                    return (i % 2 === 0) ? '#CCCCCC' : null;
+                    return (i % 2 === 0) ? '#e6e6e6' : null;
                 }
             }
             return {
@@ -476,6 +485,7 @@ class PolisMaker{
                                     colSpan: 3,
                                     style: 'firstHeader' ,
                                     fontSize: 20,
+                                    fillColor: '#e6e6e6',
                                 },
                                 {},
                                 {}
@@ -781,8 +791,8 @@ class PolisMaker{
                 },
                 firstHeader: {
                     bold: true,
-                    fillColor: '#e6e6e6',
-                    alignment: 'center'
+                    fillColor: '#DBE5F1',
+                    alignment: 'center',
                 },
             }
     
@@ -813,12 +823,14 @@ class PolisMaker{
                             {
                                 text:"СТРАХОВАТЕЛЬ:",
                                 style:"firstHeader",
-                                fontSize:12
+                                fontSize:12,
+                                fillColor: '#e6e6e6',
                             },
                             {
                                 text:"СТРАХОВЩИК:",
                                 style:"firstHeader",
-                                fontSize:12
+                                fontSize:12,
+                                fillColor: '#e6e6e6',
                             }
                         ],
                         [
