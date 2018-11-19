@@ -473,9 +473,13 @@ class PolisMaker{
      * @param  {array} risks Список рисков с описанием
      */
     makePDF(myFactory, risks){
-        console.log(myFactory.parks);
+        const emptyCell = {
+            text: '',
+            border: [false,false,false,false],
+        }
+
         let docDefinition = {
-            pageMargins: [ 50, 60, 50, 30 ],
+            pageMargins: [ 50, 60, 50, 50 ],
             content: [
                 {
                     table: {
@@ -756,7 +760,6 @@ class PolisMaker{
                         headerRows: 1,
                         widths:[100, 300, 50],
                         body: [
-                            
                             [
                                 {
                                     text:[
@@ -801,28 +804,79 @@ class PolisMaker{
                 },
             ],
             footer: function(page, pages) { 
-                return { 
-                    columns: [ 
-                        
-                        { 
-                            alignment: 'center',
-                            fontSize:6,
-                            text: [
-                                { 
-                                    text:"Страница "+ page.toString(), 
-                                    italics: true,
-                                    
+                if (page>1) return { 
+                    table: {
+                        headerRows: 1,
+                        widths:[50,70,150,70,150,50],
+                        body: [
+                            [
+                                emptyCell
+                                ,
+                                {
+                                    text: 'Cтрахователь:',
+                                    fontSize: 10,
+                                    border: [false,false,false,false],
                                 },
-                                '/',
-                                { 
-                                    text: pages.toString()+" Полиса № HIP-0000000-00-17", 
-                                    italics: true 
-                                    
+                                {
+                                    text: '__________________________',
+                                    border: [false,false,false,false],
                                 }
+                                ,
+                                {
+                                    text: 'Cтраховщик:',
+                                    fontSize: 10,
+                                    border: [false,false,false,false],
+                                },
+                                {
+                                    text: '__________________________',
+                                    border: [false,false,false,false],
+                                }
+                                ,
+                                emptyCell
+                            ],
+                            [
+                                emptyCell
+                                ,
+                                emptyCell,
+                                {
+                                    text: 'подпись и печать',
+                                    fontSize: 7,
+                                    alignment: 'center',
+                                    border: [false,false,false,false],
+                                },
+                                emptyCell,
+                                {
+                                    text: 'подпись и печать',
+                                    fontSize: 7,
+                                    alignment: 'center',
+                                    border: [false,false,false,false],
+                                },
+                                emptyCell
                             ]
-                        }
-                    ],
-                    margin: [10, 0]
+                        ],
+                        style: 'table'
+                    },
+                    // columns: [ 
+                        
+                    //     { 
+                    //         alignment: 'center',
+                    //         fontSize:6,
+                    //         text: [
+                    //             { 
+                    //                 text:"Страница "+ page.toString(), 
+                    //                 italics: true,
+                                    
+                    //             },
+                    //             '/',
+                    //             { 
+                    //                 text: pages.toString()+" Полиса № HIP-0000000-00-17", 
+                    //                 italics: true 
+                                    
+                    //             }
+                    //         ]
+                    //     }
+                    // ],
+                    // margin: [10, 0]
                 };
             },
             styles: {
@@ -840,6 +894,9 @@ class PolisMaker{
                     fillColor: '#DBE5F1',
                     alignment: 'center',
                 },
+                noborder: {
+                    border: [false,false,false,false]
+                }
             }
     
         };
@@ -947,7 +1004,6 @@ class PolisMaker{
         console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
         const win = window.open('', '_blank');
         delay(500).then(()=>pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
-
     }
 }
 const polis = new PolisMaker();
