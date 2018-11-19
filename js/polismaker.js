@@ -186,10 +186,23 @@ class PolisMaker{
             for(const car of list.cars){
                 tableContentCar.push(
                     [
-                        car.data.autNumber,
-                        car.data.VIN,
-                        car.data.prodYear,
-                        car.data.model,
+                        {
+                            text: car.data.autNumber,
+                            style: 'carInfo',
+                        }
+                        ,
+                        {
+                            text: car.data.VIN,
+                            style: 'carInfo',
+                        },
+                        {
+                            text: car.data.prodYear,
+                            style: 'carInfo',
+                        },
+                        {
+                            text: car.data.model,
+                            style: 'carInfo',
+                        }
                     ]
                 )
             }
@@ -479,7 +492,7 @@ class PolisMaker{
         }
 
         let docDefinition = {
-            pageMargins: [ 50, 60, 50, 50 ],
+            pageMargins: [ 50, 60, 50, 60 ],
             content: [
                 {
                     table: {
@@ -804,11 +817,26 @@ class PolisMaker{
                 },
             ],
             footer: function(page, pages) { 
+                console.warn(page);
+                console.info(pages);
                 if (page>1) return { 
                     table: {
-                        headerRows: 1,
+                        headerRows: 0,
                         widths:[50,70,150,70,150,50],
                         body: [
+                            [
+                                {   
+                                    // пустая строка для отступа
+                                    text: '',
+                                    fontSize: 12,
+                                    border: [false,false,false,false]
+                                },
+                                emptyCell,
+                                emptyCell,
+                                emptyCell,
+                                emptyCell,
+                                emptyCell,
+                            ],
                             [
                                 emptyCell
                                 ,
@@ -852,31 +880,19 @@ class PolisMaker{
                                     border: [false,false,false,false],
                                 },
                                 emptyCell
+                            ],
+                            [
+                                {
+                                    text: `Лист ${page.toString()}/${pages.toString()} Полиса № HIP-0000000-00-17`,
+                                    colSpan:6,
+                                    border: [false,false,false,false],
+                                    alignment: 'center',
+                                    fontSize: 7,
+                                }
                             ]
                         ],
                         style: 'table'
                     },
-                    // columns: [ 
-                        
-                    //     { 
-                    //         alignment: 'center',
-                    //         fontSize:6,
-                    //         text: [
-                    //             { 
-                    //                 text:"Страница "+ page.toString(), 
-                    //                 italics: true,
-                                    
-                    //             },
-                    //             '/',
-                    //             { 
-                    //                 text: pages.toString()+" Полиса № HIP-0000000-00-17", 
-                    //                 italics: true 
-                                    
-                    //             }
-                    //         ]
-                    //     }
-                    // ],
-                    // margin: [10, 0]
                 };
             },
             styles: {
@@ -894,8 +910,8 @@ class PolisMaker{
                     fillColor: '#DBE5F1',
                     alignment: 'center',
                 },
-                noborder: {
-                    border: [false,false,false,false]
+                carInfo: {
+                    fontSize: 9,
                 }
             }
     
