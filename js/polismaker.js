@@ -69,7 +69,7 @@ class PolisMaker{
             style: 'table',
             table: {
                 headerRows: 1,
-                widths:[54,61,65,60,97,60,60],
+                widths:[40,61,65,60,97,60,60],
                 body: [
                     [   {
                             text: 'Список ТС, №',
@@ -115,50 +115,100 @@ class PolisMaker{
                 }
             }
         }
-        lists.forEach((list)=>{
-            let tableContent=table.table.body;
-            list.processes.forEach((process, i)=>{
-                const row=[];
+        lists.forEach((list) => {
+            let tableContent = table.table.body;
+            /**
+             * Функция подсчета количества строк в наименовании риска
+             */
+            const countRows = (str) => {
+                const arr = str.split(' ');
+                if (arr.length === 1) return 1;
+                let rows = 1;
+                let len = arr[0].length;
+                for (let i = 1; i < arr.length; i++) {
+                    len = len + arr[i].length + 1;//1 это пробел между словами
+                    if (len > 15) {
+                        rows++;
+                        len = arr[i].length;
+                    }
+                }
+                return rows;
+            }
+            const getMargin = (rows) => {
+                let rowMargin;
+                switch (rows) {
+                    case 1:
+                        rowMargin = [0, 13, 0, 13]
+                        break;
+                    case 2:
+                        rowMargin = [0, 5, 0, 5]
+                        break;
+                    case 3:
+                        rowMargin = [0, 0, 0, 0]
+                        break;
+                    default:
+                        rowMargin = [0, 0, 0, 0]
+                        break;
+                }
+                return rowMargin;
+            }
+            list.processes.forEach((process, i) => {
+                const row = [];
+                const properties = ["cost", "amount", "wrapping", "risk", "limit", "franchise"];
+                const rows = countRows(process.risk);
+                const riskMargin = getMargin(rows);
+                const bigMargin = [0,13,0,13];
                 const listCountCell = {
-                    text: listCount,
-                    border: [false,false,false,false]
+                    text: `${listCount}`,
+                    border: [false, false, false, false],
+                    margin: bigMargin
                 };
+                
                 row.push(listCountCell);
-                const properties=["cost", "amount", "wrapping", "risk", "limit", "franchise"];
-                properties.forEach((property)=>{
-                    if(property=="amount"){
-                        if(myFactory.amountType=="Тягачей"){
+                properties.forEach((property) => {
+                    if (property == "amount") {
+                        if (myFactory.amountType == "Тягачей") {
                             row.push(
                                 {
                                     text: `${process[property] / 24}`,
                                     border: [false, false, false, false],
+                                    margin: bigMargin,
                                 }
                             );
                         }
-                        else{
+                        else {
                             row.push(
                                 {
                                     text: `${process[property]}`,
                                     border: [false, false, false, false],
+                                    margin: bigMargin,
                                 }
                             );
                         }
                     }
-                    else if(property=="cost" || property=="limit" || property=="franchise"){
+                    else if (property == "cost" || property == "limit" || property == "franchise") {
                         row.push(
                             {
                                 text: this.addSpaces(process[property]),
                                 border: [false, false, false, false],
+                                margin: bigMargin,
                                 // alignment: 'right',
                             });
                     }
-                    else{
+                    else if (property=='risk') {
                         row.push({
                             text: process[property],
                             border: [false, false, false, false],
+                            margin: riskMargin,
                         });
                     }
-
+                    else {
+                        row.push({
+                            text: process[property],
+                            border: [false, false, false, false],
+                            margin: bigMargin,
+                        });
+                    }
                 })
                 tableContent.push(row);
             })
@@ -169,7 +219,7 @@ class PolisMaker{
                 style: 'table',
                 table: {
                     headerRows: 2,
-                    widths:[31,75,143,60,161],
+                    widths:[29,73,141,58,159],
                     body: [
                         [
                             {
@@ -273,7 +323,7 @@ class PolisMaker{
             }
             if (obj.const) return;
             let paragraph={};
-            paragraph.widths=[30, 459];
+            paragraph.widths=[30, 457];
             paragraph.keepWithHeaderRows=1;
             paragraph.body=[
                 [       
@@ -331,7 +381,7 @@ class PolisMaker{
         const prepareListToPDF=({list, included, baseRisk})=>{
             const table={
                 headerRows: 1,
-                widths:[30, 459],
+                widths:[30, 457],
                 body:[]
             };
             if(included){
@@ -525,39 +575,19 @@ class PolisMaker{
             text: '',
             border: [false,false,false,false],
         }
+        const oneRowMargin = [0,10,0,10];
+        const twoRowMargin = [0,5,0,5]; 
         // собираем стоку с данными о территории страхования
         const territory = this.makeTerritory (myFactory);
-        let docDefinition = {
-            pageMargins: [ 50, 60, 50, 60 ],
+        const docDefinition = {
+            pageSize: 'A4',
+            pageMargins: [ 50, 115, 50, 65 ],
             content: [
                 {
                     table: {
                         headerRows: 1,
                         widths:[150, 150, 150],
                         body: [
-                            [
-                                {
-                                    text: [
-                                        '\n',
-                                        '\n'
-                                    ],
-                                    border: [false,false,false,false]
-                                },
-                                {
-                                    text: [
-                                        '\n',
-                                        '\n'
-                                    ],
-                                    border: [false,false,false,false]
-                                },
-                                {
-                                    text: [
-                                        '\n',
-                                        '\n'
-                                    ],
-                                    border: [false,false,false,false]
-                                }
-                            ],
                             [
                                 { 
                                     text: [
@@ -593,7 +623,6 @@ class PolisMaker{
                     }
                 },
                 '\n',
-                '\n',
                 {
                     table: {
                         headerRows: 1,
@@ -603,7 +632,7 @@ class PolisMaker{
                                 {
                                     text: "СТРАХОВЩИК",
                                     style: "leftCellFirstTable",
-                                    margin:[0,20,0,0],
+                                    margin: oneRowMargin,
                                 },
                                 {
                                     text:[
@@ -614,32 +643,26 @@ class PolisMaker{
                                         {
                                             text:"Московский пр., д.22, лит. 3, Санкт-Петербург, 190013\n",
                                             fontSize: 10
-                                        },
-                                        {
-                                            text:"Телефон: +7 (812) 322-63-51\n",
-                                            fontSize: 10
-                                        },
-                                        {
-                                            text:"E-mail: cargo@capitalpolis.ru, claims@capitalpolis.ru",
-                                            fontSize: 10
                                         }
                                     ],
                                     colSpan: 2,
-                                    alignment:'center'
+                                    alignment:'center',
+                                    margin: twoRowMargin,
                                 },
                                 {}
                             ],
                             [
                                 {
                                     text: "ПЕРИОД СТРАХОВАНИЯ",
-                                    style: "leftCellFirstTable"
-                                    
+                                    style: "leftCellFirstTable",
+                                    margin: oneRowMargin
                                 },
                                 {
                                     text:`${myFactory.polisObj.dates.start} - ${myFactory.polisObj.dates.end}`,
                                     alignment: 'center',
                                     bold: true,
-                                    colSpan:2
+                                    colSpan:2,
+                                    margin: oneRowMargin
                                 }
                             ]
                         ],
@@ -651,7 +674,6 @@ class PolisMaker{
                     }
                 },
                 "\n",
-                '\n',
                 {
                     table: {
                         headerRows: 1,
@@ -660,7 +682,8 @@ class PolisMaker{
                             [
                                 {
                                     text: "СТРАХОВАТЕЛЬ",
-                                    style: "leftCellFirstTable"
+                                    style: "leftCellFirstTable",
+                                    margin: oneRowMargin
                                     
                                 },
                                 {
@@ -676,18 +699,19 @@ class PolisMaker{
                                         
                                     ],
                                     colSpan: 2,
-                                    alignment:'center'
+                                    alignment:'center',
+                                    margin: twoRowMargin
                                 },
                             ],
                             [
                                 {
                                     text: "КОЛИЧЕСТВО\n ТРАНСПОРТНЫХ СРЕДСТВ",
-                                    style: "leftCellFirstTable"
-                                    
+                                    style: "leftCellFirstTable",
+                                    margin: twoRowMargin
                                 },
                                 {
                                     text:`${myFactory.totalAmount / 24 }`,
-                                    margin:[0,5,0,0],
+                                    margin:oneRowMargin,
                                     bold: true,
                                     colSpan: 2,
                                     alignment:'center'
@@ -701,7 +725,6 @@ class PolisMaker{
                     }
                 },
                 "\n",
-                '\n',
                 {
                     table: {
                         headerRows: 1,
@@ -711,13 +734,14 @@ class PolisMaker{
                             [
                                 {
                                     text: "ТЕРРИТОРИЯ СТРАХОВАНИЯ",
-                                    style: "leftCellFirstTable"
-                                    
+                                    style: "leftCellFirstTable",
+                                    margin: oneRowMargin
                                 },
                                 {
                                     text:territory,
                                     colSpan: 2,
                                     alignment:'center',
+                                    margin: (territory.length<37) ? oneRowMargin : twoRowMargin
                                 },
                             ],
                             // [
@@ -742,7 +766,7 @@ class PolisMaker{
                                 },
                                 {
                                     text:`${this.addSpaces(myFactory.a_limit.value)}`,
-                                    margin:[0,10,0,0],
+                                    margin:oneRowMargin,
                                     bold: true,
                                     colSpan: 2,
                                     alignment:'center'
@@ -763,14 +787,15 @@ class PolisMaker{
                             [
                                 {
                                     text: "ДАТА ВЫДАЧИ",
-                                    style: "leftCellFirstTable"
-                                    
+                                    style: "leftCellFirstTable",
+                                    margin: oneRowMargin
                                 },
                                 {
                                     text:`${parseDate(new Date())}`,
                                     bold: true,
                                     colSpan: 2,
-                                    alignment:'center'
+                                    alignment:'center',
+                                    margin: oneRowMargin
                                 },
                             ]
                         ]
@@ -780,8 +805,6 @@ class PolisMaker{
                         vLineColor: '#e6e6e6',
                     }
                 },
-                "\n",
-                '\n',
                 {
                     table: {
                         headerRows: 1,
@@ -803,9 +826,6 @@ class PolisMaker{
                     }
                 },
                 "\n",
-                '\n',
-                '\n',
-                '\n',
                 {
                     table: {
                         headerRows: 1,
@@ -849,10 +869,46 @@ class PolisMaker{
                         vLineColor: '#e6e6e6',
                     }
                 },
+                "\n",
                 {
-                    text:"\n",
-                    
-                },
+                    table: {
+                        headerRows: 1,
+                        widths:[100, 300, 50],
+                        body: [
+                            [
+                                {
+                                    text:[
+                                        {
+                                            text: 'ЦЕНТР СТРАХОВАНИЯ ТРАНСПОРТНЫХ РИСКОВ\n\n',
+                                            bold:true,
+                                            fontSize: 12,
+                                        },
+                                        {
+                                            text:"Телефон: +7 (812) 322-63-51\n",
+                                            fontSize: 10,
+                                        },
+                                        {
+                                            text:"E-mail: cargo@capitalpolis.ru, claims@capitalpolis.ru\n",
+                                            fontSize: 10,
+                                        },
+                                        {
+                                            text:"Московский пр., д.22, лит. 3, Санкт-Петербург, 190013, Россия",
+                                            fontSize: 10
+                                        }
+                                    ],
+                                    alignment:"center",
+                                    colSpan:3
+                                },
+                                {},
+                                {}
+                            ]
+                        ]
+                    },
+                    layout: {// цвет границы 
+                        hLineColor: '#e6e6e6',
+                        vLineColor: '#e6e6e6',
+                    }
+                }
             ],
             footer: function(page, pages) { 
                 if (page>1) return { 
@@ -933,7 +989,6 @@ class PolisMaker{
             },
             styles: {
                 leftCellFirstTable: {
-                    italics: true,
                     fillColor: '#e6e6e6',
                     fontSize: 10,
                 },
@@ -958,10 +1013,9 @@ class PolisMaker{
                 pageBreak: 'before',
                 text:  ` Под действия настоящего  Полиса подпадаю следующие списки транспортных средств (см.\u00A0Приложение 1), на закрепленных ниже условиях:`,
                 alignment: 'justify',
+                margin: [0,0,0,5],
             },
-            "\n",
             ...this.makeTables(myFactory), //списки условий страхования
-            "\n",
             ...this.makeRisksList(myFactory, risks), //таблицы заявленных/не заявленных рисков
             ...this.makeParagraphs(myFactory), //таблицы оговорок
             "\n",
