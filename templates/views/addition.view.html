@@ -1,5 +1,7 @@
 <fieldset>
-<legend>{{addition.name}}:<div class="arrow_down_conditions" ng-click="addition.included=!addition.included;$event.stopPropagation();">{{(addition.included)? '&#9650' : '&#9660' }}</div></legend>
+<legend>{{addition.name}}:
+    <div class="arrow_down_conditions" ng-click="addition.included=!addition.included;$event.stopPropagation();">{{(addition.included)? '&#9650' : '&#9660' }}</div>
+</legend>
 <table class="matrix">
     <tbody>
         <tr class="matrix_row" ng-repeat="value in addition.values" ng-if="addition.included&&value.checked && value.text!==''">

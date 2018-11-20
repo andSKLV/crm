@@ -1858,7 +1858,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         myFactory.parks.forEach(function (park) {
             let newPark = {};
             for (let key in park) {
-                if (key != "processes") newPark[key] = park[key];
+                if (key != "processes"&&key!='carGroup') newPark[key] = park[key];
+                else if (key==='carGroup') newPark[key] = park[key].id
                 else {
                     newPark[key] = [];
                     park.processes.forEach(function (process) {

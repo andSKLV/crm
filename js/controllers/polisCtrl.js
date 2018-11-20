@@ -111,12 +111,14 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         selectNames();
         switchMakingPolis();
         clearSearchResults();
-
+        const baseRiskNeeded = myFactory.parks.some(park=>{
+            return park.risks.includes('Базовые риски');
+        }) 
         //по необходимости загружаем каретку и "оговорки"
         if (!myFactory.polisObj || !myFactory.polisObj.isRequested || !$scope.currObj || $scope.currObj.length === 0) {
-            if (!myFactory.polisObj.conditions) {
+            if (!myFactory.polisObj.conditions && myFactory.parks.length>0) {
                 const type = (myFactory.calcObj.factory) ? myFactory.calcObj.factory.HIPname : 'Перевозчики';
-                await myFactory.polisObj.loadConditions(type);
+                await myFactory.polisObj.loadConditions(type, baseRiskNeeded);
             }
             await loadDashboardObj();
         };
@@ -124,7 +126,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         //если уже есть расчет и его тип не совпадает с типом оговорок, то загружаем новые оговорки
         if (myFactory.calcObj.factory && myFactory.polisObj.type !== myFactory.calcObj.factory.HIPname) {
             if (myFactory.polisObj.conditions) delete myFactory.polisObj.conditions; // если были какие то оговорки, то их нужно удалить, так как нужно загрузить новые
-            await myFactory.polisObj.loadConditions(myFactory.calcObj.factory.HIPname);
+            await myFactory.polisObj.loadConditions(myFactory.calcObj.factory.HIPname, baseRiskNeeded);
             myFactory.polisObj.type = myFactory.calcObj.factory.HIPname;
             myFactory.polisObj.additionsSeen = false;
         }
@@ -172,7 +174,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 if (!pr.isFull) pr.carSelector = ''; //вспомогательный ничего не значащий объект, нужен чтобы поставить ng-change на выбор машины
             })
         })
-        mf.setCarsFromExcel = async (cars,park, parkIndex) => {
+        mf.setCarsFromExcel = async (cars,park, parkIndex, procIndex) => {
             park.carGroup.cars.forEach((car,index)=>{
                 const excelCar = cars[index];
                 for (let key in excelCar) {
@@ -181,7 +183,8 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 car.selectorAutNumber = car.data.autNumber;
             })
             const parkUI = document.querySelectorAll('.park')[parkIndex];
-            const inpUI = parkUI.querySelector('.input_cars');
+            const procUI = parkUI.querySelectorAll('li')[procIndex];
+            const inpUI = procUI.querySelector('.input_cars');
             inpUI.focus();
             await delay(50);
             inpUI.blur();
@@ -331,6 +334,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             id: data.id,
             isNew: false,
         }
+        if (data.type) newAddition.type = data.type;
         $scope.myFactory.polisCurrent = newAddition;
         $timeout(() => $location.path(`/polisEditor`), 0);
     }
@@ -424,6 +428,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         myFactory.loadClient = key;
     }
     this.makePDF = () => {
+        /**
+         * Функция загрузки рисков. Еще раз, зачем? FIXME:
+         */
         const getRisks = () => {
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest();

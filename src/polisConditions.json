@@ -1,5 +1,31 @@
 [
   {
+    "name": "Террирория страхования",
+    "type": "territory",
+    "const": true,
+    "id": "0",
+    "included": true,
+    "isNew":false,
+    "values": [
+      {
+        "text": "Россия",
+        "checked": true
+      },
+      {
+        "text": "Казахстан, Беларусь, Украина",
+        "checked": true
+      },
+      {
+        "text": "Страны Европы",
+        "checked": true
+      },
+      {
+        "text": "Весь мир",
+        "checked": false
+      }
+    ]
+  },
+  {
     "name":"Базовые риски",
     "included": true,
     "id":"1",
