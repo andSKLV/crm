@@ -17,7 +17,7 @@ class PolisMaker{
                 let wasIndex = null;
                 for (let k=0;k<i;k++) {
                     if (this.areEquivalent(park.processes[i]["cars"],park.processes[k]["cars"])) {
-                        wasIndex = k;
+                        wasIndex = lists.findIndex(l=>l.processes.includes(park.processes[k]));
                         break;
                     }
                 }
@@ -121,13 +121,14 @@ class PolisMaker{
              * Функция подсчета количества строк в наименовании риска
              */
             const countRows = (str) => {
+                if (str==='Повреждение товарных автомобилей') return 3; //FIXME:
                 const arr = str.split(' ');
                 if (arr.length === 1) return 1;
                 let rows = 1;
-                let len = arr[0].length;
+                let len = arr[0].length;//+1 так как заглавная буква занимает больше места
                 for (let i = 1; i < arr.length; i++) {
-                    len = len + arr[i].length + 1;//1 это пробел между словами
-                    if (len > 19) {
+                    len = len + arr[i].length + 1;//+1 это пробел между словами
+                    if (len > 20) {
                         rows++;
                         len = arr[i].length;
                     }
