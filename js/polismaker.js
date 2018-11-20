@@ -127,7 +127,7 @@ class PolisMaker{
                 let len = arr[0].length;
                 for (let i = 1; i < arr.length; i++) {
                     len = len + arr[i].length + 1;//1 это пробел между словами
-                    if (len > 15) {
+                    if (len > 19) {
                         rows++;
                         len = arr[i].length;
                     }
@@ -152,6 +152,7 @@ class PolisMaker{
                 }
                 return rowMargin;
             }
+            
             list.processes.forEach((process, i) => {
                 const row = [];
                 const properties = ["cost", "amount", "wrapping", "risk", "limit", "franchise"];
@@ -735,13 +736,13 @@ class PolisMaker{
                                 {
                                     text: "ТЕРРИТОРИЯ СТРАХОВАНИЯ",
                                     style: "leftCellFirstTable",
-                                    margin: oneRowMargin
+                                    margin: oneRowMargin.map((v,i)=>(i===1)?v+2:v)
                                 },
                                 {
-                                    text:territory,
+                                    text:`${territory}`,
                                     colSpan: 2,
                                     alignment:'center',
-                                    margin: (territory.length<37) ? oneRowMargin : twoRowMargin
+                                    margin: (territory.length<65) ? oneRowMargin : twoRowMargin
                                 },
                             ],
                             // [
@@ -761,8 +762,8 @@ class PolisMaker{
                             [
                                 {
                                     text: "АГРЕГАТНЫЙ ЛИМИТ ОТВЕТСТВЕННОСТИ СТРАХОВЩИКА ПО ПОЛИСУ",
-                                    style: "leftCellFirstTable"
-                                    
+                                    style: "leftCellFirstTable",
+                                    margin: twoRowMargin
                                 },
                                 {
                                     text:`${this.addSpaces(myFactory.a_limit.value)}`,
@@ -938,7 +939,7 @@ class PolisMaker{
                                     border: [false,false,false,false],
                                 },
                                 {
-                                    text: '_______________________________',
+                                    text: '___________________________________',
                                     border: [false,false,false,false],
                                 }
                                 ,
@@ -948,7 +949,7 @@ class PolisMaker{
                                     border: [false,false,false,false],
                                 },
                                 {
-                                    text: '_______________________________',
+                                    text: '___________________________________',
                                     border: [false,false,false,false],
                                 }
                                 ,
@@ -1011,7 +1012,7 @@ class PolisMaker{
         docDefinition.content.push(
             {
                 pageBreak: 'before',
-                text:  ` Под действия настоящего  Полиса подпадаю следующие списки транспортных средств (см.\u00A0Приложение 1), на закрепленных ниже условиях:`,
+                text:  ` Под действия настоящего  Полиса подпадаю следующие списки транспортных средств (см.\u00A0Приложение 1) на закрепленных ниже условиях:`,
                 alignment: 'justify',
                 margin: [0,0,0,5],
             },
