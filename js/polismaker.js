@@ -64,7 +64,7 @@ class PolisMaker{
         let table={
             style: 'table',
             table: {
-                headerRows: 1,
+                headerRows: 2,
                 widths:[54,61,65,60,97,60,60],
                 body: [
                     [   {
@@ -484,6 +484,17 @@ class PolisMaker{
         return content;
     }
     /**
+     * Создаем строку с описанием территории страхования на основе оговорки 
+     * @param {object}  myFactory
+     */
+    makeTerritory (myFactory) {
+        const territoryVals = [];
+        myFactory.polisObj.conditions.find(c=>c.type==='territory').values.forEach(v=>{
+            if (v.checked) territoryVals.push(v.text.toUpperCase());
+        });
+        return territoryVals.join(', ');
+    }
+    /**
      * Основная функция, создает на основе данных расчета и компании файл PDF и скачивает его
      * @param  {object} myFactory объект с практически всеми нужными данными
      * @param  {array} risks Список рисков с описанием
@@ -493,7 +504,8 @@ class PolisMaker{
             text: '',
             border: [false,false,false,false],
         }
-
+        // собираем стоку с данными о территории страхования
+        const territory = this.makeTerritory (myFactory);
         let docDefinition = {
             pageMargins: [ 50, 60, 50, 60 ],
             content: [
@@ -682,25 +694,25 @@ class PolisMaker{
                                     
                                 },
                                 {
-                                    text:"РОССИЯ, КАЗАХСТАН, БЕЛАРУСЬ, УКРАИНА, СТРАНЫ ЕВРОПЫ",
+                                    text:territory,
                                     colSpan: 2,
                                     alignment:'center',
                                 },
                             ],
-                            [
-                                {
-                                    text: "ЛИМИТ ОТВЕТСТВЕННОСТИ СТРАХОВЩИКА ПО СЛУЧАЮ",
-                                    style: "leftCellFirstTable"
+                            // [
+                            //     {
+                            //         text: "ЛИМИТ ОТВЕТСТВЕННОСТИ СТРАХОВЩИКА ПО СЛУЧАЮ",
+                            //         style: "leftCellFirstTable"
                                     
-                                },
-                                {
-                                    text:`${this.addSpaces(myFactory.a_limit.value)}`,
-                                    margin:[0,5,0,0],
-                                    bold: true,
-                                    colSpan: 2,
-                                    alignment:'center'
-                                },
-                            ],
+                            //     },
+                            //     {
+                            //         text:`${this.addSpaces(myFactory.a_limit.value)}`,
+                            //         margin:[0,5,0,0],
+                            //         bold: true,
+                            //         colSpan: 2,
+                            //         alignment:'center'
+                            //     },
+                            // ],
                             [
                                 {
                                     text: "АГРЕГАТНЫЙ ЛИМИТ ОТВЕТСТВЕННОСТИ СТРАХОВЩИКА ПО ПОЛИСУ",
@@ -715,18 +727,18 @@ class PolisMaker{
                                     alignment:'center'
                                 },
                             ],
-                            [
-                                {
-                                    text: "БЕЗУСЛОВНАЯ ФРАНШИЗА",
-                                    style: "leftCellFirstTable"
+                            // [
+                            //     {
+                            //         text: "БЕЗУСЛОВНАЯ ФРАНШИЗА",
+                            //         style: "leftCellFirstTable"
                                     
-                                },
-                                {
-                                    text:"НЕ ПРИМЕНЯЕТСЯ",
-                                    colSpan: 2,
-                                    alignment:'center'
-                                },
-                            ],
+                            //     },
+                            //     {
+                            //         text:"НЕ ПРИМЕНЯЕТСЯ",
+                            //         colSpan: 2,
+                            //         alignment:'center'
+                            //     },
+                            // ],
                             [
                                 {
                                     text: "ДАТА ВЫДАЧИ",

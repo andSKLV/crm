@@ -334,6 +334,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             id: data.id,
             isNew: false,
         }
+        if (data.type) newAddition.type = data.type;
         $scope.myFactory.polisCurrent = newAddition;
         $timeout(() => $location.path(`/polisEditor`), 0);
     }

@@ -66,12 +66,12 @@ export default class Polis {
     })
   }
   deleteAddition (condition) {
-    if (condition.name==='Базовые риски'||condition.name==='Страхование по полису не распространяется на следующие грузы') return false;
+    if (condition.name==='Базовые риски'||condition.name==='Страхование по полису не распространяется на следующие грузы'||condition.const) return false;
     this.conditions = this.conditions.filter(cond=>cond.name!==condition.name);
   }
   applyStartAdditions () {
     //стартовые дополнения 
-    this.additions = {'1':[],'2':[]};
+    this.additions = {'0':[],'1':[],'2':[]};
   }
 }
 
