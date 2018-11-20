@@ -938,7 +938,7 @@ class PolisMaker{
                                     border: [false,false,false,false],
                                 },
                                 {
-                                    text: '__________________________',
+                                    text: '_______________________________',
                                     border: [false,false,false,false],
                                 }
                                 ,
@@ -948,7 +948,7 @@ class PolisMaker{
                                     border: [false,false,false,false],
                                 },
                                 {
-                                    text: '__________________________',
+                                    text: '_______________________________',
                                     border: [false,false,false,false],
                                 }
                                 ,
@@ -1105,6 +1105,12 @@ class PolisMaker{
             },
             ...this.carsTables,
         )
+        pdfMake.fonts = {
+            Roboto: {
+                normal: 'PTN.ttf',
+                bold: 'PTN-bold.ttf'
+            }
+        }
         // pdfMake.createPdf(docDefinition).download('optionalName.pdf');
         console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
         const win = window.open('', '_blank');
