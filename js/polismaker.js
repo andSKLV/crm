@@ -57,6 +57,10 @@ class PolisMaker{
      * @return {arrayOfTables}
      */
     makeTables(myFactory) {
+        const emptyCell = {
+            text: '',
+            border: [false,false,false,false],
+        }
         let body=[];
         const lists=this.makeCarLists(myFactory);
         const listContent=[];
@@ -64,7 +68,7 @@ class PolisMaker{
         let table={
             style: 'table',
             table: {
-                headerRows: 2,
+                headerRows: 1,
                 widths:[54,61,65,60,97,60,60],
                 body: [
                     [   {
@@ -160,14 +164,30 @@ class PolisMaker{
             })
 
             
-            this.carsTables.push('\n',`Список ТС №${listCount}`);
+            this.carsTables.push('\n');
             const tableCar={
                 style: 'table',
                 table: {
-                    headerRows: 1,
-                    widths:[93,143,73,161],
+                    headerRows: 2,
+                    widths:[31,75,143,60,161],
                     body: [
                         [
+                            {
+                                text:`Список ТС №${listCount}`,
+                                border:[false,false,false,false],
+                                colSpan:3,
+                                alignment:'left'
+                            },
+                            emptyCell,
+                            emptyCell,
+                            emptyCell,
+                            emptyCell
+                        ],
+                        [
+                            {
+                                text:'п/п',
+                                style:"firstHeader" 
+                            },
                             {
                                 text:'Номер', 
                                 style:"firstHeader",
@@ -190,9 +210,13 @@ class PolisMaker{
             }
             const tableContentCar=tableCar.table.body;
             // данные по машинам
-            for(const car of list.cars){
+            list.cars.forEach((car,i)=>{
                 tableContentCar.push(
                     [
+                        {
+                            text: i+1,
+                            style: 'carInfo',
+                        },
                         {
                             text: car.data.autNumber,
                             style: 'carInfo',
@@ -212,12 +236,7 @@ class PolisMaker{
                         }
                     ]
                 )
-            }
-            tableContentCar.layout = {
-                fillColor: function (i, node) {
-                    return (i % 2 === 0) ? '#e6e6e6' : null;
-                }
-            }
+            })
             this.carsTables.push(tableCar);
             listCount++;
         })
@@ -247,17 +266,19 @@ class PolisMaker{
      */
     makeParagraphs(myFactory) {
         const paragraphs=[];
-        myFactory.polisObj.conditions.forEach((obj,i)=>{
+        let parIndex = 2;
+        myFactory.polisObj.conditions.forEach(obj=>{
             if(obj.name==="Базовые риски"){
                 return;
             }
+            if (obj.const) return;
             let paragraph={};
             paragraph.widths=[30, 459];
             paragraph.keepWithHeaderRows=1;
             paragraph.body=[
                 [       
                     { 
-                        text: `${i+1}. ${obj.name}:`,
+                        text: `${parIndex}. ${obj.name}:`,
                         style: "firstHeader",
                         colSpan:2,
                         border: [false,false,false,false],
@@ -269,7 +290,7 @@ class PolisMaker{
             mass.forEach((param, num)=>{
                 let arr=[];
                 arr.push({
-                    text:`${i+1}.${num+1}`,
+                    text:`${parIndex}.${num+1}`,
                     border: [false,false,false,false],
                 },{
                     text:param.text,
@@ -287,7 +308,7 @@ class PolisMaker{
                 table:paragraph,
                 layout
             },"\n");
-            
+            parIndex++;
         });
         return paragraphs;
         
