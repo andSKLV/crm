@@ -68,7 +68,7 @@ class PolisMaker{
                 widths:[54,61,65,60,97,60,60],
                 body: [
                     [   {
-                            text: 'Перечень ТС №',
+                            text: 'Список ТС, №',
                             style: 'firstHeader',
                             border: [false, false, false, false],
                         },
@@ -160,7 +160,7 @@ class PolisMaker{
             })
 
             
-            this.carsTables.push('\n',`Перечень ${listCount}`);
+            this.carsTables.push('\n',`Список ТС №${listCount}`);
             const tableCar={
                 style: 'table',
                 table: {
@@ -822,8 +822,6 @@ class PolisMaker{
                 },
             ],
             footer: function(page, pages) { 
-                console.warn(page);
-                console.info(pages);
                 if (page>1) return { 
                     table: {
                         headerRows: 0,
@@ -925,11 +923,11 @@ class PolisMaker{
         docDefinition.content.push(
             {
                 pageBreak: 'before',
-                text:  ` Под действия настоящего  Полиса подпадают Перечни транспортных средств (см.\u00A0Приложение 1), на закрепленных ниже условиях:`,
+                text:  ` Под действия настоящего  Полиса подпадаю следующие списки транспортных средств (см.\u00A0Приложение 1), на закрепленных ниже условиях:`,
                 alignment: 'justify',
             },
             "\n",
-            ...this.makeTables(myFactory), //перечни условий страхования
+            ...this.makeTables(myFactory), //списки условий страхования
             "\n",
             ...this.makeRisksList(myFactory, risks), //таблицы заявленных/не заявленных рисков
             ...this.makeParagraphs(myFactory), //таблицы оговорок
@@ -1014,7 +1012,7 @@ class PolisMaker{
             },
             {
                 pageBreak: 'before',
-                text: "ПРИЛОЖЕНИЕ 1 - Перечни транспортных средств, застрахованных по отдельным условиям страхования",
+                text: "ПРИЛОЖЕНИЕ 1 - Списки транспортных средств, застрахованных по отдельным условиям страхования",
                 alignment: 'justify',
                 bold: true,
             },

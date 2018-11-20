@@ -111,12 +111,14 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         selectNames();
         switchMakingPolis();
         clearSearchResults();
-
+        const baseRiskNeeded = myFactory.parks.some(park=>{
+            return park.risks.includes('Базовые риски');
+        }) 
         //по необходимости загружаем каретку и "оговорки"
         if (!myFactory.polisObj || !myFactory.polisObj.isRequested || !$scope.currObj || $scope.currObj.length === 0) {
-            if (!myFactory.polisObj.conditions) {
+            if (!myFactory.polisObj.conditions && myFactory.parks.length>0) {
                 const type = (myFactory.calcObj.factory) ? myFactory.calcObj.factory.HIPname : 'Перевозчики';
-                await myFactory.polisObj.loadConditions(type);
+                await myFactory.polisObj.loadConditions(type, baseRiskNeeded);
             }
             await loadDashboardObj();
         };
@@ -124,7 +126,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         //если уже есть расчет и его тип не совпадает с типом оговорок, то загружаем новые оговорки
         if (myFactory.calcObj.factory && myFactory.polisObj.type !== myFactory.calcObj.factory.HIPname) {
             if (myFactory.polisObj.conditions) delete myFactory.polisObj.conditions; // если были какие то оговорки, то их нужно удалить, так как нужно загрузить новые
-            await myFactory.polisObj.loadConditions(myFactory.calcObj.factory.HIPname);
+            await myFactory.polisObj.loadConditions(myFactory.calcObj.factory.HIPname, baseRiskNeeded);
             myFactory.polisObj.type = myFactory.calcObj.factory.HIPname;
             myFactory.polisObj.additionsSeen = false;
         }
