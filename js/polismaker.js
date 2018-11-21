@@ -66,22 +66,30 @@ class PolisMaker{
         const lists=this.makeCarLists(myFactory);
         const listContent=[];
         let listCount=1;
+        const colOrder = ['amount', 'wrapping', 'listCount','cost','risk','limit','franchise']; //порядок столбцов в таблице
+        const colWidth = {
+            'listCount' : 40,
+            'risk': 97,
+            'cost': 61,
+            "amount": 65, 
+            "wrapping":60, 
+            "limit": 60, 
+            "franchise": 60,
+        } // ширины столбца
+        const rowWidths = [];
+        for (let i=0;i<7;i++) {
+            const name = colOrder[i];
+            rowWidths.push(colWidth[name]);
+        } //создание массива с ширинами столбцов
         let table={
             style: 'table',
             table: {
                 headerRows: 1,
-                widths:[40,61,65,60,97,60,60],
+                // widths:[40,61,65,60,97,60,60],
+                // widths:[65,60,40,61,97,60,60],
+                widths: rowWidths,
                 body: [
-                    [   {
-                            text: 'Список ТС, №',
-                            style: 'firstHeader',
-                            border: [false, false, false, false],
-                        },
-                        {
-                            text:'Страховая стоимость, руб.', 
-                            style:"firstHeader",
-                            border: [false, false, false, false],
-                        },
+                    [
                         {
                             text:`Количество ${myFactory.amountType}`,
                             style:"firstHeader", 
@@ -89,6 +97,16 @@ class PolisMaker{
                         },
                         {
                             text:'Тип грузового отсека', 
+                            style:"firstHeader",
+                            border: [false, false, false, false],
+                        },
+                        {
+                            text: 'Список ТС, №',
+                            style: 'firstHeader',
+                            border: [false, false, false, false],
+                        },
+                        {
+                            text:'Страховая стоимость, руб.', 
                             style:"firstHeader",
                             border: [false, false, false, false],
                         },
@@ -154,9 +172,12 @@ class PolisMaker{
                 }
                 return rowMargin;
             }
-            
+
             list.processes.forEach((process, i) => {
                 const row = [];
+                for (let i = 0;i<7;i++) {
+                    row.push({})
+                }
                 const properties = ["cost", "amount", "wrapping", "risk", "limit", "franchise"];
                 const rows = countRows(process.risk);
                 const riskMargin = getMargin(rows);
@@ -167,50 +188,48 @@ class PolisMaker{
                     margin: bigMargin
                 };
                 
-                row.push(listCountCell);
+                row[colOrder.indexOf('listCount')]=listCountCell;
+
                 properties.forEach((property) => {
+                    const id = colOrder.indexOf(property)
                     if (property == "amount") {
                         if (myFactory.amountType == "Тягачей") {
-                            row.push(
-                                {
-                                    text: `${process[property] / 24}`,
-                                    border: [false, false, false, false],
-                                    margin: bigMargin,
-                                }
-                            );
+                            row[id] = {
+                                text: `${process[property] / 24}`,
+                                border: [false, false, false, false],
+                                margin: bigMargin,
+                            }
                         }
-                        else {
-                            row.push(
-                                {
-                                    text: `${process[property]}`,
-                                    border: [false, false, false, false],
-                                    margin: bigMargin,
-                                }
-                            );
+                        else { 
+                            row[id] = {
+                                text: `${process[property]}`,
+                                border: [false, false, false, false],
+                                margin: bigMargin,
+                            }
                         }
                     }
                     else if (property == "cost" || property == "limit" || property == "franchise") {
-                        row.push(
-                            {
-                                text: this.addSpaces(process[property]),
-                                border: [false, false, false, false],
-                                margin: bigMargin,
-                                // alignment: 'right',
-                            });
+                        row[id] = {
+                            text: this.addSpaces(process[property]),
+                            border: [false, false, false, false],
+                            margin: bigMargin,
+                            // alignment: 'right',
+                        }
+
                     }
                     else if (property=='risk') {
-                        row.push({
+                        row[id] ={
                             text: process[property],
                             border: [false, false, false, false],
                             margin: riskMargin,
-                        });
+                        };
                     }
                     else {
-                        row.push({
+                        row[id] = {
                             text: process[property],
                             border: [false, false, false, false],
                             margin: bigMargin,
-                        });
+                        };
                     }
                 })
                 tableContent.push(row);
