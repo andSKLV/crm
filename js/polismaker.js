@@ -57,6 +57,7 @@ class PolisMaker{
      * @return {arrayOfTables}
      */
     makeTables(myFactory) {
+        this.carsTables = [];
         const emptyCell = {
             text: '',
             border: [false,false,false,false],
@@ -1119,7 +1120,7 @@ class PolisMaker{
             }
         }
         // pdfMake.createPdf(docDefinition).download('optionalName.pdf');
-        console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
+        // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
         const win = window.open('', '_blank');
         delay(500).then(()=>pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
     }
