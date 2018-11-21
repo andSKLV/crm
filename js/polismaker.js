@@ -417,7 +417,7 @@ class PolisMaker{
                             border: [false,false,false,false],
                         },
                         {
-                            text: `${risk.name} - ${risk.title.toLowerCase()}. `,
+                            text: `${risk.name} - ${risk.title}. `,
                             border: [false,false,false,false],
                         }
                         
@@ -456,7 +456,7 @@ class PolisMaker{
                             border: [false,false,false,false],
                         },
                         {
-                            text: `${risk.name} - ${risk.title.toLowerCase()}. `,
+                            text: `${risk.name} - ${risk.title}. `,
                             border: [false,false,false,false],
                         }
                         
@@ -581,6 +581,11 @@ class PolisMaker{
         const twoRowMargin = [0,5,0,5]; 
         // собираем стоку с данными о территории страхования
         const territory = this.makeTerritory (myFactory);
+        const currencySign = {
+            'Р': '₽',
+            'EUR': '€',
+            'USD': '$',
+        }
         const docDefinition = {
             pageSize: 'A4',
             pageMargins: [ 50, 115, 50, 65 ],
@@ -767,7 +772,7 @@ class PolisMaker{
                                     margin: twoRowMargin
                                 },
                                 {
-                                    text:`${this.addSpaces(myFactory.a_limit.value)}`,
+                                    text:`${this.addSpaces(myFactory.a_limit.value)} ${currencySign[myFactory.document.currency]}`,
                                     margin:oneRowMargin,
                                     bold: true,
                                     colSpan: 2,
