@@ -418,7 +418,10 @@ class PolisMaker{
                             border: [false,false,false,false],
                         },
                         {
-                            text: `${risk.name} - ${risk.title}. `,
+                            text: [
+                                {text:`${risk.name}`, bold: true},
+                                {text:` - ${risk.title}. `}
+                            ],
                             border: [false,false,false,false],
                         }
                         
@@ -457,7 +460,10 @@ class PolisMaker{
                             border: [false,false,false,false],
                         },
                         {
-                            text: `${risk.name} - ${risk.title}. `,
+                            text: [
+                                {text:`${risk.name}`,bold:true},
+                                {text:` - ${risk.title}. `}
+                            ],
                             border: [false,false,false,false],
                         }
                         
@@ -484,8 +490,9 @@ class PolisMaker{
         let baseRisk=Object.assign({},myFactory.polisObj.conditions.filter((paragraph)=>{
             return paragraph.name=="Базовые риски";
         })[0]);
-        baseRisk.ToPDFinclude=["Базовые риски:"];
-        baseRisk.ToPDFnotInclude = ['Базовые риски:'];
+        const baseHeader = {text: "Базовые риски:",bold:true}
+        baseRisk.ToPDFinclude=[baseHeader];
+        baseRisk.ToPDFnotInclude = [baseHeader];
         if(baseRisk){
             /**
              * если базовые риски включены - значит они в этом массиве не нужны, удаляем их 
