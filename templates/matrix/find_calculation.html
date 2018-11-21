@@ -26,7 +26,7 @@
     </tr>
 
 <!-- в случае если мы в меню "расчет-> сохранить-> заменить старый расчет->" -->
-<tr ng-if="dashboard.myFactory.matrixType==='calculationActions&&dashboard.myFactory.document.currParam==5'" ng-class="{matrix_row: !dashboard.row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index">
+<tr ng-if="dashboard.myFactory.matrixType==='calculationActions' && dashboard.myFactory.document.currParam==5" ng-class="{matrix_row: !dashboard.row.show}" ng-repeat="row in search_result | filter:cacheTemplate track by $index">
     <td class="properties btns" width="20px" ng-if="process.multi===undefined || process.multi.show || process.multi=='deleted'">
         <input type="button" class="btnCopy" value="+">
         <input type="button" class="btnDelete" ng-click="matrixCtrl.deleteCalculation(row);" value="-">
