@@ -1859,17 +1859,24 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             let newPark = {};
             for (let key in park) {
                 if (key != "processes"&&key!='carGroup') newPark[key] = park[key];
-                else if (key==='carGroup') newPark[key] = park[key].id
+                else if (key==='carGroup' && park[key]) newPark[key] = park[key].id
                 else {
                     newPark[key] = [];
                     park.processes.forEach(function (process) {
                         let newProcess = {};
                         for (let prop in process) {
-                            if (prop != "multi" && prop != "park") {
-                                newProcess[prop] = process[prop];
-                            }
-                            else if (prop == "multi") {
-                                newProcess[prop] = myFactory.multi.multies.indexOf(process.multi);
+                            switch (prop) {
+                                case 'multi':
+                                    newProcess[prop] = myFactory.multi.multies.indexOf(process.multi);
+                                    break;
+                                case 'park':
+                                    break;
+                                case 'cars':
+                                    //TODO:сохранение групп авто
+                                    break;
+                                default:
+                                    newProcess[prop] = process[prop];
+                                    break;
                             }
                         }
                         newPark[key].push(newProcess);

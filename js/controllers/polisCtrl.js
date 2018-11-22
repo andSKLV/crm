@@ -453,19 +453,17 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     })
                 }
             })
-            console.log(risks);
-
             polis.makePDF(myFactory, risks);
             return null;
         }, function error(response) {
-            console.log(response);
+            console.error(response);
 
         })
     }
     $scope.multiClicked = () => {
         const polis = $scope.myFactory.polisObj;
         polis.multi = !polis.multi;
-    }
+    };
     $scope.deleteAdditionFromDB = id => {
         if (id < 3) return false;
         const query = {};
