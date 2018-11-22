@@ -613,6 +613,7 @@ class PolisMaker{
             'EUR': '€',
             'USD': '$',
         }
+        let pageWithExtraFooter = null;
         const docDefinition = {
             pageSize: 'A4',
             pageMargins: [ 50, 115, 50, 65 ],
@@ -944,7 +945,38 @@ class PolisMaker{
                     }
                 }
             ],
-            footer: function(page, pages) { 
+            footer: function(page, pages,smth,pagesArr) {
+                const findExtraPage = arr => {
+                    let pageNumb = null;
+                    arr.forEach((page,ind)=>{
+                        if (page.items[0].type === 'line' && page.items[0].item.inlines[0].text === 'ПРИЛОЖЕНИЕ ' &&
+                        page.items[0].item.inlines[1].text === '1 ') pageNumb = ind;
+                    })
+                    if (!pageNumb) console.error('Не найдена страница с приложением 1');
+                    else pageWithExtraFooter = pageNumb;
+                }
+                if (pageWithExtraFooter===null) {
+                    findExtraPage(pagesArr);
+                }
+                if (page===pageWithExtraFooter) return {
+                    table: {
+                        headerRows: 0,
+                        widths:[50,70,150,70,150,50],
+                        body: [
+                            [
+                                {
+                                    text: `Лист ${page.toString()}/${pages.toString()} Полиса № HIP-0000000-00-17`,
+                                    colSpan:6,
+                                    border: [false,false,false,false],
+                                    alignment: 'center',
+                                    fontSize: 7,
+                                    margin: [0,40,0,0],
+                                }
+                            ]
+                        ],
+                        style: 'table'
+                    }
+                }
                 if (page>1) return { 
                     table: {
                         headerRows: 0,
@@ -1018,7 +1050,7 @@ class PolisMaker{
                             ]
                         ],
                         style: 'table'
-                    },
+                    }
                 };
             },
             styles: {
