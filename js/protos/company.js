@@ -1,4 +1,3 @@
-let _isFull = null;
 export default class Company {
   constructor(){
     this.id = null;
@@ -9,6 +8,7 @@ export default class Company {
     this.links = null;
     this.name = null;
     this.factory = null;
+    this._isFull = null;
   }
   /**
    * 
@@ -18,6 +18,16 @@ export default class Company {
     this.id = data.id;
     this.responses.card = data;
     this.name = data.name;
+    this.info = {
+      'Communications':data.Communications,
+      'Legal_address':data.Legal_address,
+      'Real_address':data.Real_address,
+      'company_group': data.company_group,
+      'company_mail': data.company_mail,
+      'company_phone': data.company_phone,
+      'company_url:':data.company_url,
+      'status': data.status,
+    }
   }
   markAsLoaded(){
     this.isLoaded = true;
@@ -32,11 +42,11 @@ export default class Company {
     this.responses.card = savedObj;
   }
   set isFull (val) {
-    _isFull = val;
+    this._isFull = val;
   }
   get isFull () {
-    _isFull = this.getFullness();
-    return _isFull;
+    this._isFull = this.getFullness();
+    return this._isFull;
   }
   getFullness() {
     const card = this.card;
