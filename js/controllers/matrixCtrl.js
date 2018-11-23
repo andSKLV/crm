@@ -422,10 +422,16 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                        "Когда выдан":getDate(data.give_date),
                        "Кем выдан":data.director_authority,
                      },
+                     "Продолжение": 
+                     {
+                        "Место рождения": "",
+                        "Адрес регистрации": "",
+                     },
                      "Реквизиты компании":
                      {
                        "ОГРН":data.OGRN,
-                       "ИНН/КПП": getInnKpp(data),
+                       "ИНН": data.INN,
+                       "КПП": data.KPP,
                        "ОКПО":data.OKPO,
                        "ОКВЭД":data.OKVED,
                      },
@@ -435,6 +441,13 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                        "к/счет":data.k_account,
                        "Банк":data.bank,
                        "БИК":data.bik,
+                     },
+                     "Доп. информация":
+                     {
+                        "Телефон":data.company_phone,
+                        "Эл. почта":data.company_mail,
+                        "Юридический адрес":data.Legal_address,
+                        "Фактический адрес":data.Real_address,
                      }
                    }
             }
@@ -451,14 +464,6 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                     4: "ИП"
                 }
                 return forms[+id];
-            }
-            /**
-             * Function to parse INN and KPP from loaded obj
-             * @param {obj} data object of client from DB
-             */
-            function getInnKpp (data) {
-                if (data.INN===""&&data.KPP==="") return "";
-                else return `${data.INN} / ${data.KPP}`;
             }
             function getDate (date) {
                 return (date==='0000-00-00') ? '' : date; 
