@@ -22,6 +22,7 @@ app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location
     const calcs = await $scope.loadCalculations(pr.store.calcLinks);//загрузка расчетов
     pr.store.calculations = fixPremia(calcs);
     // TODO: линки с БД connections
+    await $scope.loadAddresses ();
     modal.hide();
 
     function loadDash() {
@@ -204,6 +205,30 @@ app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location
       return resp.data;
 
     }, err => {
+      console.error(err);
+    })
+  }
+  /**
+   * Загрузка юр и фактического адреса компании
+   * ID для запросов берутся из companyObj.responses
+   * Загруженные данные сохраняются в companyObj
+   */
+  $scope.loadAddresses = () => {
+    console.log(myFactory.companyObj);
+    const query = {
+      legal_id: myFactory.companyObj.responses.card.Legal_address,
+      real_id: myFactory.companyObj.responses.card.Real_address,
+    };
+    const formatAddress = adr => {
+      return Object.values(adr).slice(1).filter(v=>v!=='').map(v=>v.trim());
+    }
+    query.type = 'addresses';
+    $http.post('php/load.php',query).then(resp=>{
+      const data = resp.data;
+      myFactory.companyObj.responses.adresses = data;
+      myFactory.companyObj.Legal_address = formatAddress(data[0]).join(', ');
+      myFactory.companyObj.Real_address = formatAddress(data[1]).join(', ');
+    },err=>{
       console.error(err);
     })
   }

@@ -20,8 +20,6 @@ export default class Company {
     this.name = data.name;
     this.info = {
       'Communications':data.Communications,
-      'Legal_address':data.Legal_address,
-      'Real_address':data.Real_address,
       'company_group': data.company_group,
       'company_mail': data.company_mail,
       'company_phone': data.company_phone,

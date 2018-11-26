@@ -24,7 +24,19 @@
         $resultJson[]=$row;
       }
     }
-
     echo json_encode($resultJson);
-}
+  }
+  else if ($data['type']='addresses') {
+    $resultJson = array();
+    $query="SELECT * FROM addresses WHERE id=".$data['legal_id'];
+    $result = mysqli_query($link,$query) or die(mysqli_error($link));
+    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    $resultJson[]=$row;
+    
+    $query2="SELECT * FROM addresses WHERE id=".$data['real_id'];
+    $result2 = mysqli_query($link,$query2) or die(mysqli_error($link));
+    $row2 = mysqli_fetch_array($result2, MYSQLI_ASSOC);
+    $resultJson[]=$row2;
+    echo json_encode($resultJson);
+  }
 ?>
