@@ -173,6 +173,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
         $scope.currObj.forEach((param, i) => {
             param.values.forEach(({ name }, j) => {
                 if (name == key) {
+                    if ($scope.newDashboard.currentPage != i) $scope.newDashboard.setCurrentPage(i);
                     Array.from(document.querySelectorAll(".company_dashboard_inputs")).forEach(item => {
                         item.classList.remove("selected");
                     });
@@ -180,7 +181,6 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
                         node.classList.remove("mi_selected");
                         if (node.title == key) node.classList.add("mi_selected");
                     })
-                    if ($scope.newDashboard.currentPage != i) $scope.newDashboard.setCurrentPage(i);
                     setTimeout(() => {
                         const elem = document.querySelector(".ul_current").firstElementChild.children[j].firstElementChild;
                         elem.classList.add("selected");
@@ -401,7 +401,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             return changed;
         }
     }
-    function generateSaveCompanyObj(card) {
+    async function generateSaveCompanyObj(card) {
         return {
             Communications: "",
             INN: getInnKpp('INN',card["Реквизиты компании"]["ИНН/КПП"]),
