@@ -8,7 +8,7 @@ export default class Profile {
     this.factory = mf;
   }
   deleteCalc (id) {
-    this.store.calcLinks.filter(c=>c.id!==id);
-    this.store.calculations.filter(c=>c.id!==id);
+    this.store.calcLinks = this.store.calcLinks.filter(c=>c.calc_id!==id);
+    this.store.calculations = this.store.calculations.filter(c=>c.id!==id);
   }
 }
