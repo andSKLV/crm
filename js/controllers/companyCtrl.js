@@ -84,6 +84,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
         setCurrentPage(index) {
             this.previousPage = this.currentPage;
             this.currentPage = index;
+            $scope.loadToDashboard($scope.currObj[index].values[0].name);
         },
         getIndex(param) {
             this.setCurrentPage($scope.clientCard.indexOf(param));
