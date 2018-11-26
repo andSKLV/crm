@@ -7,4 +7,8 @@ export default class Profile {
     mf.profileObj = this;
     this.factory = mf;
   }
+  deleteCalc (id) {
+    this.store.calcLinks.filter(c=>c.id!==id);
+    this.store.calculations.filter(c=>c.id!==id);
+  }
 }

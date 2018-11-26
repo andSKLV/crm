@@ -11,6 +11,14 @@
     $result = mysqli_query($link, $query) or die(mysqli_error());
     if ($result) echo "Успешно удалено";
   }
+  else if ($data['type']=='delete_link_company') {
+    $query = "UPDATE calculation_link SET company_id='' WHERE calc_id= '".$data['id']."'";
+  }
+  else if ($data['type']=='delete_link') {
+    $query = "DELETE FROM calculation_link WHERE calc_id = '".$data['id']."'";
+    $result = mysqli_query($link, $query) or die(mysqli_error());
+    if ($result) echo "OK";
+  }
   else if($data['type']=="save_calc"){
     $date=date("Y-m-d");
     $query = "INSERT INTO saved VALUES ('".$data['name']."', '123', '".$data['parks']."', '".$data['practicalPrice']."','".$data['payment']."', '".$data['agents']."', '".$date."','".$data['mass']."','','".$data['a_limit']."','".$data['a_limitType']."','".$data['totalAmount']."','".$data['totalPrice']."','','".$data['HIPname']."')";

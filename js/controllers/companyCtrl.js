@@ -5,7 +5,7 @@ import Company from '../protos/company.js';
  */
 app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $timeout) {
     //******    Инициализация   *******
-    if ($location.$$path==='/profile') return false; //если вызывается контроллер в профайле, так не должно быть
+    if ($location.$$path!=='/company') return false; //если вызывается контроллер в профайле, так не должно быть
     const scope = this;
     $scope.myFactory = myFactory;
     $scope.clientCard = {};

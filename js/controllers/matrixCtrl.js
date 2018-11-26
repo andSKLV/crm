@@ -14,13 +14,46 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         let data={};
         data.type="delete_calculation";
         data.id=id;
-        $http.post("php/save.php", data).then(function success(response){
+        return $http.post("php/save.php", data).then(function success(response){
            if (response.data==="Успешно удалено") console.log('calculation successfully deleted');
            else console.error('problem with deleting', response);
         },function error(response){
             console.log(response)
         });
     };
+    /**
+     * Удаляем строчку из UI
+     * @param {event} ev 
+     */
+    this.deleteRow = ev => {
+        let row = ev.currentTarget;
+        while (!row.classList.contains('row-flex')) {
+            row = row.parentNode;
+        }
+        row.parentNode.removeChild(row);
+    }
+    /**
+     * Удаление привязки расчета к компании. Если у расчета нет имени, значит он создавался только с привязкой к этой компании,
+     * значит при удалении связи можно удалить и сам расчет
+     * @param {obj} calc - объект с информацией о привязанном расчете
+     */
+    this.deleteLink = calc => {
+        const query = {
+            id: calc.id,
+        };
+        if (calc.name==='') {
+            this.deleteCalculation (calc);
+            query.type = 'delete_link';
+        } else {
+            query.type = 'delete_link_company';
+        }
+        myFactory.profileObj.deleteCalc(calc.id); //удаляем из локального объекта
+        return $http.post('php/save.php',query).then(resp=>{
+            if (resp.data!=='OK') console.error(resp.data);
+        },err=>{
+            console.error(err);
+        })
+    }
     /**
      * Загружаем расчет из БД
      * здесь надо добавить, что расчеты загружаются по разному, в зависимости от того 
