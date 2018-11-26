@@ -211,10 +211,9 @@ app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location
   /**
    * Загрузка юр и фактического адреса компании
    * ID для запросов берутся из companyObj.responses
-   * Загруженные данные сохраняются в companyObj
+   * Загруженные данные сохраняются в companyObj и newClientCard
    */
   $scope.loadAddresses = () => {
-    console.log(myFactory.companyObj);
     const query = {
       legal_id: myFactory.companyObj.responses.card.Legal_address,
       real_id: myFactory.companyObj.responses.card.Real_address,
@@ -223,11 +222,13 @@ app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location
       return Object.values(adr).slice(1).filter(v=>v!=='').map(v=>v.trim());
     }
     query.type = 'addresses';
-    $http.post('php/load.php',query).then(resp=>{
+    return $http.post('php/load.php',query).then(resp=>{
       const data = resp.data;
       myFactory.companyObj.responses.adresses = data;
-      myFactory.companyObj.Legal_address = formatAddress(data[0]).join(', ');
-      myFactory.companyObj.Real_address = formatAddress(data[1]).join(', ');
+      const legal = formatAddress(data[0]).join(', ')
+      const fakt = formatAddress(data[1]).join(', ');
+      myFactory.newClientCard['Доп. информация']['Юридический адрес'] = legal;
+      myFactory.newClientCard['Доп. информация']['Фактический адрес'] = fakt;
     },err=>{
       console.error(err);
     })

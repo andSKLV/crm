@@ -389,6 +389,26 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         data.type = 'load_company';
         data.id=id;
         return $http.post('php/search.php', data).then(async (resp) => {
+            const loadAddresses = () => {
+                const query = {
+                  legal_id: myFactory.companyObj.responses.card.Legal_address,
+                  real_id: myFactory.companyObj.responses.card.Real_address,
+                };
+                const formatAddress = adr => {
+                  return Object.values(adr).slice(1).filter(v=>v!=='').map(v=>v.trim());
+                }
+                query.type = 'addresses';
+                return $http.post('php/load.php',query).then(resp=>{
+                  const data = resp.data;
+                  myFactory.companyObj.responses.adresses = data;
+                  const legal = formatAddress(data[0]).join(', ')
+                  const fakt = formatAddress(data[1]).join(', ');
+                  myFactory.newClientCard['Доп. информация']['Юридический адрес'] = legal;
+                  myFactory.newClientCard['Доп. информация']['Фактический адрес'] = fakt;
+                },err=>{
+                  console.error(err);
+                })
+            }
             const data = resp.data;
             myFactory.newClientCard = generateClientCard(data);
             const companyObj = new Company();
@@ -396,11 +416,13 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             companyObj.parseFromCompaniesResponse(data) //создаем объект с  id  из ответа и сохраняем ответ внутри
             companyObj.card = myFactory.newClientCard;
             companyObj.markAsLoaded();
+            await loadAddresses();
             if (!noRelocation) {
                 myFactory.loadClient = 'Форма собственности'; //какую ячейку открыть при старте
                 $location.path('/company');
             }
             clearSearch();
+
             /**
              *  Функция генерации объекта карточки клиента из данных из БД
              * @param {obj} data - ответ из БД
