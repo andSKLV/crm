@@ -29,7 +29,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
     });
     function init () {
         if (!myFactory.loadCompany) {
-            $http.post("./src/new_company.json").then(function success(response) {
+            $http.post("./src/new_company.json").then(async function success(response) {
                 const obj = response.data;
                 // загрузка в каретку данных из карты клиента
                 for (const key in obj) {
@@ -48,14 +48,16 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
                 // удаляем ИД из отображения в матрице
                 delete $scope.clientCard.ID;
                 $scope.currObj = [];
+                $scope.setEmptyCardParam();
                 // делаем верхнюю каретку как образец из json
                 $scope.currObj = response.data;
-    
+                await delay(50);
                 if (myFactory.loadClient !== undefined) {
                     $scope.loadToDashboard(myFactory.loadClient);
                     delete myFactory.loadClient;
+                } else {
+                    $scope.newDashboard.setCurrentPage(0);
                 }
-                $scope.setEmptyCardParam();
             }, function error(response) {
                 console.log(response);
                 
