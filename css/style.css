@@ -395,7 +395,7 @@ div#tooltip_box{
 }
 
 div#tooltip_box>table,div#tooltip_box>table>tbody,div#tooltip_box>table>tbody>tr{
-    height: 99%;
+    height: 90%;
     display: block;
 }
 div#tooltip_box>table>tbody>tr>td:not(.tooltip_span){

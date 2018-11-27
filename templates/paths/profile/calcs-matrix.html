@@ -10,8 +10,8 @@
   </div>
   <div class="row-flex" ng-repeat="calc in myFactory.profileObj.store.calculations track by $index" ng-controller="matrixCtrl as matrix" ng-click="matrix.loadCalculation(calc.id)" ng-mouseenter="tooltip.fadeIn(calc.name)" ng-mouseleave="tooltip.fadeOut()">
     <div class="btn-func_conatiner matrix-cell">
-      <div class="btn-func" ng-click="$event.stopPropagation();">+</div>
-      <div class="btn-func" ng-click="$event.stopPropagation();">-</div>
+      <div class="btn-func" ng-click="matrix.loadCalculation(calc.id);$event.stopPropagation();">+</div>
+      <div class="btn-func" ng-click="matrix.deleteLink(calc);matrix.deleteRow($event);$event.stopPropagation();">-</div>
     </div>
     <div class="cell-flex matrix-cell"><p>{{calc.date}}</p> </div>
     <div class="cell-flex matrix-cell"><p>{{calc.a_limitType}} - {{calc.a_limit}}</p></div>

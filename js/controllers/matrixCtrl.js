@@ -14,13 +14,46 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         let data={};
         data.type="delete_calculation";
         data.id=id;
-        $http.post("php/save.php", data).then(function success(response){
+        return $http.post("php/save.php", data).then(function success(response){
            if (response.data==="Успешно удалено") console.log('calculation successfully deleted');
            else console.error('problem with deleting', response);
         },function error(response){
             console.log(response)
         });
     };
+    /**
+     * Удаляем строчку из UI
+     * @param {event} ev 
+     */
+    this.deleteRow = ev => {
+        let row = ev.currentTarget;
+        while (!row.classList.contains('row-flex')) {
+            row = row.parentNode;
+        }
+        row.parentNode.removeChild(row);
+    }
+    /**
+     * Удаление привязки расчета к компании. Если у расчета нет имени, значит он создавался только с привязкой к этой компании,
+     * значит при удалении связи можно удалить и сам расчет
+     * @param {obj} calc - объект с информацией о привязанном расчете
+     */
+    this.deleteLink = calc => {
+        const query = {
+            id: calc.id,
+        };
+        if (calc.name==='') {
+            this.deleteCalculation (calc);
+            query.type = 'delete_link';
+        } else {
+            query.type = 'delete_link_company';
+        }
+        myFactory.profileObj.deleteCalc(calc.id); //удаляем из локального объекта
+        return $http.post('php/save.php',query).then(resp=>{
+            if (resp.data!=='OK') console.error(resp.data);
+        },err=>{
+            console.error(err);
+        })
+    }
     /**
      * Загружаем расчет из БД
      * здесь надо добавить, что расчеты загружаются по разному, в зависимости от того 
@@ -389,6 +422,40 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         data.type = 'load_company';
         data.id=id;
         return $http.post('php/search.php', data).then(async (resp) => {
+            const loadAddresses = () => {
+                const check = str => {
+                    return (isNumeric(str)) ? str : '1';
+                  }
+                const query = {
+                legal_id: check(myFactory.companyObj.responses.card.Legal_address),
+                real_id: check(myFactory.companyObj.responses.card.Real_address),
+                }
+                const formatAddress = adr => {
+                  return Object.values(adr).slice(1).filter(v=>v!=='').map(v=>v.trim());
+                }
+                query.type = 'addresses';
+                if (query.legal_id==='1'&&query.real_id==='1') return false;
+                return $http.post('php/load.php',query).then(resp=>{
+                    if (!Array.isArray(resp.data)) {
+                        console.error(resp.data);
+                        return false;
+                    }
+                  const data = resp.data;
+                  myFactory.companyObj.responses.adresses = data;
+                  if (data[0].id!=='1') {
+                    if (data[0].PostalCode==='0') delete data[0].PostalCode;
+                    const legal = formatAddress(data[0]).join(', ');
+                    myFactory.newClientCard['Доп. информация']['Юридический адрес'] = legal;
+                  }
+                  if (data[1].id!=='1') {
+                    if (data[1].PostalCode==='0') delete data[1].PostalCode;
+                    const fakt = formatAddress(data[1]).join(', ');
+                    myFactory.newClientCard['Доп. информация']['Фактический адрес'] = fakt;
+                  }
+                },err=>{
+                  console.error(err);
+                })
+            }
             const data = resp.data;
             myFactory.newClientCard = generateClientCard(data);
             const companyObj = new Company();
@@ -396,11 +463,13 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             companyObj.parseFromCompaniesResponse(data) //создаем объект с  id  из ответа и сохраняем ответ внутри
             companyObj.card = myFactory.newClientCard;
             companyObj.markAsLoaded();
+            await loadAddresses();
             if (!noRelocation) {
                 myFactory.loadClient = 'Форма собственности'; //какую ячейку открыть при старте
                 $location.path('/company');
             }
             clearSearch();
+
             /**
              *  Функция генерации объекта карточки клиента из данных из БД
              * @param {obj} data - ответ из БД
@@ -422,10 +491,16 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                        "Когда выдан":getDate(data.give_date),
                        "Кем выдан":data.director_authority,
                      },
+                     "Продолжение": 
+                     {
+                        "Место рождения": "",
+                        "Адрес регистрации": "",
+                     },
                      "Реквизиты компании":
                      {
                        "ОГРН":data.OGRN,
-                       "ИНН/КПП": getInnKpp(data),
+                       "ИНН": data.INN,
+                       "КПП": data.KPP,
                        "ОКПО":data.OKPO,
                        "ОКВЭД":data.OKVED,
                      },
@@ -435,6 +510,13 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                        "к/счет":data.k_account,
                        "Банк":data.bank,
                        "БИК":data.bik,
+                     },
+                     "Доп. информация":
+                     {
+                        "Телефон":data.company_phone,
+                        "Эл. почта":data.company_mail,
+                        "Юридический адрес":data.Legal_address,
+                        "Фактический адрес":data.Real_address,
                      }
                    }
             }
@@ -451,14 +533,6 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                     4: "ИП"
                 }
                 return forms[+id];
-            }
-            /**
-             * Function to parse INN and KPP from loaded obj
-             * @param {obj} data object of client from DB
-             */
-            function getInnKpp (data) {
-                if (data.INN===""&&data.KPP==="") return "";
-                else return `${data.INN} / ${data.KPP}`;
             }
             function getDate (date) {
                 return (date==='0000-00-00') ? '' : date; 

@@ -545,7 +545,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
     $scope.setEndByTime = (start, time) => {
         if (!start) return false;
         const setEnd = month => {
-            const end = new Date(start.getFullYear(), start.getMonth() + month, start.getDate());
+            const end = new Date(start.getFullYear(), start.getMonth() + month, start.getDate() - 1);
             $scope.myFactory.polisObj.dates.endDate = end;
             $scope.myFactory.polisObj.dates.end = parseDate(end);
         }

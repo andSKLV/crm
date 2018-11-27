@@ -9,7 +9,17 @@
     $id=$data['id'];
     $query = "DELETE FROM saved WHERE id = '".$id."'";
     $result = mysqli_query($link, $query) or die(mysqli_error());
-    if ($result) echo "Успешно удалено";
+    if ($result==1) echo "Успешно удалено";
+  }
+  else if ($data['type']=='delete_link_company') {
+    $query = "UPDATE calculation_link SET company_id='0' WHERE calc_id= '".$data['id']."'";
+    $result = mysqli_query($link, $query) or die(mysqli_error());
+    if ($result==1) echo "OK";
+  }
+  else if ($data['type']=='delete_link') {
+    $query = "DELETE FROM calculation_link WHERE calc_id = '".$data['id']."'";
+    $result = mysqli_query($link, $query) or die(mysqli_error());
+    if ($result==1) echo "OK";
   }
   else if($data['type']=="save_calc"){
     $date=date("Y-m-d");
@@ -31,13 +41,13 @@
   }
   else if($data['type']=="save_company"){
     $date=date("Y-m-d");
-    $query = "INSERT INTO CompaniesNew VALUES ('','".$data['name']."','".$data['OrganizationFormID']."', '".$data['status']."','".$data['director_name']."','".$data['give_date']."','".$data['director_authority']."','".$data['general_director_passport']."','".$data['company_group']."','".$data['Communications']."','".$data['registration_date']."','".$data['who_registrate']."','".$data['company_phone']."','".$data['company_mail']."','".$data['company_url']."','".$data['OGRN']."','".$data['INN']."','".$data['KPP']."','".$data['OKPO']."','".$data['OKVED']."','".$data['r_account']."','".$data['k_account']."','".$data['bank']."','".$data['bik']."','".$data['Legal_address']."','".$data['Real_address']."','".$date."')";
+    $query = "INSERT INTO CompaniesNew VALUES ('','".$data['name']."','".$data['OrganizationFormID']."', '".$data['status']."','".$data['director_name']."','".$data['give_date']."','".$data['director_authority']."','".$data['general_director_passport']."','".$data['director_birth_place']."','".$data['director_address']."','".$data['company_group']."','".$data['Communications']."','".$data['registration_date']."','".$data['who_registrate']."','".$data['company_phone']."','".$data['company_mail']."','".$data['company_url']."','".$data['OGRN']."','".$data['INN']."','".$data['KPP']."','".$data['OKPO']."','".$data['OKVED']."','".$data['r_account']."','".$data['k_account']."','".$data['bank']."','".$data['bik']."','".$data['Legal_address']."','".$data['Real_address']."','".$date."')";
     $result = mysqli_query($link, $query) or die(mysqli_error($link));
     echo mysqli_insert_id($link);
   }
   else if ($data['type']=="update_company"){
     $card=$data['card'];
-    $query = "UPDATE CompaniesNew SET Communications='".$card['Communications']."', INN='".$card['INN']."',KPP='".$card['KPP']."',Legal_address='".$card['Legal_address']."',OGRN='".$card['OGRN']."',OKPO='".$card['OKPO']."',OKVED='".$card['OKVED']."',OrganizationFormID='".$card['OrganizationFormID']."',Real_address='".$card['Real_address']."',bank='".$card['bank']."',bik='".$card['bik']."',company_group='".$card['company_group']."',company_mail='".$card['company_mail']."',company_phone='".$card['company_phone']."',company_url='".$card['company_url']."',general_director_passport='".$card['general_director_passport']."',director_name='".$card['director_name']."',give_date='".$card['give_date']."',director_authority='".$card['director_authority']."',k_account='".$card['k_account']."',name='".$card['name']."',r_account='".$card['r_account']."',registration_date='".$card['registration_date']."',status='".$card['status']."',who_registrate='".$card['who_registrate']."' WHERE id = '".$data['id']."'";
+    $query = "UPDATE CompaniesNew SET Communications='".$card['Communications']."', INN='".$card['INN']."',KPP='".$card['KPP']."',Legal_address='".$card['Legal_address']."',OGRN='".$card['OGRN']."',OKPO='".$card['OKPO']."',OKVED='".$card['OKVED']."',OrganizationFormID='".$card['OrganizationFormID']."',Real_address='".$card['Real_address']."',bank='".$card['bank']."',bik='".$card['bik']."',company_group='".$card['company_group']."',company_mail='".$card['company_mail']."',company_phone='".$card['company_phone']."',company_url='".$card['company_url']."',general_director_passport='".$card['general_director_passport']."',director_birth_place='".$card['director_birth_place']."',director_address='".$card['director_address']."',director_name='".$card['director_name']."',give_date='".$card['give_date']."',director_authority='".$card['director_authority']."',k_account='".$card['k_account']."',name='".$card['name']."',r_account='".$card['r_account']."',registration_date='".$card['registration_date']."',status='".$card['status']."',who_registrate='".$card['who_registrate']."' WHERE id = '".$data['id']."'";
     $result = mysqli_query($link, $query) or die(mysqli_error($link));
     echo $result;
 

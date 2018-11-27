@@ -99,10 +99,8 @@
     }
     else if ($data['type']=='load_company') {
         $query="SELECT * FROM CompaniesNew WHERE id=".$data['id'];
-        $result = mysqli_query($link,$query) or die(mysqli_error());
+        $result = mysqli_query($link,$query) or die(mysqli_error($link));
         $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
         echo json_encode($row);
-
     }
-
 ?>

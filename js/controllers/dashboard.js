@@ -336,4 +336,10 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
     $scope.$on('$destroy', function () {
         myFactory.removeCellSelection ('dashboard_container',true);
     });
+    $scope.isntEmpty = obj => {
+        for (let key in obj) {
+            if (obj[key] != "" && obj[key] != "Форма организации" && obj[key] != undefined) return true;
+        }
+        return false;
+    }
 });

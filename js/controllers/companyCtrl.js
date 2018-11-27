@@ -5,7 +5,7 @@ import Company from '../protos/company.js';
  */
 app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $timeout) {
     //******    Инициализация   *******
-    if ($location.$$path==='/profile') return false; //если вызывается контроллер в профайле, так не должно быть
+    if ($location.$$path!=='/company') return false; //если вызывается контроллер в профайле, так не должно быть
     const scope = this;
     $scope.myFactory = myFactory;
     $scope.clientCard = {};
@@ -29,7 +29,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
     });
     function init () {
         if (!myFactory.loadCompany) {
-            $http.post("./src/new_company.json").then(function success(response) {
+            $http.post("./src/new_company.json").then(async function success(response) {
                 const obj = response.data;
                 // загрузка в каретку данных из карты клиента
                 for (const key in obj) {
@@ -48,14 +48,16 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
                 // удаляем ИД из отображения в матрице
                 delete $scope.clientCard.ID;
                 $scope.currObj = [];
+                $scope.setEmptyCardParam();
                 // делаем верхнюю каретку как образец из json
                 $scope.currObj = response.data;
-    
+                await delay(50);
                 if (myFactory.loadClient !== undefined) {
                     $scope.loadToDashboard(myFactory.loadClient);
                     delete myFactory.loadClient;
+                } else {
+                    $scope.newDashboard.setCurrentPage(0);
                 }
-                $scope.setEmptyCardParam();
             }, function error(response) {
                 console.log(response);
                 
@@ -84,6 +86,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
         setCurrentPage(index) {
             this.previousPage = this.currentPage;
             this.currentPage = index;
+            $scope.loadToDashboard($scope.currObj[index].values[0].name);
         },
         getIndex(param) {
             this.setCurrentPage($scope.clientCard.indexOf(param));
@@ -170,6 +173,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
         $scope.currObj.forEach((param, i) => {
             param.values.forEach(({ name }, j) => {
                 if (name == key) {
+                    if ($scope.newDashboard.currentPage != i) $scope.newDashboard.setCurrentPage(i);
                     Array.from(document.querySelectorAll(".company_dashboard_inputs")).forEach(item => {
                         item.classList.remove("selected");
                     });
@@ -177,7 +181,6 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
                         node.classList.remove("mi_selected");
                         if (node.title == key) node.classList.add("mi_selected");
                     })
-                    if ($scope.newDashboard.currentPage != i) $scope.newDashboard.setCurrentPage(i);
                     setTimeout(() => {
                         const elem = document.querySelector(".ul_current").firstElementChild.children[j].firstElementChild;
                         elem.classList.add("selected");
@@ -377,7 +380,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
          * @returns {object} объект со старыми значениями, которые были изменены
          */
         function findChanges(oldC,newC) {
-            const skip = ['id','date','type','Communications','Legal_address','Real_address','company_group','company_mail','company_phone','company_url'];
+            const skip = ['id','date','type','Communications','company_group','company_url'];
             // если даты не заданы в новом и старом, то убираем их из списка сравнения
             if ((oldC['give_date']===''||oldC['give_date']==='0000-00-00')&&(newC['give_date']===''||newC['give_date']==='0000-00-00')) skip.push('give_date');
             if ((oldC['registration_date']===''||oldC['registration_date']==='0000-00-00')&&(newC['registration_date']===''||newC['registration_date']==='0000-00-00')) skip.push('registration_date');
@@ -401,24 +404,26 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
     function generateSaveCompanyObj(card) {
         return {
             Communications: "",
-            INN: getInnKpp('INN',card["Реквизиты компании"]["ИНН/КПП"]),
-            KPP: getInnKpp('KPP',card["Реквизиты компании"]["ИНН/КПП"]),
-            Legal_address: "",
+            INN: card["Реквизиты компании"]["ИНН"],
+            KPP: card["Реквизиты компании"]["КПП"],
+            Legal_address: card['Доп. информация']['Юридический адрес'],
             OGRN: card["Реквизиты компании"]["ОГРН"],
             OKPO: card["Реквизиты компании"]['ОКПО'],
             OKVED: card["Реквизиты компании"]['ОКВЭД'],
             OrganizationFormID: getOrgForm(card['Данные компании']["Форма организации"]),
-            Real_address: "",
+            Real_address: card['Доп. информация']['Фактический адрес'],
             bank: card["Банковские реквизиты"]["Банк"],
             bik: card["Банковские реквизиты"]["БИК"],
             company_group: "",
-            company_mail: "",
-            company_phone: "",
+            company_mail: card['Доп. информация']['Эл. почта'],
+            company_phone: card['Доп. информация']['Телефон'],
             company_url: "",
             general_director_passport: card["Генеральный директор"]["Серия и номер паспорта"],
             director_name:card["Генеральный директор"]['ФИО директора'],
             give_date:card["Генеральный директор"]['Когда выдан'],
             director_authority:card["Генеральный директор"]['Кем выдан'],
+            director_birth_place: card['Продолжение']['Место рождения'],
+            director_address: card['Продолжение']['Адрес регистрации'],
             id: "",
             k_account: card["Банковские реквизиты"]["к/счет"],
             name: card['Данные компании']["Наименование организации"],
@@ -426,17 +431,6 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             registration_date: card['Данные компании']["Дата регистрации"],
             status: "",
             who_registrate: card['Данные компании']["Наименование рег. органа"],
-        }
-        function getInnKpp (type,data) {
-            if (data===''||data===undefined) return '';
-            const arr = data.split('/');
-            switch (type) {
-                case 'INN':
-                    return arr[0].trim();
-                case 'KPP':
-                    if (arr.length===1) return '';
-                    return arr[1].trim();
-            }
         }
         function getOrgForm (data) {
             if (data===''||data===undefined) return '';

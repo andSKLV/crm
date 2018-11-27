@@ -1,7 +1,10 @@
 <table class="matrix">
     <tbody>
         <tr ng-repeat="param in clientCard" class="matrix_row">
-            <td ng-repeat="(key,value) in param" data-tooltip="{{key}}" ng-mouseenter="appendTooltip(key)" ng-mouseleave="removeTooltip()" title="{{key}}" class="properties" ng-click="loadToDashboard(key)">
+            <td ng-repeat="(key,value) in param" data-tooltip="{{key}}" 
+            ng-mouseenter="appendTooltip(key)" ng-mouseleave="removeTooltip()" title="{{key}}" class="properties" 
+            ng-click="loadToDashboard(key)" 
+            colspan="{{(key==='Место рождения' || key==='Адрес регистрации') ? 4 : (key==='ИНН' || key==='КПП') ? 1 : 2}}">
                 <div class="company_matrix_header{{(value==='')?' company_matrix_header--red':''}}">{{key}}</div>
                 <div class="company_matrix_name">{{value}}</div>
             </td>
