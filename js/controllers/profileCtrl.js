@@ -21,8 +21,8 @@ app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location
     pr.store.calcLinks = await $scope.loadCalcLinks(id);
     const calcs = await $scope.loadCalculations(pr.store.calcLinks);//загрузка расчетов
     pr.store.calculations = fixPremia(calcs);
-    // TODO: линки с БД connections
     await $scope.loadAddresses ();
+    // TODO: линки с БД connections
     modal.hide();
 
     function loadDash() {
