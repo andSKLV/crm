@@ -380,7 +380,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
          * @returns {object} объект со старыми значениями, которые были изменены
          */
         function findChanges(oldC,newC) {
-            const skip = ['id','date','type','Communications','Legal_address','Real_address','company_group','company_mail','company_phone','company_url'];
+            const skip = ['id','date','type','Communications','company_group','company_url'];
             // если даты не заданы в новом и старом, то убираем их из списка сравнения
             if ((oldC['give_date']===''||oldC['give_date']==='0000-00-00')&&(newC['give_date']===''||newC['give_date']==='0000-00-00')) skip.push('give_date');
             if ((oldC['registration_date']===''||oldC['registration_date']==='0000-00-00')&&(newC['registration_date']===''||newC['registration_date']==='0000-00-00')) skip.push('registration_date');
@@ -401,27 +401,29 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             return changed;
         }
     }
-    async function generateSaveCompanyObj(card) {
+    function generateSaveCompanyObj(card) {
         return {
             Communications: "",
-            INN: getInnKpp('INN',card["Реквизиты компании"]["ИНН/КПП"]),
-            KPP: getInnKpp('KPP',card["Реквизиты компании"]["ИНН/КПП"]),
-            Legal_address: "",
+            INN: card["Реквизиты компании"]["ИНН"],
+            KPP: card["Реквизиты компании"]["КПП"],
+            Legal_address: card['Доп. информация']['Юридический адрес'],
             OGRN: card["Реквизиты компании"]["ОГРН"],
             OKPO: card["Реквизиты компании"]['ОКПО'],
             OKVED: card["Реквизиты компании"]['ОКВЭД'],
             OrganizationFormID: getOrgForm(card['Данные компании']["Форма организации"]),
-            Real_address: "",
+            Real_address: card['Доп. информация']['Фактический адрес'],
             bank: card["Банковские реквизиты"]["Банк"],
             bik: card["Банковские реквизиты"]["БИК"],
             company_group: "",
-            company_mail: "",
-            company_phone: "",
+            company_mail: card['Доп. информация']['Эл. почта'],
+            company_phone: card['Доп. информация']['Телефон'],
             company_url: "",
             general_director_passport: card["Генеральный директор"]["Серия и номер паспорта"],
             director_name:card["Генеральный директор"]['ФИО директора'],
             give_date:card["Генеральный директор"]['Когда выдан'],
             director_authority:card["Генеральный директор"]['Кем выдан'],
+            director_birth_place: card['Продолжение']['Место рождения'],
+            director_address: card['Продолжение']['Адрес регистрации'],
             id: "",
             k_account: card["Банковские реквизиты"]["к/счет"],
             name: card['Данные компании']["Наименование организации"],
@@ -429,17 +431,6 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
             registration_date: card['Данные компании']["Дата регистрации"],
             status: "",
             who_registrate: card['Данные компании']["Наименование рег. органа"],
-        }
-        function getInnKpp (type,data) {
-            if (data===''||data===undefined) return '';
-            const arr = data.split('/');
-            switch (type) {
-                case 'INN':
-                    return arr[0].trim();
-                case 'KPP':
-                    if (arr.length===1) return '';
-                    return arr[1].trim();
-            }
         }
         function getOrgForm (data) {
             if (data===''||data===undefined) return '';

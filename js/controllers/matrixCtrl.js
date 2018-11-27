@@ -423,21 +423,32 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         data.id=id;
         return $http.post('php/search.php', data).then(async (resp) => {
             const loadAddresses = () => {
+                const check = str => {
+                    return (isNumeric(str)) ? str : '1';
+                  }
                 const query = {
-                  legal_id: myFactory.companyObj.responses.card.Legal_address,
-                  real_id: myFactory.companyObj.responses.card.Real_address,
-                };
+                legal_id: check(myFactory.companyObj.responses.card.Legal_address),
+                real_id: check(myFactory.companyObj.responses.card.Real_address),
+                }
                 const formatAddress = adr => {
                   return Object.values(adr).slice(1).filter(v=>v!=='').map(v=>v.trim());
                 }
                 query.type = 'addresses';
                 return $http.post('php/load.php',query).then(resp=>{
+                    if (!Array.isArray(resp.data)) {
+                        console.error(resp.data);
+                        return false;
+                    }
                   const data = resp.data;
                   myFactory.companyObj.responses.adresses = data;
-                  const legal = formatAddress(data[0]).join(', ')
-                  const fakt = formatAddress(data[1]).join(', ');
-                  myFactory.newClientCard['Доп. информация']['Юридический адрес'] = legal;
-                  myFactory.newClientCard['Доп. информация']['Фактический адрес'] = fakt;
+                  if (data[0].id!=='1') {
+                    const legal = formatAddress(data[0]).join(', ');
+                    myFactory.newClientCard['Доп. информация']['Юридический адрес'] = legal;
+                  }
+                  if (data[1].id!=='1') {
+                    const fakt = formatAddress(data[1]).join(', ');
+                    myFactory.newClientCard['Доп. информация']['Фактический адрес'] = fakt;
+                  }
                 },err=>{
                   console.error(err);
                 })
