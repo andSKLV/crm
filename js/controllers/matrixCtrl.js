@@ -434,6 +434,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                   return Object.values(adr).slice(1).filter(v=>v!=='').map(v=>v.trim());
                 }
                 query.type = 'addresses';
+                if (query.legal_id==='1'&&query.real_id==='1') return false;
                 return $http.post('php/load.php',query).then(resp=>{
                     if (!Array.isArray(resp.data)) {
                         console.error(resp.data);
@@ -442,10 +443,12 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                   const data = resp.data;
                   myFactory.companyObj.responses.adresses = data;
                   if (data[0].id!=='1') {
+                    if (data[0].PostalCode==='0') delete data[0].PostalCode;
                     const legal = formatAddress(data[0]).join(', ');
                     myFactory.newClientCard['Доп. информация']['Юридический адрес'] = legal;
                   }
                   if (data[1].id!=='1') {
+                    if (data[1].PostalCode==='0') delete data[1].PostalCode;
                     const fakt = formatAddress(data[1]).join(', ');
                     myFactory.newClientCard['Доп. информация']['Фактический адрес'] = fakt;
                   }

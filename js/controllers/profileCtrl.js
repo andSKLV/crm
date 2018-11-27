@@ -214,7 +214,6 @@ app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location
    * Загруженные данные сохраняются в companyObj и newClientCard
    */
   $scope.loadAddresses = () => {
-    debugger;
     const check = str => {
       return (isNumeric(str)) ? str : '1';
     }
@@ -225,6 +224,7 @@ app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location
     const formatAddress = adr => {
       return Object.values(adr).slice(1).filter(v=>v!=='').map(v=>v.trim());
     }
+    if (query.legal_id==='1'&&query.real_id==='1') return false;
     query.type = 'addresses';
     return $http.post('php/load.php',query).then(resp=>{
       if (!Array.isArray(resp.data)) {
@@ -234,10 +234,12 @@ app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location
       const data = resp.data;
       myFactory.companyObj.responses.adresses = data;
       if (data[0].id!=='1') {
+        if (data[0].PostalCode==='0') delete data[0].PostalCode;//если индекс 0, то удаляем его
         const legal = formatAddress(data[0]).join(', ');
         myFactory.newClientCard['Доп. информация']['Юридический адрес'] = legal;
       }
       if (data[1].id!=='1') {
+        if (data[1].PostalCode==='0') delete data[1].PostalCode;//если индекс 0, то удаляем его
         const fakt = formatAddress(data[1]).join(', ');
         myFactory.newClientCard['Доп. информация']['Фактический адрес'] = fakt;
       }
