@@ -1,8 +1,8 @@
 /**
  * Класс для работы с PDF
  */
-class PolisMaker{
-    constructor () {
+class PolisMaker {
+    constructor() {
         this.carsTables = [];
     }
     /**
@@ -11,17 +11,17 @@ class PolisMaker{
      * @return {array} массив со списками машин
      */
     makeCarLists(myFactory) {
-        let lists=[];
-        myFactory.parks.forEach((park, parkNumber)=>{    
-            park.processes.forEach((process, i)=>{
+        let lists = [];
+        myFactory.parks.forEach((park, parkNumber) => {
+            park.processes.forEach((process, i) => {
                 let wasIndex = null;
-                for (let k=0;k<i;k++) {
-                    if (this.areEquivalent(park.processes[i]["cars"],park.processes[k]["cars"])) {
-                        wasIndex = lists.findIndex(l=>l.processes.includes(park.processes[k]));
+                for (let k = 0; k < i; k++) {
+                    if (this.areEquivalent(park.processes[i]["cars"], park.processes[k]["cars"])) {
+                        wasIndex = lists.findIndex(l => l.processes.includes(park.processes[k]));
                         break;
                     }
                 }
-                if(i==0 || wasIndex===null){
+                if (i == 0 || wasIndex === null) {
                     lists.push(
                         {
                             cars: park.processes[i]["cars"],
@@ -30,10 +30,10 @@ class PolisMaker{
                         }
                     )
                 }
-                else{
+                else {
                     lists[wasIndex].processes.push(park.processes[i]);
                     lists[wasIndex].risks.push(park.processes[i].risk);
-                }              
+                }
             });
         });
         return lists;
@@ -45,9 +45,9 @@ class PolisMaker{
      * @return {boolean} возвращает true, если машины идентичны
      */
     areEquivalent(mass1, mass2) {
-        if (mass1.length!==mass2.length) return false;
-        for(const car of mass1){
-            if(!mass2.includes(car)) return false;
+        if (mass1.length !== mass2.length) return false;
+        for (const car of mass1) {
+            if (!mass2.includes(car)) return false;
         }
         return true;
     }
@@ -60,28 +60,31 @@ class PolisMaker{
         this.carsTables = [];
         const emptyCell = {
             text: '',
-            border: [false,false,false,false],
+            border: [false, false, false, false],
         }
-        let body=[];
-        const lists=this.makeCarLists(myFactory);
-        const listContent=[];
-        let listCount=1;
-        const colOrder = ['amount', 'wrapping', 'listCount','cost','risk','limit','franchise']; //порядок столбцов в таблице
+        let body = [];
+        const lists = this.makeCarLists(myFactory);
+        const listContent = [];
+        let listCount = 1;
+        //порядок столбцов в таблице
+        const colOrder = ['amount', 'wrapping', 'listCount', 'cost', 'risk', 'limit', 'franchise'];
+        // ширины столбца
         const colWidth = {
-            'listCount' : 40,
+            'listCount': 40,
             'risk': 97,
             'cost': 61,
-            "amount": 65, 
-            "wrapping":60, 
-            "limit": 60, 
+            "amount": 65,
+            "wrapping": 60,
+            "limit": 60,
             "franchise": 60,
-        } // ширины столбца
+        }
         const rowWidths = [];
-        for (let i=0;i<7;i++) {
+        //создание массива с ширинами столбцов
+        for (let i = 0; i < 7; i++) {
             const name = colOrder[i];
             rowWidths.push(colWidth[name]);
-        } //создание массива с ширинами столбцов
-        let table={
+        }
+        let table = {
             style: 'table',
             table: {
                 headerRows: 1,
@@ -91,13 +94,13 @@ class PolisMaker{
                 body: [
                     [
                         {
-                            text:`Количество ${myFactory.amountType}`,
-                            style:"firstHeader", 
+                            text: `Количество ${myFactory.amountType}`,
+                            style: "firstHeader",
                             border: [false, false, false, false],
                         },
                         {
-                            text:'Тип грузового отсека', 
-                            style:"firstHeader",
+                            text: 'Тип грузового отсека',
+                            style: "firstHeader",
                             border: [false, false, false, false],
                         },
                         {
@@ -106,23 +109,23 @@ class PolisMaker{
                             border: [false, false, false, false],
                         },
                         {
-                            text:'Страховая стоимость, руб.', 
-                            style:"firstHeader",
+                            text: 'Страховая стоимость, руб.',
+                            style: "firstHeader",
                             border: [false, false, false, false],
                         },
                         {
-                            text:'Застрахованные риски', 
-                            style:"firstHeader",
+                            text: 'Застрахованные риски',
+                            style: "firstHeader",
                             border: [false, false, false, false],
                         },
                         {
-                            text:'Лимит по случаю, руб.', 
-                            style:"firstHeader",
+                            text: 'Лимит по случаю, руб.',
+                            style: "firstHeader",
                             border: [false, false, false, false],
                         },
                         {
-                            text:'Франшиза по случаю, руб.',
-                            style:"firstHeader",
+                            text: 'Франшиза по случаю, руб.',
+                            style: "firstHeader",
                             border: [false, false, false, false],
                         }
                     ]
@@ -140,7 +143,7 @@ class PolisMaker{
              * Функция подсчета количества строк в наименовании риска
              */
             const countRows = (str) => {
-                if (str==='Повреждение товарных автомобилей') return 3; //FIXME:
+                if (str === 'Повреждение товарных автомобилей') return 3; //FIXME:
                 const arr = str.split(' ');
                 if (arr.length === 1) return 1;
                 let rows = 1;
@@ -177,9 +180,9 @@ class PolisMaker{
                 const row = [];
                 const riskRowLength = countRows(process.risk); //считаем длинну текста и сколько он занимает строк
                 const riskMargin = getMargin(riskRowLength);
-                const bigMargin = [0,13,0,13];
+                const bigMargin = [0, 13, 0, 13];
 
-                colOrder.forEach((property,id) => {
+                colOrder.forEach((property, id) => {
                     let obj;
                     switch (property) {
                         case 'amount':
@@ -189,21 +192,21 @@ class PolisMaker{
                                     margin: bigMargin,
                                 }
                             }
-                            else { 
+                            else {
                                 obj = {
                                     text: `${process[property]}`,
                                     margin: bigMargin,
                                 }
                             }
                             break;
-                        case 'cost'||'limit'||'franchise':
+                        case 'cost' || 'limit' || 'franchise':
                             obj = {
                                 text: this.addSpaces(process[property]),
                                 margin: bigMargin,
                             }
                             break;
                         case 'risk':
-                            obj ={
+                            obj = {
                                 text: process[property],
                                 margin: riskMargin,
                             };
@@ -227,20 +230,20 @@ class PolisMaker{
                 tableContent.push(row);
             })
 
-            
+
             this.carsTables.push('\n');
-            const tableCar={
+            const tableCar = {
                 style: 'table',
                 table: {
                     headerRows: 2,
-                    widths:[29,73,141,58,159],
+                    widths: [29, 73, 141, 58, 159],
                     body: [
                         [
                             {
-                                text:`Список ТС №${listCount}`,
-                                border:[false,false,false,false],
-                                colSpan:3,
-                                alignment:'left'
+                                text: `Список ТС №${listCount}`,
+                                border: [false, false, false, false],
+                                colSpan: 3,
+                                alignment: 'left'
                             },
                             emptyCell,
                             emptyCell,
@@ -249,36 +252,36 @@ class PolisMaker{
                         ],
                         [
                             {
-                                text:'п/п',
-                                style:"firstHeader" 
+                                text: 'п/п',
+                                style: "firstHeader"
                             },
                             {
-                                text:'Номер', 
-                                style:"firstHeader",
+                                text: 'Номер',
+                                style: "firstHeader",
                             },
                             {
-                                text:`VIN`,
-                                style:"firstHeader", 
+                                text: `VIN`,
+                                style: "firstHeader",
                             },
                             {
-                                text:'Год', 
-                                style:"firstHeader",
+                                text: 'Год',
+                                style: "firstHeader",
                             },
                             {
-                                text:'Марка', 
-                                style:"firstHeader",
+                                text: 'Марка',
+                                style: "firstHeader",
                             }
                         ]
                     ]
                 },
             }
-            const tableContentCar=tableCar.table.body;
+            const tableContentCar = tableCar.table.body;
             // данные по машинам
-            list.cars.forEach((car,i)=>{
+            list.cars.forEach((car, i) => {
                 tableContentCar.push(
                     [
                         {
-                            text: i+1,
+                            text: i + 1,
                             style: 'carInfo',
                         },
                         {
@@ -329,68 +332,68 @@ class PolisMaker{
      * @return {array} возвращаем подготовленные для формата pdf данные
      */
     makeParagraphs(myFactory) {
-        const paragraphs=[];
+        const paragraphs = [];
         let parIndex = 2; //Стартующий номер параграфа, так как 1 занята под Риски
-        myFactory.polisObj.conditions.forEach(obj=>{
-            if(obj.name==="Базовые риски"){
+        myFactory.polisObj.conditions.forEach(obj => {
+            if (obj.name === "Базовые риски") {
                 return;
             }
             if (obj.const) return;
-            let paragraph={};
-            paragraph.widths=[30, 457];
-            paragraph.keepWithHeaderRows=1;
-            paragraph.body=[
-                [       
-                    { 
+            let paragraph = {};
+            paragraph.widths = [30, 457];
+            paragraph.keepWithHeaderRows = 1;
+            paragraph.body = [
+                [
+                    {
                         text: `${parIndex}. ${obj.name}:`,
                         style: "firstHeader",
-                        colSpan:2,
-                        border: [false,false,false,false],
+                        colSpan: 2,
+                        border: [false, false, false, false],
                     },
                     {},
                 ]
             ];
-            let mass=obj.values.filter(({checked})=>checked);
+            let mass = obj.values.filter(({ checked }) => checked);
             if (obj.oneLine) {
                 const text = mass.map(el => el.text).join(', ');
                 const tb = [
                     {
                         text: text,
-                        colSpan:2,
-                        border: [false,false,false,false],
+                        colSpan: 2,
+                        border: [false, false, false, false],
                         alignment: 'justify',
                     }
                 ]
                 paragraph.body.push(tb);
             }
             else {
-                mass.forEach((param, num)=>{
-                    let arr=[];
+                mass.forEach((param, num) => {
+                    let arr = [];
                     arr.push({
-                        text:`${parIndex}.${num+1}`,
-                        border: [false,false,false,false],
-                    },{
-                        text:param.text,
-                        border: [false,false,false,false],
-                    })
+                        text: `${parIndex}.${num + 1}`,
+                        border: [false, false, false, false],
+                    }, {
+                            text: param.text,
+                            border: [false, false, false, false],
+                        })
                     paragraph.body.push(arr);
-                    paragraph.headerRows= 1;
+                    paragraph.headerRows = 1;
                 });
             }
-            paragraph.headerRows= 1;
-            let layout = { 
+            paragraph.headerRows = 1;
+            let layout = {
                 fillColor: function (i, node) {
                     return (i % 2 === 0) ? '#e6e6e6' : null;
                 }
             }
             paragraphs.push({
-                table:paragraph,
+                table: paragraph,
                 layout
-            },"\n");
+            }, "\n");
             parIndex++;
         });
         return paragraphs;
-        
+
     }
     /**
      * Создаем два списка
@@ -407,94 +410,94 @@ class PolisMaker{
          * @param  {object} baseRisk объект с данными о базовых рисках
          * @return {object}
          */
-        const prepareListToPDF=({list, included, baseRisk})=>{
-            const table={
+        const prepareListToPDF = ({ list, included, baseRisk }) => {
+            const table = {
                 headerRows: 1,
-                widths:[30, 457],
-                body:[]
+                widths: [30, 457],
+                body: []
             };
-            if(included){
+            if (included) {
                 table.body.push([
                     {
                         text: '1.1 Определения застрахованных рисков:',
                         style: "firstHeader",
                         colSpan: 2,
-                        border: [false,false,false,false],
+                        border: [false, false, false, false],
                     },
                     {}
                 ])
-                let count=1;
+                let count = 1;
                 // сначала добавляем Базовые риски (включенные)
-                if(baseRisk.ToPDFinclude){
+                if (baseRisk.ToPDFinclude) {
                     table.body.push([
                         {
                             text: `1.1.${count}`,
-                            border: [false,false,false,false],
+                            border: [false, false, false, false],
                         },
                         {
                             stack: baseRisk.ToPDFinclude,
-                            border: [false,false,false,false]
+                            border: [false, false, false, false]
                         }
                     ]);
                     count++;
-                } 
-                for(const risk of list){
+                }
+                for (const risk of list) {
                     table.body.push([
                         {
                             text: `1.1.${count}`,
-                            border: [false,false,false,false],
+                            border: [false, false, false, false],
                         },
                         {
                             text: [
-                                {text:`${risk.name}`, bold: true},
-                                {text:` - ${risk.title}. `}
+                                { text: `${risk.name}`, bold: true },
+                                { text: ` - ${risk.title}. ` }
                             ],
-                            border: [false,false,false,false],
+                            border: [false, false, false, false],
                         }
-                        
+
                     ])
                     count++;
                 }
             }
-            else{
+            else {
                 table.body.push([
                     {
                         text: '1.2 Определения не заявленных на страхование рисков:',
                         style: "firstHeader",
                         colSpan: 2,
-                        border: [false,false,false,false],
+                        border: [false, false, false, false],
                     },
                     {}
                 ])
-                let count=1;
+                let count = 1;
                 // сначала добавляем Базовые риски (исключенные)
-                if(baseRisk.ToPDFnotInclude){
+                if (baseRisk.ToPDFnotInclude) {
                     table.body.push([
                         {
                             text: `1.2.${count}`,
-                            border: [false,false,false,false],
+                            border: [false, false, false, false],
                         },
                         {
                             stack: baseRisk.ToPDFnotInclude,
-                            border: [false,false,false,false]
+                            border: [false, false, false, false]
                         },
                     ]);
                     count++;
-                } 
-                for(const risk of list){
+                }
+                for (const risk of list) {
                     table.body.push([
                         {
                             text: `1.2.${count}`,
-                            border: [false,false,false,false],
+                            border: [false, false, false, false],
                         },
                         {
                             text: [
-                                {text:`${risk.name}`,bold:true},
-                                {text:` - ${risk.title}. `}
+                                { text: `${risk.name}`, bold: true },
+                                { text: ` - ${risk.title}. ` }
                             ],
-                            border: [false,false,false,false],
+                            border: [false, false, false, false],
                         }
-                        
+
                     ])
                     count++;
                 }
@@ -509,33 +512,33 @@ class PolisMaker{
                 layout,
             };
         }
-        let content=[];
+        let content = [];
         /** 
          * После таблиц с номерами авто и рисками идет перечисление застрахованных и незастрахованных рисков 
          * Начинаем с базовых рисков
          * Если они включены(по умолчанию включены)
          */
-        let baseRisk=Object.assign({},myFactory.polisObj.conditions.filter((paragraph)=>{
-            return paragraph.name=="Базовые риски";
+        let baseRisk = Object.assign({}, myFactory.polisObj.conditions.filter((paragraph) => {
+            return paragraph.name == "Базовые риски";
         })[0]);
-        const baseHeader = {text: "Базовые риски:",bold:true}
-        baseRisk.ToPDFinclude=[baseHeader];
+        const baseHeader = { text: "Базовые риски:", bold: true }
+        baseRisk.ToPDFinclude = [baseHeader];
         baseRisk.ToPDFnotInclude = [baseHeader];
-        if(baseRisk){
+        if (baseRisk) {
             /**
              * если базовые риски включены - значит они в этом массиве не нужны, удаляем их 
              */
-            risks=risks.filter(({name})=>{
-                return name!=="Базовые риски";
+            risks = risks.filter(({ name }) => {
+                return name !== "Базовые риски";
             })
             /**
              * Сначала отбираем те параметры базовых рисков, которые включены, а затем делаем из них массив строк
              */
             const baseInclude = [];
             const baseNotInlude = [];
-            
-            baseRisk.values.forEach((val)=>{
-                if (val.checked) baseInclude.push(val.text) 
+
+            baseRisk.values.forEach((val) => {
+                if (val.checked) baseInclude.push(val.text)
                 else baseNotInlude.push(val.text);
             });
             baseRisk.ToPDFinclude.push(
@@ -550,42 +553,42 @@ class PolisMaker{
                     ul: baseNotInlude,
                 }
             )
-            if (baseInclude.length===0) delete baseRisk.ToPDFinclude;
-            if (baseNotInlude.length===0) delete baseRisk.ToPDFnotInclude;
+            if (baseInclude.length === 0) delete baseRisk.ToPDFinclude;
+            if (baseNotInlude.length === 0) delete baseRisk.ToPDFnotInclude;
         }
         /**
          * Дальше перечисляем сначала те риски, которые застрахованы, а также к каким перечням(спискам) машин они относятся
          * Для начала раскидаем машины по спискам
          */
-        let lists=this.makeCarLists(myFactory);
+        let lists = this.makeCarLists(myFactory);
         /**
          * Затем определим, какие риски и куда входят
          */
-        for(const risk of risks){
-            risk.list=[];
-            lists.forEach((list, i)=>{
-                if (list.risks.includes(risk.name)) risk.list.push(i+1);
+        for (const risk of risks) {
+            risk.list = [];
+            lists.forEach((list, i) => {
+                if (list.risks.includes(risk.name)) risk.list.push(i + 1);
             });
         }
         /**
          * Остается лишь преобразовать профильтрованные данные в формат pdf
          */
-        const includedRisks=risks.filter((risk)=>{
-            return risk.list.length>0
+        const includedRisks = risks.filter((risk) => {
+            return risk.list.length > 0
         });
         content.push(prepareListToPDF(
             {
-                list: includedRisks, 
+                list: includedRisks,
                 included: true,
                 baseRisk
             }), "\n"
         );
-        const notIncludedRisks=risks.filter((risk)=>{
-            return risk.list.length==0
+        const notIncludedRisks = risks.filter((risk) => {
+            return risk.list.length == 0
         })
         content.push(prepareListToPDF(
             {
-                list: notIncludedRisks, 
+                list: notIncludedRisks,
                 included: false,
                 baseRisk
             }), "\n"
@@ -596,9 +599,9 @@ class PolisMaker{
      * Создаем строку с описанием территории страхования на основе оговорки 
      * @param {object}  myFactory
      */
-    makeTerritory (myFactory) {
+    makeTerritory(myFactory) {
         const territoryVals = [];
-        myFactory.polisObj.conditions.find(c=>c.type==='territory').values.forEach(v=>{
+        myFactory.polisObj.conditions.find(c => c.type === 'territory').values.forEach(v => {
             if (v.checked) territoryVals.push(v.text.toUpperCase());
         });
         return territoryVals.join(', ');
@@ -608,15 +611,15 @@ class PolisMaker{
      * @param  {object} myFactory объект с практически всеми нужными данными
      * @param  {array} risks Список рисков с описанием
      */
-    makePDF(myFactory, risks){
+    makePDF(myFactory, risks) {
         const emptyCell = {
             text: '',
-            border: [false,false,false,false],
+            border: [false, false, false, false],
         }
-        const oneRowMargin = [0,10,0,10];
-        const twoRowMargin = [0,5,0,5]; 
+        const oneRowMargin = [0, 10, 0, 10];
+        const twoRowMargin = [0, 5, 0, 5];
         // собираем стоку с данными о территории страхования
-        const territory = this.makeTerritory (myFactory);
+        const territory = this.makeTerritory(myFactory);
         const currencySign = {
             'Р': '₽',
             'EUR': '€',
@@ -625,21 +628,21 @@ class PolisMaker{
         let pageWithExtraFooter = null;
         const docDefinition = {
             pageSize: 'A4',
-            pageMargins: [ 50, 115, 50, 65 ],
+            pageMargins: [50, 115, 50, 65],
             content: [
                 {
                     table: {
                         headerRows: 1,
-                        widths:[150, 150, 150],
+                        widths: [150, 150, 150],
                         body: [
                             [
-                                { 
+                                {
                                     text: [
-                                        "ПОЛИС CMR/ТТН - СТРАХОВАНИЯ ПЕРЕВОЗЧИКА \n", 
+                                        "ПОЛИС CMR/ТТН - СТРАХОВАНИЯ ПЕРЕВОЗЧИКА \n",
                                         "№ HIP-0000000-00-17"
                                     ],
                                     colSpan: 3,
-                                    style: 'firstHeader' ,
+                                    style: 'firstHeader',
                                     fontSize: 20,
                                     fillColor: '#e6e6e6',
                                 },
@@ -651,13 +654,13 @@ class PolisMaker{
                                     text: "Страхование действует в соответствии с Договором CMR/ТТН - страхования перевозчика № HIP-1000000-0-17.",
                                     colSpan: 3,
                                     fontSize: 10,
-                                    alignment:'center'
+                                    alignment: 'center'
                                 },
                                 {},
                                 {}
                             ],
-                            
-                            
+
+
                         ],
                         style: 'table',
                     },
@@ -670,7 +673,7 @@ class PolisMaker{
                 {
                     table: {
                         headerRows: 1,
-                        widths:[150, 150, 150],
+                        widths: [150, 150, 150],
                         body: [
                             [
                                 {
@@ -679,18 +682,18 @@ class PolisMaker{
                                     margin: oneRowMargin,
                                 },
                                 {
-                                    text:[
-                                        { 
-                                            text:"ООО «СК «КАПИТАЛ-ПОЛИС»\n",
+                                    text: [
+                                        {
+                                            text: "ООО «СК «КАПИТАЛ-ПОЛИС»\n",
                                             bold: true,
                                         },
                                         {
-                                            text:"Московский пр., д.22, лит. 3, Санкт-Петербург, 190013\n",
+                                            text: "Московский пр., д.22, лит. 3, Санкт-Петербург, 190013\n",
                                             fontSize: 10
                                         }
                                     ],
                                     colSpan: 2,
-                                    alignment:'center',
+                                    alignment: 'center',
                                     margin: twoRowMargin,
                                 },
                                 {}
@@ -702,10 +705,10 @@ class PolisMaker{
                                     margin: oneRowMargin
                                 },
                                 {
-                                    text:`${myFactory.polisObj.dates.start} - ${myFactory.polisObj.dates.end}`,
+                                    text: `${myFactory.polisObj.dates.start} - ${myFactory.polisObj.dates.end}`,
                                     alignment: 'center',
                                     bold: true,
-                                    colSpan:2,
+                                    colSpan: 2,
                                     margin: oneRowMargin
                                 }
                             ]
@@ -721,29 +724,29 @@ class PolisMaker{
                 {
                     table: {
                         headerRows: 1,
-                        widths:[150, 150, 150],
+                        widths: [150, 150, 150],
                         body: [
                             [
                                 {
                                     text: "СТРАХОВАТЕЛЬ",
                                     style: "leftCellFirstTable",
                                     margin: oneRowMargin
-                                    
+
                                 },
                                 {
-                                    text:[
-                                        { 
-                                            text:`${myFactory.newClientCard["Данные компании"]["Форма организации"]} ${myFactory.newClientCard["Данные компании"]["Наименование организации"].toUpperCase()}\n`,
+                                    text: [
+                                        {
+                                            text: `${myFactory.newClientCard["Данные компании"]["Форма организации"]} ${myFactory.newClientCard["Данные компании"]["Наименование организации"].toUpperCase()}\n`,
                                             bold: true,
                                         },
-                                        { 
-                                            text:"**Здесь должен быть адрес компании**",
+                                        {
+                                            text: "**Здесь должен быть адрес компании**",
                                             fontSize: 10,
                                         }
-                                        
+
                                     ],
                                     colSpan: 2,
-                                    alignment:'center',
+                                    alignment: 'center',
                                     margin: twoRowMargin
                                 },
                             ],
@@ -754,11 +757,11 @@ class PolisMaker{
                                     margin: twoRowMargin
                                 },
                                 {
-                                    text:`${myFactory.totalAmount / 24 }`,
-                                    margin:oneRowMargin,
+                                    text: `${myFactory.totalAmount / 24}`,
+                                    margin: oneRowMargin,
                                     bold: true,
                                     colSpan: 2,
-                                    alignment:'center'
+                                    alignment: 'center'
                                 },
                             ]
                         ]
@@ -772,27 +775,27 @@ class PolisMaker{
                 {
                     table: {
                         headerRows: 1,
-                        widths:[150, 150, 150],
-                        
+                        widths: [150, 150, 150],
+
                         body: [
                             [
                                 {
                                     text: "ТЕРРИТОРИЯ СТРАХОВАНИЯ",
                                     style: "leftCellFirstTable",
-                                    margin: oneRowMargin.map((v,i)=>(i===1)?v+2:v)
+                                    margin: oneRowMargin.map((v, i) => (i === 1) ? v + 2 : v)
                                 },
                                 {
-                                    text:`${territory}`,
+                                    text: `${territory}`,
                                     colSpan: 2,
-                                    alignment:'center',
-                                    margin: (territory.length<65) ? oneRowMargin : twoRowMargin
+                                    alignment: 'center',
+                                    margin: (territory.length < 65) ? oneRowMargin : twoRowMargin
                                 },
                             ],
                             // [
                             //     {
                             //         text: "ЛИМИТ ОТВЕТСТВЕННОСТИ СТРАХОВЩИКА ПО СЛУЧАЮ",
                             //         style: "leftCellFirstTable"
-                                    
+
                             //     },
                             //     {
                             //         text:`${this.addSpaces(myFactory.a_limit.value)}`,
@@ -809,18 +812,18 @@ class PolisMaker{
                                     margin: twoRowMargin
                                 },
                                 {
-                                    text:`${this.addSpaces(myFactory.a_limit.value)} ${currencySign[myFactory.document.currency]}`,
-                                    margin:oneRowMargin,
+                                    text: `${this.addSpaces(myFactory.a_limit.value)} ${currencySign[myFactory.document.currency]}`,
+                                    margin: oneRowMargin,
                                     bold: true,
                                     colSpan: 2,
-                                    alignment:'center'
+                                    alignment: 'center'
                                 },
                             ],
                             // [
                             //     {
                             //         text: "БЕЗУСЛОВНАЯ ФРАНШИЗА",
                             //         style: "leftCellFirstTable"
-                                    
+
                             //     },
                             //     {
                             //         text:"НЕ ПРИМЕНЯЕТСЯ",
@@ -835,10 +838,10 @@ class PolisMaker{
                                     margin: oneRowMargin
                                 },
                                 {
-                                    text:`${parseDate(new Date())}`,
+                                    text: `${parseDate(new Date())}`,
                                     bold: true,
                                     colSpan: 2,
-                                    alignment:'center',
+                                    alignment: 'center',
                                     margin: oneRowMargin
                                 },
                             ]
@@ -852,15 +855,15 @@ class PolisMaker{
                 {
                     table: {
                         headerRows: 1,
-                        widths:[468],
+                        widths: [468],
                         body: [
-                            [                            
-                                { 
+                            [
+                                {
                                     text: "Страхованием покрывается любой и каждый груз, с учетом исключений, предусмотренных полисом.",
                                     style: "leftCellFirstTable",
                                     alignment: 'center',
                                     bold: true
-                                },                      
+                                },
                             ],
                         ]
                     },
@@ -873,35 +876,35 @@ class PolisMaker{
                 {
                     table: {
                         headerRows: 1,
-                        widths:[100, 300, 50],
+                        widths: [100, 300, 50],
                         body: [
                             [
                                 {
-                                    text:[
+                                    text: [
                                         {
-                                            text:"ООО «СК «КАПИТАЛ-ПОЛИС»\n",
-                                            bold:true,
+                                            text: "ООО «СК «КАПИТАЛ-ПОЛИС»\n",
+                                            bold: true,
                                         },
                                         {
-                                            text:"\n\n"
+                                            text: "\n\n"
                                         },
                                         {
-                                            text:"__________________________________________\n",
+                                            text: "__________________________________________\n",
                                         },
                                         {
-                                            text:"/Корпусов Д.В/\n",
+                                            text: "/Корпусов Д.В/\n",
                                             fontSize: 7
                                         },
                                         {
-                                            text:"Доверенность №74/2018 от 10.03.2018\n",
+                                            text: "Доверенность №74/2018 от 10.03.2018\n",
                                             fontSize: 7
                                         },
                                         {
-                                            text:"\n"
+                                            text: "\n"
                                         }
                                     ],
-                                    alignment:"center",
-                                    colSpan:3
+                                    alignment: "center",
+                                    colSpan: 3
                                 },
                                 {},
                                 {}
@@ -917,31 +920,31 @@ class PolisMaker{
                 {
                     table: {
                         headerRows: 1,
-                        widths:[100, 300, 50],
+                        widths: [100, 300, 50],
                         body: [
                             [
                                 {
-                                    text:[
+                                    text: [
                                         {
                                             text: 'ЦЕНТР СТРАХОВАНИЯ ТРАНСПОРТНЫХ РИСКОВ\n\n',
-                                            bold:true,
+                                            bold: true,
                                             fontSize: 12,
                                         },
                                         {
-                                            text:"Телефон: +7 (812) 322-63-51\n",
+                                            text: "Телефон: +7 (812) 322-63-51\n",
                                             fontSize: 10,
                                         },
                                         {
-                                            text:"E-mail: cargo@capitalpolis.ru, claims@capitalpolis.ru\n",
+                                            text: "E-mail: cargo@capitalpolis.ru, claims@capitalpolis.ru\n",
                                             fontSize: 10,
                                         },
                                         {
-                                            text:"Московский пр., д.22, лит. 3, Санкт-Петербург, 190013, Россия",
+                                            text: "Московский пр., д.22, лит. 3, Санкт-Петербург, 190013, Россия",
                                             fontSize: 10
                                         }
                                     ],
-                                    alignment:"center",
-                                    colSpan:3
+                                    alignment: "center",
+                                    colSpan: 3
                                 },
                                 {},
                                 {}
@@ -954,49 +957,49 @@ class PolisMaker{
                     }
                 }
             ],
-            footer: function(page, pages,smth,pagesArr) {
+            footer: function (page, pages, smth, pagesArr) {
                 const findExtraPage = arr => {
                     let pageNumb = null;
-                    arr.forEach((page,ind)=>{
+                    arr.forEach((page, ind) => {
                         if (page.items[0].type === 'line' && page.items[0].item.inlines[0].text === 'ПРИЛОЖЕНИЕ ' &&
-                        page.items[0].item.inlines[1].text === '1 ') pageNumb = ind;
+                            page.items[0].item.inlines[1].text === '1 ') pageNumb = ind;
                     })
                     if (!pageNumb) console.error('Не найдена страница с приложением 1');
                     else pageWithExtraFooter = pageNumb;
                 }
-                if (pageWithExtraFooter===null) {
+                if (pageWithExtraFooter === null) {
                     findExtraPage(pagesArr);
                 }
-                if (page===pageWithExtraFooter) return {
+                if (page === pageWithExtraFooter) return {
                     table: {
                         headerRows: 0,
-                        widths:[50,70,150,70,150,50],
+                        widths: [50, 70, 150, 70, 150, 50],
                         body: [
                             [
                                 {
                                     text: `Лист ${page.toString()}/${pages.toString()} Полиса № HIP-0000000-00-17`,
-                                    colSpan:6,
-                                    border: [false,false,false,false],
+                                    colSpan: 6,
+                                    border: [false, false, false, false],
                                     alignment: 'center',
                                     fontSize: 7,
-                                    margin: [0,40,0,0],
+                                    margin: [0, 40, 0, 0],
                                 }
                             ]
                         ],
                         style: 'table'
                     }
                 }
-                if (page>1) return { 
+                if (page > 1) return {
                     table: {
                         headerRows: 0,
-                        widths:[50,70,150,70,150,50],
+                        widths: [50, 70, 150, 70, 150, 50],
                         body: [
                             [
-                                {   
+                                {
                                     // пустая строка для отступа
                                     text: '',
                                     fontSize: 12,
-                                    border: [false,false,false,false]
+                                    border: [false, false, false, false]
                                 },
                                 emptyCell,
                                 emptyCell,
@@ -1010,21 +1013,21 @@ class PolisMaker{
                                 {
                                     text: 'Cтрахователь:',
                                     fontSize: 10,
-                                    border: [false,false,false,false],
+                                    border: [false, false, false, false],
                                 },
                                 {
                                     text: '___________________________________',
-                                    border: [false,false,false,false],
+                                    border: [false, false, false, false],
                                 }
                                 ,
                                 {
                                     text: 'Cтраховщик:',
                                     fontSize: 10,
-                                    border: [false,false,false,false],
+                                    border: [false, false, false, false],
                                 },
                                 {
                                     text: '___________________________________',
-                                    border: [false,false,false,false],
+                                    border: [false, false, false, false],
                                 }
                                 ,
                                 emptyCell
@@ -1037,22 +1040,22 @@ class PolisMaker{
                                     text: 'подпись и печать',
                                     fontSize: 7,
                                     alignment: 'center',
-                                    border: [false,false,false,false],
+                                    border: [false, false, false, false],
                                 },
                                 emptyCell,
                                 {
                                     text: 'подпись и печать',
                                     fontSize: 7,
                                     alignment: 'center',
-                                    border: [false,false,false,false],
+                                    border: [false, false, false, false],
                                 },
                                 emptyCell
                             ],
                             [
                                 {
                                     text: `Лист ${page.toString()}/${pages.toString()} Полиса № HIP-0000000-00-17`,
-                                    colSpan:6,
-                                    border: [false,false,false,false],
+                                    colSpan: 6,
+                                    border: [false, false, false, false],
                                     alignment: 'center',
                                     fontSize: 7,
                                 }
@@ -1068,7 +1071,7 @@ class PolisMaker{
                     fontSize: 10,
                 },
                 table: {
-                    fontStyle:"PT Sans Narrow",
+                    fontStyle: "PT Sans Narrow",
                     alignment: 'center'
                 },
                 firstHeader: {
@@ -1080,15 +1083,15 @@ class PolisMaker{
                     fontSize: 9,
                 }
             }
-    
+
         };
-        
+
         docDefinition.content.push(
             {
                 pageBreak: 'before',
-                text:  ` Под действия настоящего  Полиса подпадаю следующие списки транспортных средств (см.\u00A0Приложение 1) на закрепленных ниже условиях:`,
+                text: ` Под действия настоящего  Полиса подпадаю следующие списки транспортных средств (см.\u00A0Приложение 1) на закрепленных ниже условиях:`,
                 alignment: 'justify',
-                margin: [0,0,0,5],
+                margin: [0, 0, 0, 5],
             },
             ...this.makeTables(myFactory), //списки условий страхования
             ...this.makeRisksList(myFactory, risks), //таблицы заявленных/не заявленных рисков
@@ -1098,68 +1101,68 @@ class PolisMaker{
             {
                 table: {
                     headerRows: 1,
-                    widths:[245, 245],
+                    widths: [245, 245],
                     dontBreakRows: true,
                     keepWithHeaderRows: 1,
                     body: [
-                        
+
                         [
                             {
-                                text:"СТРАХОВАТЕЛЬ:",
-                                style:"firstHeader",
-                                fontSize:12,
+                                text: "СТРАХОВАТЕЛЬ:",
+                                style: "firstHeader",
+                                fontSize: 12,
                                 fillColor: '#e6e6e6',
                             },
                             {
-                                text:"СТРАХОВЩИК:",
-                                style:"firstHeader",
-                                fontSize:12,
+                                text: "СТРАХОВЩИК:",
+                                style: "firstHeader",
+                                fontSize: 12,
                                 fillColor: '#e6e6e6',
                             }
                         ],
                         [
                             {
-                                text:[
+                                text: [
                                     {
-                                        text:`${myFactory.newClientCard["Данные компании"]["Форма организации"]} «${myFactory.newClientCard["Данные компании"]["Наименование организации"].toUpperCase()}»\n`,
+                                        text: `${myFactory.newClientCard["Данные компании"]["Форма организации"]} «${myFactory.newClientCard["Данные компании"]["Наименование организации"].toUpperCase()}»\n`,
                                         bold: true
                                     },
                                     {
-                                        text:"\n\n\n"
+                                        text: "\n\n\n"
                                     },
                                     {
-                                        text:"__________________________________\n",
+                                        text: "__________________________________\n",
                                     },
                                     {
-                                        text:`${myFactory.newClientCard["Генеральный директор"]["ФИО директора"]}\n`,
-                                        fontSize:7
+                                        text: `${myFactory.newClientCard["Генеральный директор"]["ФИО директора"]}\n`,
+                                        fontSize: 7
                                     },
                                     {
-                                        text:"На основании Устава",
-                                        fontSize:7
+                                        text: "На основании Устава",
+                                        fontSize: 7
                                     }
                                 ],
                                 alignment: "center"
                             },
                             {
-                                text:[
+                                text: [
                                     {
-                                        text:"ООО «СК «КАПИТАЛ-ПОЛИС»\n",
+                                        text: "ООО «СК «КАПИТАЛ-ПОЛИС»\n",
                                         bold: true
                                     },
                                     {
-                                        text:"\n\n\n"
+                                        text: "\n\n\n"
                                     },
                                     {
-                                        text:"__________________________________\n",
+                                        text: "__________________________________\n",
                                     },
                                     {
-                                        text:"/Корпусов Д.В./\n",
-                                        fontSize:7
+                                        text: "/Корпусов Д.В./\n",
+                                        fontSize: 7
                                     },
                                     {
-                                        text:"Доверенность №74/2018 от 10.03.2018",
-                                        fontSize:7
+                                        text: "Доверенность №74/2018 от 10.03.2018",
+                                        fontSize: 7
                                     }
                                 ],
                                 alignment: "center"
@@ -1189,7 +1192,7 @@ class PolisMaker{
         // pdfMake.createPdf(docDefinition).download('optionalName.pdf');
         // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
         const win = window.open('', '_blank');
-        delay(500).then(()=>pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+        delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
     }
 }
 const polis = new PolisMaker();
