@@ -175,62 +175,54 @@ class PolisMaker{
 
             list.processes.forEach((process, i) => {
                 const row = [];
-                for (let i = 0;i<7;i++) {
-                    row.push({})
-                }
-                const properties = ["cost", "amount", "wrapping", "risk", "limit", "franchise"];
-                const rows = countRows(process.risk);
-                const riskMargin = getMargin(rows);
+                const riskRowLength = countRows(process.risk); //считаем длинну текста и сколько он занимает строк
+                const riskMargin = getMargin(riskRowLength);
                 const bigMargin = [0,13,0,13];
-                const listCountCell = {
-                    text: `${listCount}`,
-                    border: [false, false, false, false],
-                    margin: bigMargin
-                };
-                
-                row[colOrder.indexOf('listCount')]=listCountCell;
 
-                properties.forEach((property) => {
-                    const id = colOrder.indexOf(property)
-                    if (property == "amount") {
-                        if (myFactory.amountType == "Тягачей") {
-                            row[id] = {
-                                text: `${process[property] / 24}`,
-                                border: [false, false, false, false],
+                colOrder.forEach((property,id) => {
+                    let obj;
+                    switch (property) {
+                        case 'amount':
+                            if (myFactory.amountType == "Тягачей") {
+                                obj = {
+                                    text: `${process[property] / 24}`,
+                                    margin: bigMargin,
+                                }
+                            }
+                            else { 
+                                obj = {
+                                    text: `${process[property]}`,
+                                    margin: bigMargin,
+                                }
+                            }
+                            break;
+                        case 'cost'||'limit'||'franchise':
+                            obj = {
+                                text: this.addSpaces(process[property]),
                                 margin: bigMargin,
                             }
-                        }
-                        else { 
-                            row[id] = {
-                                text: `${process[property]}`,
-                                border: [false, false, false, false],
+                            break;
+                        case 'risk':
+                            obj ={
+                                text: process[property],
+                                margin: riskMargin,
+                            };
+                            break;
+                        case 'listCount':
+                            obj = {
+                                text: `${listCount}`,
+                                margin: bigMargin
+                            };
+                            break;
+                        default:
+                            obj = {
+                                text: process[property],
                                 margin: bigMargin,
-                            }
-                        }
+                            };
+                            break;
                     }
-                    else if (property == "cost" || property == "limit" || property == "franchise") {
-                        row[id] = {
-                            text: this.addSpaces(process[property]),
-                            border: [false, false, false, false],
-                            margin: bigMargin,
-                            // alignment: 'right',
-                        }
-
-                    }
-                    else if (property=='risk') {
-                        row[id] ={
-                            text: process[property],
-                            border: [false, false, false, false],
-                            margin: riskMargin,
-                        };
-                    }
-                    else {
-                        row[id] = {
-                            text: process[property],
-                            border: [false, false, false, false],
-                            margin: bigMargin,
-                        };
-                    }
+                    obj.border = [false, false, false, false];
+                    row.push(obj);
                 })
                 tableContent.push(row);
             })
@@ -338,7 +330,7 @@ class PolisMaker{
      */
     makeParagraphs(myFactory) {
         const paragraphs=[];
-        let parIndex = 2;
+        let parIndex = 2; //Стартующий номер параграфа, так как 1 занята под Риски
         myFactory.polisObj.conditions.forEach(obj=>{
             if(obj.name==="Базовые риски"){
                 return;
@@ -359,19 +351,34 @@ class PolisMaker{
                 ]
             ];
             let mass=obj.values.filter(({checked})=>checked);
-            mass.forEach((param, num)=>{
-                let arr=[];
-                arr.push({
-                    text:`${parIndex}.${num+1}`,
-                    border: [false,false,false,false],
-                },{
-                    text:param.text,
-                    border: [false,false,false,false],
-                })
-                paragraph.body.push(arr);
-                paragraph.headerRows= 1;
-            });
-            let layout = {
+            if (obj.oneLine) {
+                const text = mass.map(el => el.text).join(', ');
+                const tb = [
+                    {
+                        text: text,
+                        colSpan:2,
+                        border: [false,false,false,false],
+                        alignment: 'justify',
+                    }
+                ]
+                paragraph.body.push(tb);
+            }
+            else {
+                mass.forEach((param, num)=>{
+                    let arr=[];
+                    arr.push({
+                        text:`${parIndex}.${num+1}`,
+                        border: [false,false,false,false],
+                    },{
+                        text:param.text,
+                        border: [false,false,false,false],
+                    })
+                    paragraph.body.push(arr);
+                    paragraph.headerRows= 1;
+                });
+            }
+            paragraph.headerRows= 1;
+            let layout = { 
                 fillColor: function (i, node) {
                     return (i % 2 === 0) ? '#e6e6e6' : null;
                 }
@@ -417,6 +424,7 @@ class PolisMaker{
                     {}
                 ])
                 let count=1;
+                // сначала добавляем Базовые риски (включенные)
                 if(baseRisk.ToPDFinclude){
                     table.body.push([
                         {
@@ -459,6 +467,7 @@ class PolisMaker{
                     {}
                 ])
                 let count=1;
+                // сначала добавляем Базовые риски (исключенные)
                 if(baseRisk.ToPDFnotInclude){
                     table.body.push([
                         {
