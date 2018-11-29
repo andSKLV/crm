@@ -293,7 +293,6 @@ class Multi{
                     });
                     multi.processes.forEach(process=>process[key]=value);
                 }
-
             }
             else process[key]=value;
         })

@@ -21,20 +21,32 @@ class PolisMaker {
                         break;
                     }
                 }
+                let currGroup;
                 if (i == 0 || wasIndex === null) {
                     lists.push(
                         {
                             cars: process.cars,
                             processes: [process],
                             risks: [process.risk],
-                            wrappings: [process.wrapping], 
+                            wrappings: [process.wrapping],
+                            group: lists.length,
                         }
                     )
+                    currGroup = lists.length-1;
                 }
                 else {
                     lists[wasIndex].processes.push(process);
                     lists[wasIndex].risks.push(process.risk);
-                    if (!lists[wasIndex].wrappings.includes(process.wrapping)) lists[wasIndex].wrappings.push(process.wrapping);
+                    if (lists[wasIndex].wrappings.includes(process.wrapping)) lists[wasIndex].wrappings.push(process.wrapping);
+                    currGroup = wasIndex;
+                }
+                process.cars.forEach(car=>{
+                    if (!car.tableGroup) car.tableGroup = [currGroup];
+                    if (!car.tableGroup.includes(currGroup)) car.tableGroup.push(currGroup);
+                })
+                if (process.isFull){ 
+                    lists[currGroup].isFull = true;
+                    lists[currGroup].groups = process.cars[0].tableGroup;
                 }
             });
         });
@@ -68,6 +80,7 @@ class PolisMaker {
         const lists = this.makeCarLists(myFactory);
         const listContent = [];
         let listCount = 1;
+        let carTablesCount = 1;
         //порядок столбцов в таблице
         const colOrder = ['amount', 'wrapping', 'listCount', 'cost', 'risk', 'limit', 'franchise'];
         // ширины столбца
@@ -232,80 +245,93 @@ class PolisMaker {
                 tableContent.push(row);
             })
 
-            this.carsTables.push('\n');
-            const tableCar = {
-                style: 'table',
-                table: {
-                    headerRows: 2,
-                    widths: [44, 68, 141, 48, 159],
-                    body: [
+            if (list.isFull) {
+                this.carsTables.push('\n');
+                const tableCar = {
+                    style: 'table',
+                    table: {
+                        headerRows: 2,
+                        widths: [44, 68, 121, 48, 129, 50],
+                        body: [
+                            [
+                                {
+                                    text: `Список ТС №${carTablesCount} - Группа ${list.groups.map(x=>x+1).join(', ')}`,
+                                    border: [false, false, false, false],
+                                    colSpan: 5,
+                                    alignment: 'left'
+                                },
+                                emptyCell,
+                                emptyCell,
+                                emptyCell,
+                                emptyCell,
+                                emptyCell
+                            ],
+                            [
+                                {
+                                    text: 'п/п',
+                                    style: "firstHeader"
+                                },
+                                {
+                                    text: 'Номер',
+                                    style: "firstHeader",
+                                },
+                                {
+                                    text: `VIN`,
+                                    style: "firstHeader",
+                                },
+                                {
+                                    text: 'Год',
+                                    style: "firstHeader",
+                                },
+                                {
+                                    text: 'Марка',
+                                    style: "firstHeader",
+                                },
+                                {
+                                    text: 'Группа',
+                                    style: "firstHeader",
+                                }
+                            ]
+                        ]
+                    },
+                }
+                const tableContentCar = tableCar.table.body;
+                // данные по машинам
+                list.cars.forEach((car, i) => {
+                    tableContentCar.push(
                         [
                             {
-                                text: `Список ТС №${listCount} - Застрахованные типы отсека: ${list.wrappings.join(', ')}`,
-                                border: [false, false, false, false],
-                                colSpan: 5,
-                                alignment: 'left'
-                            },
-                            emptyCell,
-                            emptyCell,
-                            emptyCell,
-                            emptyCell
-                        ],
-                        [
-                            {
-                                text: 'п/п',
-                                style: "firstHeader"
+                                text: i + 1,
+                                style: 'carInfo',
                             },
                             {
-                                text: 'Номер',
-                                style: "firstHeader",
+                                text: car.data.autNumber,
+                                style: 'carInfo',
+                            }
+                            ,
+                            {
+                                text: car.data.VIN,
+                                style: 'carInfo',
                             },
                             {
-                                text: `VIN`,
-                                style: "firstHeader",
+                                text: car.data.prodYear,
+                                style: 'carInfo',
                             },
                             {
-                                text: 'Год',
-                                style: "firstHeader",
-                            },
+                                text: car.data.model,
+                                style: 'carInfo',
+                            }
+                            ,
                             {
-                                text: 'Марка',
-                                style: "firstHeader",
+                                text: car.tableGroup.map(x=>x+1).join(', '),
+                                style: 'carInfo',
                             }
                         ]
-                    ]
-                },
+                    )
+                })
+                this.carsTables.push(tableCar);
+                carTablesCount++;
             }
-            const tableContentCar = tableCar.table.body;
-            // данные по машинам
-            list.cars.forEach((car, i) => {
-                tableContentCar.push(
-                    [
-                        {
-                            text: i + 1,
-                            style: 'carInfo',
-                        },
-                        {
-                            text: car.data.autNumber,
-                            style: 'carInfo',
-                        }
-                        ,
-                        {
-                            text: car.data.VIN,
-                            style: 'carInfo',
-                        },
-                        {
-                            text: car.data.prodYear,
-                            style: 'carInfo',
-                        },
-                        {
-                            text: car.data.model,
-                            style: 'carInfo',
-                        }
-                    ]
-                )
-            })
-            this.carsTables.push(tableCar);
             listCount++;
         })
         listContent.push(table, "\n");
