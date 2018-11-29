@@ -4,6 +4,10 @@
 class PolisMaker {
     constructor() {
         this.carsTables = [];
+        this.includedRisksOrder = new Set();
+        Set.prototype._indexOf = function (val) {
+            return [...this].indexOf(val);
+        }
     }
     /**
      * Перераспределяем машины по спискам
@@ -154,7 +158,7 @@ class PolisMaker {
         lists.forEach((list) => {
             let tableContent = table.table.body;
             const getMargin = (str) => {
-                const twoRows = ['Контейнер/Фургон/Реф', 'Повреждение товарных автомобилей', 'Противоправные действия третьих лиц'];
+                const twoRows = ['Контейнер/Фургон/Реф', 'Повреждение товарных автомобилей', 'Противоправные действия третьих лиц', 'Упаковка и крепление', 'Поломка реф. установки'];
                 const noMargin = [0,0,0,0];
                 const oneMargin = [0,8,0,8];
                 return twoRows.includes(str) ? noMargin : oneMargin;
@@ -165,7 +169,7 @@ class PolisMaker {
                 const riskMargin = getMargin(process.risk);
                 const wrapMargin = getMargin(process.wrapping);
                 const oneMargin = getMargin('');
-
+                this.includedRisksOrder.add(process.risk);
                 colOrder.forEach((property, id) => {
                     let obj;
                     switch (property) {
@@ -193,7 +197,7 @@ class PolisMaker {
                             break;
                         case 'risk':
                             obj = {
-                                text: process[property],
+                                text: `${process[property]} п.\u00A01.1.${this.includedRisksOrder._indexOf(process[property])+1}`,
                                 margin: riskMargin,
                                 alignment: 'left',
                             };
@@ -578,9 +582,10 @@ class PolisMaker {
         /**
          * Остается лишь преобразовать профильтрованные данные в формат pdf
          */
-        const includedRisks = risks.filter((risk) => {
-            return risk.list.length > 0
-        });
+        //сортируем массив включенных рисков по очереди упоминания в таблице условий
+        const includedRisks = [...this.includedRisksOrder].map(risk=>{
+            if (risk!=='Базовые риски') return risks.find(r=>r.name===risk);
+        }).filter(val=>val!==undefined);
         content.push(prepareListToPDF(
             {
                 list: includedRisks,
