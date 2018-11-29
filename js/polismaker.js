@@ -82,20 +82,20 @@ class PolisMaker {
         let listCount = 1;
         let carTablesCount = 1;
         //порядок столбцов в таблице
-        const colOrder = ['amount', 'wrapping', 'listCount', 'cost', 'risk', 'limit', 'franchise'];
+        const colOrder = ['risk','listCount', 'wrapping', 'cost', 'limit', 'franchise'];
         // ширины столбца
         const colWidth = {
             'listCount': 40,
-            'risk': 97,
+            'risk': 97+35,
             'cost': 61,
-            "amount": 65,
-            "wrapping": 60,
+            "amount": 0,
+            "wrapping": 60+30,
             "limit": 60,
             "franchise": 60,
         }
         const rowWidths = [];
         //создание массива с ширинами столбцов
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < colOrder.length; i++) {
             const name = colOrder[i];
             rowWidths.push(colWidth[name]);
         }
@@ -103,24 +103,27 @@ class PolisMaker {
             style: 'table',
             table: {
                 headerRows: 1,
-                // widths:[40,61,65,60,97,60,60],
-                // widths:[65,60,40,61,97,60,60],
                 widths: rowWidths,
                 body: [
                     [
                         {
-                            text: `Количество ${myFactory.amountType}`,
+                            text: 'Застрахованные риски',
                             style: "firstHeader",
                             border: [false, false, false, false],
                         },
+                        {
+                            text: 'Группа ТС',
+                            style: 'firstHeader',
+                            border: [false, false, false, false],
+                        },
+                        // {
+                        //     text: `Количество ${myFactory.amountType}`,
+                        //     style: "firstHeader",
+                        //     border: [false, false, false, false],
+                        // },
                         {
                             text: 'Тип грузового отсека',
                             style: "firstHeader",
-                            border: [false, false, false, false],
-                        },
-                        {
-                            text: 'Список ТС, №',
-                            style: 'firstHeader',
                             border: [false, false, false, false],
                         },
                         {
@@ -128,11 +131,7 @@ class PolisMaker {
                             style: "firstHeader",
                             border: [false, false, false, false],
                         },
-                        {
-                            text: 'Застрахованные риски',
-                            style: "firstHeader",
-                            border: [false, false, false, false],
-                        },
+                        
                         {
                             text: 'Лимит по случаю, руб.',
                             style: "firstHeader",
@@ -204,38 +203,38 @@ class PolisMaker {
                             if (myFactory.amountType == "Тягачей") {
                                 obj = {
                                     text: `${process[property] / 24}`,
-                                    margin: bigMargin,
+                                    // margin: bigMargin,
                                 }
                             }
                             else {
                                 obj = {
                                     text: `${process[property]}`,
-                                    margin: bigMargin,
+                                    // margin: bigMargin,
                                 }
                             }
                             break;
                         case 'cost' || 'limit' || 'franchise':
                             obj = {
                                 text: this.addSpaces(process[property]),
-                                margin: bigMargin,
+                                // margin: bigMargin,
                             }
                             break;
                         case 'risk':
                             obj = {
                                 text: process[property],
-                                margin: riskMargin,
+                                // margin: riskMargin,
                             };
                             break;
                         case 'listCount':
                             obj = {
                                 text: `${listCount}`,
-                                margin: bigMargin
+                                // margin: bigMargin
                             };
                             break;
                         default:
                             obj = {
                                 text: process[property],
-                                margin: bigMargin,
+                                // margin: bigMargin,
                             };
                             break;
                     }
