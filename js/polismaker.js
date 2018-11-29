@@ -82,14 +82,14 @@ class PolisMaker {
         let listCount = 1;
         let carTablesCount = 1;
         //порядок столбцов в таблице
-        const colOrder = ['risk','listCount', 'wrapping', 'cost', 'limit', 'franchise'];
+        const colOrder = ['risk', 'wrapping', 'cost', 'limit', 'franchise','listCount'];
         // ширины столбца
         const colWidth = {
-            'listCount': 40,
-            'risk': 97+35,
-            'cost': 61,
+            'listCount': 35,
+            'risk': 97+25,
+            'cost': 61+20,
             "amount": 0,
-            "wrapping": 60+30,
+            "wrapping": 60+25,
             "limit": 60,
             "franchise": 60,
         }
@@ -109,11 +109,6 @@ class PolisMaker {
                         {
                             text: 'Застрахованные риски',
                             style: "firstHeader",
-                            border: [false, false, false, false],
-                        },
-                        {
-                            text: 'Группа ТС',
-                            style: 'firstHeader',
                             border: [false, false, false, false],
                         },
                         // {
@@ -140,6 +135,11 @@ class PolisMaker {
                         {
                             text: 'Франшиза по случаю, руб.',
                             style: "firstHeader",
+                            border: [false, false, false, false],
+                        },
+                        {
+                            text: 'Набор рисков',
+                            style: 'firstHeader',
                             border: [false, false, false, false],
                         }
                     ]
@@ -183,7 +183,9 @@ class PolisMaker {
                                 }
                             }
                             break;
-                        case 'cost' || 'limit' || 'franchise':
+                        case 'cost':
+                        case 'limit':
+                        case 'franchise':
                             obj = {
                                 text: this.addSpaces(process[property]),
                                 margin: oneMargin,
@@ -193,6 +195,7 @@ class PolisMaker {
                             obj = {
                                 text: process[property],
                                 margin: riskMargin,
+                                alignment: 'left',
                             };
                             break;
                         case 'listCount':
@@ -230,7 +233,7 @@ class PolisMaker {
                         body: [
                             [
                                 {
-                                    text: `Список ТС №${carTablesCount} - Группа ${list.groups.map(x=>x+1).join(', ')}`,
+                                    text: `Список ТС №${carTablesCount} - Набор рисков: ${list.groups.map(x=>x+1).join(', ')}`,
                                     border: [false, false, false, false],
                                     colSpan: 5,
                                     alignment: 'left'
@@ -263,7 +266,7 @@ class PolisMaker {
                                     style: "firstHeader",
                                 },
                                 {
-                                    text: 'Группа',
+                                    text: 'Набор',
                                     style: "firstHeader",
                                 }
                             ]
@@ -793,20 +796,6 @@ class PolisMaker {
                                     margin: (territory.length < 65) ? oneRowMargin : twoRowMargin
                                 },
                             ],
-                            // [
-                            //     {
-                            //         text: "ЛИМИТ ОТВЕТСТВЕННОСТИ СТРАХОВЩИКА ПО СЛУЧАЮ",
-                            //         style: "leftCellFirstTable"
-
-                            //     },
-                            //     {
-                            //         text:`${this.addSpaces(myFactory.a_limit.value)}`,
-                            //         margin:[0,5,0,0],
-                            //         bold: true,
-                            //         colSpan: 2,
-                            //         alignment:'center'
-                            //     },
-                            // ],
                             [
                                 {
                                     text: "АГРЕГАТНЫЙ ЛИМИТ ОТВЕТСТВЕННОСТИ СТРАХОВЩИКА ПО ПОЛИСУ",
@@ -821,18 +810,6 @@ class PolisMaker {
                                     alignment: 'center'
                                 },
                             ],
-                            // [
-                            //     {
-                            //         text: "БЕЗУСЛОВНАЯ ФРАНШИЗА",
-                            //         style: "leftCellFirstTable"
-
-                            //     },
-                            //     {
-                            //         text:"НЕ ПРИМЕНЯЕТСЯ",
-                            //         colSpan: 2,
-                            //         alignment:'center'
-                            //     },
-                            // ],
                             [
                                 {
                                     text: "ДАТА ВЫДАЧИ",
@@ -1091,7 +1068,7 @@ class PolisMaker {
         docDefinition.content.push(
             {
                 pageBreak: 'before',
-                text: ` Под действия настоящего  Полиса подпадаю следующие списки транспортных средств (см.\u00A0Приложение 1) на закрепленных ниже условиях:`,
+                text: ` Под действия настоящего Полиса подпадаю следующие наборы транспортных средств, указанных в Приложении 1, на закрепленных ниже условиях:`,
                 alignment: 'justify',
                 margin: [0, 0, 0, 5],
             },
