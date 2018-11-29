@@ -153,48 +153,18 @@ class PolisMaker {
         }
         lists.forEach((list) => {
             let tableContent = table.table.body;
-            /**
-             * Функция подсчета количества строк в наименовании риска
-             */
-            const countRows = (str) => {
-                if (str === 'Повреждение товарных автомобилей') return 3; //FIXME:
-                const arr = str.split(' ');
-                if (arr.length === 1) return 1;
-                let rows = 1;
-                let len = arr[0].length;//+1 так как заглавная буква занимает больше места
-                for (let i = 1; i < arr.length; i++) {
-                    len = len + arr[i].length + 1;//+1 это пробел между словами
-                    if (len > 20) {
-                        rows++;
-                        len = arr[i].length;
-                    }
-                }
-                return rows;
-            }
-            const getMargin = (rows) => {
-                let rowMargin;
-                switch (rows) {
-                    case 1:
-                        rowMargin = [0, 13, 0, 13]
-                        break;
-                    case 2:
-                        rowMargin = [0, 5, 0, 5]
-                        break;
-                    case 3:
-                        rowMargin = [0, 0, 0, 0]
-                        break;
-                    default:
-                        rowMargin = [0, 0, 0, 0]
-                        break;
-                }
-                return rowMargin;
+            const getMargin = (str) => {
+                const twoRows = ['Контейнер/Фургон/Реф', 'Повреждение товарных автомобилей', 'Противоправные действия третьих лиц'];
+                const noMargin = [0,0,0,0];
+                const oneMargin = [0,8,0,8];
+                return twoRows.includes(str) ? noMargin : oneMargin;
             }
 
             list.processes.forEach((process, i) => {
                 const row = [];
-                const riskRowLength = countRows(process.risk); //считаем длинну текста и сколько он занимает строк
-                const riskMargin = getMargin(riskRowLength);
-                const bigMargin = [0, 13, 0, 13];
+                const riskMargin = getMargin(process.risk);
+                const wrapMargin = getMargin(process.wrapping);
+                const oneMargin = getMargin('');
 
                 colOrder.forEach((property, id) => {
                     let obj;
@@ -203,38 +173,44 @@ class PolisMaker {
                             if (myFactory.amountType == "Тягачей") {
                                 obj = {
                                     text: `${process[property] / 24}`,
-                                    // margin: bigMargin,
+                                    margin: oneMargin,
                                 }
                             }
                             else {
                                 obj = {
                                     text: `${process[property]}`,
-                                    // margin: bigMargin,
+                                    margin: oneMargin,
                                 }
                             }
                             break;
                         case 'cost' || 'limit' || 'franchise':
                             obj = {
                                 text: this.addSpaces(process[property]),
-                                // margin: bigMargin,
+                                margin: oneMargin,
                             }
                             break;
                         case 'risk':
                             obj = {
                                 text: process[property],
-                                // margin: riskMargin,
+                                margin: riskMargin,
                             };
                             break;
                         case 'listCount':
                             obj = {
                                 text: `${listCount}`,
-                                // margin: bigMargin
+                                margin: oneMargin
+                            };
+                            break;
+                        case 'wrapping':
+                            obj = {
+                                text: process[property],
+                                margin: wrapMargin,
                             };
                             break;
                         default:
                             obj = {
                                 text: process[property],
-                                // margin: bigMargin,
+                                margin: oneMargin,
                             };
                             break;
                     }
