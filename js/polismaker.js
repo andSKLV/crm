@@ -16,7 +16,7 @@ class PolisMaker {
             park.processes.forEach((process, i) => {
                 let wasIndex = null;
                 for (let k = 0; k < i; k++) {
-                    if (this.areEquivalent(park.processes[i]["cars"], park.processes[k]["cars"])) {
+                    if (this.areEquivalent(process.cars, park.processes[k]["cars"])) {
                         wasIndex = lists.findIndex(l => l.processes.includes(park.processes[k]));
                         break;
                     }
@@ -24,15 +24,17 @@ class PolisMaker {
                 if (i == 0 || wasIndex === null) {
                     lists.push(
                         {
-                            cars: park.processes[i]["cars"],
-                            processes: [park.processes[i]],
-                            risks: [park.processes[i].risk]
+                            cars: process.cars,
+                            processes: [process],
+                            risks: [process.risk],
+                            wrappings: [process.wrapping], 
                         }
                     )
                 }
                 else {
-                    lists[wasIndex].processes.push(park.processes[i]);
-                    lists[wasIndex].risks.push(park.processes[i].risk);
+                    lists[wasIndex].processes.push(process);
+                    lists[wasIndex].risks.push(process.risk);
+                    if (!lists[wasIndex].wrappings.includes(process.wrapping)) lists[wasIndex].wrappings.push(process.wrapping);
                 }
             });
         });
@@ -230,19 +232,18 @@ class PolisMaker {
                 tableContent.push(row);
             })
 
-
             this.carsTables.push('\n');
             const tableCar = {
                 style: 'table',
                 table: {
                     headerRows: 2,
-                    widths: [29, 73, 141, 58, 159],
+                    widths: [44, 68, 141, 48, 159],
                     body: [
                         [
                             {
-                                text: `Список ТС №${listCount}`,
+                                text: `Список ТС №${listCount} - Застрахованные типы отсека: ${list.wrappings.join(', ')}`,
                                 border: [false, false, false, false],
-                                colSpan: 3,
+                                colSpan: 5,
                                 alignment: 'left'
                             },
                             emptyCell,
