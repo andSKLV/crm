@@ -444,10 +444,24 @@ class PolisMaker {
                             border: [false, false, false, false],
                         },
                         {
-                            stack: baseRisk.ToPDFinclude,
-                            border: [false, false, false, false]
+                            text: baseRisk.ToPDFinclude[0].text,
+                            bold: baseRisk.ToPDFinclude[0].bold,
+                            border: [false, false, false, false],
                         }
                     ]);
+                    baseRisk.ToPDFinclude[1].ul.forEach(ul=>{
+                        table.body.push([
+                            {
+                                text: ` `,
+                                border: [false, false, false, false],
+                            },
+                            {
+                                text: `• ${ul}`,
+                                border: [false, false, false, false],
+                            }
+                        ])
+                    })
+                    table.body.push()
                     count++;
                 }
                 for (const risk of list) {
@@ -487,10 +501,23 @@ class PolisMaker {
                             border: [false, false, false, false],
                         },
                         {
-                            stack: baseRisk.ToPDFnotInclude,
-                            border: [false, false, false, false]
+                            text: baseRisk.ToPDFnotInclude[0].text,
+                            bold: baseRisk.ToPDFnotInclude[0].bold,
+                            border: [false, false, false, false],
                         },
                     ]);
+                    baseRisk.ToPDFnotInclude[1].ul.forEach(ul=>{
+                        table.body.push([
+                            {
+                                text: ` `,
+                                border: [false, false, false, false],
+                            },
+                            {
+                                text: `• ${ul}`,
+                                border: [false, false, false, false],
+                            }
+                        ])
+                    })
                     count++;
                 }
                 for (const risk of list) {
@@ -746,11 +773,11 @@ class PolisMaker {
                                 {
                                     text: [
                                         {
-                                            text: `${myFactory.newClientCard["Данные компании"]["Форма организации"]} ${myFactory.newClientCard["Данные компании"]["Наименование организации"].toUpperCase()}\n`,
+                                            text: `${myFactory.companyObj.card["Данные компании"]["Форма организации"]} ${myFactory.companyObj.card["Данные компании"]["Наименование организации"].toUpperCase()}\n`,
                                             bold: true,
                                         },
                                         {
-                                            text: "**Здесь должен быть адрес компании**",
+                                            text: `${myFactory.companyObj.card["Доп. информация"]["Юридический адрес"]}`,
                                             fontSize: 10,
                                         }
 
@@ -1108,7 +1135,7 @@ class PolisMaker {
                             {
                                 text: [
                                     {
-                                        text: `${myFactory.newClientCard["Данные компании"]["Форма организации"]} «${myFactory.newClientCard["Данные компании"]["Наименование организации"].toUpperCase()}»\n`,
+                                        text: `${myFactory.companyObj.card["Данные компании"]["Форма организации"]} «${myFactory.companyObj.card["Данные компании"]["Наименование организации"].toUpperCase()}»\n`,
                                         bold: true
                                     },
                                     {
@@ -1118,7 +1145,7 @@ class PolisMaker {
                                         text: "__________________________________\n",
                                     },
                                     {
-                                        text: `${myFactory.newClientCard["Генеральный директор"]["ФИО директора"]}\n`,
+                                        text: `${myFactory.companyObj.card["Генеральный директор"]["ФИО директора"]}\n`,
                                         fontSize: 7
                                     },
                                     {
