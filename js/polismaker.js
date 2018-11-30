@@ -1,7 +1,13 @@
 /**
  * Класс для работы с PDF
  */
-class PolisMaker {
+
+const NOBORDER = [false,false,false,false];
+const emptyCell = {
+    text: '',
+    border: [false, false, false, false],
+}
+ class PolisMaker {
     constructor() {
         this.carsTables = [];
         this.includedRisksOrder = new Set();
@@ -76,24 +82,29 @@ class PolisMaker {
      */
     makeTables(myFactory) {
         this.carsTables = [];
-        const emptyCell = {
-            text: '',
-            border: [false, false, false, false],
-        }
+
         let body = [];
         const lists = this.makeCarLists(myFactory);
         const listContent = [];
         let listCount = 1;
         let carTablesCount = 1;
         //порядок столбцов в таблице
-        const colOrder = ['risk', 'wrapping', 'cost', 'limit', 'franchise','listCount'];
+        const colOrder = ['risk', 'wrapping', 'cost', 'limit', 'franchise'];
+        const colNumber = () => colOrder.length;
+        const putEmptyCells = num => {
+            const arr = [];
+            for (let i=0;i<num;i++) {
+                arr.push(emptyCell)
+            }
+            return arr;
+        }
         // ширины столбца
         const colWidth = {
-            'listCount': 35,
-            'risk': 97+25,
+            'group': 0,
+            'risk': 97+25+35,
             'cost': 61+20,
             "amount": 0,
-            "wrapping": 60+25,
+            "wrapping": 60+25+15,
             "limit": 60,
             "franchise": 60,
         }
@@ -111,15 +122,19 @@ class PolisMaker {
                 body: [
                     [
                         {
+                            text: 'Таблица 1 - Условия страхования',
+                            border: [false, false, false, false],
+                            colSpan: colNumber(),
+                            alignment: 'left',
+                        },
+                        ...putEmptyCells(colNumber()-1)
+                    ],
+                    [
+                        {
                             text: 'Застрахованные риски',
                             style: "firstHeader",
                             border: [false, false, false, false],
                         },
-                        // {
-                        //     text: `Количество ${myFactory.amountType}`,
-                        //     style: "firstHeader",
-                        //     border: [false, false, false, false],
-                        // },
                         {
                             text: 'Тип грузового отсека',
                             style: "firstHeader",
@@ -140,23 +155,38 @@ class PolisMaker {
                             text: 'Франшиза по случаю, руб.',
                             style: "firstHeader",
                             border: [false, false, false, false],
-                        },
-                        {
-                            text: 'Набор рисков',
-                            style: 'firstHeader',
-                            border: [false, false, false, false],
                         }
                     ]
                 ]
             },
             layout: {
+                // fillColor: function (i, node) {
+                //     const text = node.table.body[i][0].text;
+                //     const reg = /Группа \d+/;
+                //     const isGroupRow = reg.test(text);
+                //     return (i % 2 === 1 && i>2 && !isGroupRow) ? '#e6e6e6' : null;
+                // }
                 fillColor: function (i, node) {
-                    return (i % 2 === 0) ? '#e6e6e6' : null;
+                    const text = node.table.body[i][0].text;
+                    const reg = /Группа \d+/;
+                    const isGroupRow = reg.test(text);
+                    return (isGroupRow) ? '#e6e6e6' : null;
                 }
             }
         }
-        lists.forEach((list) => {
+
+        lists.forEach((list,i) => {
+            const group = i + 1;
             let tableContent = table.table.body;
+            // добавляем разделитель Групп
+            tableContent.push([{
+                text: `Группа ${group}`,
+                border: NOBORDER,
+                colSpan: colNumber(),
+                alignment: 'left',
+                bold: true,
+            }, ...putEmptyCells(colNumber() - 1)]);
+            //функция выдачи отступов для строки, что бы значения были отцентрованы
             const getMargin = (str) => {
                 const twoRows = ['Контейнер/Фургон/Реф', 'Повреждение товарных автомобилей', 'Противоправные действия третьих лиц', 'Упаковка и крепление', 'Поломка реф. установки'];
                 const noMargin = [0,0,0,0];
@@ -170,6 +200,7 @@ class PolisMaker {
                 const wrapMargin = getMargin(process.wrapping);
                 const oneMargin = getMargin('');
                 this.includedRisksOrder.add(process.risk);
+
                 colOrder.forEach((property, id) => {
                     let obj;
                     switch (property) {
@@ -202,9 +233,9 @@ class PolisMaker {
                                 alignment: 'left',
                             };
                             break;
-                        case 'listCount':
+                        case 'group':
                             obj = {
-                                text: `${listCount}`,
+                                text: `${group}`,
                                 margin: oneMargin
                             };
                             break;
@@ -229,6 +260,7 @@ class PolisMaker {
 
             if (list.isFull) {
                 this.carsTables.push('\n');
+                const colNumber = 6;
                 const tableCar = {
                     style: 'table',
                     table: {
@@ -239,14 +271,10 @@ class PolisMaker {
                                 {
                                     text: `Список ТС №${carTablesCount} - Набор рисков: ${list.groups.map(x=>x+1).join(', ')}`,
                                     border: [false, false, false, false],
-                                    colSpan: 5,
+                                    colSpan: colNumber,
                                     alignment: 'left'
                                 },
-                                emptyCell,
-                                emptyCell,
-                                emptyCell,
-                                emptyCell,
-                                emptyCell
+                                ...putEmptyCells(colNumber-1),
                             ],
                             [
                                 {
@@ -314,7 +342,6 @@ class PolisMaker {
                 this.carsTables.push(tableCar);
                 carTablesCount++;
             }
-            listCount++;
         })
         listContent.push(table, "\n");
         return listContent;
@@ -1098,11 +1125,18 @@ class PolisMaker {
         };
 
         docDefinition.content.push(
+            // {
+            //     pageBreak: 'before',
+            //     text: ` Под действия настоящего Полиса подпадаю следующие наборы транспортных средств, указанные в Приложении 1, на закрепленных ниже условиях:`,
+            //     alignment: 'justify',
+            //     margin: [0, 0, 0, 5],
+            // },
             {
                 pageBreak: 'before',
-                text: ` Под действия настоящего Полиса подпадаю следующие наборы транспортных средств, указанных в Приложении 1, на закрепленных ниже условиях:`,
-                alignment: 'justify',
+                text: `1. Риски и условия страхования для групп транспортных средств, перечисленных в Приложении 1`,
+                alignment: 'center',
                 margin: [0, 0, 0, 5],
+                style: "firstHeader",
             },
             ...this.makeTables(myFactory), //списки условий страхования
             ...this.makeRisksList(myFactory, risks), //таблицы заявленных/не заявленных рисков
