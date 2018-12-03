@@ -553,8 +553,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                         text: '1.2 Определения не заявленных на страхование рисков:',
                         style: "firstHeader",
                         colSpan: 2,
-                        border: [false, false, false, false],
-                        alignment: 'justify'
+                        border: [false, false, false, false]
                     },
                     {}
                 ])
@@ -735,7 +734,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                 {
                     table: {
                         headerRows: 1,
-                        widths: [150, 150, 150],
+                        widths: [150, 150, 175],
                         body: [
                             [
                                 {
@@ -775,7 +774,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                 {
                     table: {
                         headerRows: 1,
-                        widths: [150, 150, 150],
+                        widths: [150, 150, 175],
                         body: [
                             [
                                 {
@@ -826,7 +825,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                 {
                     table: {
                         headerRows: 1,
-                        widths: [150, 150, 150],
+                        widths: [150, 150, 175],
                         body: [
                             [
                                 {
@@ -877,7 +876,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                 {
                     table: {
                         headerRows: 1,
-                        widths: [150, 150, 150],
+                        widths: [150, 150, 175],
 
                         body: [
                             [
@@ -931,7 +930,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                 {
                     table: {
                         headerRows: 1,
-                        widths: [468],
+                        widths: [493],
                         body: [
                             [
                                 {
@@ -952,7 +951,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                 {
                     table: {
                         headerRows: 1,
-                        widths: [100, 300, 50],
+                        widths: [100, 300, 75],
                         body: [
                             [
                                 {
@@ -996,7 +995,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                 {
                     table: {
                         headerRows: 1,
-                        widths: [100, 300, 50],
+                        widths: [100, 300, 75],
                         body: [
                             [
                                 {
