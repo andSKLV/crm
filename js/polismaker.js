@@ -7,6 +7,8 @@ const emptyCell = {
     text: '',
     border: [false, false, false, false],
 }
+const HIP_NAME = '№ HIP-0000000-00-17';
+
  class PolisMaker {
     constructor() {
         this.carsTables = [];
@@ -15,6 +17,7 @@ const emptyCell = {
             return [...this].indexOf(val);
         }
         this.isOneCarGroup = false;
+        this.hipName = HIP_NAME; //FIXME: изменить потом, когда дойдет до генерации индекса полиса
     }
     /**
      * Перераспределяем машины по спискам
@@ -131,7 +134,7 @@ const emptyCell = {
                     ],
                     [
                         {
-                            text: 'Застрахованные риски',
+                            text: 'Застрахованные риски,\n согласно п. 1.1',
                             style: "firstHeader",
                             border: [false, false, false, false],
                         },
@@ -179,7 +182,7 @@ const emptyCell = {
             if (!this.isOneCarGroup) {
                 // добавляем разделитель Групп, если групп больше чем одна
                 tableContent.push([{
-                    text: `Набор ${group}`,
+                    text: `Набор ${group}:`,
                     border: NOBORDER,
                     colSpan: colNumber(),
                     alignment: 'left',
@@ -188,7 +191,7 @@ const emptyCell = {
             }
             //функция выдачи отступов для строки, что бы значения были отцентрованы
             const getMargin = (str) => {
-                const twoRows = ['Контейнер/Фургон/Реф', 'Повреждение товарных автомобилей', 'Противоправные действия третьих лиц', 'Упаковка и крепление', 'Поломка реф. установки'];
+                const twoRows = ['Повреждение товарных автомобилей', 'Противоправные действия третьих лиц'];
                 const noMargin = [0,0,0,0];
                 const oneMargin = [0,8,0,8];
                 return twoRows.includes(str) ? noMargin : oneMargin;
@@ -228,7 +231,8 @@ const emptyCell = {
                             break;
                         case 'risk':
                             obj = {
-                                text: `${process[property]} п.\u00A01.1.${this.includedRisksOrder._indexOf(process[property])+1}`,
+                                // text: `${process[property]} п.\u00A01.1.${this.includedRisksOrder._indexOf(process[property])+1}`,
+                                text: `${process[property]}`,
                                 margin: riskMargin,
                                 alignment: 'left',
                             };
@@ -263,7 +267,7 @@ const emptyCell = {
                 // генерируем таблицу в зависимости от количества групп ТС
                 // если групп ТС больше одной, то необходимо добавить дополнительный стоблец с обозначением Групп
                 const colNumber = (this.isOneCarGroup) ? 5 : 6;
-                const tableHeader = (this.isOneCarGroup) ? 'Список ТС' : `Список ТС №${carTablesCount} - Набор рисков: ${list.groups.map(x=>x+1).join(', ')}`;
+                const tableHeader = (this.isOneCarGroup) ? 'Список транспортных средств' : `Список транспортных средств №${carTablesCount} - Набор рисков: ${list.groups.map(x=>x+1).join(', ')}`;
                 const colWidths = (this.isOneCarGroup) ? [44, 88, 121, 58, 149] : [44, 68, 121, 48, 129, 50];
                 const contentHeader = [
                     {
@@ -271,7 +275,7 @@ const emptyCell = {
                         style: "firstHeader"
                     },
                     {
-                        text: 'Гос. номер',
+                        text: 'Гос. знак',
                         style: "firstHeader",
                     },
                     {
@@ -289,7 +293,7 @@ const emptyCell = {
                 ];
                 if (!this.isOneCarGroup) contentHeader.push(
                     {
-                        text: 'Набор',
+                        text: 'Набор*',
                         style: "firstHeader",
                     }
                 )
@@ -360,7 +364,18 @@ const emptyCell = {
                 carTablesCount++;
             }
         })
-        listContent.push(table, "\n");
+        if (!this.isOneCarGroup) this.carsTables.push({
+            text:'* Транспортные средства застрахованы на условиях и рисках, соответствующих указанным наборам в Таблице 1 и Приложении 1.',
+            bold: false,
+            alignment: 'justify',
+        })
+        listContent.push(table);
+        listContent.push({
+            text:'Совокупные выплаты по всем застрахованным случаям не могут превышать агрегатный лимит отвественности страховщика по Полису.',
+            bold: true,
+            alignment: 'justify',
+            fontSize: 12,
+        },'\n')
         return listContent;
     }
     /**
@@ -472,7 +487,7 @@ const emptyCell = {
             if (included) {
                 table.body.push([
                     {
-                        text: '1.1 Определения застрахованных рисков:',
+                        text: '1.1 Определения застрахованных рисков',
                         style: "firstHeader",
                         colSpan: 2,
                         border: [false, false, false, false],
@@ -483,15 +498,17 @@ const emptyCell = {
                 // сначала добавляем Базовые риски (включенные)
                 if (baseRisk.ToPDFinclude) {
                     table.body.push([
-                        {
-                            text: `1.1.${count}`,
-                            border: [false, false, false, false],
-                        },
+                        // {
+                        //     text: `1.1.${count}`,
+                        //     border: [false, false, false, false],
+                        // },
                         {
                             text: baseRisk.ToPDFinclude[0].text,
                             bold: baseRisk.ToPDFinclude[0].bold,
                             border: [false, false, false, false],
-                        }
+                            colSpan: 2,
+                        },
+                        emptyCell
                     ]);
                     baseRisk.ToPDFinclude[1].ul.forEach(ul=>{
                         table.body.push([
@@ -510,18 +527,19 @@ const emptyCell = {
                 }
                 for (const risk of list) {
                     table.body.push([
-                        {
-                            text: `1.1.${count}`,
-                            border: [false, false, false, false],
-                        },
+                        // {
+                        //     text: `1.1.${count}`,
+                        //     border: [false, false, false, false],
+                        // },
                         {
                             text: [
                                 { text: `${risk.name}`, bold: true },
                                 { text: ` - ${risk.title}. ` }
                             ],
                             border: [false, false, false, false],
-                        }
-
+                            colSpan: 2,
+                        },
+                        emptyCell,
                     ])
                     count++;
                 }
@@ -541,14 +559,12 @@ const emptyCell = {
                 if (baseRisk.ToPDFnotInclude) {
                     table.body.push([
                         {
-                            text: `1.2.${count}`,
-                            border: [false, false, false, false],
-                        },
-                        {
                             text: baseRisk.ToPDFnotInclude[0].text,
                             bold: baseRisk.ToPDFnotInclude[0].bold,
                             border: [false, false, false, false],
+                            colSpan: 2
                         },
+                        emptyCell
                     ]);
                     baseRisk.ToPDFnotInclude[1].ul.forEach(ul=>{
                         table.body.push([
@@ -567,17 +583,14 @@ const emptyCell = {
                 for (const risk of list) {
                     table.body.push([
                         {
-                            text: `1.2.${count}`,
-                            border: [false, false, false, false],
-                        },
-                        {
                             text: [
                                 { text: `${risk.name}`, bold: true },
                                 { text: ` - ${risk.title}. ` }
                             ],
                             border: [false, false, false, false],
-                        }
-
+                            colSpan:2,
+                        },
+                        emptyCell,
                     ])
                     count++;
                 }
@@ -707,6 +720,7 @@ const emptyCell = {
             'USD': '$',
         }
         let pageWithExtraFooter = null;
+        console.log(this.hipName);
         const docDefinition = {
             pageSize: 'A4',
             pageMargins: [50, 115, 50, 65],
@@ -720,7 +734,7 @@ const emptyCell = {
                                 {
                                     text: [
                                         "ПОЛИС CMR/ТТН - СТРАХОВАНИЯ ПЕРЕВОЗЧИКА \n",
-                                        "№ HIP-0000000-00-17"
+                                        `${this.hipName}`
                                     ],
                                     colSpan: 3,
                                     style: 'firstHeader',
@@ -732,7 +746,7 @@ const emptyCell = {
                             ],
                             [
                                 {
-                                    text: "Страхование действует в соответствии с Договором CMR/ТТН - страхования перевозчика № HIP-1000000-0-17.",
+                                    text: `Страхование действует в соответствии с Договором CMR/ТТН - страхования перевозчика ${this.hipName}.`,
                                     colSpan: 3,
                                     fontSize: 10,
                                     alignment: 'center'
@@ -833,7 +847,7 @@ const emptyCell = {
                             ],
                             [
                                 {
-                                    text: "КОЛИЧЕСТВО\n ТРАНСПОРТНЫХ СРЕДСТВ",
+                                    text: "КОЛИЧЕСТВО ЗАСТРАХОВАННЫХ ТРАНСПОРТНЫХ СРЕДСТВ",
                                     style: "leftCellFirstTable",
                                     margin: twoRowMargin
                                 },
@@ -1012,7 +1026,7 @@ const emptyCell = {
                     }
                 }
             ],
-            footer: function (page, pages, smth, pagesArr) {
+            footer: (page, pages, smth, pagesArr) => {
                 const findExtraPage = arr => {
                     let pageNumb = null;
                     arr.forEach((page, ind) => {
@@ -1025,6 +1039,7 @@ const emptyCell = {
                 if (pageWithExtraFooter === null) {
                     findExtraPage(pagesArr);
                 }
+                console.log(this.hipName);
                 if (page === pageWithExtraFooter) return {
                     table: {
                         headerRows: 0,
@@ -1032,7 +1047,7 @@ const emptyCell = {
                         body: [
                             [
                                 {
-                                    text: `Лист ${page.toString()}/${pages.toString()} Полиса № HIP-0000000-00-17`,
+                                    text: `Лист ${page.toString()}/${pages.toString()} Полиса ${this.hipName}`,
                                     colSpan: 6,
                                     border: [false, false, false, false],
                                     alignment: 'center',
@@ -1044,6 +1059,7 @@ const emptyCell = {
                         style: 'table'
                     }
                 }
+                console.log(this.hipName);
                 if (page > 1) return {
                     table: {
                         headerRows: 0,
@@ -1108,7 +1124,7 @@ const emptyCell = {
                             ],
                             [
                                 {
-                                    text: `Лист ${page.toString()}/${pages.toString()} Полиса № HIP-0000000-00-17`,
+                                    text: `Лист ${page.toString()}/${pages.toString()} Полиса ${this.hipName}`,
                                     colSpan: 6,
                                     border: [false, false, false, false],
                                     alignment: 'center',
@@ -1239,7 +1255,7 @@ const emptyCell = {
             },
             {
                 pageBreak: 'before',
-                text: "ПРИЛОЖЕНИЕ 1 - Списки транспортных средств, застрахованных по отдельным условиям страхования",
+                text: `ПРИЛОЖЕНИЕ 1 - Списки транспортных средств подпадающих под страхование Полиса ${this.hipName}`,
                 alignment: 'justify',
                 bold: true,
             },
