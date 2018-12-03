@@ -168,7 +168,7 @@ const emptyCell = {
         else table.layout = {
             fillColor: function (i, node) {
                 const text = node.table.body[i][0].text;
-                const reg = /Группа \d+/;
+                const reg = /Набор \d+/;
                 const isGroupRow = reg.test(text);
                 return (isGroupRow) ? '#e6e6e6' : null;
             }
@@ -179,7 +179,7 @@ const emptyCell = {
             if (!this.isOneCarGroup) {
                 // добавляем разделитель Групп, если групп больше чем одна
                 tableContent.push([{
-                    text: `Группа ${group}`,
+                    text: `Набор ${group}`,
                     border: NOBORDER,
                     colSpan: colNumber(),
                     alignment: 'left',
@@ -263,7 +263,7 @@ const emptyCell = {
                 // генерируем таблицу в зависимости от количества групп ТС
                 // если групп ТС больше одной, то необходимо добавить дополнительный стоблец с обозначением Групп
                 const colNumber = (this.isOneCarGroup) ? 5 : 6;
-                const tableHeader = (this.isOneCarGroup) ? 'Список ТС' : `Список ТС №${carTablesCount} - Группы ТС: ${list.groups.map(x=>x+1).join(', ')}`;
+                const tableHeader = (this.isOneCarGroup) ? 'Список ТС' : `Список ТС №${carTablesCount} - Набор рисков: ${list.groups.map(x=>x+1).join(', ')}`;
                 const colWidths = (this.isOneCarGroup) ? [44, 88, 121, 58, 149] : [44, 68, 121, 48, 129, 50];
                 const contentHeader = [
                     {
@@ -289,7 +289,7 @@ const emptyCell = {
                 ];
                 if (!this.isOneCarGroup) contentHeader.push(
                     {
-                        text: 'Группа',
+                        text: 'Набор',
                         style: "firstHeader",
                     }
                 )
@@ -1150,7 +1150,7 @@ const emptyCell = {
             // },
             {
                 pageBreak: 'before',
-                text: `1. Риски и условия страхования для групп транспортных средств, перечисленных в Приложении 1`,
+                text: `1. Риски и условия страхования для транспортных средств, перечисленных в Приложении 1`,
                 alignment: 'center',
                 margin: [0, 0, 0, 5],
                 style: "firstHeader",
