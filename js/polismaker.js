@@ -14,6 +14,7 @@ const emptyCell = {
         Set.prototype._indexOf = function (val) {
             return [...this].indexOf(val);
         }
+        this.isOneCarGroup = false;
     }
     /**
      * Перераспределяем машины по спискам
@@ -82,11 +83,10 @@ const emptyCell = {
      */
     makeTables(myFactory) {
         this.carsTables = [];
-
         let body = [];
         const lists = this.makeCarLists(myFactory);
+        if (lists.length===1) this.isOneCarGroup = true; // если одна группа машин, то слово Група не нужно
         const listContent = [];
-        let listCount = 1;
         let carTablesCount = 1;
         //порядок столбцов в таблице
         const colOrder = ['risk', 'wrapping', 'cost', 'limit', 'franchise'];
@@ -158,34 +158,34 @@ const emptyCell = {
                         }
                     ]
                 ]
-            },
-            layout: {
-                // fillColor: function (i, node) {
-                //     const text = node.table.body[i][0].text;
-                //     const reg = /Группа \d+/;
-                //     const isGroupRow = reg.test(text);
-                //     return (i % 2 === 1 && i>2 && !isGroupRow) ? '#e6e6e6' : null;
-                // }
-                fillColor: function (i, node) {
-                    const text = node.table.body[i][0].text;
-                    const reg = /Группа \d+/;
-                    const isGroupRow = reg.test(text);
-                    return (isGroupRow) ? '#e6e6e6' : null;
-                }
             }
         }
-
+        if (this.isOneCarGroup) table.layout = {
+            fillColor: function (i, node) {
+                return (i % 2 === 1 && i>2) ? '#e6e6e6' : null;
+            }
+        }
+        else table.layout = {
+            fillColor: function (i, node) {
+                const text = node.table.body[i][0].text;
+                const reg = /Группа \d+/;
+                const isGroupRow = reg.test(text);
+                return (isGroupRow) ? '#e6e6e6' : null;
+            }
+        }
         lists.forEach((list,i) => {
             const group = i + 1;
             let tableContent = table.table.body;
-            // добавляем разделитель Групп
-            tableContent.push([{
-                text: `Группа ${group}`,
-                border: NOBORDER,
-                colSpan: colNumber(),
-                alignment: 'left',
-                bold: true,
-            }, ...putEmptyCells(colNumber() - 1)]);
+            if (!this.isOneCarGroup) {
+                // добавляем разделитель Групп, если групп больше чем одна
+                tableContent.push([{
+                    text: `Группа ${group}`,
+                    border: NOBORDER,
+                    colSpan: colNumber(),
+                    alignment: 'left',
+                    bold: true,
+                }, ...putEmptyCells(colNumber() - 1)]);
+            }
             //функция выдачи отступов для строки, что бы значения были отцентрованы
             const getMargin = (str) => {
                 const twoRows = ['Контейнер/Фургон/Реф', 'Повреждение товарных автомобилей', 'Противоправные действия третьих лиц', 'Упаковка и крепление', 'Поломка реф. установки'];
@@ -260,48 +260,92 @@ const emptyCell = {
 
             if (list.isFull) {
                 this.carsTables.push('\n');
-                const colNumber = 6;
+                // генерируем таблицу в зависимости от количества групп ТС
+                // если групп ТС больше одной, то необходимо добавить дополнительный стоблец с обозначением Групп
+                const colNumber = (this.isOneCarGroup) ? 5 : 6;
+                const tableHeader = (this.isOneCarGroup) ? 'Список ТС' : `Список ТС №${carTablesCount} - Группы ТС: ${list.groups.map(x=>x+1).join(', ')}`;
+                const colWidths = (this.isOneCarGroup) ? [44, 88, 121, 58, 149] : [44, 68, 121, 48, 129, 50];
+                const contentHeader = [
+                    {
+                        text: 'п/п',
+                        style: "firstHeader"
+                    },
+                    {
+                        text: 'Гос. номер',
+                        style: "firstHeader",
+                    },
+                    {
+                        text: `VIN`,
+                        style: "firstHeader",
+                    },
+                    {
+                        text: 'Год',
+                        style: "firstHeader",
+                    },
+                    {
+                        text: 'Марка',
+                        style: "firstHeader",
+                    }
+                ];
+                if (!this.isOneCarGroup) contentHeader.push(
+                    {
+                        text: 'Группа',
+                        style: "firstHeader",
+                    }
+                )
+                /**
+                 * Возвращает строку с описанием ТС со столбцом Группа или без него в зависимости от общего кол-ва групп
+                 * @param {*} car 
+                 * @param {*} i 
+                 */
+                const contentBody = (car, i) => {
+                    const content = [
+                        {
+                            text: i + 1,
+                            style: 'carInfo',
+                        },
+                        {
+                            text: car.data.autNumber,
+                            style: 'carInfo',
+                        }
+                        ,
+                        {
+                            text: car.data.VIN,
+                            style: 'carInfo',
+                        },
+                        {
+                            text: car.data.prodYear,
+                            style: 'carInfo',
+                        },
+                        {
+                            text: car.data.model,
+                            style: 'carInfo',
+                        }
+                    ]
+                    if (!this.isOneCarGroup) content.push(
+                        {
+                            text: car.tableGroup.map(x=>x+1).join(', '),
+                            style: 'carInfo',
+                        }
+                    )
+                    return content;
+                };
                 const tableCar = {
                     style: 'table',
                     table: {
                         headerRows: 2,
-                        widths: [44, 68, 121, 48, 129, 50],
+                        widths: colWidths,
                         body: [
                             [
                                 {
-                                    text: `Список ТС №${carTablesCount} - Набор рисков: ${list.groups.map(x=>x+1).join(', ')}`,
+                                    text: tableHeader,
                                     border: [false, false, false, false],
                                     colSpan: colNumber,
                                     alignment: 'left'
                                 },
                                 ...putEmptyCells(colNumber-1),
                             ],
-                            [
-                                {
-                                    text: 'п/п',
-                                    style: "firstHeader"
-                                },
-                                {
-                                    text: 'Номер',
-                                    style: "firstHeader",
-                                },
-                                {
-                                    text: `VIN`,
-                                    style: "firstHeader",
-                                },
-                                {
-                                    text: 'Год',
-                                    style: "firstHeader",
-                                },
-                                {
-                                    text: 'Марка',
-                                    style: "firstHeader",
-                                },
-                                {
-                                    text: 'Набор',
-                                    style: "firstHeader",
-                                }
-                            ]
+                            contentHeader,
                         ]
                     },
                 }
@@ -309,34 +353,7 @@ const emptyCell = {
                 // данные по машинам
                 list.cars.forEach((car, i) => {
                     tableContentCar.push(
-                        [
-                            {
-                                text: i + 1,
-                                style: 'carInfo',
-                            },
-                            {
-                                text: car.data.autNumber,
-                                style: 'carInfo',
-                            }
-                            ,
-                            {
-                                text: car.data.VIN,
-                                style: 'carInfo',
-                            },
-                            {
-                                text: car.data.prodYear,
-                                style: 'carInfo',
-                            },
-                            {
-                                text: car.data.model,
-                                style: 'carInfo',
-                            }
-                            ,
-                            {
-                                text: car.tableGroup.map(x=>x+1).join(', '),
-                                style: 'carInfo',
-                            }
-                        ]
+                        contentBody(car, i)
                     )
                 })
                 this.carsTables.push(tableCar);
