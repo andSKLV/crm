@@ -8,6 +8,7 @@ const emptyCell = {
     border: [false, false, false, false],
 }
 const HIP_NAME = '№ HIP-0000000-00-17';
+const baseFontSize = 11;
 
  class PolisMaker {
     constructor() {
@@ -129,6 +130,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             border: [false, false, false, false],
                             colSpan: colNumber(),
                             alignment: 'left',
+                            fontSize: baseFontSize,
                         },
                         ...putEmptyCells(colNumber()-1)
                     ],
@@ -137,27 +139,32 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             text: 'Застрахованные риски,\n согласно п. 1.1',
                             style: "firstHeader",
                             border: [false, false, false, false],
+                            fontSize: baseFontSize,
                         },
                         {
                             text: 'Тип грузового отсека',
                             style: "firstHeader",
                             border: [false, false, false, false],
+                            fontSize: baseFontSize,
                         },
                         {
                             text: 'Страховая стоимость, руб.',
                             style: "firstHeader",
                             border: [false, false, false, false],
+                            fontSize: baseFontSize,
                         },
                         
                         {
                             text: 'Лимит по случаю, руб.',
                             style: "firstHeader",
                             border: [false, false, false, false],
+                            fontSize: baseFontSize,
                         },
                         {
                             text: 'Франшиза по случаю, руб.',
                             style: "firstHeader",
                             border: [false, false, false, false],
+                            fontSize: baseFontSize,
                         }
                     ]
                 ]
@@ -187,6 +194,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                     colSpan: colNumber(),
                     alignment: 'left',
                     bold: true,
+                    fontSize: baseFontSize,
                 }, ...putEmptyCells(colNumber() - 1)]);
             }
             //функция выдачи отступов для строки, что бы значения были отцентрованы
@@ -212,12 +220,14 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                                 obj = {
                                     text: `${process[property] / 24}`,
                                     margin: oneMargin,
+                                    fontSize: baseFontSize,
                                 }
                             }
                             else {
                                 obj = {
                                     text: `${process[property]}`,
                                     margin: oneMargin,
+                                    fontSize: baseFontSize,
                                 }
                             }
                             break;
@@ -227,6 +237,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             obj = {
                                 text: this.addSpaces(process[property]),
                                 margin: oneMargin,
+                                fontSize: baseFontSize,
                             }
                             break;
                         case 'risk':
@@ -235,24 +246,28 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                                 text: `${process[property]}`,
                                 margin: riskMargin,
                                 alignment: 'left',
+                                fontSize: baseFontSize,
                             };
                             break;
                         case 'group':
                             obj = {
                                 text: `${group}`,
-                                margin: oneMargin
+                                margin: oneMargin,
+                                fontSize: baseFontSize,
                             };
                             break;
                         case 'wrapping':
                             obj = {
                                 text: process[property],
                                 margin: wrapMargin,
+                                fontSize: baseFontSize,
                             };
                             break;
                         default:
                             obj = {
                                 text: process[property],
                                 margin: oneMargin,
+                                fontSize: baseFontSize,
                             };
                             break;
                     }
@@ -272,29 +287,35 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                 const contentHeader = [
                     {
                         text: 'п/п',
-                        style: "firstHeader"
+                        style: "firstHeader",
+                        fontSize: baseFontSize,
                     },
                     {
                         text: 'Гос. знак',
                         style: "firstHeader",
+                        fontSize: baseFontSize,
                     },
                     {
                         text: `VIN`,
                         style: "firstHeader",
+                        fontSize: baseFontSize,
                     },
                     {
                         text: 'Год',
                         style: "firstHeader",
+                        fontSize: baseFontSize,
                     },
                     {
                         text: 'Марка',
                         style: "firstHeader",
+                        fontSize: baseFontSize,
                     }
                 ];
                 if (!this.isOneCarGroup) contentHeader.push(
                     {
                         text: 'Набор*',
                         style: "firstHeader",
+                        fontSize: baseFontSize,
                     }
                 )
                 /**
@@ -345,7 +366,8 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                                     text: tableHeader,
                                     border: [false, false, false, false],
                                     colSpan: colNumber,
-                                    alignment: 'left'
+                                    alignment: 'left',
+                                    fontSize: baseFontSize,
                                 },
                                 ...putEmptyCells(colNumber-1),
                             ],
@@ -374,7 +396,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
             text:'Совокупные выплаты по всем застрахованным случаям не могут превышать агрегатный лимит отвественности страховщика по Полису.',
             bold: true,
             alignment: 'justify',
-            fontSize: 12,
+            fontSize: baseFontSize,
         },'\n')
         return listContent;
     }
@@ -417,6 +439,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                         style: "firstHeader",
                         colSpan: 2,
                         border: [false, false, false, false],
+                        fontSize: baseFontSize,
                     },
                     {},
                 ]
@@ -430,6 +453,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                         colSpan: 2,
                         border: [false, false, false, false],
                         alignment: 'justify',
+                        fontSize: baseFontSize,
                     }
                 ]
                 paragraph.body.push(tb);
@@ -440,9 +464,11 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                     arr.push({
                         text: `${parIndex}.${num + 1}`,
                         border: [false, false, false, false],
+                        fontSize: baseFontSize,
                     }, {
                             text: param.text,
                             border: [false, false, false, false],
+                            fontSize: baseFontSize,
                         })
                     paragraph.body.push(arr);
                     paragraph.headerRows = 1;
@@ -481,7 +507,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
         const prepareListToPDF = ({ list, included, baseRisk }) => {
             const table = {
                 headerRows: 1,
-                widths: [30, 457],
+                widths: [1, 486],
                 body: []
             };
             if (included) {
@@ -507,7 +533,8 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             bold: baseRisk.ToPDFinclude[0].bold,
                             border: [false, false, false, false],
                             colSpan: 2,
-                            alignment: 'justify'
+                            alignment: 'justify',
+                            fontSize: baseFontSize,
                         },
                         emptyCell
                     ]);
@@ -520,7 +547,8 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             {
                                 text: `• ${ul}`,
                                 border: [false, false, false, false],
-                                alignment: 'justify'
+                                alignment: 'justify',
+                                fontSize: baseFontSize,
                             }
                         ])
                     })
@@ -540,7 +568,8 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             ],
                             border: [false, false, false, false],
                             colSpan: 2,
-                            alignment: 'justify'
+                            alignment: 'justify',
+                            fontSize: baseFontSize,
                         },
                         emptyCell,
                     ])
@@ -566,7 +595,8 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             bold: baseRisk.ToPDFnotInclude[0].bold,
                             border: [false, false, false, false],
                             colSpan: 2,
-                            alignment: 'justify'
+                            alignment: 'justify',
+                            fontSize: baseFontSize,
                         },
                         emptyCell
                     ]);
@@ -579,7 +609,8 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             {
                                 text: `• ${ul}`,
                                 border: [false, false, false, false],
-                                alignment: 'justify'
+                                alignment: 'justify',
+                                fontSize: baseFontSize,
                             }
                         ])
                     })
@@ -594,7 +625,8 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             ],
                             border: [false, false, false, false],
                             colSpan:2,
-                            alignment: 'justify'
+                            alignment: 'justify',
+                            fontSize: baseFontSize,
                         },
                         emptyCell,
                     ])
