@@ -365,7 +365,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
             }
         })
         if (!this.isOneCarGroup) this.carsTables.push({
-            text:'* Транспортные средства застрахованы на условиях и рисках, соответствующих указанным наборам в Таблице 1 и Приложении 1.',
+            text:'* Транспортные средства застрахованы на условиях и рисках, соответствующих указанным наборам в Таблице 1.',
             bold: false,
             alignment: 'justify',
         })
@@ -507,6 +507,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             bold: baseRisk.ToPDFinclude[0].bold,
                             border: [false, false, false, false],
                             colSpan: 2,
+                            alignment: 'justify'
                         },
                         emptyCell
                     ]);
@@ -519,6 +520,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             {
                                 text: `• ${ul}`,
                                 border: [false, false, false, false],
+                                alignment: 'justify'
                             }
                         ])
                     })
@@ -538,6 +540,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             ],
                             border: [false, false, false, false],
                             colSpan: 2,
+                            alignment: 'justify'
                         },
                         emptyCell,
                     ])
@@ -551,6 +554,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                         style: "firstHeader",
                         colSpan: 2,
                         border: [false, false, false, false],
+                        alignment: 'justify'
                     },
                     {}
                 ])
@@ -562,7 +566,8 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             text: baseRisk.ToPDFnotInclude[0].text,
                             bold: baseRisk.ToPDFnotInclude[0].bold,
                             border: [false, false, false, false],
-                            colSpan: 2
+                            colSpan: 2,
+                            alignment: 'justify'
                         },
                         emptyCell
                     ]);
@@ -575,6 +580,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             {
                                 text: `• ${ul}`,
                                 border: [false, false, false, false],
+                                alignment: 'justify'
                             }
                         ])
                     })
@@ -589,6 +595,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
                             ],
                             border: [false, false, false, false],
                             colSpan:2,
+                            alignment: 'justify'
                         },
                         emptyCell,
                     ])
