@@ -128,7 +128,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                     [
                         {
                             text: 'Таблица 1 - Условия страхования',
-                            border: [false, false, false, false],
+                            border: NOBORDER,
                             colSpan: colNumber(),
                             alignment: 'left',
                             fontSize: BIGFONTSIZE,
@@ -139,32 +139,32 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         {
                             text: 'Застрахованные риски,\n согласно п. 1.1',
                             style: "firstHeader",
-                            border: [false, false, false, false],
+                            border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
                         {
                             text: 'Тип грузового отсека',
                             style: "firstHeader",
-                            border: [false, false, false, false],
+                            border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
                         {
                             text: 'Страховая стоимость, руб.',
                             style: "firstHeader",
-                            border: [false, false, false, false],
+                            border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
                         
                         {
                             text: 'Лимит по случаю, руб.',
                             style: "firstHeader",
-                            border: [false, false, false, false],
+                            border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
                         {
                             text: 'Франшиза по случаю, руб.',
                             style: "firstHeader",
-                            border: [false, false, false, false],
+                            border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         }
                     ]
@@ -272,7 +272,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                             };
                             break;
                     }
-                    obj.border = [false, false, false, false];
+                    obj.border = NOBORDER;
                     row.push(obj);
                 })
                 tableContent.push(row);
@@ -365,7 +365,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                             [
                                 {
                                     text: tableHeader,
-                                    border: [false, false, false, false],
+                                    border: NOBORDER,
                                     colSpan: colNumber,
                                     alignment: 'left',
                                     fontSize: BASEFONTSIZE,
@@ -439,7 +439,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         text: `${parIndex}. ${obj.name}:`,
                         style: "firstHeader",
                         colSpan: 2,
-                        border: [false, false, false, false],
+                        border: NOBORDER,
                         fontSize: BASEFONTSIZE,
                     },
                     {},
@@ -452,7 +452,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                     {
                         text: text,
                         colSpan: 2,
-                        border: [false, false, false, false],
+                        border: NOBORDER,
                         alignment: 'justify',
                         fontSize: BASEFONTSIZE,
                     }
@@ -464,11 +464,11 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                     let arr = [];
                     arr.push({
                         text: `${parIndex}.${num + 1}`,
-                        border: [false, false, false, false],
+                        border: NOBORDER,
                         fontSize: BASEFONTSIZE,
                     }, {
                             text: param.text,
-                            border: [false, false, false, false],
+                            border: NOBORDER,
                             fontSize: BASEFONTSIZE,
                         })
                     paragraph.body.push(arr);
@@ -517,7 +517,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         text: '1.1 Определения застрахованных рисков',
                         style: "firstHeader",
                         colSpan: 2,
-                        border: [false, false, false, false],
+                        border: NOBORDER,
                     },
                     {}
                 ])
@@ -527,12 +527,12 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                     table.body.push([
                         // {
                         //     text: `1.1.${count}`,
-                        //     border: [false, false, false, false],
+                        //     border: NOBORDER,
                         // },
                         {
                             text: baseRisk.ToPDFinclude[0].text,
                             bold: baseRisk.ToPDFinclude[0].bold,
-                            border: [false, false, false, false],
+                            border: NOBORDER,
                             colSpan: 2,
                             alignment: 'justify',
                             fontSize: BASEFONTSIZE,
@@ -543,11 +543,11 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         table.body.push([
                             {
                                 text: ` `,
-                                border: [false, false, false, false],
+                                border: NOBORDER,
                             },
                             {
                                 text: `• ${ul}`,
-                                border: [false, false, false, false],
+                                border: NOBORDER,
                                 alignment: 'justify',
                                 fontSize: BASEFONTSIZE,
                             }
@@ -560,14 +560,14 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                     table.body.push([
                         // {
                         //     text: `1.1.${count}`,
-                        //     border: [false, false, false, false],
+                        //     border: NOBORDER,
                         // },
                         {
                             text: [
                                 { text: `${risk.name}`, bold: true },
                                 { text: ` - ${risk.title}. ` }
                             ],
-                            border: [false, false, false, false],
+                            border: NOBORDER,
                             colSpan: 2,
                             alignment: 'justify',
                             fontSize: BASEFONTSIZE,
@@ -583,7 +583,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         text: '1.2 Определения не заявленных на страхование рисков:',
                         style: "firstHeader",
                         colSpan: 2,
-                        border: [false, false, false, false]
+                        border: NOBORDER
                     },
                     {}
                 ])
@@ -594,7 +594,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         {
                             text: baseRisk.ToPDFnotInclude[0].text,
                             bold: baseRisk.ToPDFnotInclude[0].bold,
-                            border: [false, false, false, false],
+                            border: NOBORDER,
                             colSpan: 2,
                             alignment: 'justify',
                             fontSize: BASEFONTSIZE,
@@ -605,11 +605,11 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         table.body.push([
                             {
                                 text: ` `,
-                                border: [false, false, false, false],
+                                border: NOBORDER,
                             },
                             {
                                 text: `• ${ul}`,
-                                border: [false, false, false, false],
+                                border: NOBORDER,
                                 alignment: 'justify',
                                 fontSize: BASEFONTSIZE,
                             }
@@ -624,7 +624,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                                 { text: `${risk.name}`, bold: true },
                                 { text: ` - ${risk.title}. ` }
                             ],
-                            border: [false, false, false, false],
+                            border: NOBORDER,
                             colSpan:2,
                             alignment: 'justify',
                             fontSize: BASEFONTSIZE,
@@ -1088,7 +1088,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                                 {
                                     text: `Лист ${page.toString()}/${pages.toString()} Полиса ${this.hipName}`,
                                     colSpan: 6,
-                                    border: [false, false, false, false],
+                                    border: NOBORDER,
                                     alignment: 'center',
                                     fontSize: 7,
                                     margin: [0, 40, 0, 0],
@@ -1109,7 +1109,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                                     // пустая строка для отступа
                                     text: '',
                                     fontSize: 12,
-                                    border: [false, false, false, false]
+                                    border: NOBORDER
                                 },
                                 emptyCell,
                                 emptyCell,
@@ -1123,21 +1123,21 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                                 {
                                     text: 'Cтрахователь:',
                                     fontSize: 10,
-                                    border: [false, false, false, false],
+                                    border: NOBORDER,
                                 },
                                 {
                                     text: '___________________________________',
-                                    border: [false, false, false, false],
+                                    border: NOBORDER,
                                 }
                                 ,
                                 {
                                     text: 'Cтраховщик:',
                                     fontSize: 10,
-                                    border: [false, false, false, false],
+                                    border: NOBORDER,
                                 },
                                 {
                                     text: '___________________________________',
-                                    border: [false, false, false, false],
+                                    border: NOBORDER,
                                 }
                                 ,
                                 emptyCell
@@ -1150,14 +1150,14 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                                     text: 'подпись и печать',
                                     fontSize: 7,
                                     alignment: 'center',
-                                    border: [false, false, false, false],
+                                    border: NOBORDER,
                                 },
                                 emptyCell,
                                 {
                                     text: 'подпись и печать',
                                     fontSize: 7,
                                     alignment: 'center',
-                                    border: [false, false, false, false],
+                                    border: NOBORDER,
                                 },
                                 emptyCell
                             ],
@@ -1165,7 +1165,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                                 {
                                     text: `Лист ${page.toString()}/${pages.toString()} Полиса ${this.hipName}`,
                                     colSpan: 6,
-                                    border: [false, false, false, false],
+                                    border: NOBORDER,
                                     alignment: 'center',
                                     fontSize: 7,
                                 }
