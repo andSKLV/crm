@@ -300,7 +300,7 @@ app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location
   };
   $scope.relocate = (path) => {
     $scope.myFactory.cameFrom = {
-      name: 'Карту клиента',
+      name: getPathName($location.$$path),
       path: $location.$$path,
     };
     $location.path(path);

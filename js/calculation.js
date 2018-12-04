@@ -339,20 +339,23 @@ function getPathName (path) {
     let name;
     switch (path) {
         case '/profile':
-            name = 'Карту компании'
+            name = 'Карту компании';
             break;
         case '/calculation':
-            name = 'Расчет'
+            name = 'Расчет';
             break;
         case '/':
-            name = 'Основное меню'
+            name = 'Основное меню';
             break;
         case '/polis':
-            name = 'Проект документа'
+            name = 'Проект документа';
+            break;
+        case '/company':
+            name = 'Редактор карты клиента';
             break;
         default:
             console.error(`Неописанный случай, $location.path = ${path}`);
-            name = path;
+            name = 'прошлую вкладку';
             break;
     }
     return name;

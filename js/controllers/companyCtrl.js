@@ -193,7 +193,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
     };
     $scope.changeLocation = (path) => {
         $scope.myFactory.cameFrom = {
-            name: 'Редактор карты клиента',
+            name: getPathName($location.$$path),
             path: $location.$$path,
         }
         if (!$scope.myFactory.companyObj.id) {

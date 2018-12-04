@@ -295,7 +295,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
     }
     $scope.changeLocation = (value) => {
         $scope.myFactory.cameFrom = {
-            name: 'Проект документа',
+            name: getPathName($location.$$path),
             path: $location.$$path,
         };
         switch (value) {
