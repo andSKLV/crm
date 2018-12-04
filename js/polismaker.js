@@ -32,6 +32,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
             park.processes.forEach((process, i) => {
                 let wasIndex = null;
                 for (let k = 0; k < i; k++) {
+                    //ищем проц с идентичными машинами
                     if (this.areEquivalent(process.cars, park.processes[k]["cars"])) {
                         wasIndex = lists.findIndex(l => l.processes.includes(park.processes[k]));
                         break;
@@ -51,14 +52,19 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                     currGroup = lists.length-1;
                 }
                 else {
-                    lists[wasIndex].processes.push(process);
-                    lists[wasIndex].risks.push(process.risk);
-                    if (lists[wasIndex].wrappings.includes(process.wrapping)) lists[wasIndex].wrappings.push(process.wrapping);
+                    if (!wasSameRisk (lists[wasIndex].processes, process)) {
+                        lists[wasIndex].processes.push(process);
+                        lists[wasIndex].risks.push(process.risk);
+                    } 
+
+                    if (!lists[wasIndex].wrappings.includes(process.wrapping)) lists[wasIndex].wrappings.push(process.wrapping);
                     currGroup = wasIndex;
                 }
                 process.cars.forEach(car=>{
                     if (!car.tableGroup) car.tableGroup = [currGroup];
                     if (!car.tableGroup.includes(currGroup)) car.tableGroup.push(currGroup);
+                    if (!car.wrappings) car.wrappings = [process.wrapping];
+                    if (!car.wrappings.includes(process.wrapping)) car.wrappings.push(process.wrapping);
                 })
                 if (process.isFull){ 
                     lists[currGroup].isFull = true;
@@ -67,6 +73,18 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
             });
         });
         return lists;
+        /**
+         * Проверка, сущетсвует ли в нашем списке проц с такими же полями (кроме типа отсека)
+         * @param {array} listOfProcesses - список уже добавленных процев
+         * @param {process} proc - проверяемый про
+         */
+        function wasSameRisk (listOfProcesses, proc) {
+            const checkingFields = ['cost', 'franchise', 'limit', 'risk', 'turnover'];
+            // проходимся по списку всех процев в листе, если есть хоть один, у которого все проверяемые параметры совпадают с нашим то true
+            return listOfProcesses.some(p => {
+                return checkingFields.every(field => p[field] === proc[field]);
+            })
+        }
     }
     /**
      * Функция проверки двух соседних строк на идентичность машин, к которым относятся данные строки
@@ -94,7 +112,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
         const listContent = [];
         let carTablesCount = 1;
         //порядок столбцов в таблице
-        const colOrder = ['risk', 'wrapping', 'cost', 'limit', 'franchise'];
+        const colOrder = ['risk', 'cost', 'limit', 'franchise'];
         const colNumber = () => colOrder.length;
         const putEmptyCells = num => {
             const arr = [];
@@ -106,10 +124,10 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
         // ширины столбца
         const colWidth = {
             'group': 0,
-            'risk': 97+25+35,
+            'risk': 97+25+35+100,
             'cost': 61+20,
             "amount": 0,
-            "wrapping": 60+25+15,
+            "wrapping": 0, //100 было
             "limit": 60,
             "franchise": 60,
         }
@@ -142,12 +160,12 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                             border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
-                        {
-                            text: 'Тип грузового отсека',
-                            style: "firstHeader",
-                            border: NOBORDER,
-                            fontSize: BIGFONTSIZE,
-                        },
+                        // {
+                        //     text: 'Тип грузового отсека',
+                        //     style: "firstHeader",
+                        //     border: NOBORDER,
+                        //     fontSize: BIGFONTSIZE,
+                        // },
                         {
                             text: 'Страховая стоимость, руб.',
                             style: "firstHeader",
@@ -202,7 +220,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
             const getMargin = (str) => {
                 const twoRows = ['Повреждение товарных автомобилей', 'Противоправные действия третьих лиц'];
                 const noMargin = [0,0,0,0];
-                const oneMargin = [0,8,0,8];
+                const oneMargin = noMargin; //[0,8,0,8] было для двустрочных
                 return twoRows.includes(str) ? noMargin : oneMargin;
             }
 
@@ -243,6 +261,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                             break;
                         case 'risk':
                             obj = {
+                                // пункт риска отключен пока
                                 // text: `${process[property]} п.\u00A01.1.${this.includedRisksOrder._indexOf(process[property])+1}`,
                                 text: `${process[property]}`,
                                 margin: riskMargin,
@@ -259,7 +278,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                             break;
                         case 'wrapping':
                             obj = {
-                                text: process[property],
+                                text: list.wrappings.join(', '),
                                 margin: wrapMargin,
                                 fontSize: BIGFONTSIZE,
                             };
@@ -307,7 +326,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         fontSize: BASEFONTSIZE,
                     },
                     {
-                        text: 'Марка',
+                        text: 'Тип грузового отсека',
                         style: "firstHeader",
                         fontSize: BASEFONTSIZE,
                     }
@@ -344,7 +363,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                             style: 'carInfo',
                         },
                         {
-                            text: car.data.model,
+                            text: car.wrappings.join(', '),
                             style: 'carInfo',
                         }
                     ]
@@ -759,7 +778,6 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
             'USD': '$',
         }
         let pageWithExtraFooter = null;
-        console.log(this.hipName);
         const docDefinition = {
             pageSize: 'A4',
             pageMargins: [50, 115, 50, 65],
@@ -1078,7 +1096,6 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                 if (pageWithExtraFooter === null) {
                     findExtraPage(pagesArr);
                 }
-                console.log(this.hipName);
                 if (page === pageWithExtraFooter) return {
                     table: {
                         headerRows: 0,
@@ -1098,7 +1115,6 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         style: 'table'
                     }
                 }
-                console.log(this.hipName);
                 if (page > 1) return {
                     table: {
                         headerRows: 0,
