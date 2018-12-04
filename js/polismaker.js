@@ -8,7 +8,8 @@ const emptyCell = {
     border: [false, false, false, false],
 }
 const HIP_NAME = '№ HIP-0000000-00-17';
-const baseFontSize = 11;
+const BASEFONTSIZE = 10.5;
+const BIGFONTSIZE = BASEFONTSIZE + 1.5;
 
  class PolisMaker {
     constructor() {
@@ -130,7 +131,7 @@ const baseFontSize = 11;
                             border: [false, false, false, false],
                             colSpan: colNumber(),
                             alignment: 'left',
-                            fontSize: baseFontSize,
+                            fontSize: BIGFONTSIZE,
                         },
                         ...putEmptyCells(colNumber()-1)
                     ],
@@ -139,32 +140,32 @@ const baseFontSize = 11;
                             text: 'Застрахованные риски,\n согласно п. 1.1',
                             style: "firstHeader",
                             border: [false, false, false, false],
-                            fontSize: baseFontSize,
+                            fontSize: BIGFONTSIZE,
                         },
                         {
                             text: 'Тип грузового отсека',
                             style: "firstHeader",
                             border: [false, false, false, false],
-                            fontSize: baseFontSize,
+                            fontSize: BIGFONTSIZE,
                         },
                         {
                             text: 'Страховая стоимость, руб.',
                             style: "firstHeader",
                             border: [false, false, false, false],
-                            fontSize: baseFontSize,
+                            fontSize: BIGFONTSIZE,
                         },
                         
                         {
                             text: 'Лимит по случаю, руб.',
                             style: "firstHeader",
                             border: [false, false, false, false],
-                            fontSize: baseFontSize,
+                            fontSize: BIGFONTSIZE,
                         },
                         {
                             text: 'Франшиза по случаю, руб.',
                             style: "firstHeader",
                             border: [false, false, false, false],
-                            fontSize: baseFontSize,
+                            fontSize: BIGFONTSIZE,
                         }
                     ]
                 ]
@@ -194,7 +195,7 @@ const baseFontSize = 11;
                     colSpan: colNumber(),
                     alignment: 'left',
                     bold: true,
-                    fontSize: baseFontSize,
+                    fontSize: BASEFONTSIZE,
                 }, ...putEmptyCells(colNumber() - 1)]);
             }
             //функция выдачи отступов для строки, что бы значения были отцентрованы
@@ -220,14 +221,14 @@ const baseFontSize = 11;
                                 obj = {
                                     text: `${process[property] / 24}`,
                                     margin: oneMargin,
-                                    fontSize: baseFontSize,
+                                    fontSize: BIGFONTSIZE,
                                 }
                             }
                             else {
                                 obj = {
                                     text: `${process[property]}`,
                                     margin: oneMargin,
-                                    fontSize: baseFontSize,
+                                    fontSize: BIGFONTSIZE,
                                 }
                             }
                             break;
@@ -237,7 +238,7 @@ const baseFontSize = 11;
                             obj = {
                                 text: this.addSpaces(process[property]),
                                 margin: oneMargin,
-                                fontSize: baseFontSize,
+                                fontSize: BIGFONTSIZE,
                             }
                             break;
                         case 'risk':
@@ -246,28 +247,28 @@ const baseFontSize = 11;
                                 text: `${process[property]}`,
                                 margin: riskMargin,
                                 alignment: 'left',
-                                fontSize: baseFontSize,
+                                fontSize: BIGFONTSIZE,
                             };
                             break;
                         case 'group':
                             obj = {
                                 text: `${group}`,
                                 margin: oneMargin,
-                                fontSize: baseFontSize,
+                                fontSize: BIGFONTSIZE,
                             };
                             break;
                         case 'wrapping':
                             obj = {
                                 text: process[property],
                                 margin: wrapMargin,
-                                fontSize: baseFontSize,
+                                fontSize: BIGFONTSIZE,
                             };
                             break;
                         default:
                             obj = {
                                 text: process[property],
                                 margin: oneMargin,
-                                fontSize: baseFontSize,
+                                fontSize: BIGFONTSIZE,
                             };
                             break;
                     }
@@ -288,34 +289,34 @@ const baseFontSize = 11;
                     {
                         text: 'п/п',
                         style: "firstHeader",
-                        fontSize: baseFontSize,
+                        fontSize: BASEFONTSIZE,
                     },
                     {
                         text: 'Гос. знак',
                         style: "firstHeader",
-                        fontSize: baseFontSize,
+                        fontSize: BASEFONTSIZE,
                     },
                     {
                         text: `VIN`,
                         style: "firstHeader",
-                        fontSize: baseFontSize,
+                        fontSize: BASEFONTSIZE,
                     },
                     {
                         text: 'Год',
                         style: "firstHeader",
-                        fontSize: baseFontSize,
+                        fontSize: BASEFONTSIZE,
                     },
                     {
                         text: 'Марка',
                         style: "firstHeader",
-                        fontSize: baseFontSize,
+                        fontSize: BASEFONTSIZE,
                     }
                 ];
                 if (!this.isOneCarGroup) contentHeader.push(
                     {
                         text: 'Набор*',
                         style: "firstHeader",
-                        fontSize: baseFontSize,
+                        fontSize: BASEFONTSIZE,
                     }
                 )
                 /**
@@ -367,7 +368,7 @@ const baseFontSize = 11;
                                     border: [false, false, false, false],
                                     colSpan: colNumber,
                                     alignment: 'left',
-                                    fontSize: baseFontSize,
+                                    fontSize: BASEFONTSIZE,
                                 },
                                 ...putEmptyCells(colNumber-1),
                             ],
@@ -396,7 +397,7 @@ const baseFontSize = 11;
             text:'Совокупные выплаты по всем застрахованным случаям не могут превышать агрегатный лимит отвественности страховщика по Полису.',
             bold: true,
             alignment: 'justify',
-            fontSize: baseFontSize,
+            fontSize: BASEFONTSIZE,
         },'\n')
         return listContent;
     }
@@ -439,7 +440,7 @@ const baseFontSize = 11;
                         style: "firstHeader",
                         colSpan: 2,
                         border: [false, false, false, false],
-                        fontSize: baseFontSize,
+                        fontSize: BASEFONTSIZE,
                     },
                     {},
                 ]
@@ -453,7 +454,7 @@ const baseFontSize = 11;
                         colSpan: 2,
                         border: [false, false, false, false],
                         alignment: 'justify',
-                        fontSize: baseFontSize,
+                        fontSize: BASEFONTSIZE,
                     }
                 ]
                 paragraph.body.push(tb);
@@ -464,11 +465,11 @@ const baseFontSize = 11;
                     arr.push({
                         text: `${parIndex}.${num + 1}`,
                         border: [false, false, false, false],
-                        fontSize: baseFontSize,
+                        fontSize: BASEFONTSIZE,
                     }, {
                             text: param.text,
                             border: [false, false, false, false],
-                            fontSize: baseFontSize,
+                            fontSize: BASEFONTSIZE,
                         })
                     paragraph.body.push(arr);
                     paragraph.headerRows = 1;
@@ -534,7 +535,7 @@ const baseFontSize = 11;
                             border: [false, false, false, false],
                             colSpan: 2,
                             alignment: 'justify',
-                            fontSize: baseFontSize,
+                            fontSize: BASEFONTSIZE,
                         },
                         emptyCell
                     ]);
@@ -548,7 +549,7 @@ const baseFontSize = 11;
                                 text: `• ${ul}`,
                                 border: [false, false, false, false],
                                 alignment: 'justify',
-                                fontSize: baseFontSize,
+                                fontSize: BASEFONTSIZE,
                             }
                         ])
                     })
@@ -569,7 +570,7 @@ const baseFontSize = 11;
                             border: [false, false, false, false],
                             colSpan: 2,
                             alignment: 'justify',
-                            fontSize: baseFontSize,
+                            fontSize: BASEFONTSIZE,
                         },
                         emptyCell,
                     ])
@@ -596,7 +597,7 @@ const baseFontSize = 11;
                             border: [false, false, false, false],
                             colSpan: 2,
                             alignment: 'justify',
-                            fontSize: baseFontSize,
+                            fontSize: BASEFONTSIZE,
                         },
                         emptyCell
                     ]);
@@ -610,7 +611,7 @@ const baseFontSize = 11;
                                 text: `• ${ul}`,
                                 border: [false, false, false, false],
                                 alignment: 'justify',
-                                fontSize: baseFontSize,
+                                fontSize: BASEFONTSIZE,
                             }
                         ])
                     })
@@ -626,7 +627,7 @@ const baseFontSize = 11;
                             border: [false, false, false, false],
                             colSpan:2,
                             alignment: 'justify',
-                            fontSize: baseFontSize,
+                            fontSize: BASEFONTSIZE,
                         },
                         emptyCell,
                     ])
@@ -1196,12 +1197,6 @@ const baseFontSize = 11;
         };
 
         docDefinition.content.push(
-            // {
-            //     pageBreak: 'before',
-            //     text: ` Под действия настоящего Полиса подпадаю следующие наборы транспортных средств, указанные в Приложении 1, на закрепленных ниже условиях:`,
-            //     alignment: 'justify',
-            //     margin: [0, 0, 0, 5],
-            // },
             {
                 pageBreak: 'before',
                 text: `1. Риски и условия страхования для транспортных средств, перечисленных в Приложении 1`,
