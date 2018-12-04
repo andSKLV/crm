@@ -65,6 +65,10 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         $timeout(async function () {
             $rootScope.cacheTemplate = {};
             if($location.path!=="/calculation"){
+                myFactory.cameFrom = {
+                    path: $location.$$path,
+                    name: getPathName($location.$$path)
+                }
                 $location.path('/calculation');
                 await delay(200);
             }

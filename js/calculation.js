@@ -331,3 +331,29 @@ function parseDate(date) {
     if (month < 10) month = `0${month}`;
     return `${day}.${month}.${year}`;
 }
+/**
+ * Функция возвращает название поля пути, напр. profile -> Карта компании
+ * @param {string} path - строка из $location.$$path
+ */
+function getPathName (path) {
+    let name;
+    switch (path) {
+        case '/profile':
+            name = 'Карту компании'
+            break;
+        case '/calculation':
+            name = 'Расчет'
+            break;
+        case '/':
+            name = 'Основное меню'
+            break;
+        case '/polis':
+            name = 'Проект документа'
+            break;
+        default:
+            console.error(`Неописанный случай, $location.path = ${path}`);
+            name = path;
+            break;
+    }
+    return name;
+}
