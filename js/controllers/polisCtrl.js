@@ -156,6 +156,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             // создаем максимальное количество машин и добавляем в парк
             for (let i = 0; i < max; i++) {
                 const car = new Car();
+                car.park = park;
                 carGroup.add(car);
             }
             // назначаем каждому процессу в парке машины
@@ -294,7 +295,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
     }
     $scope.changeLocation = (value) => {
         $scope.myFactory.cameFrom = {
-            name: 'Проект документа',
+            name: getPathName($location.$$path),
             path: $location.$$path,
         };
         switch (value) {

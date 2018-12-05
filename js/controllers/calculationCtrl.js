@@ -607,7 +607,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     };
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
         this.myFactory.cameFrom = {
-            name: 'Расчет',
+            name: getPathName($location.$$path),
             path: $location.$$path,
         };
         value = (value==="dashboard") ? "" : value;

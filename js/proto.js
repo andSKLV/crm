@@ -267,6 +267,10 @@ class Multi{
         this.processes.forEach(function (process) {
             if(process.package){
                 if(multi.parent===undefined){
+                    if (!multi.template) {
+                        process[key]=value;
+                        return true;
+                    }
                     let template=multi.template.filter(function (proc) {
                         return proc.risk==process.risk;
                     });
@@ -289,7 +293,6 @@ class Multi{
                     });
                     multi.processes.forEach(process=>process[key]=value);
                 }
-
             }
             else process[key]=value;
         })

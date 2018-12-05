@@ -1,6 +1,7 @@
 import Calculation from '../protos/calc.js';
 import Company from "../protos/company.js";
 import Loading from '../protos/loading.js';
+import { GenerateClientCard } from '../ServiceFunctions.js';
 
 app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $location){
     let scope=this;
@@ -65,6 +66,10 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         $timeout(async function () {
             $rootScope.cacheTemplate = {};
             if($location.path!=="/calculation"){
+                myFactory.cameFrom = {
+                    path: $location.$$path,
+                    name: getPathName($location.$$path)
+                }
                 $location.path('/calculation');
                 await delay(200);
             }
@@ -398,16 +403,8 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
         }, 0);
     };
     this.loadCompanyProfile = async function (id){
-        if ($location.$$path==='/polis') myFactory.cameFrom = {
-            name: 'Проекту документа',
-            path: $location.$$path,
-        }
-        else if ($location.$$path==='/') myFactory.cameFrom = {
-            name: 'Основное меню',
-            path: $location.$$path,
-        }
-        else myFactory.cameFrom = {
-            name: 'прошлая вкладка',
+        myFactory.cameFrom = {
+            name: getPathName($location.$$path),
             path: $location.$$path,
         }
         myFactory.companyObj.id = id;
@@ -457,7 +454,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                 })
             }
             const data = resp.data;
-            myFactory.newClientCard = generateClientCard(data);
+            myFactory.newClientCard = GenerateClientCard(data);
             const companyObj = new Company();
             myFactory.companyObj = companyObj;
             companyObj.parseFromCompaniesResponse(data) //создаем объект с  id  из ответа и сохраняем ответ внутри
@@ -469,74 +466,6 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                 $location.path('/company');
             }
             clearSearch();
-
-            /**
-             *  Функция генерации объекта карточки клиента из данных из БД
-             * @param {obj} data - ответ из БД
-             * @returns {obj} - объект карточки клиента
-             */
-            function generateClientCard (data) {
-                return {
-                    'Данные компании':
-                    {
-                       "Форма организации": getOrgForm(data.OrganizationFormID),
-                       "Наименование организации": data.name,
-                       "Дата регистрации": getDate(data.registration_date),
-                       "Наименование рег. органа": data.who_registrate,
-                     },
-                     "Генеральный директор":
-                     {
-                       "ФИО директора":data.director_name,
-                       "Серия и номер паспорта":data.general_director_passport,
-                       "Когда выдан":getDate(data.give_date),
-                       "Кем выдан":data.director_authority,
-                     },
-                     "Продолжение": 
-                     {
-                        "Место рождения": "",
-                        "Адрес регистрации": "",
-                     },
-                     "Реквизиты компании":
-                     {
-                       "ОГРН":data.OGRN,
-                       "ИНН": data.INN,
-                       "КПП": data.KPP,
-                       "ОКПО":data.OKPO,
-                       "ОКВЭД":data.OKVED,
-                     },
-                     "Банковские реквизиты":
-                     {
-                       "р/счет":data.r_account,
-                       "к/счет":data.k_account,
-                       "Банк":data.bank,
-                       "БИК":data.bik,
-                     },
-                     "Доп. информация":
-                     {
-                        "Телефон":data.company_phone,
-                        "Эл. почта":data.company_mail,
-                        "Юридический адрес":data.Legal_address,
-                        "Фактический адрес":data.Real_address,
-                     }
-                   }
-            }
-            /**
-             * Функция возвращает наименование формы компании 
-             * @param {number} id 
-             */
-            function getOrgForm (id) {
-                if (id==='0') return '';
-                const forms = {
-                    1: "ЗАО",
-                    2: "ООО",
-                    3: "ОАО",
-                    4: "ИП"
-                }
-                return forms[+id];
-            }
-            function getDate (date) {
-                return (date==='0000-00-00') ? '' : date; 
-            } 
         },function error(resp){
             console.error(resp);
         })
