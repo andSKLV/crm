@@ -197,7 +197,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
         else table.layout = {
             fillColor: function (i, node) {
                 const text = node.table.body[i][0].text;
-                const reg = /Набор \d+/;
+                const reg = /Набор рисков \d+/;
                 const isGroupRow = reg.test(text);
                 return (isGroupRow) ? '#e6e6e6' : null;
             }
@@ -208,7 +208,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
             if (!this.isOneCarGroup) {
                 // добавляем разделитель Групп, если групп больше чем одна
                 tableContent.push([{
-                    text: `Набор ${group}:`,
+                    text: `Набор рисков ${group}:`,
                     border: NOBORDER,
                     colSpan: colNumber(),
                     alignment: 'left',
@@ -303,7 +303,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                 // если групп ТС больше одной, то необходимо добавить дополнительный стоблец с обозначением Групп
                 const colNumber = (this.isOneCarGroup) ? 5 : 6;
                 const tableHeader = (this.isOneCarGroup) ? 'Список транспортных средств' : `Список транспортных средств №${carTablesCount} - Набор рисков: ${list.groups.map(x=>x+1).join(', ')}`;
-                const colWidths = (this.isOneCarGroup) ? [44, 88, 121, 58, 149] : [44, 68, 121, 48, 129, 50];
+                const colWidths = (this.isOneCarGroup) ? [44, 88, 121, 58, 149] : [34, 68, 121, 48, 129, 60];
                 const contentHeader = [
                     {
                         text: 'п/п',
@@ -333,7 +333,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                 ];
                 if (!this.isOneCarGroup) contentHeader.push(
                     {
-                        text: 'Набор*',
+                        text: 'Набор рисков*',
                         style: "firstHeader",
                         fontSize: BASEFONTSIZE,
                     }
@@ -407,7 +407,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
             }
         })
         if (!this.isOneCarGroup) this.carsTables.push({
-            text:'* Транспортные средства застрахованы на условиях и рисках, соответствующих указанным наборам в Таблице 1.',
+            text:'* Транспортные средства застрахованы на условиях и рисках, соответствующих указанным наборам рисков в Таблице 1.',
             bold: false,
             alignment: 'justify',
         })
