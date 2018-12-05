@@ -20,9 +20,11 @@
                      ng-mouseenter="process.unselectable=true" ng-mouseleave="calculation.deleteProperty(process, 'unselectable')">&#9650</div>
                 <div class="copyDown"
                      ng-click="calculation.setParamToAllProcess(value, key, process)"
+                     ng-class="{copyDownLeft: key==='cost'}"
                      ng-if="process.showRows==key && process.park.processes.length>1 && key!='risk' && process.park.processes.length-1!==process.park.processes.indexOf(process)"
                      ng-mouseenter="process.unselectable=true" ng-mouseleave="calculation.deleteProperty(process, 'unselectable')">&#9660</div>
                 <div class="closePark"
+                    ng-class="{closeParkLeft: key==='cost'}"
                      ng-click="park.show=false; calculation.clean()"
                      ng-if="process.showRows==key && process.park.processes.length-1==process.park.processes.indexOf(process) && process.park.processes.length>1"
                      ng-mouseenter="process.unselectable=true;" ng-mouseleave="calculation.deleteProperty(process, 'unselectable')">&#9650</div>
