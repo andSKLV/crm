@@ -1127,7 +1127,7 @@ app.factory("myFactory", function () {
             let obj = {};
             obj.packName = this.process.risk;
             obj.template = this.multi.template;
-            this.process.risk = "Базовые риски";
+            this.process.risk = BASENAME;
             this.process["package"] = obj.packName;
             //this.process.multi=this.multi.count;
             array.push(new Process(this.process));
@@ -1256,10 +1256,10 @@ app.factory("myFactory", function () {
             // перемещение базовых рисков на первую строчку если они есть
             let flag = false;
             array.forEach(process => {
-                if (process.risk == "Базовые риски") flag = true;
+                if (process.risk == BASENAME) flag = true;
             });
             if (flag) {
-                while (array[0].risk != "Базовые риски") {
+                while (array[0].risk != BASENAME) {
                     array.push(array.splice(0, 1)[0]);
                 }
             }
@@ -1346,10 +1346,10 @@ app.factory("myFactory", function () {
                     const enrolledRisks = enrollRisks.call(this, splittedRisks);
                     this.multi.arrays.risk = [];
                     // удаляем базовые риски, чтобы потом поместить в начало
-                    delete enrolledRisks["Базовые риски"];
+                    delete enrolledRisks[BASENAME];
                     this.multi.arrays.risk = Object.keys(enrolledRisks);
                     // добавляем базовые риски в начало списка
-                    this.multi.arrays.risk.unshift("Базовые риски");
+                    this.multi.arrays.risk.unshift(BASENAME);
                     array = this.makeMulti();
                     array.forEach(pr => {
                         const limitKoef = enrolledRisks[pr.risk]

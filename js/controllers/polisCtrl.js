@@ -112,7 +112,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         switchMakingPolis();
         clearSearchResults();
         const baseRiskNeeded = myFactory.parks.some(park=>{
-            return park.risks.includes('Базовые риски');
+            return park.risks.includes(BASENAME);
         }) 
         //по необходимости загружаем каретку и "оговорки"
         if (!myFactory.polisObj || !myFactory.polisObj.isRequested || !$scope.currObj || $scope.currObj.length === 0) {

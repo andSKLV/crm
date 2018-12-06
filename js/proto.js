@@ -32,7 +32,7 @@ class Multi{
         }
     }
     prepareForPackage(){
-        this.processes.forEach(process=>{if(process.risk=="Базовые риски") process.remove();});
+        this.processes.forEach(process=>{if(process.risk==BASENAME) process.remove();});
         let mass=[];
         this.template.forEach(obj=>mass.push(obj.risk));
         let array=this.processes.filter(process=>mass.indexOf(process.risk)!=-1);
@@ -104,7 +104,7 @@ class Multi{
             else this.franchise=min+"-"+max;
         }
         if(this.packName){
-            let risks=["Базовые риски"];
+            let risks=[BASENAME];
             this.template.forEach(function (process) {
                 risks.push(process.risk);
             });
@@ -321,7 +321,7 @@ class Process{
         //SKLV 14.05.2018: этот блок нужен в случае, если объем перевозок в базовых рисках меньше чем в других рисках. Базовые риски должны считаться по наибольшему из объемов перевозок, поэтому перезаписываем amount на наибольшее. сохраняем значение, чтобы поменять его обратно после расчетов, чтобы в интерфейсе выводилось первоначальное число
         const maxAmount = this.park.calculateAmount();
         let writtenAmount;
-        if (this.risk==="Базовые риски" && maxAmount!=this.amount) {
+        if (this.risk===BASENAME && maxAmount!=this.amount) {
             // если у базовых рисков не самое большое кол-во груза в парке, то запоминаем самое большое кол-во для учета в расчетах базового риска
             writtenAmount = this.amount;
             this.amount = maxAmount;
@@ -350,7 +350,7 @@ class Process{
         //************  проверяем учли ли мы надбавку за прицеп базовых рисков для данного типа прицепа
         if(this.park.wrappings.indexOf(this.wrapping)!=-1){
             this.park.wrappings.splice(this.park.wrappings.indexOf(this.wrapping),1);
-            if(this.risk!="Базовые риски"){
+            if(this.risk!=BASENAME){
                 //this.park.riskSum+=risks[this.wrapping];
                 let spline2 = Spline(risks[this.wrapping]*this.park.riskKoef/2, Points.risk, 2);
                 this.totalPrice+=this.turnover*(this.baseRate*spline2/100)/100;
@@ -597,11 +597,11 @@ class Park{
     replaceBase(){
         if(this.processes.length==0) return false;
         let base;
-        if(this.processes[0].risk=="Базовые риски") return;
+        if(this.processes[0].risk==BASENAME) return;
 
         for(let i=0; i<this.processes.length; i++){
             let process=this.processes[i];
-            if(process.risk=="Базовые риски"){
+            if(process.risk==BASENAME){
                 base=this.processes.splice(i,1);
                 this.processes.splice(0,0,base[0]);
                 return false;
@@ -620,7 +620,7 @@ class Park{
         const maxAmount = park.calculateAmount();
         const amountOfBaseToMax = () => {
             park.processes.map(proc=>{
-                if (proc.risk==="Базовые риски") {
+                if (proc.risk===BASENAME) {
                     proc.writtenAmount = proc.amount;
                     proc.amount = maxAmount;
                 }
@@ -628,7 +628,7 @@ class Park{
         }
         const amountOfBaseChangeBack = () => {
             park.processes.map(proc=>{
-                if (proc.risk==="Базовые риски") {
+                if (proc.risk===BASENAME) {
                     proc.amount = proc.writtenAmount;
                     delete proc.writtenAmount;
                 }
@@ -679,7 +679,7 @@ class Park{
             let flag=true;
             // если в парке нет мульти узла, то надо посчитать и за него учет коэф.
             this.processes.forEach(function(process){
-                if(process.wrapping==key && process.risk=="Базовые риски") flag=false;
+                if(process.wrapping==key && process.risk==BASENAME) flag=false;
             });
             if(flag){
                 risksum+=risks[key];
@@ -702,7 +702,7 @@ class Park{
         this.newRiskKoef = (newWrapRisk===0) ? 0 : (newSum)/(newAmount*this.risks.length);
 
         //this.riskSum=risksum;
-        if(NO===undefined && this.risks.indexOf("Базовые риски")==-1 && this.processes.length==1){
+        if(NO===undefined && this.risks.indexOf(BASENAME)==-1 && this.processes.length==1){
             mass=this.processes;
             this.processes=[];
         }
