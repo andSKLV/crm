@@ -79,16 +79,19 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             data.type="load_calculation";
             data.id=id;
             let scope=this;
-            myFactory.urlJSON="transortation_cals.json";
             $http.post("php/search.php", data).then(async function success(response){
+
                 myFactory.matrixType="HIP";
                 myFactory.parks=[];
+                //Подмена старых Базовые риски на новое значение
+                // const 
                 let mass=JSON.parse(response.data.processes);
                 if(response.data.user_name==123){
                     mass.forEach(function (park) {
                         let multi=[];
                         let array=[];//создаем массив из процессов new Process
                         park.processes.forEach(function (process) {
+                            if (OLDBASENAMES.includes(process.risk)) process.risk = BASENAME;
                             let proc=new Process(process);
                             for(let key in process){
                                 proc[key]=process[key];
@@ -200,6 +203,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                         delete process[3];
                         process.risk=process[4];
                         delete process[4];
+                        if (OLDBASENAMES.includes(process.risk)) process.risk = BASENAME;
                         process.limit=process[5].split(" Р");
                         process.limit=process.limit[0]*1;
                         delete process[5];
