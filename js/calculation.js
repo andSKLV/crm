@@ -13,6 +13,8 @@ let MC= [[],[]];
 let MD= [[],[]];
 let risks=[];
 let koef_pow;
+const BASENAME = 'CMR/TTH пакет';
+const OLDBASENAMES = ['Базовые риски'];
 
 init();
 // SKLV: функция для асинхронной загрузки БД

@@ -980,7 +980,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                             multi.removePackage();
                             multi.prepareForPackage();
                             let riskMass=myFactory.multi.arrays[param.model];
-                            if(riskMass.indexOf("Базовые риски")!=-1) riskMass.splice(riskMass.indexOf("Базовые риски"),1);
+                            if(riskMass.indexOf(BASENAME)!=-1) riskMass.splice(riskMass.indexOf(BASENAME),1);
                             let mass=[];
                             multi.template.forEach(obj=>mass.push(obj.risk));
                             mass.forEach(risk=>{
@@ -1469,7 +1469,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             else if(!isNumeric(park[key]) && park[key].indexOf("-")!=-1){
                 let mass=[];
                 park.processes.forEach(function (process) {
-                    if(!process.package || process.package && process.risk=="Базовые риски") mass.push(process[key]);
+                    if(!process.package || process.package && process.risk==BASENAME) mass.push(process[key]);
                 });
                 if(mass.length>10) return false;
 

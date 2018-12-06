@@ -32,7 +32,7 @@ export default class Polis {
   /**
    * Функция загрузки стартовых оговорок из json
    * @param {str} str  название загружаемых оговорок: Перевозчики либо Экспедиторы
-   * @param {boolean} includeBR - добавлять базовые риски или нет
+   * @param {boolean} includeBR - добавлять Базовые риски или нет
    */
   async loadConditions (str, includeBR) {
     let url;
@@ -51,7 +51,7 @@ export default class Polis {
     const resp = await fetch (`./src/${url}.json`);
     this.conditions = await resp.json();
     this.conditions.forEach(val=>{
-      if (val.name==='Базовые риски' && !includeBR) val.values.forEach(v=>v.checked = false);
+      if (val.name===BASENAME && !includeBR) val.values.forEach(v=>v.checked = false);
       val.included = false;
     });
     return this.conditions;
@@ -66,7 +66,7 @@ export default class Polis {
     })
   }
   deleteAddition (condition) {
-    if (condition.name==='Базовые риски'||condition.name==='Страхование по полису не распространяется на следующие грузы'||condition.const) return false;
+    if (condition.name===BASENAME||condition.name==='Страхование по полису не распространяется на следующие грузы'||condition.const) return false;
     this.conditions = this.conditions.filter(cond=>cond.name!==condition.name);
   }
   applyStartAdditions () {

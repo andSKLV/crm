@@ -445,7 +445,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
         const paragraphs = [];
         let parIndex = 2; //Стартующий номер параграфа, так как 1 занята под Риски
         myFactory.polisObj.conditions.forEach(obj => {
-            if (obj.name === "Базовые риски") {
+            if (obj.name === BASENAME) {
                 return;
             }
             if (obj.const) return;
@@ -670,9 +670,9 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
          * Если они включены(по умолчанию включены)
          */
         let baseRisk = Object.assign({}, myFactory.polisObj.conditions.filter((paragraph) => {
-            return paragraph.name == "Базовые риски";
+            return paragraph.name == BASENAME;
         })[0]);
-        const baseHeader = { text: "Базовые риски:", bold: true }
+        const baseHeader = { text: `${BASENAME}:`, bold: true }
         baseRisk.ToPDFinclude = [baseHeader];
         baseRisk.ToPDFnotInclude = [baseHeader];
         if (baseRisk) {
@@ -680,7 +680,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
              * если базовые риски включены - значит они в этом массиве не нужны, удаляем их 
              */
             risks = risks.filter(({ name }) => {
-                return name !== "Базовые риски";
+                return name !== BASENAME;
             })
             /**
              * Сначала отбираем те параметры базовых рисков, которые включены, а затем делаем из них массив строк
@@ -726,7 +726,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
          */
         //сортируем массив включенных рисков по очереди упоминания в таблице условий
         const includedRisks = [...this.includedRisksOrder].map(risk=>{
-            if (risk!=='Базовые риски') return risks.find(r=>r.name===risk);
+            if (risk!==BASENAME) return risks.find(r=>r.name===risk);
         }).filter(val=>val!==undefined);
         content.push(prepareListToPDF(
             {
