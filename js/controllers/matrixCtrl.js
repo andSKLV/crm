@@ -470,6 +470,10 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                 $location.path('/company');
             }
             clearSearch();
+            try {
+                console.log($scope);
+            }
+            catch {}
         },function error(resp){
             console.error(resp);
         })
