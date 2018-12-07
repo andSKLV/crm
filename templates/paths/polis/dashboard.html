@@ -34,15 +34,7 @@
             <div ng-if="dashboard.myFactory.parks.length===0 || !myFactory.polisObj.dates.start || !myFactory.polisObj.dates.start">Финансовый блок не доступен пока не добавлен расчет</div>
             <div ng-if="dashboard.myFactory.parks.length>0 && myFactory.polisObj.dates.start && myFactory.polisObj.dates.start" ng-repeat="value in param.values" ng-click="dashboard.relocatePage({urlTo:'finance'})">{{value.name}}</div>
         </div>
-
-        <!-- Даты, пока не придумал -->
-        <!-- <div id="horizontal-container"  ng-if="param.type=='dates'" class="sortable-row" as-sortable="sortableOptions" data-ng-model="itemsList.items1">
-          
-                <div ng-repeat="item in itemsList.items1" as-sortable-item>
-                    <div as-sortable-item-handle>{{item.Label}}</div>
-                </div>
-                
-        </div> -->
+        <!-- Даты -->
         <div ng-if="param.type=='dates'" >
             <div ng-repeat="val in param.values" ng-click="(val.type=='btn-switch')?switchBtnClick(val):''" class="properties">
                 {{(val.type=='btn-switch')? val.name+val.selected : ''}}
@@ -67,6 +59,6 @@
              ]">
             {{param.name}}
         </div>
-        <div ng-if="newDashboard.allSelected()"ng-click="polisCtrl.makePDF()">Преобразовать в документ</div>
+        <div ng-class="{disabled: !newDashboard.allSelected()}" ng-click="polisCtrl.makePDF()">Преобразовать в документ</div>
     </div>
 </div>

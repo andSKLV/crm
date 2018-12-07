@@ -6,7 +6,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
     this.myFactory = myFactory;
     $scope.myFactory = myFactory;
     $scope.init = async () => {
-        const makePolsiObj = () => {
+        const makePolisObj = () => {
             // создаем объект хранения для полиса, если не создан
             if (!myFactory.polisObj) {
                 const polisObj = new Polis(myFactory);
@@ -106,7 +106,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             $scope.myFactory.polisObj.dates.startDate = setDay;
             $scope.setEndByTime(setDay, $scope.myFactory.polisObj.dates.time);
         }
-        makePolsiObj();
+        makePolisObj();
         myFactory.polisObj.updateNames();
         selectNames();
         switchMakingPolis();
@@ -119,6 +119,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             if (!myFactory.polisObj.conditions && myFactory.parks.length>0) {
                 const type = (myFactory.calcObj.factory) ? myFactory.calcObj.factory.HIPname : 'Перевозчики';
                 await myFactory.polisObj.loadConditions(type, baseRiskNeeded);
+                myFactory.polisObj.additionsSeen = true;
             }
             await loadDashboardObj();
         };
@@ -128,7 +129,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             if (myFactory.polisObj.conditions) delete myFactory.polisObj.conditions; // если были какие то оговорки, то их нужно удалить, так как нужно загрузить новые
             await myFactory.polisObj.loadConditions(myFactory.calcObj.factory.HIPname, baseRiskNeeded);
             myFactory.polisObj.type = myFactory.calcObj.factory.HIPname;
-            myFactory.polisObj.additionsSeen = false;
+            myFactory.polisObj.additionsSeen = true;
         }
         
         // если даты не назначены, то ставим их сегодняшним днем начало
@@ -250,26 +251,6 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             if (needToCreate) myFactory.payment.makeArray(myFactory.totalPrice, myFactory.polisObj.dates);
         }
     }
-    //Удалено за ненадобностью. Какой то драгбл контейнер
-    // $scope.itemsList = {
-    //     items1: [],
-    //     items2: []
-    // };
-
-    // for (let i = 0; i <= 5; i += 1) {
-    //     $scope.itemsList.items1.push({ 'Id': i, 'Label': 'Item A_' + i });
-    // }
-
-    $scope.sortableOptions = {
-        containment: '#horizontal-container',
-        //restrict move across columns. move only within column.
-        accept: function (sourceItemHandleScope, destSortableScope) {
-            return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
-        },
-        itemMoved: function (event) {
-            console.log(1)
-        }
-    };
     $scope.returnToDashboard = () => {
         $location.path('/');
     };
@@ -408,9 +389,11 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             }
         },
         allSelected() {
-            for (let i = 0; i < 5; i++) {
+            // Компанию не проверяем, поэтому начинаем с индекса 1
+            for (let i = 1; i < 5; i++) {
                 if (!$scope.newDashboard.alreadySelected(i)) return false;
             }
+            
             return true;
         }
     }
@@ -429,6 +412,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         myFactory.loadClient = key;
     }
     this.makePDF = () => {
+        if (!$scope.newDashboard.allSelected()) return false;
         /**
          * Функция загрузки рисков. Еще раз, зачем? FIXME:
          */
@@ -630,7 +614,37 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             $location.path('/profile');
         }
     }
-
+    $scope.updateState = async () => {
+        const baseRiskNeeded = myFactory.parks.some(park=>{
+            return park.risks.includes(BASENAME);
+        }) 
+        // проверяем когда расчеты загрузятся
+        const calcIsLoaded = async () => {
+            function check () {
+                return myFactory.parks.length>0;
+            }
+            return new Promise (resolve=>{
+                const id = setInterval(()=>{
+                    if (check()) {
+                        clearInterval(id);
+                        resolve();
+                        
+                    }
+                },100)
+            })
+        }
+        await calcIsLoaded();
+        await myFactory.polisObj.loadConditions(myFactory.calcObj.factory.HIPname, baseRiskNeeded);
+        myFactory.polisObj.type = myFactory.calcObj.factory.HIPname;
+        myFactory.polisObj.additionsSeen = true;
+        myFactory.polisObj.updateConditionsCheck();
+        if (myFactory.parks.length>0) $scope.createCars ();
+        myFactory.polisObj.datesSeen = true;
+        $scope.calcFinances();
+        myFactory.polisObj.financeSeen= true;
+        myFactory.polisObj.dates = myFactory.polisObj.dates;
+        document.querySelector('.mi_selected').click(); // констыльно вызываем ререндер 
+    }
 
     $scope.init();
 })
