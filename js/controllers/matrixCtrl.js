@@ -65,7 +65,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
     this.loadCalculation=function(id){ //нажимаем на строку расчета в результате поиска
         $timeout(async function () {
             $rootScope.cacheTemplate = {};
-            if($location.path!=="/calculation"){
+            if($location. $$path!=="/calculation"&&$location.$$path!=='/polis'){
                 myFactory.cameFrom = {
                     path: $location.$$path,
                     name: getPathName($location.$$path)
