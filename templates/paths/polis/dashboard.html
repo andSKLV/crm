@@ -18,7 +18,8 @@
                 }) : ''" 
                 >
             </div>
-            <div ng-click="changeLocation(param.name)">Создать/Изменить</div>
+            <div ng-if='param.name!=="Компания" || !myFactory.companyObj.id' ng-click="changeLocation(param.name)">Создать/Изменить</div>
+            <div ng-if='param.name==="Компания" && myFactory.companyObj.id' ng-click="loadCompanyProfile(myFactory.companyObj.id)">Создать/Изменить</div>
         </div>
 
         <!-- доп. списки -->

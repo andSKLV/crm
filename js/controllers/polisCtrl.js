@@ -619,6 +619,17 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         if (month < 10) month = `0${month}`;
         return `${day}.${month}.${year}`;
     }
+    $scope.loadCompanyProfile = async function (id){
+        myFactory.cameFrom = {
+            name: getPathName($location.$$path),
+            path: $location.$$path,
+        }
+        if (!myFactory.companyObj || !myFactory.companyObj.id) $scope.changeLocation('Компания');
+        else {
+            myFactory.companyObj.id = id;
+            $location.path('/profile');
+        }
+    }
 
 
     $scope.init();

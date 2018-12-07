@@ -34,7 +34,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             });
             pack=pack[0];
             scope.myFactory.packages=pack.values;
-            scope.myFactory.removeCellSelection('dashboard_container');
+            if ($location.$$path==='/calculation') scope.myFactory.removeCellSelection('dashboard_container');
             scope.selectParam(0);
             if(myFactory.parks.length===0) {
                 scope.karetka.mode="making new process";
