@@ -263,7 +263,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                             obj = {
                                 // пункт риска отключен пока
                                 // text: `${process[property]} п.\u00A01.1.${this.includedRisksOrder._indexOf(process[property])+1}`,
-                                text: `${process[property]}`,
+                                text: `"${process[property]}"`,
                                 margin: riskMargin,
                                 alignment: 'left',
                                 fontSize: BIGFONTSIZE,
