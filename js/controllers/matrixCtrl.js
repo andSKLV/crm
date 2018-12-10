@@ -63,6 +63,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
      * @param {number} id 
      */
     this.loadCalculation=function(id){ //нажимаем на строку расчета в результате поиска
+        myFactory.calcObj = undefined;
         $timeout(async function () {
             $rootScope.cacheTemplate = {};
             if($location. $$path!=="/calculation"&&$location.$$path!=='/polis'){

@@ -621,7 +621,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         // проверяем когда расчеты загрузятся
         const calcIsLoaded = async () => {
             function check () {
-                return myFactory.parks.length>0;
+                return myFactory.parks.length>0 && myFactory.calcObj;
             }
             return new Promise (resolve=>{
                 const id = setInterval(()=>{
@@ -634,6 +634,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             })
         }
         await calcIsLoaded();
+        myFactory.polisObj.conditions = []; //удаляем старые значения
         await myFactory.polisObj.loadConditions(myFactory.calcObj.factory.HIPname, baseRiskNeeded);
         myFactory.polisObj.type = myFactory.calcObj.factory.HIPname;
         myFactory.polisObj.additionsSeen = true;
