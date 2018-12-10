@@ -410,6 +410,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
             text:'* Транспортные средства застрахованы на условиях и рисках, соответствующих указанным наборам рисков в Таблице 1.',
             bold: false,
             alignment: 'justify',
+            fontSize: 10,
         })
         listContent.push(table);
         listContent.push({
@@ -1322,7 +1323,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
         delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
     }
 }
-const polis = new PolisMaker();
+const polisMaker = new PolisMaker();
 
 
 

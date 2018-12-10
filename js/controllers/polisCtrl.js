@@ -438,7 +438,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     })
                 }
             })
-            polis.makePDF(myFactory, risks);
+            polisMaker.makePDF(myFactory, risks);
             return null;
         }, function error(response) {
             console.error(response);
