@@ -108,7 +108,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
         this.carsTables = [];
         let body = [];
         const lists = this.makeCarLists(myFactory);
-        if (lists.length===1) this.isOneCarGroup = true; // если одна группа машин, то слово Група не нужно
+        this.isOneCarGroup = (lists.length===1); // если одна группа машин, то слово Група не нужно
         const listContent = [];
         let carTablesCount = 1;
         //порядок столбцов в таблице
@@ -765,6 +765,21 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
      * @param  {array} risks Список рисков с описанием
      */
     makePDF(myFactory, risks) {
+        if (!myFactory.companyObj.card) {
+            // заполняем нужные поля заглушками, если компания не выбрана
+            myFactory.companyObj.card = {
+                "Данные компании" : {
+                    "Форма организации": '',
+                    "Наименование организации": 'ОБРАЗЕЦ',
+                },
+                "Доп. информация": {
+                    "Юридический адрес": '',
+                },
+                "Генеральный директор": {
+                    "ФИО директора": '',
+                }
+            }
+        }
         const emptyCell = {
             text: '',
             border: [false, false, false, false],

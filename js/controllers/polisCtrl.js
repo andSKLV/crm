@@ -106,6 +106,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             $scope.myFactory.polisObj.dates.startDate = setDay;
             $scope.setEndByTime(setDay, $scope.myFactory.polisObj.dates.time);
         }
+        
         makePolisObj();
         myFactory.polisObj.updateNames();
         selectNames();
@@ -136,7 +137,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         if (!$scope.myFactory.polisObj.dates.start && !$scope.myFactory.polisObj.dates.end) setInitialDates ();
 
         myFactory.polisObj.updateConditionsCheck();
-        if (myFactory.parks.length>0) $scope.createCars ();
+        const needRefreshCalc = myFactory.cameFrom.path==='/calculation' && myFactory.parks.length>0;
+        if (needRefreshCalc) $scope.updateState();
+        // if (myFactory.parks.length>0) $scope.createCars ();
         openTab();
     }
     /**
@@ -644,6 +647,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         $scope.calcFinances();
         myFactory.polisObj.financeSeen= true;
         myFactory.polisObj.dates = myFactory.polisObj.dates;
+        console.log('state updated')
         document.querySelector('.mi_selected').click(); // констыльно вызываем ререндер 
     }
 
