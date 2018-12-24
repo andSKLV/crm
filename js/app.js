@@ -4,8 +4,6 @@ import { loadRisks, SplineKoeff, Spline, Franchise, BubbleSort, Limit, isNumeric
 const app = angular.module("mainApp", [
     "ngRoute",
     "ngCookies",
-    "ngAnimate",
-    "as.sortable"
 ]);
 window.app = app;
 app.config(function ($routeProvider) {
