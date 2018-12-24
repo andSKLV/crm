@@ -1,4 +1,9 @@
-import angular from 'angular';
+
+// require ('./lib/angular-route.js');
+// require ('./lib/angular-animate.min.js');
+// require ('./lib/angular-cookies.min.js');
+// require ('../node_modules/ng-sortable/dist/ng-sortable.min.js');
+import angular from './lib/angular.min.js';
 require ('./app.js');
 require ('./proto.js');
 require ('./calculation.js');

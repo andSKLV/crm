@@ -1,6 +1,7 @@
 /**
  * Класс для работы с PDF
  */
+import { isNumeric, addSpaces, intFromStr, delay, parseDate, getPathName} from './calculation.js';
 
 const NOBORDER = [false, false, false, false];
 const emptyCell = {
@@ -17,7 +18,7 @@ const currencySign = {
     'USD': '$',
 }
 
- class PolisMaker {
+export class PolisMaker {
     constructor(myFactory) {
         this.carsTables = [];
         this.includedRisksOrder = new Set();

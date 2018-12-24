@@ -1,12 +1,13 @@
 import { Process, Park, Multi } from './proto.js';
 import { loadRisks, SplineKoeff, Spline, Franchise, BubbleSort, Limit, isNumeric, addSpaces, intFromStr, delay, parseDate, getPathName} from './calculation.js';
 
-window.app = angular.module("mainApp", [
+const app = angular.module("mainApp", [
     "ngRoute",
     "ngCookies",
     "ngAnimate",
     "as.sortable"
 ]);
+window.app = app;
 app.config(function ($routeProvider) {
     //с помощью .config мы определяем маршруты приложения. Для конфигурации маршрутов используется объект $routeProvider.
     /*
@@ -555,7 +556,6 @@ app.directive("currencyInput", function ($filter, myFactory) {
                                 let target = $event.target;
                                 target.blur();
                                 document.querySelector(".dashboard_container").focus();
-                                console.log(myFactory.process);
                                 return;
                             }
                             i++;
