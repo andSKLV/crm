@@ -63,7 +63,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
      * @param {number} id 
      */
     this.loadCalculation=function(id){ //нажимаем на строку расчета в результате поиска
-        myFactory.calcObj = undefined;
+        myFactory.calcObj = {};
         $timeout(async function () {
             $rootScope.cacheTemplate = {};
             if($location. $$path!=="/calculation"&&$location.$$path!=='/polis'){
@@ -471,10 +471,12 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                 $location.path('/company');
             }
             clearSearch();
-            try {
-                console.log($scope);
+            if ($location.$$path==='/') {
+                this.loadCompanyProfile(myFactory.companyObj.id);
+                const div = document.querySelector('.mi_selected');
+                if (div) div.click();
+            //FIXME: хот фикс, изменить
             }
-            catch {}
         },function error(resp){
             console.error(resp);
         })

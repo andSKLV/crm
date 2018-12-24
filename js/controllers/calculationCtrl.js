@@ -150,7 +150,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
      * @param {park} park в каком парке нужно поменять
      */
     this.setParamToAllProcess=function(value,key,process){
-        if (value.includes('-')) return false;
+        if (typeof value === 'string' && value.includes('-')) return false;
         const park = process.park;
         const index = park.processes.indexOf(process);
         let processes;

@@ -624,7 +624,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         // проверяем когда расчеты загрузятся
         const calcIsLoaded = async () => {
             function check () {
-                return myFactory.parks.length>0 && myFactory.calcObj;
+                return myFactory.parks.length>0 && myFactory.calcObj.isInited;
             }
             return new Promise (resolve=>{
                 const id = setInterval(()=>{
