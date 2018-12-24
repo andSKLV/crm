@@ -2,6 +2,7 @@ import Company from '../protos/company.js';
 import Profile from '../protos/profile.js';
 import Loading from '../protos/loading.js';
 import { GenerateClientCard } from '../ServiceFunctions.js';
+import { isNumeric, delay, getPathName} from '../calculation.js';
 
 app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location, myFactory) {
   $scope.myFactory = myFactory;
@@ -21,8 +22,10 @@ app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location
     await $scope.loadCompany(id);
     pr.store.calcLinks = await $scope.loadCalcLinks(id);
     const calcs = await $scope.loadCalculations(pr.store.calcLinks);//загрузка расчетов
-    calcs.sort((a,b)=>a.date<b.date ? 1 : -1) //сортируем по дате
-    pr.store.calculations = fixPremia(calcs);
+    if (calcs) {
+      calcs.sort((a,b)=>a.date<b.date ? 1 : -1) //сортируем по дате
+      pr.store.calculations = fixPremia(calcs);
+    }
     await $scope.loadAddresses ();
     // TODO: линки с БД connections
     modal.hide();

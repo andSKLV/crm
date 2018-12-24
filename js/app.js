@@ -1,8 +1,7 @@
-/**
- * Created by RoGGeR on 25.05.17.
- */
-"use strict";
-let app = angular.module("mainApp", [
+import { Process, Park, Multi } from './proto.js';
+import { loadRisks, SplineKoeff, Spline, Franchise, BubbleSort, Limit, isNumeric, addSpaces, intFromStr, delay, parseDate, getPathName} from './calculation.js';
+
+window.app = angular.module("mainApp", [
     "ngRoute",
     "ngCookies",
     "ngAnimate",
@@ -1675,6 +1674,7 @@ app.factory("myFactory", function () {
          * Функция очистки фактори от всех следов вычислений. обнуление
          */
         cleanCalculations() {
+            debugger;
             this.calculationName = "";
             const lim = this.a_limit;
             lim.max_limit = 0;

@@ -1,5 +1,6 @@
 import Polis from '../protos/polis.js';
 import {Car, CarGroup} from "../protos/car.js";
+import { addSpaces, delay, parseDate, getPathName} from '../calculation.js';
 
 app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $rootScope, $timeout) {
 
