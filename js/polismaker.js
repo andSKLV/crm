@@ -1,6 +1,7 @@
 /**
  * Класс для работы с PDF
  */
+import { isNumeric, addSpaces, intFromStr, delay, parseDate, getPathName} from './calculation.js';
 
 const NOBORDER = [false,false,false,false];
 const emptyCell = {
@@ -11,7 +12,7 @@ const HIP_NAME = '№ HIP-0000000-00-17';
 const BASEFONTSIZE = 10.5;
 const BIGFONTSIZE = BASEFONTSIZE + 1.5;
 
- class PolisMaker {
+export class PolisMaker {
     constructor() {
         this.carsTables = [];
         this.includedRisksOrder = new Set();

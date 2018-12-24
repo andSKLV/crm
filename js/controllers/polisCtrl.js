@@ -1,6 +1,7 @@
 import Polis from '../protos/polis.js';
 import {Car, CarGroup} from "../protos/car.js";
 import { addSpaces, delay, parseDate, getPathName} from '../calculation.js';
+import { PolisMaker } from '../polismaker.js';
 
 app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $rootScope, $timeout) {
 
@@ -442,6 +443,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     })
                 }
             })
+            const polisMaker = new PolisMaker();
             polisMaker.makePDF(myFactory, risks);
             return null;
         }, function error(response) {
