@@ -1,10 +1,7 @@
 node_modules
 connect
-.idea/Documents.iml
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
-.idea/workspace.xml
+dist
+.idea
 .vscode
 node_modules/.bin/babylon
 node_modules/.bin/jsdoc
