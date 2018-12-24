@@ -1,11 +1,15 @@
 node_modules
 connect
 dist
+<<<<<<< HEAD
 .idea/Documents.iml
 .idea/misc.xml
 .idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
+=======
+.idea
+>>>>>>> deleting files
 .vscode
 .DS_Store
 node_modules/.bin/babylon

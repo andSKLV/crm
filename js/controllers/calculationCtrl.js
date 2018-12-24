@@ -958,7 +958,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 }
                 //если такого процесса нету
                 else{
-                    console.log(param, value);
                     // если нажали "выбрать все"
                     if(value.action=="selectAll"){
                         if(multi.packName===undefined) this.clickedSelectAll(param, value);
