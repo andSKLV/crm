@@ -2,6 +2,8 @@ import Calculation from '../protos/calc.js';
 import Company from "../protos/company.js";
 import Loading from '../protos/loading.js';
 import { GenerateClientCard, DeleteInsurant } from '../ServiceFunctions.js';
+import { loadRisks, SplineKoeff, Spline, Franchise, BubbleSort, Limit, isNumeric, addSpaces, intFromStr, delay, parseDate, getPathName} from '../calculation.js';
+import { Process, Park, Multi } from '../proto.js';
 
 app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $location, $scope){
     let scope=this;

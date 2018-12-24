@@ -1,5 +1,6 @@
 import Calculation from '../protos/calc.js';
 import Loading from '../protos/loading.js';
+import { loadRisks, isNumeric, getPathName} from '../calculation.js';
 
 app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location, $scope){
     this.span=1;

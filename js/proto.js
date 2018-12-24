@@ -1,14 +1,13 @@
-/**
- * Created by RoGGeR on 08.08.17.
- */
 "use strict";
-const transportProp=["cost","amount","wrapping","risk","limit","franchise"];
-const qwerty=["Q","W","E","R","T","Y","U","I","O","P"];
-const TRACTOR=24;
-let LimKoef=1;
-let totalAmount=0;
+import { loadRisks, SplineKoeff, Spline, Franchise, BubbleSort, Limit, isNumeric, addSpaces, intFromStr, delay, parseDate, getPathName} from './calculation.js';
 
-class Multi{
+window.transportProp=["cost","amount","wrapping","risk","limit","franchise"];
+window.qwerty=["Q","W","E","R","T","Y","U","I","O","P"];
+window.TRACTOR=24;
+window.LimKoef=1;
+window.totalAmount=0;
+
+export class Multi{
     constructor(array, packName, template){
         let mult=this;
         this.show=false;
@@ -299,7 +298,7 @@ class Multi{
     }
 
 }
-class Process{
+export class Process{
     constructor(process, multi){
         for(let key in process){
             if (key!=='practicalPriceKoef') this[key]=process[key];
@@ -438,7 +437,7 @@ class Process{
         }
     }
 }
-class Park{
+export class Park{
     constructor(process){
         if(Array.isArray(process)){
             this.processes=process;
