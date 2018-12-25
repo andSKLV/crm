@@ -1,8 +1,13 @@
 <div class="ul_container">
     <div ng-repeat="param in calculation.currObj" class="ul" ng-class="[{mi_current: calculation.currentUl($index)}, {mi_moveFromRight: calculation.currentUl($index)},{ mi_moveToRight: !calculation.currentUl($index)}]" ng-show="calculation.currentUl($index)" >
         <div>
-            <div ng-class="[{alreadySelected: value.selected},{keyFriendly : calculation.myFactory.foc},{disable: value.type=='resaveCalc'&&!calculation.myFactory.calcObj.isSaved}]" ng-repeat="value in param.values  track by $index"
-                 ng-click="calculation.clickedOnTopOfDashboard(value, param)" class="clickable" data-disableMsg="{{value.type=='resaveCalc' ? 'Расчет еще не сохранен': ''}}">
+            <div ng-class="[{alreadySelected: value.selected},{keyFriendly : calculation.myFactory.foc},{disable: value.type=='resaveCalc'&&!calculation.myFactory.calcObj.isSaved}]" 
+            ng-repeat="value in param.values  track by $index"
+            ng-click="calculation.clickedOnTopOfDashboard(value, param)" class="clickable" data-disableMsg="{{value.type=='resaveCalc' ? 'Расчет еще не сохранен': ''}}"
+            ng-mouseenter="process.showRows=value.type; value.type=='risk' ? calculation.tooltip.fadeIn(value.name) : '';"
+            ng-mouseleave="calculation.config!=='calculationActions.json' ? calculation.deleteProperty(process, 'showRows') : ''; 
+            calculation.config!=='calculationActions.json' ? calculation.tooltip.fadeOut() : '';"
+            >
                 {{value.type == "relocate_here" || value.type == "relocatePage" || value.type=="risk" || value.type=="saveCalc"|| value.type=="resaveCalc" || value.type=="button" ? 
                 value.name : 
                 value.type=="currency" || value.type=="amount" ? 
@@ -57,7 +62,12 @@
         <div  ng-repeat="param in calculation.currObj" 
         ng-click="calculation.unexpectedSave();param.able=='none' ? '' : calculation.karetka.mode!='changing process' ? calculation.selectParam($index) : calculation.selectParam($index) " 
         ng-if="param.name" 
-        ng-class="[{mi_selected: calculation.myFactory.document.selectedParam===$index}, {alreadySelected : calculation.alreadySelected(param.model)},{keyFriendly : calculation.myFactory.foc}]" class="clickable">
+        ng-class="[{mi_selected: calculation.myFactory.document.selectedParam===$index}, {alreadySelected : calculation.alreadySelected(param.model)},{keyFriendly : calculation.myFactory.foc}]" class="clickable"
+        ng-mouseenter="calculation.config!=='calculationActions.json' ? process.showRows=param.name : '';
+        calculation.config!=='calculationActions.json' ? calculation.tooltip.fadeIn(param.name) : ''"
+        ng-mouseleave="calculation.config!=='calculationActions.json' ? calculation.deleteProperty(process, 'showRows') : ''; 
+        calculation.config!=='calculationActions.json' ? calculation.tooltip.fadeOut() : ''"
+        >
             <div class="depth-symbol" ng-click="calculation.selectParentParam();$event.stopPropagation();" ng-if="calculation.karetkaDepth>1&&calculation.myFactory.document.selectedParam===$index">{{calculation.depthSymbol(calculation.karetkaDepth);}}</div> 
             {{param.able=='none' ? '' : 
             param.selected ? 

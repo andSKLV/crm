@@ -398,7 +398,14 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         style: "",
 
         fadeIn(title,isMulti){
-
+            const nonRiskTooltipKeys = {
+                'Стоимость груза' : 'Страховая стоимость',
+                'Объем перевозок' : 'Количество застрахованных транспортных средств',
+                'Тип грузового отсека' : 'Тип грузового отсека',
+                'Риски' : 'Застрахованные риски',
+                'Лимит по случаю' : 'Лимит по случаю',
+                'Франшиза по случаю' : 'Франшиза по случаю',
+            }
             let isTitle=false;
             if(typeof title === "object"){
                 // DONE SKLV: no more ['...'] if it is array
@@ -415,6 +422,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                     })
                 })
             }
+            else if (nonRiskTooltipKeys[title]!==undefined) {
+                isTitle = true;
+                title = nonRiskTooltipKeys[title];
+            }
             if(isTitle){
                 this.title=title;
                 scope.oldConfig=scope.config;
@@ -422,8 +433,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 if (isMulti) this.style = 'tooltip_span--multi';
                 else this.style = '';
             }
-
-
         },
         fadeOut(){
             this.title='';
