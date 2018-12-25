@@ -142,6 +142,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             (myFactory.cameFrom.path==='/calculation' ||
             !myFactory.parks[0].processes[0].cars);
         if (needRefreshCalc) $scope.updateState();
+        
+        const needToClearState = myFactory.parks.length===0 && (myFactory.payment.array&&myFactory.payment.array.length>0);
+        if (needToClearState) $scope.clearState();
         openTab();
     }
     /**
@@ -652,6 +655,16 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         console.log('state updated')
         document.querySelector('.mi_selected').click(); // констыльно вызываем ререндер 
     }
-
+    /**
+     * Функция очистки Оговорок и финансов и их атрибутов "просмотрено"
+     */
+    $scope.clearState = () => {
+        myFactory.polisObj.additionsSeen = false;
+        myFactory.polisObj.conditions = undefined; 
+        myFactory.polisObj.datesSeen = false;
+        myFactory.polisObj.financeSeen= false;
+        myFactory.payment.array = undefined;
+        console.log('state cleared');
+    }
     $scope.init();
 })
