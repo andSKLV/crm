@@ -18,3 +18,5 @@ require ('./controllers/polisEditorCtrl.js');
 require ('./controllers/financeCtrl.js');
 require ('./controllers/profileCtrl.js');
 require ('./polismaker.js');
+
+import '../css/style.css'
