@@ -653,6 +653,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         myFactory.polisObj.financeSeen= true;
         myFactory.polisObj.dates = myFactory.polisObj.dates;
         console.log('state updated')
+        await delay (100);
         document.querySelector('.mi_selected').click(); // констыльно вызываем ререндер 
     }
     /**
