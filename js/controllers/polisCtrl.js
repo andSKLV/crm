@@ -137,9 +137,11 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         if (!$scope.myFactory.polisObj.dates.start && !$scope.myFactory.polisObj.dates.end) setInitialDates ();
 
         myFactory.polisObj.updateConditionsCheck();
-        const needRefreshCalc = myFactory.cameFrom.path==='/calculation' && myFactory.parks.length>0;
+        // нужно ли обновить оговорки, машины, финансы после перехода
+        const needRefreshCalc = myFactory.parks.length>0 &&
+            (myFactory.cameFrom.path==='/calculation' ||
+            !myFactory.parks[0].processes[0].cars);
         if (needRefreshCalc) $scope.updateState();
-        // if (myFactory.parks.length>0) $scope.createCars ();
         openTab();
     }
     /**
