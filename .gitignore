@@ -3,6 +3,7 @@ connect
 dist
 .idea
 .vscode
+.DS_Store
 node_modules/.bin/babylon
 node_modules/.bin/jsdoc
 node_modules/.bin/marked
