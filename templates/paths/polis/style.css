@@ -249,9 +249,6 @@ legend {
     font-size: 1em;
     cursor: pointer;
 }
-.matrix_row td {
-    padding: 4px 8px 4px 8px;
-}
 ul.park li table .td_cars{
     height: 35px;
 }

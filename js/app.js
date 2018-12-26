@@ -15,7 +15,7 @@ app.config(function ($routeProvider) {
        */
     $routeProvider
         .when("/", {
-            templateUrl: "dashboard.html",
+            templateUrl: "./templates/paths/main/dashboard.html",
             controller: "dashboardCtrl as dashboard"
         })
         .when("/dashboard", {
@@ -50,7 +50,7 @@ app.config(function ($routeProvider) {
                     } else $location.path("/");
                 }
             },
-            templateUrl: "dashboard.html",
+            templateUrl: "./templates/paths/main/dashboard.html",
             controller: "dashboardCtrl as dashboard"
         })
         .when("/company", {
