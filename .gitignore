@@ -1,6 +1,7 @@
 node_modules
 connect
 dist
+dist/main.js
 .idea
 .vscode
 .DS_Store
