@@ -1,7 +1,10 @@
 module.exports = {
   plugins: [
     require('autoprefixer')({
-      'browsers': ['cover 99.5%']
-    })
+      'browsers': ['cover 99%']
+    }),
+    require('cssnano')({
+      preset: 'default',
+    }),
   ]
 }

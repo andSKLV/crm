@@ -6,6 +6,7 @@ dist
 .idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
+dist/main.js
 .idea
 .vscode
 .DS_Store
