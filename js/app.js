@@ -647,7 +647,6 @@ app.directive("currencyInput", function ($filter, myFactory) {
                 } else {
                     if ($scope.calculation.karetka.mode == "listener")
                         $scope.calculation.karetka.mode = "making new process";
-                    console.log(myFactory.process);
                     if (key == 13) {
                         let val = $element.val().replace(/[\s\,]/g, "") * 1;
                         if (myFactory.process.constructor.name == "Park") {

@@ -64,6 +64,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
      */
     this.loadCalculation=function(id){ //нажимаем на строку расчета в результате поиска
         myFactory.calcObj = {};
+        clearSearch();
         $timeout(async function () {
             $rootScope.cacheTemplate = {};
             if($location. $$path!=="/calculation"&&$location.$$path!=='/polis'){
@@ -393,7 +394,6 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                     }
                 }
                 myFactory.document.currParam="";
-                clearSearch();
                 // инициализируем calcObj и добавляем в него всю информацию
                 const calcObj = new Calculation();
                 calcObj.parseFromMyFactory(myFactory);
