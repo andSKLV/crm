@@ -148,12 +148,11 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         openTab();
     }
     /**
-     * Функция первоначального создания машин при загрузке "чистого" расчета в полис
+     * Функция создания машин
      */
     $scope.createCars = () => {
         const mf = $scope.myFactory;
         mf.parks.forEach(park=>{
-            if (park.carGroup) return false;
             let max = -Infinity;
             //считаем максимальное количество машин в парке
             park.processes.forEach(pr=>{

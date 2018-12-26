@@ -30,6 +30,10 @@ const currencySign = {
     confConstructor (mf) {
         const conf = this.CONF;
         conf.AGR_LIMIT = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`;
+        conf.RISK_CHANGER = {
+            'Поломка реф. установки' : 'Поломка рефрижераторной установки',
+            'Неохраняемая стоянка' : 'Кража с неохраняемой стоянки',
+        }
     }
     /**
      * Перераспределяем машины по спискам
@@ -264,10 +268,11 @@ const currencySign = {
                             }
                             break;
                         case 'risk':
+                            const riskName = this.CONF.RISK_CHANGER[process[property]] || process[property];
                             obj = {
                                 // пункт риска отключен пока
                                 // text: `${process[property]} п.\u00A01.1.${this.includedRisksOrder._indexOf(process[property])+1}`,
-                                text: `${process[property]}`,
+                                text: `${riskName}`,
                                 margin: riskMargin,
                                 alignment: 'left',
                                 fontSize: BIGFONTSIZE,
@@ -533,10 +538,6 @@ const currencySign = {
                 // сначала добавляем Базовые риски (включенные)
                 if (baseRisk.ToPDFinclude) {
                     table.body.push([
-                        // {
-                        //     text: `1.1.${count}`,
-                        //     border: NOBORDER,
-                        // },
                         {
                             text: baseRisk.ToPDFinclude[0].text,
                             bold: baseRisk.ToPDFinclude[0].bold,
@@ -565,14 +566,11 @@ const currencySign = {
                     count++;
                 }
                 for (const risk of list) {
+                    const riskName = this.CONF.RISK_CHANGER[risk.name] || risk.name;
                     table.body.push([
-                        // {
-                        //     text: `1.1.${count}`,
-                        //     border: NOBORDER,
-                        // },
                         {
                             text: [
-                                { text: `${risk.name}`, bold: true },
+                                { text: `${riskName}`, bold: true },
                                 { text: ` - ${risk.title}. ` }
                             ],
                             border: NOBORDER,
@@ -626,10 +624,11 @@ const currencySign = {
                     count++;
                 }
                 for (const risk of list) {
+                    const riskName = this.CONF.RISK_CHANGER[risk.name] || risk.name;
                     table.body.push([
                         {
                             text: [
-                                { text: `${risk.name}`, bold: true },
+                                { text: `${riskName}`, bold: true },
                                 { text: ` - ${risk.title}. ` }
                             ],
                             border: NOBORDER,
