@@ -1,11 +1,13 @@
 node_modules
 connect
+dist
 .idea/Documents.iml
 .idea/misc.xml
 .idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
 .vscode
+.DS_Store
 node_modules/.bin/babylon
 node_modules/.bin/jsdoc
 node_modules/.bin/marked
