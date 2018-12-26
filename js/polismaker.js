@@ -267,7 +267,7 @@ const currencySign = {
                             obj = {
                                 // пункт риска отключен пока
                                 // text: `${process[property]} п.\u00A01.1.${this.includedRisksOrder._indexOf(process[property])+1}`,
-                                text: `"${process[property]}"`,
+                                text: `${process[property]}`,
                                 margin: riskMargin,
                                 alignment: 'left',
                                 fontSize: BIGFONTSIZE,
@@ -588,7 +588,7 @@ const currencySign = {
             else {
                 table.body.push([
                     {
-                        text: '1.2 Определения не заявленных на страхование рисков:',
+                        text: '1.2 Незастрахованные риски:',
                         style: "firstHeader",
                         colSpan: 2,
                         border: NOBORDER
@@ -1024,9 +1024,6 @@ const currencySign = {
                                         {
                                             text: "Доверенность №74/2018 от 10.03.2018\n",
                                             fontSize: 7
-                                        },
-                                        {
-                                            text: "\n"
                                         }
                                     ],
                                     alignment: "center",
@@ -1046,34 +1043,54 @@ const currencySign = {
                 {
                     table: {
                         headerRows: 1,
-                        widths: [100, 300, 75],
+                        widths: [242,242],
                         body: [
                             [
                                 {
-                                    text: [
-                                        {
-                                            text: 'ЦЕНТР СТРАХОВАНИЯ ТРАНСПОРТНЫХ РИСКОВ\n\n',
-                                            bold: true,
-                                            fontSize: 12,
-                                        },
-                                        {
-                                            text: "Телефон: +7 (812) 322-63-51\n",
-                                            fontSize: 10,
-                                        },
-                                        {
-                                            text: "E-mail: cargo@capitalpolis.ru, claims@capitalpolis.ru\n",
-                                            fontSize: 10,
-                                        },
-                                        {
-                                            text: "Московский пр., д.22, лит. 3, Санкт-Петербург, 190013, Россия",
-                                            fontSize: 10
-                                        }
-                                    ],
+                                    text: 'ЦЕНТР СТРАХОВАНИЯ ТРАНСПОРТНЫХ РИСКОВ\n',
+                                    bold: true,
+                                    fontSize: 12,
                                     alignment: "center",
-                                    colSpan: 3
+                                    colSpan: 2
                                 },
-                                {},
-                                {}
+                                {
+                                }
+                            ],
+                            [
+                                {
+                                    text: "УРЕГУЛИРОВАНИЕ УБЫТКОВ\n",
+                                    fontSize: 10,
+                                    bold: true,
+                                    alignment: "center",
+                                },
+                                {
+                                    text: "КЛИЕНТСКАЯ СЛУЖБА\n",
+                                    fontSize: 10,
+                                    bold: true,
+                                    alignment: "center",
+                                }
+                            ],
+                            [
+                                {
+                                    text: "claims@capitalpolis.ru\n",
+                                    fontSize: 10,
+                                    alignment: "center",
+                                },
+                                {
+                                    text: "cargo@capitalpolis.ru\n",
+                                    fontSize: 10,
+                                    alignment: "center",
+                                }
+                            ],
+                            [
+                                {
+                                    text: "Московский пр., д.22, лит. 3, Санкт-Петербург, 190013, Россия",
+                                    fontSize: 10,
+                                    alignment: "center",
+                                    colSpan: 2,
+                                },
+                                {
+                                }
                             ]
                         ]
                     },
