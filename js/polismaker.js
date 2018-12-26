@@ -10,9 +10,14 @@ const emptyCell = {
 const HIP_NAME = '№ HIP-0000000-00-17';
 const BASEFONTSIZE = 10.5;
 const BIGFONTSIZE = BASEFONTSIZE + 1.5;
+const currencySign = {
+    'Р': '₽',
+    'EUR': '€',
+    'USD': '$',
+}
 
  class PolisMaker {
-    constructor() {
+    constructor(myFactory) {
         this.carsTables = [];
         this.includedRisksOrder = new Set();
         Set.prototype._indexOf = function (val) {
@@ -20,6 +25,11 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
         }
         this.isOneCarGroup = false;
         this.hipName = HIP_NAME; //FIXME: изменить потом, когда дойдет до генерации индекса полиса
+        this.CONF = {}
+    }
+    confConstructor (mf) {
+        const conf = this.CONF;
+        conf.AGR_LIMIT = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`;
     }
     /**
      * Перераспределяем машины по спискам
@@ -160,27 +170,21 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                             border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
-                        // {
-                        //     text: 'Тип грузового отсека',
-                        //     style: "firstHeader",
-                        //     border: NOBORDER,
-                        //     fontSize: BIGFONTSIZE,
-                        // },
                         {
-                            text: 'Страховая стоимость, руб.',
+                            text: 'Страховая стоимость на т.с., руб.',
                             style: "firstHeader",
                             border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
                         
                         {
-                            text: 'Лимит по случаю, руб.',
+                            text: 'Лимит выплаты по случаю, руб.',
                             style: "firstHeader",
                             border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
                         {
-                            text: 'Франшиза по случаю, руб.',
+                            text: 'Франшиза по риску, руб.',
                             style: "firstHeader",
                             border: NOBORDER,
                             fontSize: BIGFONTSIZE,
@@ -254,7 +258,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         case 'limit':
                         case 'franchise':
                             obj = {
-                                text: this.addSpaces(process[property]),
+                                text: addSpaces(process[property]),
                                 margin: oneMargin,
                                 fontSize: BIGFONTSIZE,
                             }
@@ -414,28 +418,12 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
         })
         listContent.push(table);
         listContent.push({
-            text:'Совокупные выплаты по всем застрахованным случаям не могут превышать агрегатный лимит отвественности страховщика по Полису.',
+            text:`Совокупные выплаты по всем застрахованным рискам не могут превышать - ${this.CONF.AGR_LIMIT}`,
             bold: true,
             alignment: 'justify',
             fontSize: BASEFONTSIZE,
         },'\n')
         return listContent;
-    }
-    /**
-     * Преобразуем число из 1000000 в 1 000 000 (то есть добавляем пробелы между)
-     * @param  {string} nStr 1000000
-     * @return {string} 1 000 000
-     */
-    addSpaces(nStr) {
-        nStr += '';
-        let x = nStr.split('.');
-        let x1 = x[0];
-        let x2 = x.length > 1 ? '.' + x[1] : '';
-        let rgx = /(\d+)(\d{3})/;
-        while (rgx.test(x1)) {
-            x1 = x1.replace(rgx, '$1' + ' ' + '$2');
-        }
-        return x1 + x2;
     }
     /**
      * Преобразуем в нужный формат "оговорки и условия"
@@ -765,6 +753,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
      * @param  {array} risks Список рисков с описанием
      */
     makePDF(myFactory, risks) {
+        this.confConstructor (myFactory);
         if (!myFactory.companyObj.card) {
             // заполняем нужные поля заглушками, если компания не выбрана
             myFactory.companyObj.card = {
@@ -788,11 +777,6 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
         const twoRowMargin = [0, 5, 0, 5];
         // собираем стоку с данными о территории страхования
         const territory = this.makeTerritory(myFactory);
-        const currencySign = {
-            'Р': '₽',
-            'EUR': '€',
-            'USD': '$',
-        }
         let pageWithExtraFooter = null;
         const docDefinition = {
             pageSize: 'A4',
@@ -918,20 +902,20 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                                     margin: twoRowMargin
                                 },
                             ],
-                            [
-                                {
-                                    text: "КОЛИЧЕСТВО ЗАСТРАХОВАННЫХ ТРАНСПОРТНЫХ СРЕДСТВ",
-                                    style: "leftCellFirstTable",
-                                    margin: twoRowMargin
-                                },
-                                {
-                                    text: `${myFactory.totalAmount / 24}`,
-                                    margin: oneRowMargin,
-                                    bold: true,
-                                    colSpan: 2,
-                                    alignment: 'center'
-                                },
-                            ]
+                            // [
+                            //     {
+                            //         text: "КОЛИЧЕСТВО ЗАСТРАХОВАННЫХ ТРАНСПОРТНЫХ СРЕДСТВ",
+                            //         style: "leftCellFirstTable",
+                            //         margin: twoRowMargin
+                            //     },
+                            //     {
+                            //         text: `${myFactory.totalAmount / 24}`,
+                            //         margin: oneRowMargin,
+                            //         bold: true,
+                            //         colSpan: 2,
+                            //         alignment: 'center'
+                            //     },
+                            // ]
                         ]
                     },
                     layout: {// цвет границы 
@@ -966,7 +950,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                                     margin: twoRowMargin
                                 },
                                 {
-                                    text: `${this.addSpaces(myFactory.a_limit.value)} ${currencySign[myFactory.document.currency]}`,
+                                    text: `${this.CONF.AGR_LIMIT}`,
                                     margin: oneRowMargin,
                                     bold: true,
                                     colSpan: 2,
