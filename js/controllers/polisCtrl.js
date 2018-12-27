@@ -670,5 +670,12 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         myFactory.payment.array = undefined;
         console.log('state cleared');
     }
+    /**
+     * удаление страхователя из списка страхователей
+     * @param {Company} insurant - страхователь на удаление
+     */
+    $scope.deleteInsurant= (insurant) => {
+        myFactory.polisObj.insurants = myFactory.polisObj.insurants.filter(el=>el!==insurant);
+    }
     $scope.init();
 })

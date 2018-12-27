@@ -1,22 +1,25 @@
 <fieldset>
   <legend>Страхователь {{$index+1}}:
-      <div class="arrow_down_conditions" ng-click="company.isOpen=!company.isOpen;$event.stopPropagation();">{{(company.isOpen)? '&#9650' : '&#9660' }}{{company.isOpen}}</div>
   </legend>
   <table class="matrix">
       <tbody>
-          <tr class="matrix_row" ng-repeat="value in addition.values" ng-if="addition.included&&value.checked && value.text!==''">
-              <td>
-                  количество
-              </td>
-          </tr>
           <tr class="matrix_row" ng-if="!addition.included">
               <td class="properties btns" width="20px" >
                   <input type="button" class="btnCopy" value="+" ng-click="">
-                  <input type="button" class="btnDelete" value="-" ng-click="addition.delete(addition);$event.stopPropagation();">
+                  <input type="button" class="btnDelete" value="-" ng-click="deleteInsurant(company);$event.stopPropagation();">
               </td>
               <td>
-                 <p>Всего:  позиций</p> 
+                 <div class="p--centered">{{company.name}}</div> 
               </td>
+              <td>
+                <div class="p--centered">{{company.card['Генеральный директор']['ФИО директора']}}</div> 
+             </td>
+             <td>
+                <div class="p--centered">{{company.card['Доп. информация']['Телефон']}}</div> 
+             </td>
+             <td>
+                <div class="p--centered">{{company.card['Доп. информация']['Юридический адрес']}}</div> 
+             </td>
           </tr>
       </tbody>
   </table>
