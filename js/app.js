@@ -140,6 +140,12 @@ app.directive("addition", function () {
         templateUrl: "./templates/views/addition.view.html"
     };
 });
+app.directive("insurant", function () {
+    return {
+        restrict: "A",
+        templateUrl: "./templates/views/insurant.view.html"
+    };
+});
 app.directive("companyView", function () {
     return {
         restrict: "A",
