@@ -9,7 +9,7 @@ export default class Company {
     this.name = null;
     this.factory = null;
     this._isFull = null;
-    this.isOpenned = false;
+    this.isOpen = false;
   }
   /**
    * 

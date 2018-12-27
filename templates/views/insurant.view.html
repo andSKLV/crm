@@ -1,6 +1,6 @@
 <fieldset>
-  <legend>{{company.name}}:
-      <div class="arrow_down_conditions" ng-click="addition.included=!addition.included;$event.stopPropagation();">{{(true)? '&#9650' : '&#9660' }}</div>
+  <legend>Страхователь {{$index+1}}:
+      <div class="arrow_down_conditions" ng-click="company.isOpen=!company.isOpen;$event.stopPropagation();">{{(company.isOpen)? '&#9650' : '&#9660' }}{{company.isOpen}}</div>
   </legend>
   <table class="matrix">
       <tbody>
