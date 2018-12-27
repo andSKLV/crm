@@ -5,6 +5,7 @@ import { GenerateClientCard } from '../ServiceFunctions.js';
 
 app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location, myFactory) {
   $scope.myFactory = myFactory;
+  myFactory.scopes.profile = $scope;
   const scope = this;
 
   async function init() {

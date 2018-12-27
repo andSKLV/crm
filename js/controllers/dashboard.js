@@ -9,6 +9,7 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
     this.span=1;
     this.myFactory=myFactory;
     let scope=this;
+    myFactory.scopes.dashboard = $scope;
     this.search_params=[];
     this.isArray = angular.isArray;
     this.deleteProperty=function(obj, key){

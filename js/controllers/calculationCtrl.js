@@ -6,6 +6,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.karetkaDepth = 1;
     this.myFactory=myFactory;
     let scope=this;
+    myFactory.scopes.calculation = $scope;
     this.search_params=[];
     this.isArray = angular.isArray;
     this.config="HIP.json";
