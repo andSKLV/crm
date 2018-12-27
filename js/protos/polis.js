@@ -17,6 +17,7 @@ export default class Polis {
       changes: [],
       time: 'Год',
     }
+    this.insurants = [];
     if (mf) this.bindMyFactory(mf);
   }
   bindMyFactory (myFactory) {

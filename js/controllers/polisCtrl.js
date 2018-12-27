@@ -5,6 +5,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
 
     this.myFactory = myFactory;
     $scope.myFactory = myFactory;
+    myFactory.scopes.polis = $scope;
     $scope.init = async () => {
         const makePolisObj = () => {
             // создаем объект хранения для полиса, если не создан
@@ -146,6 +147,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         const needToClearState = myFactory.parks.length===0 && (myFactory.payment.array&&myFactory.payment.array.length>0);
         if (needToClearState) $scope.clearState();
         openTab();
+
+        console.info(myFactory.polisObj.insurants);
+        console.info(myFactory.companyObj);
     }
     /**
      * Функция создания машин

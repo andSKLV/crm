@@ -3,8 +3,9 @@ import Company from "../protos/company.js";
 import Loading from '../protos/loading.js';
 import { GenerateClientCard } from '../ServiceFunctions.js';
 
-app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $location){
+app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $location, $scope){
     let scope=this;
+    myFactory.scopes.matrix = $scope;
     /**
      * удаляем расчет из БД
      * @param {object} row строка которую надо удалить из БД
@@ -466,6 +467,10 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             companyObj.card = myFactory.newClientCard;
             companyObj.markAsLoaded();
             await loadAddresses();
+            if (myFactory.polisObj) {
+                myFactory.polisObj.insurants.push(myFactory.companyObj);
+                myFactory.applyAllScopes();
+            }
             if (!noRelocation) {
                 myFactory.loadClient = 'Форма собственности'; //какую ячейку открыть при старте
                 $location.path('/company');

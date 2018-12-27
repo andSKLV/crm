@@ -716,6 +716,16 @@ app.directive("currencyInput", function ($filter, myFactory) {
 
 app.factory("myFactory", function () {
     return {
+        scopes: {}, //сохраняем скоупы для ререндеринга
+        /**
+         * Функция принудительного ререндераа всех скоупов
+         */
+        applyAllScopes: function () {
+            for (let key in this.scopes) {
+                const sc = this.scopes[key];
+                sc.$apply();
+            }
+        },
         cameFrom: {
             name: null,
             path: null
