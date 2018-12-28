@@ -5,8 +5,12 @@
       <tbody>
           <tr class="matrix_row" ng-if="!addition.included">
               <td class="properties btns" width="20px" >
-                  <input type="button" class="btnCopy" value="+" ng-click="">
-                  <input type="button" class="btnDelete" value="-" ng-click="deleteInsurant(company);$event.stopPropagation();">
+                  <input value="▲" type="button" class="btnCopy"
+                    ng-click="moveInsurant(company, 'up')" >
+                  <input value="-" type="button" class="btnDelete"
+                    ng-click="deleteInsurant(company);$event.stopPropagation();">
+                  <input value="▼" type="button" class="btnCopy" 
+                    ng-click="moveInsurant(company, 'down')">
               </td>
               <td ng-click="loadCompanyProfile(company.id)">
                  <div class="p--centered">{{company.name}}</div> 

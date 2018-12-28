@@ -686,5 +686,20 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
     $scope.deleteInsurant= (insurant) => {
         DeleteInsurant (insurant, myFactory);
     }
+    /**
+     * Перемещаем страхователя вниз или вверх по списку
+     * @param {obj} insurant компания, которую надо переместить
+     * @param {string} direction 'up'|'down'
+     */
+    $scope.moveInsurant = (insurant, direction) => {
+        const all = myFactory.polisObj.insurants;
+        if (all.length===1) return false;
+        const ind = all.indexOf(insurant);
+        if (direction==='up' && ind===0) return false;
+        if (direction==='down' && ind===all.length-1) return false;
+        const newInd = direction==='up' ? ind-1 : ind+1;
+        [all[ind],all[newInd]] = [all[newInd],all[ind]]; //swap elements
+    }
+
     $scope.init();
 })
