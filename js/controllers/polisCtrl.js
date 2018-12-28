@@ -149,6 +149,13 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         if (needToClearState) $scope.clearState();
         openTab();
 
+        //добавляем открытую компанию в сострахователи
+        if (myFactory.companyObj.id && 
+            !myFactory.polisObj.insurant.some(ins=>ins.id===myFactory.companyObj.id)) {
+                if (myFactory.polisObj.insurants.length===4) $scope.deleteInsurant (myFactory.polisObj.insurants[0]);
+                myFactory.polisObj.insurants.push(myFactory.companyObj);
+        }
+                
         console.info(myFactory.polisObj.insurants);
         console.info(myFactory.companyObj);
     }
@@ -656,9 +663,8 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         $scope.calcFinances();
         myFactory.polisObj.financeSeen= true;
         myFactory.polisObj.dates = myFactory.polisObj.dates;
-        console.log('state updated')
-        await delay (100);
-        document.querySelector('.mi_selected').click(); // констыльно вызываем ререндер 
+        console.log('state updated');
+        myFactory.applyAllScopes();
     }
     /**
      * Функция очистки Оговорок и финансов и их атрибутов "просмотрено"

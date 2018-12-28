@@ -467,7 +467,9 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             companyObj.card = myFactory.newClientCard;
             companyObj.markAsLoaded();
             await loadAddresses();
-            if (myFactory.polisObj) {
+            if (myFactory.polisObj &&
+                myFactory.polisObj.insurants.length<4 &&
+                !myFactory.polisObj.insurants.some(ins=>ins.id===companyObj.id) ) {
                 myFactory.polisObj.insurants.push(myFactory.companyObj);
                 myFactory.applyAllScopes();
             }
@@ -478,9 +480,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             clearSearch();
             if ($location.$$path==='/') {
                 this.loadCompanyProfile(myFactory.companyObj.id);
-                const div = document.querySelector('.mi_selected');
-                if (div) div.click();
-            //FIXME: хот фикс, изменить
+                myFactory.applyAllScopes();
             }
         },function error(resp){
             console.error(resp);
