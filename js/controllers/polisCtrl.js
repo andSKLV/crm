@@ -1,7 +1,7 @@
 import Polis from '../protos/polis.js';
 import {Car, CarGroup} from "../protos/car.js";
 import Company from '../protos/company.js';
-import { deleteInsurant } from '../ServiceFunctions.js';
+import { DeleteInsurant } from '../ServiceFunctions.js';
 
 app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $rootScope, $timeout) {
 
@@ -207,9 +207,10 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             const parkUI = document.querySelectorAll('.park')[parkIndex];
             const procUI = parkUI.querySelectorAll('li')[procIndex];
             const inpUI = procUI.querySelector('.input_cars');
-            inpUI.focus();
-            await delay(50);
-            inpUI.blur();
+            // inpUI.focus();
+            // await delay(50);
+            // inpUI.blur();
+            mf.applyAllScopes ();
         }
 
     }
@@ -634,14 +635,14 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             $location.path('/profile');
         }
     }
-    $scope.updateState = async () => {
+    $scope.updateState = async (id) => {
         const baseRiskNeeded = myFactory.parks.some(park=>{
             return park.risks.includes(BASENAME);
         }) 
         // проверяем когда расчеты загрузятся
         const calcIsLoaded = async () => {
             function check () {
-                return myFactory.parks.length>0 && myFactory.calcObj.isInited;
+                return (id) ? myFactory.calcObj.id===id : myFactory.parks.length>0 && myFactory.calcObj.isInited;
             }
             return new Promise (resolve=>{
                 const id = setInterval(()=>{
