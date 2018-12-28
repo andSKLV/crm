@@ -8,16 +8,16 @@
                   <input type="button" class="btnCopy" value="+" ng-click="">
                   <input type="button" class="btnDelete" value="-" ng-click="deleteInsurant(company);$event.stopPropagation();">
               </td>
-              <td>
+              <td ng-click="loadCompanyProfile(company.id)">
                  <div class="p--centered">{{company.name}}</div> 
               </td>
-              <td>
+              <td ng-click="loadCompanyProfile(company.id)">
                 <div class="p--centered">{{company.card['Генеральный директор']['ФИО директора']}}</div> 
              </td>
-             <td>
+             <td ng-click="loadCompanyProfile(company.id)">
                 <div class="p--centered">{{company.card['Доп. информация']['Телефон']}}</div> 
              </td>
-             <td>
+             <td ng-click="loadCompanyProfile(company.id)">
                 <div class="p--centered">{{company.card['Доп. информация']['Юридический адрес']}}</div> 
              </td>
           </tr>
