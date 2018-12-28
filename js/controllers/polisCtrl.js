@@ -1,5 +1,6 @@
 import Polis from '../protos/polis.js';
 import {Car, CarGroup} from "../protos/car.js";
+import Company from '../protos/company.js';
 
 app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $rootScope, $timeout) {
 
@@ -675,6 +676,34 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      * @param {Company} insurant - страхователь на удаление
      */
     $scope.deleteInsurant= (insurant) => {
+        /**
+         * Check if deleting active company
+         * @param {object} param0 insurant
+         * @param {Company } param1 active company
+         */
+        const isActiveCompany = ({id: deleteId},{id: activeId}) => deleteId===activeId;
+        /**
+         * Выбираем ближайший не удаляемый элемент. Если удаляемый последний - возвращаем предпоследний, 
+         * если не последний - то возвращаем последний
+         * @param {object} toDelete - удаляемый элемент
+         * @param {array} all - массив с элементами
+         */
+        const chooseActiveCompany = (toDelete, all) => {
+            const id = all.indexOf(toDelete);
+            const len = all.length;
+            return (id===len-1 && len>1) ?  all[len-2] : all[len-1];
+        };
+        if (isActiveCompany(insurant,myFactory.companyObj)) {
+            if (myFactory.polisObj.insurants.length>1) {
+                const newActive = chooseActiveCompany(insurant,myFactory.polisObj.insurants);
+                myFactory.companyObj = newActive;
+            }
+            else {
+                myFactory.companyObj = new Company();
+                delete myFactory.newClientCard;
+            }
+        }
+
         myFactory.polisObj.insurants = myFactory.polisObj.insurants.filter(el=>el!==insurant);
     }
     $scope.init();
