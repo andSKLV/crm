@@ -4,7 +4,7 @@
  * @param {obj} data - ответ из БД
  * @returns {obj} - объект карточки клиента
  */
-export function GenerateClientCard(data) {
+function GenerateClientCard(data) {
   return {
     'Данные компании':
       {
@@ -65,4 +65,40 @@ function getOrgForm(id) {
 }
 function getDate(date) {
   return (date === '0000-00-00') ? '' : date;
+}
+
+const DeleteInsurant = (insurant, factory) => {
+  /**
+   * Check if deleting active company
+   * @param {object} param0 insurant
+   * @param {Company } param1 active company
+   */
+  const isActiveCompany = ({id: deleteId},{id: activeId}) => deleteId===activeId;
+  /**
+   * Выбираем ближайший не удаляемый элемент. Если удаляемый последний - возвращаем предпоследний, 
+   * если не последний - то возвращаем последний
+   * @param {object} toDelete - удаляемый элемент
+   * @param {array} all - массив с элементами
+   */
+  const chooseActiveCompany = (toDelete, all) => {
+      const id = all.indexOf(toDelete);
+      const len = all.length;
+      return (id===len-1 && len>1) ?  all[len-2] : all[len-1];
+  };
+  if (isActiveCompany(insurant,factory.companyObj)) {
+      if (factory.polisObj.insurants.length>1) {
+          const newActive = chooseActiveCompany(insurant,factory.polisObj.insurants);
+          factory.companyObj = newActive;
+      }
+      else {
+          factory.companyObj = new Company();
+          delete factory.newClientCard;
+      }
+  }
+  factory.polisObj.insurants = factory.polisObj.insurants.filter(el=>el!==insurant);
+}
+
+export {
+  GenerateClientCard,
+  DeleteInsurant,
 }

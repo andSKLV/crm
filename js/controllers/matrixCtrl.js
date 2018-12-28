@@ -1,7 +1,7 @@
 import Calculation from '../protos/calc.js';
 import Company from "../protos/company.js";
 import Loading from '../protos/loading.js';
-import { GenerateClientCard } from '../ServiceFunctions.js';
+import { GenerateClientCard, DeleteInsurant } from '../ServiceFunctions.js';
 
 app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $location, $scope){
     let scope=this;
@@ -421,6 +421,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
      * @param {number} id - id компании
      */
     this.loadCompany = function (id, noRelocation) {
+
         const data = {};
         data.type = 'load_company';
         data.id=id;
@@ -468,10 +469,13 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             companyObj.markAsLoaded();
             await loadAddresses();
             if (myFactory.polisObj &&
-                myFactory.polisObj.insurants.length<4 &&
                 !myFactory.polisObj.insurants.some(ins=>ins.id===companyObj.id) ) {
-                myFactory.polisObj.insurants.push(myFactory.companyObj);
-                myFactory.applyAllScopes();
+                    if (myFactory.polisObj.insurants.length===4) {
+                        const firstInsurant = myFactory.polisObj.insurants[0];
+                        deleteInsurant(firstInsurant, myFactory);
+                    } 
+                    myFactory.polisObj.insurants.push(myFactory.companyObj);
+                    myFactory.applyAllScopes();
             }
             if (!noRelocation) {
                 myFactory.loadClient = 'Форма собственности'; //какую ячейку открыть при старте
