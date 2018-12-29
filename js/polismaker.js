@@ -6,6 +6,7 @@ const NOBORDER = [false,false,false,false];
 const emptyCell = {
     text: '',
     border: [false, false, false, false],
+    fontSize: 1,
 }
 const HIP_NAME = '№ HIP-0000000-00-17';
 const BASEFONTSIZE = 10.5;
@@ -49,7 +50,6 @@ const currencySign = {
      */
     makeFooterObj (numOfIns) {
         //TODO:
-        debugger;
         const putEmptyCells = num => {
             const arr = [];
             for (let i=0;i<num;i++) {
@@ -57,38 +57,44 @@ const currencySign = {
             }
             return arr;
         }
-        const colNum = numOfIns+1; // количество страхователей + страховщик
-        const footerWidths = [];
-        const marginWidth = 30;
-        const width = (540-(marginWidth*(colNum-1)))/(colNum); 
-        for (let i=0;i<colNum;i++) {
-            footerWidths.push(width);
-            if (i!==colNum-1) footerWidths.push(marginWidth);
-        }
-        const dashes = (num) => {
-            const arr = [];
+        const createRowWithText = (num,text) => {
+            const arr = [emptyCell];
+            let printText = text;
             for (let i=0;i<num;i++) {
+                if (!text) printText = (i!==colNum-1) ? `Страхователь ${i+1}: подпись и печать` : 'Страховщик: подпись и печать';
                 arr.push({
-                    text: '___________________________________',
-                    border: NOBORDER,
-                });
-                if (i!==num-1) arr.push(emptyCell);
-            }
-            return arr;
-        }
-        const signs = (num) => {
-            const arr = [];
-            for (let i=0;i<num;i++) {
-                arr.push({
-                    text: 'подпись и печать',
+                    text: printText,
                     fontSize: 7,
                     alignment: 'center',
                     border: NOBORDER,
                 });
-                if (i!==num-1) arr.push(emptyCell);
+                arr.push(emptyCell);
             }
             return arr;
         }
+        const colNum = numOfIns+1; // количество страхователей + страховщик
+        let marginWidth;
+        switch (colNum) {
+            case 4:
+                marginWidth = 20;
+                break;
+            case 5:
+                marginWidth = 10;
+                break;
+            default:
+                marginWidth = 50;
+                break;
+        }
+        const pageMargins = 15;
+        const footerWidths = [];
+        footerWidths.push(pageMargins) // отступ слева
+        const width = (540-(marginWidth*(colNum-1))-2*pageMargins)/(colNum); 
+        for (let i=0;i<colNum;i++) {
+            footerWidths.push(width);
+            if (i!==colNum-1) footerWidths.push(marginWidth);
+        }
+        footerWidths.push(pageMargins) //отступ справа
+        const realColNum = footerWidths.length;
         return {
             table: {
                 headerRows: 0,
@@ -101,11 +107,11 @@ const currencySign = {
                             fontSize: 12,
                             border: NOBORDER
                         },
-                        ...putEmptyCells(colNum*2-2) //количество столбцов с подписями и марджинами
+                        ...putEmptyCells(realColNum-1) //количество столбцов с подписями и марджинами
                     ],
-                    dashes(colNum)
+                    createRowWithText(colNum,'________________________________')
                     ,
-                    signs(colNum)
+                    createRowWithText(colNum)
                 ],
                 style: 'table'
             }
