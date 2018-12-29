@@ -25,14 +25,40 @@ const currencySign = {
         }
         this.isOneCarGroup = false;
         this.hipName = HIP_NAME; //FIXME: изменить потом, когда дойдет до генерации индекса полиса
-        this.CONF = {}
+        this.CONF = {
+            wasMocked: false,
+        }
     }
+    /**
+     * Создаем конфиг из которого забирается вся информация
+     * @param {myFactory} mf 
+     */
     confConstructor (mf) {
         const conf = this.CONF;
         conf.AGR_LIMIT = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`;
         conf.RISK_CHANGER = {
             'Поломка реф. установки' : 'Поломка рефрижераторной установки',
             'Неохраняемая стоянка' : 'Кража с неохраняемой стоянки',
+        }
+        conf.titleBreakerFontSize = this.chooseBreakerSize(mf.polisObj.insurants.length);
+        console.log(conf.titleBreakerFontSize);
+    }
+    /**
+     * Определение высоты разрыва между таблицами, чтобы на титул все поместилось
+     * @param {number} numOfIns - количество страхователей, максимум 4 
+     */
+    chooseBreakerSize (numOfIns) {
+        switch (numOfIns) {
+            case 1:
+                return BASEFONTSIZE+5;
+            case 2:
+                return BASEFONTSIZE+3;
+            case 3:
+                return BASEFONTSIZE;
+            case 4:
+                return 4; // с таким значением помещается на одном листе
+            default:
+                return BASEFONTSIZE;
         }
     }
     /**
@@ -747,6 +773,39 @@ const currencySign = {
         return territoryVals.join(', ');
     }
     /**
+     * Создание блока с страхователями
+     * @param {myFactory} mf 
+     * @param {object} param1 объект с параметрами марджинов строк
+     */
+    prepareInsurantsBlock (mf,{oneRowMargin,twoRowMargin}) {
+        const all = mf.polisObj.insurants;
+        return all.map((ins,i)=>{
+            return [
+                {
+                    text: `СТРАХОВАТЕЛЬ ${i+1}`,
+                    style: "leftCellFirstTable",
+                    margin: oneRowMargin
+                },
+                {
+                    text: [
+                        {
+                            text: `${ins.card["Данные компании"]["Форма организации"]} ${ins.card["Данные компании"]["Наименование организации"].toUpperCase()}\n`,
+                            bold: true,
+                        },
+                        {
+                            text: `${ins.card["Доп. информация"]["Юридический адрес"]}`,
+                            fontSize: 10,
+                        }
+
+                    ],
+                    colSpan: 2,
+                    alignment: 'center',
+                    margin: twoRowMargin
+                },
+            ]
+        })
+    }
+    /**
      * Основная функция, создает на основе данных расчета и компании файл PDF и скачивает его
      * @param  {object} myFactory объект с практически всеми нужными данными
      * @param  {array} risks Список рисков с описанием
@@ -767,6 +826,8 @@ const currencySign = {
                     "ФИО директора": '',
                 }
             }
+            myFactory.polisObj.insurants.push(myFactory.companyObj);
+            this.CONF.wasMocked = true;
         }
         const emptyCell = {
             text: '',
@@ -777,6 +838,7 @@ const currencySign = {
         // собираем стоку с данными о территории страхования
         const territory = this.makeTerritory(myFactory);
         let pageWithExtraFooter = null;
+        const insurantsBlock = this.prepareInsurantsBlock (myFactory, {oneRowMargin,twoRowMargin});
         const docDefinition = {
             pageSize: 'A4',
             pageMargins: [50, 115, 50, 65],
@@ -810,8 +872,6 @@ const currencySign = {
                                 {},
                                 {}
                             ],
-
-
                         ],
                         style: 'table',
                     },
@@ -820,7 +880,10 @@ const currencySign = {
                         vLineColor: '#e6e6e6',
                     }
                 },
-                '\n',
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
                 {
                     table: {
                         headerRows: 1,
@@ -871,36 +934,16 @@ const currencySign = {
                         vLineColor: '#e6e6e6',
                     }
                 },
-                "\n",
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
                 {
                     table: {
                         headerRows: 1,
                         widths: [150, 150, 175],
                         body: [
-                            [
-                                {
-                                    text: "СТРАХОВАТЕЛЬ",
-                                    style: "leftCellFirstTable",
-                                    margin: oneRowMargin
-
-                                },
-                                {
-                                    text: [
-                                        {
-                                            text: `${myFactory.companyObj.card["Данные компании"]["Форма организации"]} ${myFactory.companyObj.card["Данные компании"]["Наименование организации"].toUpperCase()}\n`,
-                                            bold: true,
-                                        },
-                                        {
-                                            text: `${myFactory.companyObj.card["Доп. информация"]["Юридический адрес"]}`,
-                                            fontSize: 10,
-                                        }
-
-                                    ],
-                                    colSpan: 2,
-                                    alignment: 'center',
-                                    margin: twoRowMargin
-                                },
-                            ],
+                            ...insurantsBlock,
                             // [
                             //     {
                             //         text: "КОЛИЧЕСТВО ЗАСТРАХОВАННЫХ ТРАНСПОРТНЫХ СРЕДСТВ",
@@ -922,7 +965,10 @@ const currencySign = {
                         vLineColor: '#e6e6e6',
                     }
                 },
-                "\n",
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
                 {
                     table: {
                         headerRows: 1,
@@ -997,7 +1043,10 @@ const currencySign = {
                         vLineColor: '#e6e6e6',
                     }
                 },
-                "\n",
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
                 {
                     table: {
                         headerRows: 1,
@@ -1038,7 +1087,10 @@ const currencySign = {
                         vLineColor: '#e6e6e6',
                     }
                 },
-                "\n",
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
                 {
                     table: {
                         headerRows: 1,
@@ -1336,8 +1388,18 @@ const currencySign = {
         // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
         const win = window.open('', '_blank');
         delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+
+        this.deleteServiceData (myFactory);
+    }
+    deleteServiceData (mf) {
+        if (this.CONF.wasMocked) {
+            mf.companyObj = {};
+            mf.polisObj.insurants = [];
+        }
+        this.CONF.wasMocked = false;
     }
 }
+
 const polisMaker = new PolisMaker();
 
 
