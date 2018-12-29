@@ -779,10 +779,10 @@ const currencySign = {
      */
     prepareInsurantsBlock (mf,{oneRowMargin,twoRowMargin}) {
         const all = mf.polisObj.insurants;
-        return all.map((ins,i)=>{
+        const makeBlock = (ins, name) => {
             return [
                 {
-                    text: `СТРАХОВАТЕЛЬ ${i+1}`,
+                    text: `${name}`,
                     style: "leftCellFirstTable",
                     margin: oneRowMargin
                 },
@@ -801,9 +801,13 @@ const currencySign = {
                     colSpan: 2,
                     alignment: 'center',
                     margin: twoRowMargin
-                },
+                }
             ]
-        })
+        }
+        if (all.length===1) {
+            return [makeBlock(all[0],`СТРАХОВАТЕЛЬ`)];
+        }
+        return all.map((ins,i)=>makeBlock(ins,`СТРАХОВАТЕЛЬ ${i+1}`))
     }
     /**
      * Основная функция, создает на основе данных расчета и компании файл PDF и скачивает его
