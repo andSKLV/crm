@@ -41,7 +41,75 @@ const currencySign = {
             'Неохраняемая стоянка' : 'Кража с неохраняемой стоянки',
         }
         conf.titleBreakerFontSize = this.chooseBreakerSize(mf.polisObj.insurants.length);
-        console.log(conf.titleBreakerFontSize);
+        conf.footerObj = this.makeFooterObj(mf.polisObj.insurants.length);
+        debugger;
+    }
+    /**
+     * 
+     */
+    makeFooterObj (numOfIns) {
+        //TODO:
+        debugger;
+        const putEmptyCells = num => {
+            const arr = [];
+            for (let i=0;i<num;i++) {
+                arr.push(emptyCell)
+            }
+            return arr;
+        }
+        const colNum = numOfIns+1; // количество страхователей + страховщик
+        const footerWidths = [];
+        const marginWidth = 30;
+        const width = (540-(marginWidth*(colNum-1)))/(colNum); 
+        for (let i=0;i<colNum;i++) {
+            footerWidths.push(width);
+            if (i!==colNum-1) footerWidths.push(marginWidth);
+        }
+        const dashes = (num) => {
+            const arr = [];
+            for (let i=0;i<num;i++) {
+                arr.push({
+                    text: '___________________________________',
+                    border: NOBORDER,
+                });
+                if (i!==num-1) arr.push(emptyCell);
+            }
+            return arr;
+        }
+        const signs = (num) => {
+            const arr = [];
+            for (let i=0;i<num;i++) {
+                arr.push({
+                    text: 'подпись и печать',
+                    fontSize: 7,
+                    alignment: 'center',
+                    border: NOBORDER,
+                });
+                if (i!==num-1) arr.push(emptyCell);
+            }
+            return arr;
+        }
+        return {
+            table: {
+                headerRows: 0,
+                widths: footerWidths,
+                body: [
+                    [
+                        {
+                            // пустая строка для отступа
+                            text: '',
+                            fontSize: 12,
+                            border: NOBORDER
+                        },
+                        ...putEmptyCells(colNum*2-2) //количество столбцов с подписями и марджинами
+                    ],
+                    dashes(colNum)
+                    ,
+                    signs(colNum)
+                ],
+                style: 'table'
+            }
+        }
     }
     /**
      * Определение высоты разрыва между таблицами, чтобы на титул все поместилось
@@ -815,7 +883,6 @@ const currencySign = {
      * @param  {array} risks Список рисков с описанием
      */
     makePDF(myFactory, risks) {
-        this.confConstructor (myFactory);
         if (!myFactory.companyObj.card) {
             // заполняем нужные поля заглушками, если компания не выбрана
             myFactory.companyObj.card = {
@@ -833,6 +900,7 @@ const currencySign = {
             myFactory.polisObj.insurants.push(myFactory.companyObj);
             this.CONF.wasMocked = true;
         }
+        this.confConstructor (myFactory);
         const emptyCell = {
             text: '',
             border: [false, false, false, false],
@@ -1187,81 +1255,20 @@ const currencySign = {
                         style: 'table'
                     }
                 }
-                if (page > 1) return {
-                    table: {
-                        headerRows: 0,
-                        widths: [50, 70, 150, 70, 150, 50],
-                        body: [
-                            [
-                                {
-                                    // пустая строка для отступа
-                                    text: '',
-                                    fontSize: 12,
-                                    border: NOBORDER
-                                },
-                                emptyCell,
-                                emptyCell,
-                                emptyCell,
-                                emptyCell,
-                                emptyCell,
-                            ],
-                            [
-                                emptyCell
-                                ,
-                                {
-                                    text: 'Cтрахователь:',
-                                    fontSize: 10,
-                                    border: NOBORDER,
-                                },
-                                {
-                                    text: '___________________________________',
-                                    border: NOBORDER,
-                                }
-                                ,
-                                {
-                                    text: 'Cтраховщик:',
-                                    fontSize: 10,
-                                    border: NOBORDER,
-                                },
-                                {
-                                    text: '___________________________________',
-                                    border: NOBORDER,
-                                }
-                                ,
-                                emptyCell
-                            ],
-                            [
-                                emptyCell
-                                ,
-                                emptyCell,
-                                {
-                                    text: 'подпись и печать',
-                                    fontSize: 7,
-                                    alignment: 'center',
-                                    border: NOBORDER,
-                                },
-                                emptyCell,
-                                {
-                                    text: 'подпись и печать',
-                                    fontSize: 7,
-                                    alignment: 'center',
-                                    border: NOBORDER,
-                                },
-                                emptyCell
-                            ],
-                            [
-                                {
-                                    text: `Лист ${page.toString()}/${pages.toString()} Полиса ${this.hipName}`,
-                                    colSpan: 6,
-                                    border: NOBORDER,
-                                    alignment: 'center',
-                                    fontSize: 7,
-                                }
-                            ]
-                        ],
-                        style: 'table'
-                    }
-                };
+                if (page > 1) {
+                    const footer = this.CONF.footerObj;
+                    const len = footer.table.widths.length;
+                    footer.table.body.push([
+                        {
+                            text: `Лист ${page.toString()}/${pages.toString()} Полиса ${this.hipName}`,
+                            colSpan: len,
+                            border: NOBORDER,
+                            alignment: 'center',
+                            fontSize: 7,
+                        }
+                    ])
+                    return footer;
+                }
             },
             styles: {
                 leftCellFirstTable: {
@@ -1281,7 +1288,6 @@ const currencySign = {
                     fontSize: 9,
                 }
             }
-
         };
 
         docDefinition.content.push(
