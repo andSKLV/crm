@@ -1262,9 +1262,10 @@ const currencySign = {
                     }
                 }
                 if (page > 1) {
-                    const footer = this.CONF.footerObj;
+                    const footer = {};
+                    footer.table = Object.assign({},this.CONF.footerObj.table);
                     const len = footer.table.widths.length;
-                    footer.table.body.push([
+                    const listCounter = [
                         {
                             text: `Лист ${page.toString()}/${pages.toString()} Полиса ${this.hipName}`,
                             colSpan: len,
@@ -1272,7 +1273,8 @@ const currencySign = {
                             alignment: 'center',
                             fontSize: 7,
                         }
-                    ])
+                    ];
+                    footer.table.body = [...footer.table.body,listCounter];
                     return footer;
                 }
             },
