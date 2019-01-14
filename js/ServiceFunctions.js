@@ -1,4 +1,4 @@
-
+import Company from './protos/company.js';
 /**
  *  Функция генерации объекта карточки клиента из данных из БД
  * @param {obj} data - ответ из БД
