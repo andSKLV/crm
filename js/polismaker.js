@@ -131,6 +131,7 @@ const currencySign = {
     makeSignTable (myFactory) {
         const all = myFactory.polisObj.insurants;
         let headerFontSize, textFontSize, dash, pageWidth;
+        //конфиг в зависимости от количества страхователей
         switch (all.length) {
             case 1:
                 pageWidth = 490;
@@ -159,6 +160,7 @@ const currencySign = {
         }
         const width = Math.floor(pageWidth/(all.length+1));
         const widths = new Array(all.length+1).fill(width);
+        //заголовок таблицы
         const headersMake = () => {
             const sigleInsurant = all.length === 1;
             const arr = all.map((ins,i)=>{
@@ -177,6 +179,7 @@ const currencySign = {
             })
             return arr;
         }
+        // тело таблицы
         const bodyMake = () => {
             const arr = all.map(ins=>{
                 const form = ins.card["Данные компании"]["Форма организации"];
@@ -233,7 +236,6 @@ const currencySign = {
             });
             return arr;
         }
-        bodyMake();
         return {
             table: {
                 headerRows: 1,
