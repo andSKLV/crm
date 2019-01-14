@@ -2,7 +2,7 @@
  * Класс для работы с PDF
  */
 
-const NOBORDER = [false,false,false,false];
+const NOBORDER = [false, false, false, false];
 const emptyCell = {
     text: '',
     border: [false, false, false, false],
@@ -50,6 +50,7 @@ const currencySign = {
      */
     makeFooterObj (numOfIns) {
         //TODO:
+        //Добавляет нужное количество пустых ячеек
         const putEmptyCells = num => {
             const arr = [];
             for (let i=0;i<num;i++) {
@@ -57,6 +58,7 @@ const currencySign = {
             }
             return arr;
         }
+        //Добавляет строку с необходимым количеством страхователей и страховщиком
         const createRowWithText = (num,text) => {
             const arr = [emptyCell];
             let printText = text;
@@ -68,30 +70,35 @@ const currencySign = {
                     alignment: 'center',
                     border: NOBORDER,
                 });
-                arr.push(emptyCell);
+                if (colNum===2) arr.push(emptyCell); //если страхователей 4, то отступы не нужны
             }
+            if (colNum!==2) arr.push(emptyCell); //если страхователей 4, то добавляем один отступ в конце
             return arr;
         }
         const colNum = numOfIns+1; // количество страхователей + страховщик
-        let marginWidth;
+        let marginWidth, dash;
         switch (colNum) {
             case 4:
-                marginWidth = 20;
-                break;
             case 5:
-                marginWidth = 10;
+                dash='________________________________';
+                marginWidth = 0;
+                break;
+            case 3:
+                dash='_________________________________________________';
+                marginWidth = 0;
                 break;
             default:
+                dash='_________________________________________________';
                 marginWidth = 50;
                 break;
         }
-        const pageMargins = 15;
+        const pageMargins = 25;
         const footerWidths = [];
         footerWidths.push(pageMargins) // отступ слева
         const width = (540-(marginWidth*(colNum-1))-2*pageMargins)/(colNum); 
         for (let i=0;i<colNum;i++) {
             footerWidths.push(width);
-            if (i!==colNum-1) footerWidths.push(marginWidth);
+            if ((colNum===2) && i!==colNum-1) footerWidths.push(marginWidth);
         }
         footerWidths.push(pageMargins) //отступ справа
         const realColNum = footerWidths.length;
@@ -104,12 +111,12 @@ const currencySign = {
                         {
                             // пустая строка для отступа
                             text: '',
-                            fontSize: 12,
+                            fontSize: 1,
                             border: NOBORDER
                         },
                         ...putEmptyCells(realColNum-1) //количество столбцов с подписями и марджинами
                     ],
-                    createRowWithText(colNum,'________________________________')
+                    createRowWithText(colNum,dash)
                     ,
                     createRowWithText(colNum)
                 ],
