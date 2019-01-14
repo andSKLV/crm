@@ -135,7 +135,7 @@ const currencySign = {
             case 2:
                 return BASEFONTSIZE+3;
             case 3:
-                return BASEFONTSIZE;
+                return BASEFONTSIZE-1;
             case 4:
                 return 4; // с таким значением помещается на одном листе
             default:
