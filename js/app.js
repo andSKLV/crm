@@ -140,6 +140,12 @@ app.directive("addition", function () {
         templateUrl: "./templates/views/addition.view.html"
     };
 });
+app.directive("insurant", function () {
+    return {
+        restrict: "A",
+        templateUrl: "./templates/views/insurant.view.html"
+    };
+});
 app.directive("companyView", function () {
     return {
         restrict: "A",
@@ -647,7 +653,6 @@ app.directive("currencyInput", function ($filter, myFactory) {
                 } else {
                     if ($scope.calculation.karetka.mode == "listener")
                         $scope.calculation.karetka.mode = "making new process";
-                    console.log(myFactory.process);
                     if (key == 13) {
                         let val = $element.val().replace(/[\s\,]/g, "") * 1;
                         if (myFactory.process.constructor.name == "Park") {
@@ -711,6 +716,16 @@ app.directive("currencyInput", function ($filter, myFactory) {
 
 app.factory("myFactory", function () {
     return {
+        scopes: {}, //сохраняем скоупы для ререндеринга
+        /**
+         * Функция принудительного ререндераа всех скоупов
+         */
+        applyAllScopes: function () {
+            for (let key in this.scopes) {
+                const sc = this.scopes[key];
+                sc.$apply();
+            }
+        },
         cameFrom: {
             name: null,
             path: null

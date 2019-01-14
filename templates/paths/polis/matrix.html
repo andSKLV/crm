@@ -1,6 +1,8 @@
 <!-- Компания -->
-<div company-view class="view view_active" ng-if="newDashboard.checkCurrentPage(0)  && search_result.length==0"  ng-controller="companyCtrl as companyCtrl"></div>
 <table find-company class="matrix" ng-if="newDashboard.checkCurrentPage(0)  && search_result.length!=0"  ng-controller="matrixCtrl as matrixCtrl"></table>
+<div ng-if="newDashboard.checkCurrentPage(0)  && search_result.length==0">
+    <div insurant="company" ng-repeat="company in myFactory.polisObj.insurants"></div>
+</div>
 
 <!-- Расчет -->
 <div calculation-view ng-if="newDashboard.checkCurrentPage(1) && search_result.length==0" class="view" ng-class="{view_active: newDashboard.checkCurrentPage(1) && search_result.length==0}" ng-controller="calculationCtrl as calculation"></div>

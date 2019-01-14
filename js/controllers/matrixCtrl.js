@@ -1,10 +1,11 @@
 import Calculation from '../protos/calc.js';
 import Company from "../protos/company.js";
 import Loading from '../protos/loading.js';
-import { GenerateClientCard } from '../ServiceFunctions.js';
+import { GenerateClientCard, DeleteInsurant } from '../ServiceFunctions.js';
 
-app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $location){
+app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $location, $scope){
     let scope=this;
+    myFactory.scopes.matrix = $scope;
     /**
      * удаляем расчет из БД
      * @param {object} row строка которую надо удалить из БД
@@ -64,6 +65,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
      */
     this.loadCalculation=function(id){ //нажимаем на строку расчета в результате поиска
         myFactory.calcObj = {};
+        clearSearch();
         $timeout(async function () {
             $rootScope.cacheTemplate = {};
             if($location. $$path!=="/calculation"&&$location.$$path!=='/polis'){
@@ -393,7 +395,6 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                     }
                 }
                 myFactory.document.currParam="";
-                clearSearch();
                 // инициализируем calcObj и добавляем в него всю информацию
                 const calcObj = new Calculation();
                 calcObj.parseFromMyFactory(myFactory);
@@ -420,6 +421,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
      * @param {number} id - id компании
      */
     this.loadCompany = function (id, noRelocation) {
+
         const data = {};
         data.type = 'load_company';
         data.id=id;
@@ -466,6 +468,15 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             companyObj.card = myFactory.newClientCard;
             companyObj.markAsLoaded();
             await loadAddresses();
+            if (myFactory.polisObj &&
+                !myFactory.polisObj.insurants.some(ins=>ins.id===companyObj.id) ) {
+                    if (myFactory.polisObj.insurants.length===4) {
+                        const firstInsurant = myFactory.polisObj.insurants[0];
+                        deleteInsurant(firstInsurant, myFactory);
+                    } 
+                    myFactory.polisObj.insurants.push(myFactory.companyObj);
+                    myFactory.applyAllScopes();
+            }
             if (!noRelocation) {
                 myFactory.loadClient = 'Форма собственности'; //какую ячейку открыть при старте
                 $location.path('/company');
@@ -473,9 +484,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             clearSearch();
             if ($location.$$path==='/') {
                 this.loadCompanyProfile(myFactory.companyObj.id);
-                const div = document.querySelector('.mi_selected');
-                if (div) div.click();
-            //FIXME: хот фикс, изменить
+                myFactory.applyAllScopes();
             }
         },function error(resp){
             console.error(resp);

@@ -8,6 +8,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
     if ($location.$$path!=='/company') return false; //если вызывается контроллер в профайле, так не должно быть
     const scope = this;
     $scope.myFactory = myFactory;
+    myFactory.scopes.company = $scope;
     $scope.clientCard = {};
     Object.assign($scope.clientCard, $scope.myFactory.newClientCard);
     myFactory.document.selectedParam = "";

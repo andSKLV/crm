@@ -1,5 +1,6 @@
 app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
     $scope.myFactory = myFactory;
+    myFactory.scopes.finance = $scope;
     /**
      * Инициализация, запускается каждый раз при открытии окна финансы
      */

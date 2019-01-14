@@ -5,6 +5,7 @@ import { GenerateClientCard } from '../ServiceFunctions.js';
 
 app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location, myFactory) {
   $scope.myFactory = myFactory;
+  myFactory.scopes.profile = $scope;
   const scope = this;
 
   async function init() {
@@ -21,9 +22,10 @@ app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location
     await $scope.loadCompany(id);
     pr.store.calcLinks = await $scope.loadCalcLinks(id);
     const calcs = await $scope.loadCalculations(pr.store.calcLinks);//загрузка расчетов
-    calcs.sort((a,b)=>a.date<b.date ? 1 : -1) //сортируем по дате
+    if (calcs) calcs.sort((a,b)=>a.date<b.date ? 1 : -1) //сортируем по дате
     pr.store.calculations = fixPremia(calcs);
     await $scope.loadAddresses ();
+    $scope.addCompanyToInsurants (myFactory.companyObj);
     // TODO: линки с БД connections
     modal.hide();
 
@@ -259,7 +261,15 @@ app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location
       this.title = '';
     }
   };
-
+  /**
+   * Добавляем компанию в сострахователи
+   * @param {Company} company 
+   */
+  $scope.addCompanyToInsurants = (company) => {
+    if (myFactory.polisObj && 
+        myFactory.polisObj.insurants.length<4 && 
+        !myFactory.polisObj.insurants.some(ins=>ins.id===company.id)) myFactory.polisObj.insurants.push(company);
+  }
   if (!$scope.myFactory.companyObj.id) $scope.relocate('/');
   else init();
 });

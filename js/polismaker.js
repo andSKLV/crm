@@ -2,17 +2,23 @@
  * Класс для работы с PDF
  */
 
-const NOBORDER = [false,false,false,false];
+const NOBORDER = [false, false, false, false];
 const emptyCell = {
     text: '',
     border: [false, false, false, false],
+    fontSize: 1,
 }
 const HIP_NAME = '№ HIP-0000000-00-17';
 const BASEFONTSIZE = 10.5;
 const BIGFONTSIZE = BASEFONTSIZE + 1.5;
+const currencySign = {
+    'Р': '₽',
+    'EUR': '€',
+    'USD': '$',
+}
 
  class PolisMaker {
-    constructor() {
+    constructor(myFactory) {
         this.carsTables = [];
         this.includedRisksOrder = new Set();
         Set.prototype._indexOf = function (val) {
@@ -20,6 +26,250 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
         }
         this.isOneCarGroup = false;
         this.hipName = HIP_NAME; //FIXME: изменить потом, когда дойдет до генерации индекса полиса
+        this.CONF = {
+            wasMocked: false,
+        }
+    }
+    /**
+     * Создаем конфиг из которого забирается вся информация
+     * @param {myFactory} mf 
+     */
+    confConstructor (mf) {
+        const conf = this.CONF;
+        conf.AGR_LIMIT = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`;
+        conf.RISK_CHANGER = {
+            'Поломка реф. установки' : 'Поломка рефрижераторной установки',
+            'Неохраняемая стоянка' : 'Кража с неохраняемой стоянки',
+        }
+        conf.titleBreakerFontSize = this.chooseBreakerSize(mf.polisObj.insurants.length);
+        conf.footerObj = this.makeFooterObj(mf.polisObj.insurants.length);
+        debugger;
+    }
+    /**
+     * Генерация футера в зависимости от количества страхователей
+     * @param {number} numOfIns - количество страхователей
+     */
+    makeFooterObj (numOfIns) {
+        //Добавляет нужное количество пустых ячеек
+        const putEmptyCells = num => {
+            const arr = [];
+            for (let i=0;i<num;i++) {
+                arr.push(emptyCell)
+            }
+            return arr;
+        }
+        //Добавляет строку с необходимым количеством страхователей и страховщиком
+        const createRowWithText = (num,text) => {
+            const arr = [emptyCell];
+            let printText = text;
+            for (let i=0;i<num;i++) {
+                if (!text) printText = (i!==colNum-1) ? (colNum===2) ? `Страхователь: подпись и печать` : `Страхователь ${i+1}: подпись и печать` : 'Страховщик: подпись и печать';
+                arr.push({
+                    text: printText,
+                    fontSize: 7,
+                    alignment: 'center',
+                    border: NOBORDER,
+                });
+                if (colNum===2) arr.push(emptyCell); //если страхователей 4, то отступы не нужны
+            }
+            if (colNum!==2) arr.push(emptyCell); //если страхователей 4, то добавляем один отступ в конце
+            return arr;
+        }
+        const colNum = numOfIns+1; // количество страхователей + страховщик
+        let marginWidth, dash;
+        switch (colNum) {
+            case 4:
+            case 5:
+                dash='________________________________';
+                marginWidth = 0;
+                break;
+            case 3:
+                dash='_________________________________________________';
+                marginWidth = 0;
+                break;
+            default:
+                dash='_________________________________________________';
+                marginWidth = 50;
+                break;
+        }
+        const pageMargins = 25;
+        const footerWidths = [];
+        footerWidths.push(pageMargins) // отступ слева
+        const width = (540-(marginWidth*(colNum-1))-2*pageMargins)/(colNum); 
+        for (let i=0;i<colNum;i++) {
+            footerWidths.push(width);
+            if ((colNum===2) && i!==colNum-1) footerWidths.push(marginWidth);
+        }
+        footerWidths.push(pageMargins) //отступ справа
+        const realColNum = footerWidths.length;
+        return {
+            table: {
+                headerRows: 0,
+                widths: footerWidths,
+                body: [
+                    [
+                        {
+                            // пустая строка для отступа
+                            text: '',
+                            fontSize: 1,
+                            border: NOBORDER
+                        },
+                        ...putEmptyCells(realColNum-1) //количество столбцов с подписями и марджинами
+                    ],
+                    createRowWithText(colNum,dash)
+                    ,
+                    createRowWithText(colNum)
+                ],
+                style: 'table'
+            }
+        }
+    }
+    /**
+     * Создание таблицы подписантов
+     * @param {myFactory} myFactory 
+     */
+    makeSignTable (myFactory) {
+        const all = myFactory.polisObj.insurants;
+        let headerFontSize, textFontSize, dash, pageWidth;
+        //конфиг в зависимости от количества страхователей
+        switch (all.length) {
+            case 1:
+                pageWidth = 490;
+                headerFontSize = 12;
+                textFontSize = 7;
+                dash = "__________________________________\n";
+                break;
+            case 2:
+                pageWidth = 480;
+                headerFontSize = 12;
+                textFontSize = 7;
+                dash = "_______________________________\n";
+                break;
+            case 3:
+                pageWidth = 470;
+                headerFontSize = 9;
+                textFontSize = 5;
+                dash = "__________________________\n";
+                break;
+            case 4:
+                pageWidth = 460;
+                headerFontSize = 8;
+                textFontSize = 5;
+                dash = "____________________\n";
+                break;
+        }
+        const width = Math.floor(pageWidth/(all.length+1));
+        const widths = new Array(all.length+1).fill(width);
+        //заголовок таблицы
+        const headersMake = () => {
+            const sigleInsurant = all.length === 1;
+            const arr = all.map((ins,i)=>{
+                return  {
+                    text: sigleInsurant ? `СТРАХОВАТЕЛЬ:` : `СТРАХОВАТЕЛЬ ${i+1}:`,
+                    style: "firstHeader",
+                    fontSize: headerFontSize,
+                    fillColor: '#e6e6e6',
+                }
+            })
+            arr.push({
+                text: "СТРАХОВЩИК:",
+                style: "firstHeader",
+                fontSize: headerFontSize,
+                fillColor: '#e6e6e6',
+            })
+            return arr;
+        }
+        // тело таблицы
+        const bodyMake = () => {
+            const arr = all.map(ins=>{
+                const form = ins.card["Данные компании"]["Форма организации"];
+                const compName = ins.card["Данные компании"]["Наименование организации"].toUpperCase();
+                const direcorName = ins.card["Генеральный директор"]["ФИО директора"];
+                return {
+                    text: [
+                        {
+                            text: `${form} «${compName}»\n`,
+                            bold: true,
+                            fontSize: headerFontSize,
+                        },
+                        {
+                            text: "\n\n\n"
+                        },
+                        {
+                            text: dash,
+                        },
+                        {
+                            text: `${direcorName}\n`,
+                            fontSize: textFontSize,
+                        },
+                        {
+                            text: "На основании Устава",
+                            fontSize: textFontSize,
+                        }
+                    ],
+                    alignment: "center"
+                }
+            });
+            arr.push({
+                text: [
+                    {
+                        text: "ООО «СК «КАПИТАЛ-ПОЛИС»\n",
+                        bold: true,
+                        fontSize: headerFontSize,
+                    },
+                    {
+                        text: "\n\n\n"
+                    },
+                    {
+                        text: dash,
+                    },
+                    {
+                        text: "/Корпусов Д.В./\n",
+                        fontSize: textFontSize,
+                    },
+                    {
+                        text: "Доверенность №74/2018 от 10.03.2018",
+                        fontSize: textFontSize,
+                    }
+                ],
+                alignment: "center"
+            });
+            return arr;
+        }
+        return {
+            table: {
+                headerRows: 1,
+                widths,
+                dontBreakRows: true,
+                keepWithHeaderRows: 1,
+                body: [
+                    headersMake(),
+                    bodyMake()
+                ]
+            },
+            layout: {// цвет границы 
+                hLineColor: '#e6e6e6',
+                vLineColor: '#e6e6e6',
+            }
+        }
+    }
+    /**
+     * Определение высоты разрыва между таблицами, чтобы на титул все поместилось
+     * @param {number} numOfIns - количество страхователей, максимум 4 
+     */
+    chooseBreakerSize (numOfIns) {
+        switch (numOfIns) {
+            case 1:
+                return BASEFONTSIZE+5;
+            case 2:
+                return BASEFONTSIZE+3;
+            case 3:
+                return BASEFONTSIZE-1;
+            case 4:
+                return 4; // с таким значением помещается на одном листе
+            default:
+                return BASEFONTSIZE;
+        }
     }
     /**
      * Перераспределяем машины по спискам
@@ -160,27 +410,21 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                             border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
-                        // {
-                        //     text: 'Тип грузового отсека',
-                        //     style: "firstHeader",
-                        //     border: NOBORDER,
-                        //     fontSize: BIGFONTSIZE,
-                        // },
                         {
-                            text: 'Страховая стоимость, руб.',
+                            text: 'Страховая стоимость на т.с., руб.',
                             style: "firstHeader",
                             border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
                         
                         {
-                            text: 'Лимит по случаю, руб.',
+                            text: 'Лимит выплаты по случаю, руб.',
                             style: "firstHeader",
                             border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
                         {
-                            text: 'Франшиза по случаю, руб.',
+                            text: 'Франшиза по риску, руб.',
                             style: "firstHeader",
                             border: NOBORDER,
                             fontSize: BIGFONTSIZE,
@@ -254,16 +498,17 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         case 'limit':
                         case 'franchise':
                             obj = {
-                                text: this.addSpaces(process[property]),
+                                text: addSpaces(process[property]),
                                 margin: oneMargin,
                                 fontSize: BIGFONTSIZE,
                             }
                             break;
                         case 'risk':
+                            const riskName = this.CONF.RISK_CHANGER[process[property]] || process[property];
                             obj = {
                                 // пункт риска отключен пока
                                 // text: `${process[property]} п.\u00A01.1.${this.includedRisksOrder._indexOf(process[property])+1}`,
-                                text: `"${process[property]}"`,
+                                text: `${riskName}`,
                                 margin: riskMargin,
                                 alignment: 'left',
                                 fontSize: BIGFONTSIZE,
@@ -414,28 +659,12 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
         })
         listContent.push(table);
         listContent.push({
-            text:'Совокупные выплаты по всем застрахованным случаям не могут превышать агрегатный лимит отвественности страховщика по Полису.',
+            text:`Совокупные выплаты по всем застрахованным рискам не могут превышать - ${this.CONF.AGR_LIMIT}`,
             bold: true,
             alignment: 'justify',
             fontSize: BASEFONTSIZE,
         },'\n')
         return listContent;
-    }
-    /**
-     * Преобразуем число из 1000000 в 1 000 000 (то есть добавляем пробелы между)
-     * @param  {string} nStr 1000000
-     * @return {string} 1 000 000
-     */
-    addSpaces(nStr) {
-        nStr += '';
-        let x = nStr.split('.');
-        let x1 = x[0];
-        let x2 = x.length > 1 ? '.' + x[1] : '';
-        let rgx = /(\d+)(\d{3})/;
-        while (rgx.test(x1)) {
-            x1 = x1.replace(rgx, '$1' + ' ' + '$2');
-        }
-        return x1 + x2;
     }
     /**
      * Преобразуем в нужный формат "оговорки и условия"
@@ -545,10 +774,6 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                 // сначала добавляем Базовые риски (включенные)
                 if (baseRisk.ToPDFinclude) {
                     table.body.push([
-                        // {
-                        //     text: `1.1.${count}`,
-                        //     border: NOBORDER,
-                        // },
                         {
                             text: baseRisk.ToPDFinclude[0].text,
                             bold: baseRisk.ToPDFinclude[0].bold,
@@ -577,14 +802,11 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                     count++;
                 }
                 for (const risk of list) {
+                    const riskName = this.CONF.RISK_CHANGER[risk.name] || risk.name;
                     table.body.push([
-                        // {
-                        //     text: `1.1.${count}`,
-                        //     border: NOBORDER,
-                        // },
                         {
                             text: [
-                                { text: `${risk.name}`, bold: true },
+                                { text: `${riskName}`, bold: true },
                                 { text: ` - ${risk.title}. ` }
                             ],
                             border: NOBORDER,
@@ -600,7 +822,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
             else {
                 table.body.push([
                     {
-                        text: '1.2 Определения не заявленных на страхование рисков:',
+                        text: '1.2 Незастрахованные риски:',
                         style: "firstHeader",
                         colSpan: 2,
                         border: NOBORDER
@@ -638,10 +860,11 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                     count++;
                 }
                 for (const risk of list) {
+                    const riskName = this.CONF.RISK_CHANGER[risk.name] || risk.name;
                     table.body.push([
                         {
                             text: [
-                                { text: `${risk.name}`, bold: true },
+                                { text: `${riskName}`, bold: true },
                                 { text: ` - ${risk.title}. ` }
                             ],
                             border: NOBORDER,
@@ -760,6 +983,43 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
         return territoryVals.join(', ');
     }
     /**
+     * Создание блока с страхователями
+     * @param {myFactory} mf 
+     * @param {object} param1 объект с параметрами марджинов строк
+     */
+    prepareInsurantsBlock (mf,{oneRowMargin,twoRowMargin}) {
+        const all = mf.polisObj.insurants;
+        const makeBlock = (ins, name) => {
+            return [
+                {
+                    text: `${name}`,
+                    style: "leftCellFirstTable",
+                    margin: oneRowMargin
+                },
+                {
+                    text: [
+                        {
+                            text: `${ins.card["Данные компании"]["Форма организации"]} ${ins.card["Данные компании"]["Наименование организации"].toUpperCase()}\n`,
+                            bold: true,
+                        },
+                        {
+                            text: `${ins.card["Доп. информация"]["Юридический адрес"]}`,
+                            fontSize: 10,
+                        }
+
+                    ],
+                    colSpan: 2,
+                    alignment: 'center',
+                    margin: twoRowMargin
+                }
+            ]
+        }
+        if (all.length===1) {
+            return [makeBlock(all[0],`СТРАХОВАТЕЛЬ`)];
+        }
+        return all.map((ins,i)=>makeBlock(ins,`СТРАХОВАТЕЛЬ ${i+1}`))
+    }
+    /**
      * Основная функция, создает на основе данных расчета и компании файл PDF и скачивает его
      * @param  {object} myFactory объект с практически всеми нужными данными
      * @param  {array} risks Список рисков с описанием
@@ -779,7 +1039,10 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                     "ФИО директора": '',
                 }
             }
+            myFactory.polisObj.insurants.push(myFactory.companyObj);
+            this.CONF.wasMocked = true;
         }
+        this.confConstructor (myFactory);
         const emptyCell = {
             text: '',
             border: [false, false, false, false],
@@ -788,12 +1051,8 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
         const twoRowMargin = [0, 5, 0, 5];
         // собираем стоку с данными о территории страхования
         const territory = this.makeTerritory(myFactory);
-        const currencySign = {
-            'Р': '₽',
-            'EUR': '€',
-            'USD': '$',
-        }
         let pageWithExtraFooter = null;
+        const insurantsBlock = this.prepareInsurantsBlock (myFactory, {oneRowMargin,twoRowMargin});
         const docDefinition = {
             pageSize: 'A4',
             pageMargins: [50, 115, 50, 65],
@@ -827,8 +1086,6 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                                 {},
                                 {}
                             ],
-
-
                         ],
                         style: 'table',
                     },
@@ -837,7 +1094,10 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         vLineColor: '#e6e6e6',
                     }
                 },
-                '\n',
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
                 {
                     table: {
                         headerRows: 1,
@@ -888,50 +1148,16 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         vLineColor: '#e6e6e6',
                     }
                 },
-                "\n",
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
                 {
                     table: {
                         headerRows: 1,
                         widths: [150, 150, 175],
                         body: [
-                            [
-                                {
-                                    text: "СТРАХОВАТЕЛЬ",
-                                    style: "leftCellFirstTable",
-                                    margin: oneRowMargin
-
-                                },
-                                {
-                                    text: [
-                                        {
-                                            text: `${myFactory.companyObj.card["Данные компании"]["Форма организации"]} ${myFactory.companyObj.card["Данные компании"]["Наименование организации"].toUpperCase()}\n`,
-                                            bold: true,
-                                        },
-                                        {
-                                            text: `${myFactory.companyObj.card["Доп. информация"]["Юридический адрес"]}`,
-                                            fontSize: 10,
-                                        }
-
-                                    ],
-                                    colSpan: 2,
-                                    alignment: 'center',
-                                    margin: twoRowMargin
-                                },
-                            ],
-                            [
-                                {
-                                    text: "КОЛИЧЕСТВО ЗАСТРАХОВАННЫХ ТРАНСПОРТНЫХ СРЕДСТВ",
-                                    style: "leftCellFirstTable",
-                                    margin: twoRowMargin
-                                },
-                                {
-                                    text: `${myFactory.totalAmount / 24}`,
-                                    margin: oneRowMargin,
-                                    bold: true,
-                                    colSpan: 2,
-                                    alignment: 'center'
-                                },
-                            ]
+                            ...insurantsBlock,
                         ]
                     },
                     layout: {// цвет границы 
@@ -939,7 +1165,10 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         vLineColor: '#e6e6e6',
                     }
                 },
-                "\n",
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
                 {
                     table: {
                         headerRows: 1,
@@ -966,7 +1195,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                                     margin: twoRowMargin
                                 },
                                 {
-                                    text: `${this.addSpaces(myFactory.a_limit.value)} ${currencySign[myFactory.document.currency]}`,
+                                    text: `${this.CONF.AGR_LIMIT}`,
                                     margin: oneRowMargin,
                                     bold: true,
                                     colSpan: 2,
@@ -1014,7 +1243,10 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         vLineColor: '#e6e6e6',
                     }
                 },
-                "\n",
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
                 {
                     table: {
                         headerRows: 1,
@@ -1040,9 +1272,6 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                                         {
                                             text: "Доверенность №74/2018 от 10.03.2018\n",
                                             fontSize: 7
-                                        },
-                                        {
-                                            text: "\n"
                                         }
                                     ],
                                     alignment: "center",
@@ -1058,38 +1287,61 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         vLineColor: '#e6e6e6',
                     }
                 },
-                "\n",
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
                 {
                     table: {
                         headerRows: 1,
-                        widths: [100, 300, 75],
+                        widths: [242,242],
                         body: [
                             [
                                 {
-                                    text: [
-                                        {
-                                            text: 'ЦЕНТР СТРАХОВАНИЯ ТРАНСПОРТНЫХ РИСКОВ\n\n',
-                                            bold: true,
-                                            fontSize: 12,
-                                        },
-                                        {
-                                            text: "Телефон: +7 (812) 322-63-51\n",
-                                            fontSize: 10,
-                                        },
-                                        {
-                                            text: "E-mail: cargo@capitalpolis.ru, claims@capitalpolis.ru\n",
-                                            fontSize: 10,
-                                        },
-                                        {
-                                            text: "Московский пр., д.22, лит. 3, Санкт-Петербург, 190013, Россия",
-                                            fontSize: 10
-                                        }
-                                    ],
+                                    text: 'ЦЕНТР СТРАХОВАНИЯ ТРАНСПОРТНЫХ РИСКОВ\n',
+                                    bold: true,
+                                    fontSize: 12,
                                     alignment: "center",
-                                    colSpan: 3
+                                    colSpan: 2
                                 },
-                                {},
-                                {}
+                                {
+                                }
+                            ],
+                            [
+                                {
+                                    text: "УРЕГУЛИРОВАНИЕ УБЫТКОВ\n",
+                                    fontSize: 10,
+                                    bold: true,
+                                    alignment: "center",
+                                },
+                                {
+                                    text: "КЛИЕНТСКАЯ СЛУЖБА\n",
+                                    fontSize: 10,
+                                    bold: true,
+                                    alignment: "center",
+                                }
+                            ],
+                            [
+                                {
+                                    text: "claims@capitalpolis.ru\n",
+                                    fontSize: 10,
+                                    alignment: "center",
+                                },
+                                {
+                                    text: "cargo@capitalpolis.ru\n",
+                                    fontSize: 10,
+                                    alignment: "center",
+                                }
+                            ],
+                            [
+                                {
+                                    text: "Московский пр., д.22, лит. 3, Санкт-Петербург, 190013, Россия",
+                                    fontSize: 10,
+                                    alignment: "center",
+                                    colSpan: 2,
+                                },
+                                {
+                                }
                             ]
                         ]
                     },
@@ -1131,81 +1383,22 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                         style: 'table'
                     }
                 }
-                if (page > 1) return {
-                    table: {
-                        headerRows: 0,
-                        widths: [50, 70, 150, 70, 150, 50],
-                        body: [
-                            [
-                                {
-                                    // пустая строка для отступа
-                                    text: '',
-                                    fontSize: 12,
-                                    border: NOBORDER
-                                },
-                                emptyCell,
-                                emptyCell,
-                                emptyCell,
-                                emptyCell,
-                                emptyCell,
-                            ],
-                            [
-                                emptyCell
-                                ,
-                                {
-                                    text: 'Cтрахователь:',
-                                    fontSize: 10,
-                                    border: NOBORDER,
-                                },
-                                {
-                                    text: '___________________________________',
-                                    border: NOBORDER,
-                                }
-                                ,
-                                {
-                                    text: 'Cтраховщик:',
-                                    fontSize: 10,
-                                    border: NOBORDER,
-                                },
-                                {
-                                    text: '___________________________________',
-                                    border: NOBORDER,
-                                }
-                                ,
-                                emptyCell
-                            ],
-                            [
-                                emptyCell
-                                ,
-                                emptyCell,
-                                {
-                                    text: 'подпись и печать',
-                                    fontSize: 7,
-                                    alignment: 'center',
-                                    border: NOBORDER,
-                                },
-                                emptyCell,
-                                {
-                                    text: 'подпись и печать',
-                                    fontSize: 7,
-                                    alignment: 'center',
-                                    border: NOBORDER,
-                                },
-                                emptyCell
-                            ],
-                            [
-                                {
-                                    text: `Лист ${page.toString()}/${pages.toString()} Полиса ${this.hipName}`,
-                                    colSpan: 6,
-                                    border: NOBORDER,
-                                    alignment: 'center',
-                                    fontSize: 7,
-                                }
-                            ]
-                        ],
-                        style: 'table'
-                    }
-                };
+                if (page > 1) {
+                    const footer = {};
+                    footer.table = Object.assign({},this.CONF.footerObj.table);
+                    const len = footer.table.widths.length;
+                    const listCounter = [
+                        {
+                            text: `Лист ${page.toString()}/${pages.toString()} Полиса ${this.hipName}`,
+                            colSpan: len,
+                            border: NOBORDER,
+                            alignment: 'center',
+                            fontSize: 7,
+                        }
+                    ];
+                    footer.table.body = [...footer.table.body,listCounter];
+                    return footer;
+                }
             },
             styles: {
                 leftCellFirstTable: {
@@ -1225,7 +1418,6 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
                     fontSize: 9,
                 }
             }
-
         };
 
         docDefinition.content.push(
@@ -1240,84 +1432,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
             ...this.makeRisksList(myFactory, risks), //таблицы заявленных/не заявленных рисков
             ...this.makeParagraphs(myFactory), //таблицы оговорок
             "\n",
-            //таблица для подписей
-            {
-                table: {
-                    headerRows: 1,
-                    widths: [245, 245],
-                    dontBreakRows: true,
-                    keepWithHeaderRows: 1,
-                    body: [
-
-                        [
-                            {
-                                text: "СТРАХОВАТЕЛЬ:",
-                                style: "firstHeader",
-                                fontSize: 12,
-                                fillColor: '#e6e6e6',
-                            },
-                            {
-                                text: "СТРАХОВЩИК:",
-                                style: "firstHeader",
-                                fontSize: 12,
-                                fillColor: '#e6e6e6',
-                            }
-                        ],
-                        [
-                            {
-                                text: [
-                                    {
-                                        text: `${myFactory.companyObj.card["Данные компании"]["Форма организации"]} «${myFactory.companyObj.card["Данные компании"]["Наименование организации"].toUpperCase()}»\n`,
-                                        bold: true
-                                    },
-                                    {
-                                        text: "\n\n\n"
-                                    },
-                                    {
-                                        text: "__________________________________\n",
-                                    },
-                                    {
-                                        text: `${myFactory.companyObj.card["Генеральный директор"]["ФИО директора"]}\n`,
-                                        fontSize: 7
-                                    },
-                                    {
-                                        text: "На основании Устава",
-                                        fontSize: 7
-                                    }
-                                ],
-                                alignment: "center"
-                            },
-                            {
-                                text: [
-                                    {
-                                        text: "ООО «СК «КАПИТАЛ-ПОЛИС»\n",
-                                        bold: true
-                                    },
-                                    {
-                                        text: "\n\n\n"
-                                    },
-                                    {
-                                        text: "__________________________________\n",
-                                    },
-                                    {
-                                        text: "/Корпусов Д.В./\n",
-                                        fontSize: 7
-                                    },
-                                    {
-                                        text: "Доверенность №74/2018 от 10.03.2018",
-                                        fontSize: 7
-                                    }
-                                ],
-                                alignment: "center"
-                            },
-                        ]
-                    ]
-                },
-                layout: {// цвет границы 
-                    hLineColor: '#e6e6e6',
-                    vLineColor: '#e6e6e6',
-                }
-            },
+            this.makeSignTable(myFactory),//таблица для подписей
             {
                 pageBreak: 'before',
                 text: `ПРИЛОЖЕНИЕ 1 - Списки транспортных средств подпадающих под страхование Полиса ${this.hipName}`,
@@ -1336,8 +1451,18 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
         // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
         const win = window.open('', '_blank');
         delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+
+        this.deleteServiceData (myFactory);
+    }
+    deleteServiceData (mf) {
+        if (this.CONF.wasMocked) {
+            mf.companyObj = {};
+            mf.polisObj.insurants = [];
+        }
+        this.CONF.wasMocked = false;
     }
 }
+
 const polisMaker = new PolisMaker();
 
 

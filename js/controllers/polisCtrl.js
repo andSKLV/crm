@@ -1,10 +1,13 @@
 import Polis from '../protos/polis.js';
 import {Car, CarGroup} from "../protos/car.js";
+import Company from '../protos/company.js';
+import { DeleteInsurant } from '../ServiceFunctions.js';
 
 app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $rootScope, $timeout) {
 
     this.myFactory = myFactory;
     $scope.myFactory = myFactory;
+    myFactory.scopes.polis = $scope;
     $scope.init = async () => {
         const makePolisObj = () => {
             // создаем объект хранения для полиса, если не создан
@@ -146,14 +149,23 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         const needToClearState = myFactory.parks.length===0 && (myFactory.payment.array&&myFactory.payment.array.length>0);
         if (needToClearState) $scope.clearState();
         openTab();
+
+        //добавляем открытую компанию в сострахователи
+        if (myFactory.companyObj.id && 
+            !myFactory.polisObj.insurants.some(ins=>ins.id===myFactory.companyObj.id)) {
+                if (myFactory.polisObj.insurants.length===4) $scope.deleteInsurant (myFactory.polisObj.insurants[0]);
+                myFactory.polisObj.insurants.push(myFactory.companyObj);
+        }
+                
+        console.info(myFactory.polisObj.insurants);
+        console.info(myFactory.companyObj);
     }
     /**
-     * Функция первоначального создания машин при загрузке "чистого" расчета в полис
+     * Функция создания машин
      */
     $scope.createCars = () => {
         const mf = $scope.myFactory;
         mf.parks.forEach(park=>{
-            if (park.carGroup) return false;
             let max = -Infinity;
             //считаем максимальное количество машин в парке
             park.processes.forEach(pr=>{
@@ -195,9 +207,10 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             const parkUI = document.querySelectorAll('.park')[parkIndex];
             const procUI = parkUI.querySelectorAll('li')[procIndex];
             const inpUI = procUI.querySelector('.input_cars');
-            inpUI.focus();
-            await delay(50);
-            inpUI.blur();
+            // inpUI.focus();
+            // await delay(50);
+            // inpUI.blur();
+            mf.applyAllScopes ();
         }
 
     }
@@ -622,14 +635,14 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             $location.path('/profile');
         }
     }
-    $scope.updateState = async () => {
+    $scope.updateState = async (id) => {
         const baseRiskNeeded = myFactory.parks.some(park=>{
             return park.risks.includes(BASENAME);
         }) 
         // проверяем когда расчеты загрузятся
         const calcIsLoaded = async () => {
             function check () {
-                return myFactory.parks.length>0 && myFactory.calcObj.isInited;
+                return (id) ? myFactory.calcObj.id===id : myFactory.parks.length>0 && myFactory.calcObj.isInited;
             }
             return new Promise (resolve=>{
                 const id = setInterval(()=>{
@@ -652,9 +665,8 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         $scope.calcFinances();
         myFactory.polisObj.financeSeen= true;
         myFactory.polisObj.dates = myFactory.polisObj.dates;
-        console.log('state updated')
-        await delay (100);
-        document.querySelector('.mi_selected').click(); // констыльно вызываем ререндер 
+        console.log('state updated');
+        myFactory.applyAllScopes();
     }
     /**
      * Функция очистки Оговорок и финансов и их атрибутов "просмотрено"
@@ -667,5 +679,27 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         myFactory.payment.array = undefined;
         console.log('state cleared');
     }
+    /**
+     * удаление страхователя из списка страхователей
+     * @param {Company} insurant - страхователь на удаление
+     */
+    $scope.deleteInsurant= (insurant) => {
+        DeleteInsurant (insurant, myFactory);
+    }
+    /**
+     * Перемещаем страхователя вниз или вверх по списку
+     * @param {obj} insurant компания, которую надо переместить
+     * @param {string} direction 'up'|'down'
+     */
+    $scope.moveInsurant = (insurant, direction) => {
+        const all = myFactory.polisObj.insurants;
+        if (all.length===1) return false;
+        const ind = all.indexOf(insurant);
+        if (direction==='up' && ind===0) return false;
+        if (direction==='down' && ind===all.length-1) return false;
+        const newInd = direction==='up' ? ind-1 : ind+1;
+        [all[ind],all[newInd]] = [all[newInd],all[ind]]; //swap elements
+    }
+
     $scope.init();
 })
