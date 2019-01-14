@@ -46,10 +46,10 @@ const currencySign = {
         debugger;
     }
     /**
-     * 
+     * Генерация футера в зависимости от количества страхователей
+     * @param {number} numOfIns - количество страхователей
      */
     makeFooterObj (numOfIns) {
-        //TODO:
         //Добавляет нужное количество пустых ячеек
         const putEmptyCells = num => {
             const arr = [];
@@ -121,6 +121,133 @@ const currencySign = {
                     createRowWithText(colNum)
                 ],
                 style: 'table'
+            }
+        }
+    }
+    /**
+     * Создание таблицы подписантов
+     * @param {myFactory} myFactory 
+     */
+    makeSignTable (myFactory) {
+        const all = myFactory.polisObj.insurants;
+        let headerFontSize, textFontSize, dash, pageWidth;
+        switch (all.length) {
+            case 1:
+                pageWidth = 490;
+                headerFontSize = 12;
+                textFontSize = 7;
+                dash = "__________________________________\n";
+                break;
+            case 2:
+                pageWidth = 480;
+                headerFontSize = 12;
+                textFontSize = 7;
+                dash = "_______________________________\n";
+                break;
+            case 3:
+                pageWidth = 470;
+                headerFontSize = 9;
+                textFontSize = 5;
+                dash = "__________________________\n";
+                break;
+            case 4:
+                pageWidth = 460;
+                headerFontSize = 8;
+                textFontSize = 5;
+                dash = "____________________\n";
+                break;
+        }
+        const width = Math.floor(pageWidth/(all.length+1));
+        const widths = new Array(all.length+1).fill(width);
+        const headersMake = () => {
+            const sigleInsurant = all.length === 1;
+            const arr = all.map((ins,i)=>{
+                return  {
+                    text: sigleInsurant ? `СТРАХОВАТЕЛЬ:` : `СТРАХОВАТЕЛЬ ${i+1}:`,
+                    style: "firstHeader",
+                    fontSize: headerFontSize,
+                    fillColor: '#e6e6e6',
+                }
+            })
+            arr.push({
+                text: "СТРАХОВЩИК:",
+                style: "firstHeader",
+                fontSize: headerFontSize,
+                fillColor: '#e6e6e6',
+            })
+            return arr;
+        }
+        const bodyMake = () => {
+            const arr = all.map(ins=>{
+                const form = ins.card["Данные компании"]["Форма организации"];
+                const compName = ins.card["Данные компании"]["Наименование организации"].toUpperCase();
+                const direcorName = ins.card["Генеральный директор"]["ФИО директора"];
+                return {
+                    text: [
+                        {
+                            text: `${form} «${compName}»\n`,
+                            bold: true,
+                            fontSize: headerFontSize,
+                        },
+                        {
+                            text: "\n\n\n"
+                        },
+                        {
+                            text: dash,
+                        },
+                        {
+                            text: `${direcorName}\n`,
+                            fontSize: textFontSize,
+                        },
+                        {
+                            text: "На основании Устава",
+                            fontSize: textFontSize,
+                        }
+                    ],
+                    alignment: "center"
+                }
+            });
+            arr.push({
+                text: [
+                    {
+                        text: "ООО «СК «КАПИТАЛ-ПОЛИС»\n",
+                        bold: true,
+                        fontSize: headerFontSize,
+                    },
+                    {
+                        text: "\n\n\n"
+                    },
+                    {
+                        text: dash,
+                    },
+                    {
+                        text: "/Корпусов Д.В./\n",
+                        fontSize: textFontSize,
+                    },
+                    {
+                        text: "Доверенность №74/2018 от 10.03.2018",
+                        fontSize: textFontSize,
+                    }
+                ],
+                alignment: "center"
+            });
+            return arr;
+        }
+        bodyMake();
+        return {
+            table: {
+                headerRows: 1,
+                widths,
+                dontBreakRows: true,
+                keepWithHeaderRows: 1,
+                body: [
+                    headersMake(),
+                    bodyMake()
+                ]
+            },
+            layout: {// цвет границы 
+                hLineColor: '#e6e6e6',
+                vLineColor: '#e6e6e6',
             }
         }
     }
@@ -1029,20 +1156,6 @@ const currencySign = {
                         widths: [150, 150, 175],
                         body: [
                             ...insurantsBlock,
-                            // [
-                            //     {
-                            //         text: "КОЛИЧЕСТВО ЗАСТРАХОВАННЫХ ТРАНСПОРТНЫХ СРЕДСТВ",
-                            //         style: "leftCellFirstTable",
-                            //         margin: twoRowMargin
-                            //     },
-                            //     {
-                            //         text: `${myFactory.totalAmount / 24}`,
-                            //         margin: oneRowMargin,
-                            //         bold: true,
-                            //         colSpan: 2,
-                            //         alignment: 'center'
-                            //     },
-                            // ]
                         ]
                     },
                     layout: {// цвет границы 
@@ -1317,84 +1430,7 @@ const currencySign = {
             ...this.makeRisksList(myFactory, risks), //таблицы заявленных/не заявленных рисков
             ...this.makeParagraphs(myFactory), //таблицы оговорок
             "\n",
-            //таблица для подписей
-            {
-                table: {
-                    headerRows: 1,
-                    widths: [245, 245],
-                    dontBreakRows: true,
-                    keepWithHeaderRows: 1,
-                    body: [
-
-                        [
-                            {
-                                text: "СТРАХОВАТЕЛЬ:",
-                                style: "firstHeader",
-                                fontSize: 12,
-                                fillColor: '#e6e6e6',
-                            },
-                            {
-                                text: "СТРАХОВЩИК:",
-                                style: "firstHeader",
-                                fontSize: 12,
-                                fillColor: '#e6e6e6',
-                            }
-                        ],
-                        [
-                            {
-                                text: [
-                                    {
-                                        text: `${myFactory.companyObj.card["Данные компании"]["Форма организации"]} «${myFactory.companyObj.card["Данные компании"]["Наименование организации"].toUpperCase()}»\n`,
-                                        bold: true
-                                    },
-                                    {
-                                        text: "\n\n\n"
-                                    },
-                                    {
-                                        text: "__________________________________\n",
-                                    },
-                                    {
-                                        text: `${myFactory.companyObj.card["Генеральный директор"]["ФИО директора"]}\n`,
-                                        fontSize: 7
-                                    },
-                                    {
-                                        text: "На основании Устава",
-                                        fontSize: 7
-                                    }
-                                ],
-                                alignment: "center"
-                            },
-                            {
-                                text: [
-                                    {
-                                        text: "ООО «СК «КАПИТАЛ-ПОЛИС»\n",
-                                        bold: true
-                                    },
-                                    {
-                                        text: "\n\n\n"
-                                    },
-                                    {
-                                        text: "__________________________________\n",
-                                    },
-                                    {
-                                        text: "/Корпусов Д.В./\n",
-                                        fontSize: 7
-                                    },
-                                    {
-                                        text: "Доверенность №74/2018 от 10.03.2018",
-                                        fontSize: 7
-                                    }
-                                ],
-                                alignment: "center"
-                            },
-                        ]
-                    ]
-                },
-                layout: {// цвет границы 
-                    hLineColor: '#e6e6e6',
-                    vLineColor: '#e6e6e6',
-                }
-            },
+            this.makeSignTable(myFactory),//таблица для подписей
             {
                 pageBreak: 'before',
                 text: `ПРИЛОЖЕНИЕ 1 - Списки транспортных средств подпадающих под страхование Полиса ${this.hipName}`,
