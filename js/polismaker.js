@@ -61,7 +61,7 @@ const currencySign = {
             const arr = [emptyCell];
             let printText = text;
             for (let i=0;i<num;i++) {
-                if (!text) printText = (i!==colNum-1) ? `Страхователь ${i+1}: подпись и печать` : 'Страховщик: подпись и печать';
+                if (!text) printText = (i!==colNum-1) ? (colNum===2) ? `Страхователь: подпись и печать` : `Страхователь ${i+1}: подпись и печать` : 'Страховщик: подпись и печать';
                 arr.push({
                     text: printText,
                     fontSize: 7,
