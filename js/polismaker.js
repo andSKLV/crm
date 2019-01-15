@@ -41,6 +41,48 @@ const currencySign = {
             'Поломка реф. установки' : 'Поломка рефрижераторной установки',
             'Неохраняемая стоянка' : 'Кража с неохраняемой стоянки',
         }
+        conf.vars = {
+            insurer: 'СТРАХОВЩИК',
+            insurant: 'СТРАХОВАТЕЛЬ',
+            polisCMRTTH: 'ПОЛИС CMR/ТТН - СТРАХОВАНИЯ ПЕРЕВОЗЧИКА',
+            inrulesofdoc: 'Страхование действует в соответствии с Договором CMR/ТТН - страхования перевозчика',
+            kapitalpolis: 'ООО «СК «КАПИТАЛ-ПОЛИС»',
+            kpadress: 'Московский пр., д.22, лит. 3, Санкт-Петербург, 190013',
+            period: 'ПЕРИОД СТРАХОВАНИЯ',
+            territory: 'ТЕРРИТОРИЯ СТРАХОВАНИЯ',
+            agrlimit: 'АГРЕГАТНЫЙ ЛИМИТ ОТВЕТСТВЕННОСТИ СТРАХОВЩИКА ПО ПОЛИСУ',
+            fromdate: 'ДАТА ВЫДАЧИ',
+            allcargo: 'Страхованием покрывается любой и каждый груз, с учетом исключений, предусмотренных полисом.',
+            kpdirector: '/Корпусов Д.В/',
+            attorney: 'Доверенность №74/2018 от 10.03.2018',
+            cargocenter: 'ЦЕНТР СТРАХОВАНИЯ ТРАНСПОРТНЫХ РИСКОВ',
+            lesionCenter: `УРЕГУЛИРОВАНИЕ УБЫТКОВ`,
+            clientsCenter: 'КЛИЕНТСКАЯ СЛУЖБА',
+            lesionCenterMail: 'claims@capitalpolis.ru',
+            clientsCenterMail: 'cargo@capitalpolis.ru',
+            page: 'Лист',
+            ofPolis: 'Полиса',
+            riskAndRules: '1. Риски и условия страхования для транспортных средств, перечисленных в Приложении 1',
+            appex1: 'ПРИЛОЖЕНИЕ 1 - Списки транспортных средств подпадающих под страхование Полиса',
+            table1: 'Таблица 1 - Условия страхования',
+            insuredRisks: 'Застрахованные риски,',
+            asPoint: ' согласно п. 1.1',
+            insuredPrice: 'Страховая стоимость на т.с., руб.',
+            insuredLimit: 'Лимит выплаты по случаю, руб.',
+            insuredFranch: 'Франшиза по риску, руб.',
+            risksPack: 'Набор рисков',
+            listOfAuto: 'Список транспортных средств',
+            listOfAutoNum: 'Список транспортных средств №',
+            pp: 'п/п',
+            carNumber: 'Гос. знак',
+            VIN: 'VIN',
+            carYear: 'Год',
+            carType: 'Тип грузового отсека',
+            footnote: '* Транспортные средства застрахованы на условиях и рисках, соответствующих указанным наборам рисков в Таблице 1.',
+            allPaymentNotBigger: 'Совокупные выплаты по всем застрахованным рискам не могут превышать',
+            insuredRisksDefinition: '1.1 Определения застрахованных рисков',
+            notInsuredRisksDefinition: '1.2 Незастрахованные риски:'
+        }
         conf.titleBreakerFontSize = this.chooseBreakerSize(mf.polisObj.insurants.length);
         conf.footerObj = this.makeFooterObj(mf.polisObj.insurants.length);
         debugger;
@@ -165,14 +207,14 @@ const currencySign = {
             const sigleInsurant = all.length === 1;
             const arr = all.map((ins,i)=>{
                 return  {
-                    text: sigleInsurant ? `СТРАХОВАТЕЛЬ:` : `СТРАХОВАТЕЛЬ ${i+1}:`,
+                    text: sigleInsurant ? `${this.CONF.vars.insurant}` : `${this.CONF.vars.insurant} ${i+1}:`,
                     style: "firstHeader",
                     fontSize: headerFontSize,
                     fillColor: '#e6e6e6',
                 }
             })
             arr.push({
-                text: "СТРАХОВЩИК:",
+                text: this.CONF.vars.insurer,
                 style: "firstHeader",
                 fontSize: headerFontSize,
                 fillColor: '#e6e6e6',
@@ -213,7 +255,7 @@ const currencySign = {
             arr.push({
                 text: [
                     {
-                        text: "ООО «СК «КАПИТАЛ-ПОЛИС»\n",
+                        text: `${this.CONF.vars.kapitalpolis}\n`,
                         bold: true,
                         fontSize: headerFontSize,
                     },
@@ -224,11 +266,11 @@ const currencySign = {
                         text: dash,
                     },
                     {
-                        text: "/Корпусов Д.В./\n",
+                        text: `${this.CONF.vars.kpdirector}\n`,
                         fontSize: textFontSize,
                     },
                     {
-                        text: "Доверенность №74/2018 от 10.03.2018",
+                        text: this.CONF.vars.attorney,
                         fontSize: textFontSize,
                     }
                 ],
@@ -395,7 +437,7 @@ const currencySign = {
                 body: [
                     [
                         {
-                            text: 'Таблица 1 - Условия страхования',
+                            text: this.CONF.vars.table1,
                             border: NOBORDER,
                             colSpan: colNumber(),
                             alignment: 'left',
@@ -405,26 +447,26 @@ const currencySign = {
                     ],
                     [
                         {
-                            text: 'Застрахованные риски,\n согласно п. 1.1',
+                            text: `${this.CONF.vars.insuredRisks}\n${this.CONF.vars.asPoint}`,
                             style: "firstHeader",
                             border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
                         {
-                            text: 'Страховая стоимость на т.с., руб.',
+                            text: this.CONF.vars.insuredPrice,
                             style: "firstHeader",
                             border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
                         
                         {
-                            text: 'Лимит выплаты по случаю, руб.',
+                            text: this.CONF.vars.insuredLimit,
                             style: "firstHeader",
                             border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
                         {
-                            text: 'Франшиза по риску, руб.',
+                            text: this.CONF.vars.insuredFranch,
                             style: "firstHeader",
                             border: NOBORDER,
                             fontSize: BIGFONTSIZE,
@@ -452,7 +494,7 @@ const currencySign = {
             if (!this.isOneCarGroup) {
                 // добавляем разделитель Групп, если групп больше чем одна
                 tableContent.push([{
-                    text: `Набор рисков ${group}:`,
+                    text: `${this.CONF.vars.risksPack} ${group}:`,
                     border: NOBORDER,
                     colSpan: colNumber(),
                     alignment: 'left',
@@ -547,38 +589,38 @@ const currencySign = {
                 // генерируем таблицу в зависимости от количества групп ТС
                 // если групп ТС больше одной, то необходимо добавить дополнительный стоблец с обозначением Групп
                 const colNumber = (this.isOneCarGroup) ? 5 : 6;
-                const tableHeader = (this.isOneCarGroup) ? 'Список транспортных средств' : `Список транспортных средств №${carTablesCount} - Набор рисков: ${list.groups.map(x=>x+1).join(', ')}`;
+                const tableHeader = (this.isOneCarGroup) ? this.CONF.vars.listOfAuto : `${this.CONF.vars.listOfAutoNum} ${carTablesCount} - ${this.CONF.vars.risksPack}: ${list.groups.map(x=>x+1).join(', ')}`;
                 const colWidths = (this.isOneCarGroup) ? [44, 88, 121, 58, 149] : [34, 68, 121, 48, 129, 60];
                 const contentHeader = [
                     {
-                        text: 'п/п',
+                        text: this.CONF.vars.pp,
                         style: "firstHeader",
                         fontSize: BASEFONTSIZE,
                     },
                     {
-                        text: 'Гос. знак',
+                        text: this.CONF.vars.carNumber,
                         style: "firstHeader",
                         fontSize: BASEFONTSIZE,
                     },
                     {
-                        text: `VIN`,
+                        text: this.CONF.vars.VIN,
                         style: "firstHeader",
                         fontSize: BASEFONTSIZE,
                     },
                     {
-                        text: 'Год',
+                        text: this.CONF.vars.carYear,
                         style: "firstHeader",
                         fontSize: BASEFONTSIZE,
                     },
                     {
-                        text: 'Тип грузового отсека',
+                        text: this.CONF.vars.carType,
                         style: "firstHeader",
                         fontSize: BASEFONTSIZE,
                     }
                 ];
                 if (!this.isOneCarGroup) contentHeader.push(
                     {
-                        text: 'Набор рисков*',
+                        text: `${this.CONF.vars.risksPack}*`,
                         style: "firstHeader",
                         fontSize: BASEFONTSIZE,
                     }
@@ -652,14 +694,14 @@ const currencySign = {
             }
         })
         if (!this.isOneCarGroup) this.carsTables.push({
-            text:'* Транспортные средства застрахованы на условиях и рисках, соответствующих указанным наборам рисков в Таблице 1.',
+            text: this.CONF.vars.footnote,
             bold: false,
             alignment: 'justify',
             fontSize: 10,
         })
         listContent.push(table);
         listContent.push({
-            text:`Совокупные выплаты по всем застрахованным рискам не могут превышать - ${this.CONF.AGR_LIMIT}`,
+            text:`${this.CONF.vars.allPaymentNotBigger} - ${this.CONF.AGR_LIMIT}`,
             bold: true,
             alignment: 'justify',
             fontSize: BASEFONTSIZE,
@@ -763,7 +805,7 @@ const currencySign = {
             if (included) {
                 table.body.push([
                     {
-                        text: '1.1 Определения застрахованных рисков',
+                        text: this.CONF.vars.insuredRisksDefinition,
                         style: "firstHeader",
                         colSpan: 2,
                         border: NOBORDER,
@@ -822,7 +864,7 @@ const currencySign = {
             else {
                 table.body.push([
                     {
-                        text: '1.2 Незастрахованные риски:',
+                        text: this.CONF.vars.notInsuredRisksDefinition,
                         style: "firstHeader",
                         colSpan: 2,
                         border: NOBORDER
@@ -1015,9 +1057,9 @@ const currencySign = {
             ]
         }
         if (all.length===1) {
-            return [makeBlock(all[0],`СТРАХОВАТЕЛЬ`)];
+            return [makeBlock(all[0],`${this.CONF.vars.insurant}`)];
         }
-        return all.map((ins,i)=>makeBlock(ins,`СТРАХОВАТЕЛЬ ${i+1}`))
+        return all.map((ins,i)=>makeBlock(ins,`${this.CONF.vars.insurant} ${i+1}`))
     }
     /**
      * Основная функция, создает на основе данных расчета и компании файл PDF и скачивает его
@@ -1065,7 +1107,7 @@ const currencySign = {
                             [
                                 {
                                     text: [
-                                        "ПОЛИС CMR/ТТН - СТРАХОВАНИЯ ПЕРЕВОЗЧИКА \n",
+                                        `${this.CONF.vars.polisCMRTTH} \n`,
                                         `${this.hipName}`
                                     ],
                                     colSpan: 3,
@@ -1078,7 +1120,7 @@ const currencySign = {
                             ],
                             [
                                 {
-                                    text: `Страхование действует в соответствии с Договором CMR/ТТН - страхования перевозчика ${this.hipName}.`,
+                                    text: `${this.CONF.vars.inrulesofdoc} ${this.hipName}.`,
                                     colSpan: 3,
                                     fontSize: 10,
                                     alignment: 'center'
@@ -1105,18 +1147,18 @@ const currencySign = {
                         body: [
                             [
                                 {
-                                    text: "СТРАХОВЩИК",
+                                    text: this.CONF.vars.insurer,
                                     style: "leftCellFirstTable",
                                     margin: oneRowMargin,
                                 },
                                 {
                                     text: [
                                         {
-                                            text: "ООО «СК «КАПИТАЛ-ПОЛИС»\n",
+                                            text: `${this.CONF.vars.kapitalpolis}\n`,
                                             bold: true,
                                         },
                                         {
-                                            text: "Московский пр., д.22, лит. 3, Санкт-Петербург, 190013\n",
+                                            text: `${this.CONF.vars.kpadress}\n`,
                                             fontSize: 10
                                         }
                                     ],
@@ -1128,7 +1170,7 @@ const currencySign = {
                             ],
                             [
                                 {
-                                    text: "ПЕРИОД СТРАХОВАНИЯ",
+                                    text: this.CONF.vars.period,
                                     style: "leftCellFirstTable",
                                     margin: oneRowMargin
                                 },
@@ -1177,7 +1219,7 @@ const currencySign = {
                         body: [
                             [
                                 {
-                                    text: "ТЕРРИТОРИЯ СТРАХОВАНИЯ",
+                                    text: this.CONF.vars.territory,
                                     style: "leftCellFirstTable",
                                     margin: oneRowMargin.map((v, i) => (i === 1) ? v + 2 : v)
                                 },
@@ -1190,7 +1232,7 @@ const currencySign = {
                             ],
                             [
                                 {
-                                    text: "АГРЕГАТНЫЙ ЛИМИТ ОТВЕТСТВЕННОСТИ СТРАХОВЩИКА ПО ПОЛИСУ",
+                                    text: this.CONF.vars.agrlimit,
                                     style: "leftCellFirstTable",
                                     margin: twoRowMargin
                                 },
@@ -1204,7 +1246,7 @@ const currencySign = {
                             ],
                             [
                                 {
-                                    text: "ДАТА ВЫДАЧИ",
+                                    text: this.CONF.vars.fromdate,
                                     style: "leftCellFirstTable",
                                     margin: oneRowMargin
                                 },
@@ -1230,7 +1272,7 @@ const currencySign = {
                         body: [
                             [
                                 {
-                                    text: "Страхованием покрывается любой и каждый груз, с учетом исключений, предусмотренных полисом.",
+                                    text: this.CONF.vars.allcargo,
                                     style: "leftCellFirstTable",
                                     alignment: 'center',
                                     bold: true
@@ -1256,7 +1298,7 @@ const currencySign = {
                                 {
                                     text: [
                                         {
-                                            text: "ООО «СК «КАПИТАЛ-ПОЛИС»\n",
+                                            text: `${this.CONF.vars.kapitalpolis}\n`,
                                             bold: true,
                                         },
                                         {
@@ -1266,11 +1308,11 @@ const currencySign = {
                                             text: "__________________________________________\n",
                                         },
                                         {
-                                            text: "/Корпусов Д.В/\n",
+                                            text: `${this.CONF.vars.kpdirector}\n`,
                                             fontSize: 7
                                         },
                                         {
-                                            text: "Доверенность №74/2018 от 10.03.2018\n",
+                                            text: `${this.CONF.vars.attorney}\n`,
                                             fontSize: 7
                                         }
                                     ],
@@ -1298,7 +1340,7 @@ const currencySign = {
                         body: [
                             [
                                 {
-                                    text: 'ЦЕНТР СТРАХОВАНИЯ ТРАНСПОРТНЫХ РИСКОВ\n',
+                                    text: `${this.CONF.vars.cargocenter}\n`,
                                     bold: true,
                                     fontSize: 12,
                                     alignment: "center",
@@ -1309,13 +1351,13 @@ const currencySign = {
                             ],
                             [
                                 {
-                                    text: "УРЕГУЛИРОВАНИЕ УБЫТКОВ\n",
+                                    text: `${this.CONF.vars.lesionCenter}В\n`,
                                     fontSize: 10,
                                     bold: true,
                                     alignment: "center",
                                 },
                                 {
-                                    text: "КЛИЕНТСКАЯ СЛУЖБА\n",
+                                    text: `${this.CONF.vars.clientsCenter}\n`,
                                     fontSize: 10,
                                     bold: true,
                                     alignment: "center",
@@ -1323,19 +1365,19 @@ const currencySign = {
                             ],
                             [
                                 {
-                                    text: "claims@capitalpolis.ru\n",
+                                    text: `${this.CONF.vars.lesionCenterMail}\n`,
                                     fontSize: 10,
                                     alignment: "center",
                                 },
                                 {
-                                    text: "cargo@capitalpolis.ru\n",
+                                    text: `${this.CONF.vars.clientsCenterMail}\n`,
                                     fontSize: 10,
                                     alignment: "center",
                                 }
                             ],
                             [
                                 {
-                                    text: "Московский пр., д.22, лит. 3, Санкт-Петербург, 190013, Россия",
+                                    text: this.CONF.vars.kpadress,
                                     fontSize: 10,
                                     alignment: "center",
                                     colSpan: 2,
@@ -1371,7 +1413,7 @@ const currencySign = {
                         body: [
                             [
                                 {
-                                    text: `Лист ${page.toString()}/${pages.toString()} Полиса ${this.hipName}`,
+                                    text: `${this.CONF.vars.page} ${page.toString()}/${pages.toString()} ${this.CONF.vars.ofPolis} ${this.hipName}`,
                                     colSpan: 6,
                                     border: NOBORDER,
                                     alignment: 'center',
@@ -1389,7 +1431,7 @@ const currencySign = {
                     const len = footer.table.widths.length;
                     const listCounter = [
                         {
-                            text: `Лист ${page.toString()}/${pages.toString()} Полиса ${this.hipName}`,
+                            text: `${this.CONF.vars.page} ${page.toString()}/${pages.toString()} ${this.CONF.vars.ofPolis} ${this.hipName}`,
                             colSpan: len,
                             border: NOBORDER,
                             alignment: 'center',
@@ -1423,7 +1465,7 @@ const currencySign = {
         docDefinition.content.push(
             {
                 pageBreak: 'before',
-                text: `1. Риски и условия страхования для транспортных средств, перечисленных в Приложении 1`,
+                text: this.CONF.vars.riskAndRules,
                 alignment: 'center',
                 margin: [0, 0, 0, 5],
                 style: "firstHeader",
@@ -1435,7 +1477,7 @@ const currencySign = {
             this.makeSignTable(myFactory),//таблица для подписей
             {
                 pageBreak: 'before',
-                text: `ПРИЛОЖЕНИЕ 1 - Списки транспортных средств подпадающих под страхование Полиса ${this.hipName}`,
+                text: `${this.CONF.vars.appex1} ${this.hipName}`,
                 alignment: 'justify',
                 bold: true,
             },
