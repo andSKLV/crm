@@ -31,6 +31,9 @@
                 <td class='td_cars'>
                     <input  class='input_cars' type="text" ng-model="car.data.prodYear" placeholder="Год производства">
                 </td>
+                <td class="td_cars" ng-if="myFactory.polisObj.insurants.length>1">
+                    <input  class='input_cars' type="text" ng-model="car.data.company" placeholder="Номер компании">
+                </td>
             </tr>
         </table>
     </li>

@@ -156,9 +156,6 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 if (myFactory.polisObj.insurants.length===4) $scope.deleteInsurant (myFactory.polisObj.insurants[0]);
                 myFactory.polisObj.insurants.push(myFactory.companyObj);
         }
-                
-        console.info(myFactory.polisObj.insurants);
-        console.info(myFactory.companyObj);
     }
     /**
      * Функция создания машин

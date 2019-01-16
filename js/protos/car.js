@@ -15,6 +15,7 @@ export class Car {
       endYear: null,
       type: null,
       risks: null,
+      company: null,
     }
   }
   setData (obj) {
