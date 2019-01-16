@@ -447,7 +447,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 xhr.send();
             })
         };
-        getRisks().then((data) => {
+        getRisks().then(async (data) => {
             let risks = [];
             data.forEach(({ model, values }) => {
                 if (model == "risk") {
@@ -456,7 +456,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     })
                 }
             })
-            polisMaker.makePDF(myFactory, risks);
+            debugger;
+            await polisMaker.start(myFactory, risks);
+            contractMaker.makePDF(myFactory);
             return null;
         }, function error(response) {
             console.error(response);

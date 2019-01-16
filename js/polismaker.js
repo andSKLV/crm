@@ -1083,6 +1083,12 @@ const currencySign = {
         }
         return all.map((ins,i)=>makeBlock(ins,`${this.CONF.vars.insurant} ${i+1}`))
     }
+    start (mf,risks) {
+        return new Promise (resolve=>{
+            this.makePDF(mf,risks);
+            resolve();
+        })
+    }
     /**
      * Основная функция, создает на основе данных расчета и компании файл PDF и скачивает его
      * @param  {object} myFactory объект с практически всеми нужными данными
@@ -1513,9 +1519,8 @@ const currencySign = {
         }
         // pdfMake.createPdf(docDefinition).download('optionalName.pdf');
         // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
-        const win = window.open('', '_blank');
-        delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
-
+        // const win = window.open('', '_blank');
+        // delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
         this.deleteServiceData (myFactory);
     }
     deleteServiceData (mf) {
@@ -1529,5 +1534,134 @@ const currencySign = {
 
 const polisMaker = new PolisMaker();
 
+
+class ContractMaker {
+    constructor (myFactory) {
+        this.CONF = {}
+        
+    }
+    confConstructor (mf) {
+        const conf = this.CONF;
+        conf.vars = {
+
+        }
+    }
+    makePDF (myFactory) {
+        debugger;
+        this.confConstructor (myFactory);
+        const putEmptyCells = (num) => new Array(num).map(x=>new Object());
+        const COLS = 6;
+        const docDefinition = {
+            pageSize: 'A4',
+            pageMargins: [50, 65, 50, 65],
+            content: [
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: [80, 33, 33, 36, 203, 85],
+                        body: [
+                            [
+                                {
+                                    text: [
+                                        `FIRST \n`,
+                                        `SECOND`
+                                    ],
+                                    colSpan: 6,
+                                    style: 'firstHeader',
+                                    fontSize: 14,
+                                    fillColor: '#e6e6e6',
+                                },...putEmptyCells(COLS-1)
+                            ],
+                            [
+                                {
+                                    text: `ПРЕДМЕТ ДОГОВОРА/ ОБЪЕКТ СТРАХОВАНИЯ`,
+                                    fontSize: 10,
+                                    alignment: 'center'
+                                },
+                                {
+                                    text: `10.6`,
+                                    fontSize: 10,
+                                    alignment: 'center'
+                                },
+                                {
+                                    text: `9.1.2`,
+                                    fontSize: 10,
+                                    alignment: 'center'
+                                },
+                                {
+                                    text: `8.1.2.3`,
+                                    fontSize: 10,
+                                    alignment: 'center'
+                                },
+                                {
+                                    text: `текст текст текст текст текст`,
+                                    fontSize: 10,
+                                    alignment: 'center'
+                                },
+                                {
+                                    text: `ИСКЛЮЧЕНО`,
+                                    fontSize: 10,
+                                    alignment: 'center'
+                                },
+                            ],
+                            
+                        ],
+                        style: 'table',
+                    },
+                    layout: {// цвет границы 
+                        hLineColor: '#000000',
+                        vLineColor: '#000000',
+                    }
+                }
+            ],
+            footer: (page, pages, smth, pagesArr) => {
+                if (page > 1) {
+                    // const footer = {};
+                    // footer.table = Object.assign({},this.CONF.footerObj.table);
+                    // const len = footer.table.widths.length;
+                    // const listCounter = [
+                    //     {
+                    //         text: `${this.CONF.vars.page} ${page.toString()}/${pages.toString()} ${this.CONF.vars.ofPolis} ${this.hipName}`,
+                    //         colSpan: len,
+                    //         border: NOBORDER,
+                    //         alignment: 'center',
+                    //         fontSize: 7,
+                    //     }
+                    // ];
+                    // footer.table.body = [...footer.table.body,listCounter];
+                    // return footer;
+                    return {}
+                }
+            },
+            styles: {
+                leftCellFirstTable: {
+                    fillColor: '#e6e6e6',
+                    fontSize: 10,
+                },
+                table: {
+                    fontStyle: "PT Sans Narrow",
+                    alignment: 'center'
+                },
+                firstHeader: {
+                    bold: true,
+                    alignment: 'center',
+                },
+                carInfo: {
+                    fontSize: 9,
+                }
+            }
+        };
+        pdfMake.fonts = {
+            Roboto: {
+                normal: 'PTN.ttf',
+                bold: 'PTN-bold.ttf'
+            }
+        }
+        const win = window.open('', '_blank');
+        delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+    }    
+
+}
+const contractMaker = new ContractMaker ();
 
 
