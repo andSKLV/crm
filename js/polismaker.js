@@ -82,7 +82,7 @@ const currencySign = {
             allPaymentNotBigger: 'Совокупные выплаты по всем застрахованным рискам не могут превышать',
             insuredRisksDefinition: '1.1 Определения застрахованных рисков',
             notInsuredRisksDefinition: '1.2 Незастрахованные риски:',
-            companyHeader: 'Компания'
+            companyHeader: 'Страхователь'
         }
         conf.titleBreakerFontSize = this.chooseBreakerSize(mf.polisObj.insurants.length);
         conf.footerObj = this.makeFooterObj(mf.polisObj.insurants.length);
@@ -592,7 +592,7 @@ const currencySign = {
                 const widthsFromCols = {
                     5 : [44, 88, 121, 58, 149],
                     6 : [34, 68, 121, 48, 129, 60],
-                    7 : [20, 48, 121, 33, 129, 60, 39],
+                    7 : [20, 48, 121, 33, 129, 60, 52],
                 }
                 let colNumber;
                 if (!this.isOneCarGroup && myFactory.polisObj.insurants.length>1) colNumber = 7
@@ -678,7 +678,7 @@ const currencySign = {
                     )
                     if (myFactory.polisObj.insurants.length>1) content.push(
                         {
-                            text: car.data.company,
+                            text: car.data.insurant,
                             style: 'carInfo',
                         }
                     )

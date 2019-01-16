@@ -416,7 +416,7 @@ app.directive("importSheetJs", function SheetJSImportDirective(myFactory) {
                 autNumber: (list[`C${i}`]) ? list[`C${i}`].w : '',
                 VIN: (list[`D${i}`]) ? list[`D${i}`].w : '',
                 prodYear: (list[`E${i}`]) ? list[`E${i}`].w : '',
-                company: (list[`F${i}`] && (list[`F${i}`].w.match(/\d/))) ? list[`F${i}`].w : '',
+                insurant: (list[`F${i}`] && (list[`F${i}`].w.match(/\d/))) ? list[`F${i}`].w : '',
             }
             cars.push(car);
         }
