@@ -81,7 +81,8 @@ const currencySign = {
             footnote: '* Транспортные средства застрахованы на условиях и рисках, соответствующих указанным наборам рисков в Таблице 1.',
             allPaymentNotBigger: 'Совокупные выплаты по всем застрахованным рискам не могут превышать',
             insuredRisksDefinition: '1.1 Определения застрахованных рисков',
-            notInsuredRisksDefinition: '1.2 Незастрахованные риски:'
+            notInsuredRisksDefinition: '1.2 Незастрахованные риски:',
+            companyHeader: 'Компания'
         }
         conf.titleBreakerFontSize = this.chooseBreakerSize(mf.polisObj.insurants.length);
         conf.footerObj = this.makeFooterObj(mf.polisObj.insurants.length);
@@ -588,9 +589,17 @@ const currencySign = {
                 this.carsTables.push('\n');
                 // генерируем таблицу в зависимости от количества групп ТС
                 // если групп ТС больше одной, то необходимо добавить дополнительный стоблец с обозначением Групп
-                const colNumber = (this.isOneCarGroup) ? 5 : 6;
+                const widthsFromCols = {
+                    5 : [44, 88, 121, 58, 149],
+                    6 : [34, 68, 121, 48, 129, 60],
+                    7 : [20, 48, 121, 33, 129, 60, 39],
+                }
+                let colNumber;
+                if (!this.isOneCarGroup && myFactory.polisObj.insurants.length>1) colNumber = 7
+                else if (!this.isOneCarGroup || myFactory.polisObj.insurants.length>1) colNumber = 6
+                else colNumber = 5;
                 const tableHeader = (this.isOneCarGroup) ? this.CONF.vars.listOfAuto : `${this.CONF.vars.listOfAutoNum} ${carTablesCount} - ${this.CONF.vars.risksPack}: ${list.groups.map(x=>x+1).join(', ')}`;
-                const colWidths = (this.isOneCarGroup) ? [44, 88, 121, 58, 149] : [34, 68, 121, 48, 129, 60];
+                const colWidths = widthsFromCols[colNumber];
                 const contentHeader = [
                     {
                         text: this.CONF.vars.pp,
@@ -621,6 +630,13 @@ const currencySign = {
                 if (!this.isOneCarGroup) contentHeader.push(
                     {
                         text: `${this.CONF.vars.risksPack}*`,
+                        style: "firstHeader",
+                        fontSize: BASEFONTSIZE,
+                    }
+                )
+                if (myFactory.polisObj.insurants.length>1) contentHeader.push(
+                    {
+                        text: `${this.CONF.vars.companyHeader}`,
                         style: "firstHeader",
                         fontSize: BASEFONTSIZE,
                     }
@@ -657,6 +673,12 @@ const currencySign = {
                     if (!this.isOneCarGroup) content.push(
                         {
                             text: car.tableGroup.map(x=>x+1).join(', '),
+                            style: 'carInfo',
+                        }
+                    )
+                    if (myFactory.polisObj.insurants.length>1) content.push(
+                        {
+                            text: car.data.company,
                             style: 'carInfo',
                         }
                     )
