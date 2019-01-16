@@ -14,7 +14,7 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
 const currencySign = {
     'Р': '₽',
     'EUR': '€',
-    'USD': '$',
+    'USD': '$',   
 }
 
  class PolisMaker {
