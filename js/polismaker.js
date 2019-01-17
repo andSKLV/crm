@@ -86,7 +86,6 @@ const currencySign = {
         }
         conf.titleBreakerFontSize = this.chooseBreakerSize(mf.polisObj.insurants.length);
         conf.footerObj = this.makeFooterObj(mf.polisObj.insurants.length);
-        debugger;
     }
     /**
      * Генерация футера в зависимости от количества страхователей
@@ -1521,7 +1520,6 @@ const currencySign = {
         // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
         // const win = window.open('', '_blank');
         // delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
-        this.deleteServiceData (myFactory);
     }
     deleteServiceData (mf) {
         if (this.CONF.wasMocked) {
@@ -1543,8 +1541,26 @@ class ContractMaker {
     confConstructor (mf) {
         const conf = this.CONF;
         conf.vars = {
-
+            contractCMR: 'ДОГОВОР CMR/ТТН - СТРАХОВАНИЯ ПЕРЕВОЗЧИКА',
+            insuranceOfTransport: 'СТРАХОВАНИЕ ГРУЗОВ ДЛЯ ТРАНСПОРТНЫХ ОПЕРАТОРОВ',
+            SPB: 'г. Санкт-Петербург',
+            firstCell1: 'В соответствии с настоящим Договором CMR/ТТН-страхования (далее - Договор)',
+            firstCellKP: 'Общество с ограниченной ответственностью «Страховая компания «Капитал-полис страхование»',
+            firstCellKPsmall: '(ООО «СК «Капитал-полис С»)',
+            firstCell2: 'в лице Заместителя генерального директора Корпусова Д.В, действующего на основании Доверенности № 2-1602/2012 от 20.02.2012, в дальнейшем именуемое «Страховщик», и ',
+            firstCell3: 'в лице',
+            firstCell4: ', действующего на основании Устава, именуемое в дальнейшем «Страхователь», договорились о следующем:',
         }
+        const company = mf.polisObj.insurants[0];
+        conf.companyForm = company.card["Данные компании"]["Форма организации"];
+        conf.companyName = company.card["Данные компании"]["Наименование организации"];
+        conf.directorName = company.card["Генеральный директор"]["ФИО директора"];
+        conf.roditelniyFIO = this.getShortFIO(conf.direcorName);
+        conf.contractNumber = HIP_NAME;
+    }
+    getShortFIO (FIO) {
+        if (FIO==='') return 'Иванова И.И.'
+        return 'Иванова И.И.'
     }
     makePDF (myFactory) {
         debugger;
@@ -1554,64 +1570,62 @@ class ContractMaker {
         const docDefinition = {
             pageSize: 'A4',
             pageMargins: [50, 65, 50, 65],
+            defaultStyle: {
+                fontSize: 10,
+                bold: false,
+                alignment: 'justify',
+            },
             content: [
                 {
                     table: {
                         headerRows: 1,
-                        widths: [80, 33, 33, 36, 203, 85],
+                        widths: [80, 25, 25, 25, 215, 70],
                         body: [
                             [
                                 {
                                     text: [
-                                        `FIRST \n`,
-                                        `SECOND`
+                                        `${this.CONF.vars.contractCMR}\n`,
+                                        `${this.CONF.contractNumber}\n`
                                     ],
-                                    colSpan: 6,
+                                    colSpan: COLS,
                                     style: 'firstHeader',
-                                    fontSize: 14,
-                                    fillColor: '#e6e6e6',
+                                    fontSize: 16,
                                 },...putEmptyCells(COLS-1)
                             ],
                             [
                                 {
+                                    text: `\n${this.CONF.vars.insuranceOfTransport}`,
+                                    colSpan: COLS,
+                                    fontSize: 12,
+                                    alignment: 'center',
+                                },...putEmptyCells(COLS-1)
+                            ],
+                            
+                            [
+                                {
                                     text: `ПРЕДМЕТ ДОГОВОРА/ ОБЪЕКТ СТРАХОВАНИЯ`,
-                                    fontSize: 10,
-                                    alignment: 'center'
                                 },
                                 {
                                     text: `10.6`,
-                                    fontSize: 10,
-                                    alignment: 'center'
                                 },
                                 {
                                     text: `9.1.2`,
-                                    fontSize: 10,
-                                    alignment: 'center'
                                 },
                                 {
                                     text: `8.1.2.3`,
-                                    fontSize: 10,
-                                    alignment: 'center'
                                 },
                                 {
-                                    text: `текст текст текст текст текст`,
-                                    fontSize: 10,
-                                    alignment: 'center'
+                                    text: `Гибель или повреждение всего или части груза вследствие дорожно-транспортного происшествия, наступившего в результате действий третьих лиц, - согласно п. 4.5.1. Правил.`,
                                 },
                                 {
-                                    text: `ИСКЛЮЧЕНО`,
-                                    fontSize: 10,
-                                    alignment: 'center'
+                                    text: `Не застраховано`,
                                 },
                             ],
                             
                         ],
                         style: 'table',
                     },
-                    layout: {// цвет границы 
-                        hLineColor: '#000000',
-                        vLineColor: '#000000',
-                    }
+                    // layout: 'noBorders',
                 }
             ],
             footer: (page, pages, smth, pagesArr) => {
