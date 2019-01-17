@@ -97,8 +97,28 @@ const DeleteInsurant = (insurant, factory) => {
   }
   factory.polisObj.insurants = factory.polisObj.insurants.filter(el=>el!==insurant);
 }
-
+const GetLocaleMonth = (m,isUpper) => {
+  debugger;
+  const monthes = {
+    0: 'Января',
+    1: 'Февраля',
+    2: 'Марта',
+    3: 'Апреля',
+    4: 'Мая',
+    5: 'Июня',
+    6: 'Июля',
+    7: 'Августа',
+    8: 'Сентября',
+    9: 'Октября',
+    10: 'Ноября',
+    11: 'Декабря',
+  }
+  let month = monthes[m];
+  if (isUpper) month = month[0].toUpperCase() + month.slice(1);
+  return month;
+}
 export {
   GenerateClientCard,
   DeleteInsurant,
+  GetLocaleMonth,
 }

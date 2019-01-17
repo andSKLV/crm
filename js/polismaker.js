@@ -1,6 +1,4 @@
-/**
- * Класс для работы с PDF
- */
+import {GetLocaleMonth} from './ServiceFunctions.js';
 
 const NOBORDER = [false, false, false, false];
 const emptyCell = {
@@ -1543,7 +1541,7 @@ class ContractMaker {
         conf.vars = {
             contractCMR: 'ДОГОВОР CMR/ТТН - СТРАХОВАНИЯ ПЕРЕВОЗЧИКА',
             insuranceOfTransport: 'СТРАХОВАНИЕ ГРУЗОВ ДЛЯ ТРАНСПОРТНЫХ ОПЕРАТОРОВ',
-            SPB: 'г. Санкт-Петербург',
+            city: 'г. Санкт-Петербург',
             firstCell1: 'В соответствии с настоящим Договором CMR/ТТН-страхования (далее - Договор)',
             firstCellKP: 'Общество с ограниченной ответственностью «Страховая компания «Капитал-полис страхование»',
             firstCellKPsmall: '(ООО «СК «Капитал-полис С»)',
@@ -1557,6 +1555,12 @@ class ContractMaker {
         conf.directorName = company.card["Генеральный директор"]["ФИО директора"];
         conf.roditelniyFIO = this.getShortFIO(conf.direcorName);
         conf.contractNumber = HIP_NAME;
+        let day = mf.polisObj.dates.startDate.getDate();
+        if (day<10) day = '0'+day;
+        let month = GetLocaleMonth(mf.polisObj.dates.startDate.getMonth(),true);
+        const year = mf.polisObj.dates.startDate.getFullYear();
+        debugger;
+        conf.date = `«${day}» ${month} ${year} года`;
     }
     getShortFIO (FIO) {
         if (FIO==='') return 'Иванова И.И.'
@@ -1600,7 +1604,16 @@ class ContractMaker {
                                     alignment: 'center',
                                 },...putEmptyCells(COLS-1)
                             ],
-                            
+                            [
+                                {
+                                    text: [
+                                        `\n${this.CONF.date}\n`,
+                                        `${this.CONF.vars.city}\n\n`
+                                    ],
+                                    colSpan: COLS,
+                                    alignment: 'center',
+                                },...putEmptyCells(COLS-1)
+                            ],
                             [
                                 {
                                     text: `ПРЕДМЕТ ДОГОВОРА/ ОБЪЕКТ СТРАХОВАНИЯ`,
@@ -1678,4 +1691,4 @@ class ContractMaker {
 }
 const contractMaker = new ContractMaker ();
 
-
+export {polisMaker,contractMaker}

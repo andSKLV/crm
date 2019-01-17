@@ -2,6 +2,7 @@ import Polis from '../protos/polis.js';
 import {Car, CarGroup} from "../protos/car.js";
 import Company from '../protos/company.js';
 import { DeleteInsurant } from '../ServiceFunctions.js';
+import {polisMaker,contractMaker} from '../polismaker.js';
 
 app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $rootScope, $timeout) {
 
