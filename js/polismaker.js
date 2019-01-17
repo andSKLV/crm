@@ -1,4 +1,4 @@
-import {GetLocaleMonth} from './ServiceFunctions.js';
+import {GetLocaleMonth, GetFullForm} from './ServiceFunctions.js';
 
 const NOBORDER = [false, false, false, false];
 const emptyCell = {
@@ -1096,7 +1096,7 @@ const currencySign = {
             // заполняем нужные поля заглушками, если компания не выбрана
             myFactory.companyObj.card = {
                 "Данные компании" : {
-                    "Форма организации": '',
+                    "Форма организации": 'ООО',
                     "Наименование организации": 'ОБРАЗЕЦ',
                 },
                 "Доп. информация": {
@@ -1551,6 +1551,7 @@ class ContractMaker {
         }
         const company = mf.polisObj.insurants[0];
         conf.companyForm = company.card["Данные компании"]["Форма организации"];
+        conf.companyFullForm = GetFullForm (conf.companyForm, 'род');
         conf.companyName = company.card["Данные компании"]["Наименование организации"];
         conf.directorName = company.card["Генеральный директор"]["ФИО директора"];
         conf.roditelniyFIO = this.getShortFIO(conf.direcorName);
@@ -1559,8 +1560,8 @@ class ContractMaker {
         if (day<10) day = '0'+day;
         let month = GetLocaleMonth(mf.polisObj.dates.startDate.getMonth(),true);
         const year = mf.polisObj.dates.startDate.getFullYear();
-        debugger;
         conf.date = `«${day}» ${month} ${year} года`;
+        console.log(conf.companyFullForm);
     }
     getShortFIO (FIO) {
         if (FIO==='') return 'Иванова И.И.'
@@ -1613,6 +1614,20 @@ class ContractMaker {
                                     colSpan: COLS,
                                     alignment: 'center',
                                 },...putEmptyCells(COLS-1)
+                            ],
+                            [
+                                {
+                                    text: [
+                                        {text: `${this.CONF.vars.firstCell1} `},
+                                        {text: `${this.CONF.vars.firstCellKP} `, bold:true},
+                                        {text: `${this.CONF.vars.firstCellKPsmall} `},
+                                        {text: `${this.CONF.vars.firstCell2} `},
+                                        {text: `${this.CONF.companyFullForm}`, bold:true}
+                                    ],
+                                    colSpan: COLS,
+                                    alignment: 'center',
+                                },...putEmptyCells(COLS-1)
+                                
                             ],
                             [
                                 {

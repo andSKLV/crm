@@ -98,7 +98,6 @@ const DeleteInsurant = (insurant, factory) => {
   factory.polisObj.insurants = factory.polisObj.insurants.filter(el=>el!==insurant);
 }
 const GetLocaleMonth = (m,isUpper) => {
-  debugger;
   const monthes = {
     0: 'Января',
     1: 'Февраля',
@@ -117,8 +116,24 @@ const GetLocaleMonth = (m,isUpper) => {
   if (isUpper) month = month[0].toUpperCase() + month.slice(1);
   return month;
 }
+const GetFullForm = (short,form = 'им') => {
+  const forms = {
+    'ООО': ['Общество с ограниченной ответственностью','Общества с ограниченной ответственностью'],
+    'ЗАО': ['Закрытое акционерное общество','Закрытого акционерного общества'],
+    'ПАО': ['Публичное акционерное общество','Публичного акционерного общества'],
+    'ОАО': ['Открытое акционерное общество','Открытого акционерного общества'],
+  }
+  const selectors = {
+    'им': '0',
+    'род': '1'
+  }
+  if (!forms[short]) return '';
+  const selector = selectors[form] ? selectors[form] : selectors['им'];
+  return forms[short][selector];
+}
 export {
   GenerateClientCard,
   DeleteInsurant,
   GetLocaleMonth,
+  GetFullForm
 }
