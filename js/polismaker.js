@@ -1574,6 +1574,24 @@ class ContractMaker {
             p1_2: 'Страхователь передает, а Страховщик принимает на страхование в соответствии с процедурой, предусмотренной  Договором, груз – новые товарные автомобили, перевозимый Страхователем автомобильным транспортом по территории Российской федерации с учетом изъятий, предусмотренных настоящим Договором.',
             p1_3: 'Страхование не распространяется на перевозку грузов из/в/через «горячие точки»: ',
             p1_4: 'Если Стороны не договорятся об ином, страхование не распространяется на перевозки следующих грузов:',
+            p2: 'Застрахованные риски',
+            p3: 'ОБЩИЕ ПОЛОЖЕНИЯ',
+            p3_1: 'Страхователь не застрахован от страховых рисков, не обозначенных в Договоре в качестве застрахованных, даже в тех случаях, когда они могли бы подпадать под общее определение застрахованных рисков.',
+            p3_2: 'Страхование по Договору действует при условии соблюдения Страхователем инструкций для водителей, являющихся неотъемлемой частью Договора.',
+            p3_3: 'Если иное не согласовано сторонами в письменной форме, страхование не распространяется на перевозки грузов, выполняемые с привлечением в качестве перевозчика физических лиц, не зарегистрированных в установленном законом порядке в качестве индивидуальных предпринимателей.',
+            p3_4: 'Страхование распространяется на весь период перевозки груза, с момента принятия груза Страхователем, включая перегрузки (перевалки), временное хранение и кратковременные (до 12 часов) остановки на охраняемых стоянках, до момента передачи его Страхователем конечному грузополучателю, либо иному лицу, указанному грузовладельцем.',
+            p3_5: 'Страхование, предусмотренное настоящим Договором, распространяется исключительно на перевозки, осуществляемые транспортными средствами, принадлежащими или арендованными Страхователем, если Стороны не договорятся об ином. При этом транспортная накладная должна быть подписана грузоотправителем и перевозчиком или их уполномоченными лицами.',
+            p4: 'СРОК ДЕЙСТВИЯ ДОГОВОРА',
+            p5: 'СТРАХОВАЯ СУММА. ЛИМИТЫ ОТВЕТСТВЕННОСТИ СТРАХОВЩИКА',
+            p5_1: `Страховая стоимость груза – его действительная стоимость, которая определяется исходя из затрат на приобретение или изготовление груза, иных расходов, необходимость оплаты которых была вызвана процессом транспортировки (таможенные платежи, провозная плата). 
+            Таможенные платежи и провозная плата включены в страховую сумму по настоящему Договору, если на основании акцептованного Страховщиком Заявления Страхователя по ним установлены лимиты ответственности Страховщика (п.п. 5.6.1. и 5.6.2. Договора соответственно).
+            Страховая стоимость контейнера - его действительная (рыночная) стоимость на дату начала перевозки. `,
+            p5_2: 'Действительная стоимость груза может быть подтверждена инвойсом (счетом) грузоотправителя. При международной перевозке дополнительно может быть запрошена грузовая таможенная декларация. Страхователь имеет право подтвердить страховую стоимость груза, представив соответствующее заключение Торгово-Промышленной палаты.',
+            p5_3: 'Таможенные платежи и провозная плата возмещаются в размере, определенном в соответствии с действующим законодательством, пропорционально количеству утраченного или поврежденного груза, но не более установленных Договором лимитов ответственности Страховщика. ',
+            p5_4: 'Страховая сумма по каждой перевозке соответствует страховой стоимости перевозимого груза и, в случае страхования риска, предусмотренного п.2.2.9. настоящего Договора, страховой стоимости контейнера, но не превышает лимита ответственности Страховщика, установленного Договором. ',
+            p5_5: 'Лимит ответственности Страховщика - денежная сумма, в пределах которой Страховщик обязуется выплачивать страховое возмещение.',
+            p5_6_first: 'Лимит ответственности Страховщика по страховому случаю устанавливается в размере ',
+            p5_6_second: ', включая: ',
         }
         const company = mf.polisObj.insurants[0];
         conf.companyForm = company.card["Данные компании"]["Форма организации"];
@@ -1584,11 +1602,20 @@ class ContractMaker {
         conf.contractNumber = HIP_NAME;
         conf.territory = this.makeTerritory(mf);
         conf.shipments = this.makeShipments(mf);
-        let day = mf.polisObj.dates.startDate.getDate();
+        const startDate = this.getStrDate(mf.polisObj.dates.startDate);
+        conf.date = `«${startDate.day}» ${startDate.month} ${startDate.year} года`;
+        conf.cleanDate = `C ${startDate.day} ${startDate.month} ${startDate.year} года `
+        const endDate = this.getStrDate (mf.polisObj.dates.endDate);
+        conf.endDate = `по ${endDate.day} ${endDate.month} ${endDate.year} года`;
+        conf.limit = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`
+    }
+    getStrDate (date) {
+        debugger;
+        let day = date.getDate();
         if (day<10) day = '0'+day;
-        let month = GetLocaleMonth(mf.polisObj.dates.startDate.getMonth(),true);
-        const year = mf.polisObj.dates.startDate.getFullYear();
-        conf.date = `«${day}» ${month} ${year} года`;
+        let month = GetLocaleMonth(date.getMonth(),false);
+        const year = date.getFullYear();
+        return {day,month,year};
     }
     getShortFIO (FIO) {
         if (FIO==='') return 'Иванова И.И.'
@@ -1610,7 +1637,7 @@ class ContractMaker {
             content: [
                 {
                     table: {
-                        headerRows: 1,
+                        headerRows: 0,
                         widths: [80, 25, 25, 25, 215, 70],
                         body: [
                             [
@@ -1660,6 +1687,7 @@ class ContractMaker {
                                 },...putEmptyCells(COLS-1)
                                 
                             ],
+                            //РАЗРЫВ
                             [
                                 {
                                     text: ['\n'],
@@ -1720,8 +1748,236 @@ class ContractMaker {
                                     colSpan: COLS-2
                                 },...putEmptyCells(COLS-3)
                             ],
-
-
+                            [
+                                {
+                                    text: [
+                                        this.CONF.vars.p2.toUpperCase()
+                                    ],
+                                },
+                                {
+                                    text: ['2.1'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [''],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [
+                                        this.CONF.vars.p2.toUpperCase()
+                                    ],
+                                },
+                                {
+                                    text: ['2.1'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [''],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            //РАЗРЫВ
+                            [
+                                {
+                                    text: ['\n'],
+                                    colSpan: COLS,
+                                },...putEmptyCells(COLS-1)
+                            ],
+                            [
+                                {
+                                    text: [
+                                        this.CONF.vars.p3.toUpperCase()
+                                    ],
+                                },
+                                {
+                                    text: ['3.1'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p3_1],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['3.2'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p3_2],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['3.3'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p3_3],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['3.3'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p3_3],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['3.4'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p3_4],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['3.5'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p3_5],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            //РАЗРЫВ
+                            [
+                                {
+                                    text: ['\n'],
+                                    colSpan: COLS,
+                                },...putEmptyCells(COLS-1)
+                            ],
+                            [
+                                {
+                                    text: [
+                                        this.CONF.vars.p4.toUpperCase()
+                                    ],
+                                },
+                                {
+                                    text: ['4.1'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.cleanDate,this.CONF.endDate],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            //РАЗРЫВ
+                            [
+                                {
+                                    text: ['\n'],
+                                    colSpan: COLS,
+                                },...putEmptyCells(COLS-1)
+                            ],
+                            [
+                                {
+                                    text: [
+                                        this.CONF.vars.p5.toUpperCase()
+                                    ],
+                                },
+                                {
+                                    text: ['5.1'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p5_1],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['5.2'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p5_2],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['5.3'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p5_3],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['5.4'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p5_4],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['5.5'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p5_5],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['5.6'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [
+                                        {text: `${this.CONF.vars.p5_6_first} `},
+                                        {text: `${this.CONF.limit} `, bold:true},
+                                        {text: `${this.CONF.vars.p5_6_second} `},
+                                    ],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
                             [
                                 {
                                     text: `ПРЕДМЕТ ДОГОВОРА/ ОБЪЕКТ СТРАХОВАНИЯ`,
