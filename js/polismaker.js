@@ -1536,32 +1536,59 @@ class ContractMaker {
         this.CONF = {}
         
     }
+    makeTerritory(mf){
+        const condition = mf.polisObj.conditions.filter(x=>x.name==='Страхование по полису не распространяется на перевозки из/в/через')
+        if (!condition) return '';
+        let territory = condition[0].values.reduce((acc,x)=>{
+            return (x.checked) ? [...acc,x.text] : acc 
+        },[])
+        if (territory.length===0) return '';
+        territory = territory.join(', ');
+        return territory;
+    }
+    makeShipments (mf) {
+        const condition = mf.polisObj.conditions.filter(x=>x.name==='Страхование по полису не распространяется на следующие типы грузов');
+        if (!condition) return '';
+        let shipments = condition[0].values.reduce((acc,x)=>{
+            return (x.checked) ? [...acc,x.text] : acc 
+        },[])
+        if (shipments.length===0) return '';
+        shipments.unshift('');
+        shipments = shipments.join('\n  -   ');
+        return shipments;
+    }
     confConstructor (mf) {
         const conf = this.CONF;
         conf.vars = {
             contractCMR: 'ДОГОВОР CMR/ТТН - СТРАХОВАНИЯ ПЕРЕВОЗЧИКА',
             insuranceOfTransport: 'СТРАХОВАНИЕ ГРУЗОВ ДЛЯ ТРАНСПОРТНЫХ ОПЕРАТОРОВ',
             city: 'г. Санкт-Петербург',
-            firstCell1: 'В соответствии с настоящим Договором CMR/ТТН-страхования (далее - Договор)',
+            firstCell1: '  В соответствии с настоящим Договором CMR/ТТН-страхования (далее - Договор)',
             firstCellKP: 'Общество с ограниченной ответственностью «Страховая компания «Капитал-полис страхование»',
             firstCellKPsmall: '(ООО «СК «Капитал-полис С»)',
             firstCell2: 'в лице Заместителя генерального директора Корпусова Д.В, действующего на основании Доверенности № 2-1602/2012 от 20.02.2012, в дальнейшем именуемое «Страховщик», и ',
             firstCell3: 'в лице',
             firstCell4: ', действующего на основании Устава, именуемое в дальнейшем «Страхователь», договорились о следующем:',
+            p1: 'ПРЕДМЕТ ДОГОВОРА/ ОБЪЕКТ СТРАХОВАНИЯ',
+            p1_1: 'Настоящим удостоверяется факт заключения Договора страхования грузов на основании Заявления страхователя и на условиях, содержащихся в настоящем Договоре и Правилах страхования грузов для транспортных операторов, утвержденных Приказом от 24.04.2012г. № 51-12 (далее – Правила), являющихся неотъемлемыми приложениями к настоящему Договору. В случае обнаружения расхождений между положениями настоящего Договора и положениями Правил приоритет имеют положения настоящего Договора.',
+            p1_2: 'Страхователь передает, а Страховщик принимает на страхование в соответствии с процедурой, предусмотренной  Договором, груз – новые товарные автомобили, перевозимый Страхователем автомобильным транспортом по территории Российской федерации с учетом изъятий, предусмотренных настоящим Договором.',
+            p1_3: 'Страхование не распространяется на перевозку грузов из/в/через «горячие точки»: ',
+            p1_4: 'Если Стороны не договорятся об ином, страхование не распространяется на перевозки следующих грузов:',
         }
         const company = mf.polisObj.insurants[0];
         conf.companyForm = company.card["Данные компании"]["Форма организации"];
-        conf.companyFullForm = GetFullForm (conf.companyForm, 'род');
+        conf.companyFullForm = GetFullForm (conf.companyForm);
         conf.companyName = company.card["Данные компании"]["Наименование организации"];
         conf.directorName = company.card["Генеральный директор"]["ФИО директора"];
         conf.roditelniyFIO = this.getShortFIO(conf.direcorName);
         conf.contractNumber = HIP_NAME;
+        conf.territory = this.makeTerritory(mf);
+        conf.shipments = this.makeShipments(mf);
         let day = mf.polisObj.dates.startDate.getDate();
         if (day<10) day = '0'+day;
         let month = GetLocaleMonth(mf.polisObj.dates.startDate.getMonth(),true);
         const year = mf.polisObj.dates.startDate.getFullYear();
         conf.date = `«${day}» ${month} ${year} года`;
-        console.log(conf.companyFullForm);
     }
     getShortFIO (FIO) {
         if (FIO==='') return 'Иванова И.И.'
@@ -1622,13 +1649,79 @@ class ContractMaker {
                                         {text: `${this.CONF.vars.firstCellKP} `, bold:true},
                                         {text: `${this.CONF.vars.firstCellKPsmall} `},
                                         {text: `${this.CONF.vars.firstCell2} `},
-                                        {text: `${this.CONF.companyFullForm}`, bold:true}
+                                        {text: `${this.CONF.companyFullForm} `, bold:true},
+                                        {text: `«${this.CONF.companyName}» `, bold:true},
+                                        {text: `(${this.CONF.companyForm} «${this.CONF.companyName}») `},
+                                        {text: `${this.CONF.vars.firstCell3} `},
+                                        {text: `${this.CONF.roditelniyFIO}`},
+                                        {text: `${this.CONF.vars.firstCell4}`}
                                     ],
                                     colSpan: COLS,
-                                    alignment: 'center',
                                 },...putEmptyCells(COLS-1)
                                 
                             ],
+                            [
+                                {
+                                    text: ['\n'],
+                                    colSpan: COLS,
+                                },...putEmptyCells(COLS-1)
+                            ],
+                            [
+                                {
+                                    text: [
+                                        this.CONF.vars.p1
+                                    ],
+                                },
+                                {
+                                    text: ['1.1'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p1_1],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['1.2'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p1_2],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['1.3'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p1_3,this.CONF.territory],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['1.4'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p1_4,this.CONF.shipments],
+                                    colSpan: COLS-2
+                                },...putEmptyCells(COLS-3)
+                            ],
+
+
                             [
                                 {
                                     text: `ПРЕДМЕТ ДОГОВОРА/ ОБЪЕКТ СТРАХОВАНИЯ`,
