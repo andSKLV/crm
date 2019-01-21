@@ -1,4 +1,4 @@
-import {GetLocaleMonth, GetFullForm} from './ServiceFunctions.js';
+import {GetLocaleMonth, GetFullForm, GetWordsFromNumber} from './ServiceFunctions.js';
 
 const NOBORDER = [false, false, false, false];
 const emptyCell = {
@@ -1092,7 +1092,7 @@ const currencySign = {
      * @param  {array} risks Список рисков с описанием
      */
     makePDF(myFactory, risks) {
-        if (!myFactory.companyObj.card) {
+        if (!myFactory.companyObj.card||myFactory.companyObj.card["Данные компании"]["Наименование организации"]==='') {
             // заполняем нужные поля заглушками, если компания не выбрана
             myFactory.companyObj.card = {
                 "Данные компании" : {
@@ -1563,6 +1563,7 @@ class ContractMaker {
             contractCMR: 'ДОГОВОР CMR/ТТН - СТРАХОВАНИЯ ПЕРЕВОЗЧИКА',
             insuranceOfTransport: 'СТРАХОВАНИЕ ГРУЗОВ ДЛЯ ТРАНСПОРТНЫХ ОПЕРАТОРОВ',
             city: 'г. Санкт-Петербург',
+            executed: 'Исключено',
             firstCell1: '  В соответствии с настоящим Договором CMR/ТТН-страхования (далее - Договор)',
             firstCellKP: 'Общество с ограниченной ответственностью «Страховая компания «Капитал-полис страхование»',
             firstCellKPsmall: '(ООО «СК «Капитал-полис С»)',
@@ -1592,6 +1593,9 @@ class ContractMaker {
             p5_5: 'Лимит ответственности Страховщика - денежная сумма, в пределах которой Страховщик обязуется выплачивать страховое возмещение.',
             p5_6_first: 'Лимит ответственности Страховщика по страховому случаю устанавливается в размере ',
             p5_6_second: ', включая: ',
+            p5_6_1: 'Лимит ответственности Страховщика по возмещению уплаченных таможенных платежей;',
+            p5_6_2: 'Лимит ответственности Страховщика по возмещению провозной платы;',
+            p5_6_3: 'Лимит ответственности Страховщика по возмещению расходов на восстановление  контейнера (п. 2.2.9. настоящего Договора).',
         }
         const company = mf.polisObj.insurants[0];
         conf.companyForm = company.card["Данные компании"]["Форма организации"];
@@ -1607,10 +1611,10 @@ class ContractMaker {
         conf.cleanDate = `C ${startDate.day} ${startDate.month} ${startDate.year} года `
         const endDate = this.getStrDate (mf.polisObj.dates.endDate);
         conf.endDate = `по ${endDate.day} ${endDate.month} ${endDate.year} года`;
-        conf.limit = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`
+        conf.limit = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`;
+        conf.limitStr = GetWordsFromNumber(Math.round(mf.a_limit.value)); 
     }
     getStrDate (date) {
-        debugger;
         let day = date.getDate();
         if (day<10) day = '0'+day;
         let month = GetLocaleMonth(date.getMonth(),false);
@@ -1972,11 +1976,74 @@ class ContractMaker {
                                 {
                                     text: [
                                         {text: `${this.CONF.vars.p5_6_first} `},
-                                        {text: `${this.CONF.limit} `, bold:true},
+                                        {text: `${this.CONF.limit} (${this.CONF.limitStr})`, bold:true},
                                         {text: `${this.CONF.vars.p5_6_second} `},
                                     ],
                                     colSpan: COLS-2
                                 },...putEmptyCells(COLS-3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: [''],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: ['5.6.1'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p5_6_1],
+                                    colSpan: 2,
+                                },{},
+                                {
+                                    text: [this.CONF.vars.executed], //ИСКЛЮЧЕНО
+                                    alignment: 'center', 
+                                }
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: [''],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: ['5.6.2'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p5_6_2],
+                                    colSpan: 2,
+                                },{},
+                                {
+                                    text: [this.CONF.vars.executed], //ИСКЛЮЧЕНО
+                                    alignment: 'center', 
+                                }
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: [''],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: ['5.6.3'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p5_6_3],
+                                    colSpan: 2,
+                                },{},
+                                {
+                                    text: [this.CONF.vars.executed], //ИСКЛЮЧЕНО
+                                    alignment: 'center', 
+                                }
                             ],
                             [
                                 {
