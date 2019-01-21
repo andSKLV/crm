@@ -123,7 +123,12 @@ const GetFullForm = (short,form = 'им') => {
   return forms[short][selector];
 }
 const GetWordsFromNumber = (num = 0) => {
-  return sum_letters(num) + ', 00/100';
+  return sum_letters(num) + `, ${getKop(num)}/100`;
+  function getKop(num) {
+    let kop = (Math.round((num-Math.floor(num))*100));
+    kop = kop<10 ? `0${kop}` : kop;
+    return kop;
+  }
   function num_letters(num, d) {  // целое число прописью, это основа
     let str = '', arr = [
       ['','тысяч','миллион','миллиард','триллион'],
