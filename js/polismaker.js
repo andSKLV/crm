@@ -1516,8 +1516,8 @@ class PolisMaker {
         }
         // pdfMake.createPdf(docDefinition).download('optionalName.pdf');
         // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
-        // const win = window.open('', '_blank');
-        // delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+        const win = window.open('', '_blank');
+        delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
     }
     deleteServiceData(mf) {
         if (this.CONF.wasMocked) {
@@ -1596,6 +1596,11 @@ class ContractMaker {
             p5_6_1: 'Лимит ответственности Страховщика по возмещению уплаченных таможенных платежей;',
             p5_6_2: 'Лимит ответственности Страховщика по возмещению провозной платы;',
             p5_6_3: 'Лимит ответственности Страховщика по возмещению расходов на восстановление  контейнера (п. 2.2.9. настоящего Договора).',
+            p5_7: 'Общий (агрегатный) лимит  ответственности Страховщика по настоящему Договору устанавливается в размере',
+            p5_8: 'После каждой выплаты страхового возмещения размер общего (агрегатного) лимита ответственности Страховщика автоматически уменьшается на сумму выплаченного страхового возмещения. Договор страхования прекращает свое действие, если  агрегатный лимит исчерпан.',
+            p5_9: 'Общая сумма страховых выплат по одному и каждому страховому случаю не может превышать предельных сумм возмещения ущерба, установленных для перевозчиков и экспедиторов действующим законодательством и международными договорами Российской Федерации, а также сумм обоснованных расходов по спасанию груза и уменьшению убытков.',
+            p5_10: 'Безусловная франшиза по одному страховому случаю составляет ',
+
         }
         const company = mf.polisObj.insurants[0];
         conf.companyForm = company.card["Данные компании"]["Форма организации"];
@@ -1613,6 +1618,9 @@ class ContractMaker {
         conf.endDate = `по ${endDate.day} ${endDate.month} ${endDate.year} года`;
         conf.limit = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`;
         conf.limitStr = GetWordsFromNumber(Math.round(mf.a_limit.value));
+        const fr = 1000000; //FIXME:
+        conf.franchise = `${addSpaces(fr)} ${currencySign[mf.document.currency]}`
+        conf.franchiseStr = GetWordsFromNumber(fr);
     }
     getStrDate(date) {
         let day = date.getDate();
@@ -2044,6 +2052,64 @@ class ContractMaker {
                                     text: [this.CONF.vars.executed], //ИСКЛЮЧЕНО
                                     alignment: 'center',
                                 }
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['5.7'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [
+                                        { text: `${this.CONF.vars.p5_7} ` },
+                                        { text: `${this.CONF.limit} (${this.CONF.limitStr})`, bold: true },
+                                    ],
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['5.8'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p5_8],
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['5.9'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p5_9],
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['5.10'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [
+                                        { text: `${this.CONF.vars.p5_10} ` },
+                                        { text: `${this.CONF.franchise} (${this.CONF.franchiseStr})`, bold: true },
+                                    ],
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
