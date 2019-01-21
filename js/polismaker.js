@@ -1,4 +1,4 @@
-import {GetLocaleMonth, GetFullForm, GetWordsFromNumber} from './ServiceFunctions.js';
+import { GetLocaleMonth, GetFullForm, GetWordsFromNumber } from './ServiceFunctions.js';
 
 const NOBORDER = [false, false, false, false];
 const emptyCell = {
@@ -12,10 +12,10 @@ const BIGFONTSIZE = BASEFONTSIZE + 1.5;
 const currencySign = {
     'Р': '₽',
     'EUR': '€',
-    'USD': '$',   
+    'USD': '$',
 }
 
- class PolisMaker {
+class PolisMaker {
     constructor(myFactory) {
         this.carsTables = [];
         this.includedRisksOrder = new Set();
@@ -32,12 +32,12 @@ const currencySign = {
      * Создаем конфиг из которого забирается вся информация
      * @param {myFactory} mf 
      */
-    confConstructor (mf) {
+    confConstructor(mf) {
         const conf = this.CONF;
         conf.AGR_LIMIT = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`;
         conf.RISK_CHANGER = {
-            'Поломка реф. установки' : 'Поломка рефрижераторной установки',
-            'Неохраняемая стоянка' : 'Кража с неохраняемой стоянки',
+            'Поломка реф. установки': 'Поломка рефрижераторной установки',
+            'Неохраняемая стоянка': 'Кража с неохраняемой стоянки',
         }
         conf.vars = {
             insurer: 'СТРАХОВЩИК',
@@ -89,56 +89,56 @@ const currencySign = {
      * Генерация футера в зависимости от количества страхователей
      * @param {number} numOfIns - количество страхователей
      */
-    makeFooterObj (numOfIns) {
+    makeFooterObj(numOfIns) {
         //Добавляет нужное количество пустых ячеек
         const putEmptyCells = num => {
             const arr = [];
-            for (let i=0;i<num;i++) {
+            for (let i = 0; i < num; i++) {
                 arr.push(emptyCell)
             }
             return arr;
         }
         //Добавляет строку с необходимым количеством страхователей и страховщиком
-        const createRowWithText = (num,text) => {
+        const createRowWithText = (num, text) => {
             const arr = [emptyCell];
             let printText = text;
-            for (let i=0;i<num;i++) {
-                if (!text) printText = (i!==colNum-1) ? (colNum===2) ? `Страхователь: подпись и печать` : `Страхователь ${i+1}: подпись и печать` : 'Страховщик: подпись и печать';
+            for (let i = 0; i < num; i++) {
+                if (!text) printText = (i !== colNum - 1) ? (colNum === 2) ? `Страхователь: подпись и печать` : `Страхователь ${i + 1}: подпись и печать` : 'Страховщик: подпись и печать';
                 arr.push({
                     text: printText,
                     fontSize: 7,
                     alignment: 'center',
                     border: NOBORDER,
                 });
-                if (colNum===2) arr.push(emptyCell); //если страхователей 4, то отступы не нужны
+                if (colNum === 2) arr.push(emptyCell); //если страхователей 4, то отступы не нужны
             }
-            if (colNum!==2) arr.push(emptyCell); //если страхователей 4, то добавляем один отступ в конце
+            if (colNum !== 2) arr.push(emptyCell); //если страхователей 4, то добавляем один отступ в конце
             return arr;
         }
-        const colNum = numOfIns+1; // количество страхователей + страховщик
+        const colNum = numOfIns + 1; // количество страхователей + страховщик
         let marginWidth, dash;
         switch (colNum) {
             case 4:
             case 5:
-                dash='________________________________';
+                dash = '________________________________';
                 marginWidth = 0;
                 break;
             case 3:
-                dash='_________________________________________________';
+                dash = '_________________________________________________';
                 marginWidth = 0;
                 break;
             default:
-                dash='_________________________________________________';
+                dash = '_________________________________________________';
                 marginWidth = 50;
                 break;
         }
         const pageMargins = 25;
         const footerWidths = [];
         footerWidths.push(pageMargins) // отступ слева
-        const width = (540-(marginWidth*(colNum-1))-2*pageMargins)/(colNum); 
-        for (let i=0;i<colNum;i++) {
+        const width = (540 - (marginWidth * (colNum - 1)) - 2 * pageMargins) / (colNum);
+        for (let i = 0; i < colNum; i++) {
             footerWidths.push(width);
-            if ((colNum===2) && i!==colNum-1) footerWidths.push(marginWidth);
+            if ((colNum === 2) && i !== colNum - 1) footerWidths.push(marginWidth);
         }
         footerWidths.push(pageMargins) //отступ справа
         const realColNum = footerWidths.length;
@@ -154,9 +154,9 @@ const currencySign = {
                             fontSize: 1,
                             border: NOBORDER
                         },
-                        ...putEmptyCells(realColNum-1) //количество столбцов с подписями и марджинами
+                        ...putEmptyCells(realColNum - 1) //количество столбцов с подписями и марджинами
                     ],
-                    createRowWithText(colNum,dash)
+                    createRowWithText(colNum, dash)
                     ,
                     createRowWithText(colNum)
                 ],
@@ -168,7 +168,7 @@ const currencySign = {
      * Создание таблицы подписантов
      * @param {myFactory} myFactory 
      */
-    makeSignTable (myFactory) {
+    makeSignTable(myFactory) {
         const all = myFactory.polisObj.insurants;
         let headerFontSize, textFontSize, dash, pageWidth;
         //конфиг в зависимости от количества страхователей
@@ -198,14 +198,14 @@ const currencySign = {
                 dash = "____________________\n";
                 break;
         }
-        const width = Math.floor(pageWidth/(all.length+1));
-        const widths = new Array(all.length+1).fill(width);
+        const width = Math.floor(pageWidth / (all.length + 1));
+        const widths = new Array(all.length + 1).fill(width);
         //заголовок таблицы
         const headersMake = () => {
             const sigleInsurant = all.length === 1;
-            const arr = all.map((ins,i)=>{
-                return  {
-                    text: sigleInsurant ? `${this.CONF.vars.insurant}` : `${this.CONF.vars.insurant} ${i+1}:`,
+            const arr = all.map((ins, i) => {
+                return {
+                    text: sigleInsurant ? `${this.CONF.vars.insurant}` : `${this.CONF.vars.insurant} ${i + 1}:`,
                     style: "firstHeader",
                     fontSize: headerFontSize,
                     fillColor: '#e6e6e6',
@@ -221,7 +221,7 @@ const currencySign = {
         }
         // тело таблицы
         const bodyMake = () => {
-            const arr = all.map(ins=>{
+            const arr = all.map(ins => {
                 const form = ins.card["Данные компании"]["Форма организации"];
                 const compName = ins.card["Данные компании"]["Наименование организации"].toUpperCase();
                 const direcorName = ins.card["Генеральный директор"]["ФИО директора"];
@@ -297,14 +297,14 @@ const currencySign = {
      * Определение высоты разрыва между таблицами, чтобы на титул все поместилось
      * @param {number} numOfIns - количество страхователей, максимум 4 
      */
-    chooseBreakerSize (numOfIns) {
+    chooseBreakerSize(numOfIns) {
         switch (numOfIns) {
             case 1:
-                return BASEFONTSIZE+5;
+                return BASEFONTSIZE + 5;
             case 2:
-                return BASEFONTSIZE+3;
+                return BASEFONTSIZE + 3;
             case 3:
-                return BASEFONTSIZE-1;
+                return BASEFONTSIZE - 1;
             case 4:
                 return 4; // с таким значением помещается на одном листе
             default:
@@ -339,24 +339,24 @@ const currencySign = {
                             group: lists.length,
                         }
                     )
-                    currGroup = lists.length-1;
+                    currGroup = lists.length - 1;
                 }
                 else {
-                    if (!wasSameRisk (lists[wasIndex].processes, process)) {
+                    if (!wasSameRisk(lists[wasIndex].processes, process)) {
                         lists[wasIndex].processes.push(process);
                         lists[wasIndex].risks.push(process.risk);
-                    } 
+                    }
 
                     if (!lists[wasIndex].wrappings.includes(process.wrapping)) lists[wasIndex].wrappings.push(process.wrapping);
                     currGroup = wasIndex;
                 }
-                process.cars.forEach(car=>{
+                process.cars.forEach(car => {
                     if (!car.tableGroup) car.tableGroup = [currGroup];
                     if (!car.tableGroup.includes(currGroup)) car.tableGroup.push(currGroup);
                     if (!car.wrappings) car.wrappings = [process.wrapping];
                     if (!car.wrappings.includes(process.wrapping)) car.wrappings.push(process.wrapping);
                 })
-                if (process.isFull){ 
+                if (process.isFull) {
                     lists[currGroup].isFull = true;
                     lists[currGroup].groups = process.cars[0].tableGroup;
                 }
@@ -368,7 +368,7 @@ const currencySign = {
          * @param {array} listOfProcesses - список уже добавленных процев
          * @param {process} proc - проверяемый про
          */
-        function wasSameRisk (listOfProcesses, proc) {
+        function wasSameRisk(listOfProcesses, proc) {
             const checkingFields = ['cost', 'franchise', 'limit', 'risk', 'turnover'];
             // проходимся по списку всех процев в листе, если есть хоть один, у которого все проверяемые параметры совпадают с нашим то true
             return listOfProcesses.some(p => {
@@ -398,7 +398,7 @@ const currencySign = {
         this.carsTables = [];
         let body = [];
         const lists = this.makeCarLists(myFactory);
-        this.isOneCarGroup = (lists.length===1); // если одна группа машин, то слово Група не нужно
+        this.isOneCarGroup = (lists.length === 1); // если одна группа машин, то слово Група не нужно
         const listContent = [];
         let carTablesCount = 1;
         //порядок столбцов в таблице
@@ -406,7 +406,7 @@ const currencySign = {
         const colNumber = () => colOrder.length;
         const putEmptyCells = num => {
             const arr = [];
-            for (let i=0;i<num;i++) {
+            for (let i = 0; i < num; i++) {
                 arr.push(emptyCell)
             }
             return arr;
@@ -414,8 +414,8 @@ const currencySign = {
         // ширины столбца
         const colWidth = {
             'group': 0,
-            'risk': 97+25+35+100,
-            'cost': 61+20,
+            'risk': 97 + 25 + 35 + 100,
+            'cost': 61 + 20,
             "amount": 0,
             "wrapping": 0, //100 было
             "limit": 60,
@@ -441,7 +441,7 @@ const currencySign = {
                             alignment: 'left',
                             fontSize: BIGFONTSIZE,
                         },
-                        ...putEmptyCells(colNumber()-1)
+                        ...putEmptyCells(colNumber() - 1)
                     ],
                     [
                         {
@@ -456,7 +456,7 @@ const currencySign = {
                             border: NOBORDER,
                             fontSize: BIGFONTSIZE,
                         },
-                        
+
                         {
                             text: this.CONF.vars.insuredLimit,
                             style: "firstHeader",
@@ -475,7 +475,7 @@ const currencySign = {
         }
         if (this.isOneCarGroup) table.layout = {
             fillColor: function (i, node) {
-                return (i % 2 === 1 && i>2) ? '#e6e6e6' : null;
+                return (i % 2 === 1 && i > 2) ? '#e6e6e6' : null;
             }
         }
         else table.layout = {
@@ -486,7 +486,7 @@ const currencySign = {
                 return (isGroupRow) ? '#e6e6e6' : null;
             }
         }
-        lists.forEach((list,i) => {
+        lists.forEach((list, i) => {
             const group = i + 1;
             let tableContent = table.table.body;
             if (!this.isOneCarGroup) {
@@ -503,7 +503,7 @@ const currencySign = {
             //функция выдачи отступов для строки, что бы значения были отцентрованы
             const getMargin = (str) => {
                 const twoRows = ['Повреждение товарных автомобилей', 'Противоправные действия третьих лиц'];
-                const noMargin = [0,0,0,0];
+                const noMargin = [0, 0, 0, 0];
                 const oneMargin = noMargin; //[0,8,0,8] было для двустрочных
                 return twoRows.includes(str) ? noMargin : oneMargin;
             }
@@ -587,15 +587,15 @@ const currencySign = {
                 // генерируем таблицу в зависимости от количества групп ТС
                 // если групп ТС больше одной, то необходимо добавить дополнительный стоблец с обозначением Групп
                 const widthsFromCols = {
-                    5 : [44, 88, 121, 58, 149],
-                    6 : [34, 68, 121, 48, 129, 60],
-                    7 : [20, 48, 121, 33, 129, 60, 52],
+                    5: [44, 88, 121, 58, 149],
+                    6: [34, 68, 121, 48, 129, 60],
+                    7: [20, 48, 121, 33, 129, 60, 52],
                 }
                 let colNumber;
-                if (!this.isOneCarGroup && myFactory.polisObj.insurants.length>1) colNumber = 7
-                else if (!this.isOneCarGroup || myFactory.polisObj.insurants.length>1) colNumber = 6
+                if (!this.isOneCarGroup && myFactory.polisObj.insurants.length > 1) colNumber = 7
+                else if (!this.isOneCarGroup || myFactory.polisObj.insurants.length > 1) colNumber = 6
                 else colNumber = 5;
-                const tableHeader = (this.isOneCarGroup) ? this.CONF.vars.listOfAuto : `${this.CONF.vars.listOfAutoNum} ${carTablesCount} - ${this.CONF.vars.risksPack}: ${list.groups.map(x=>x+1).join(', ')}`;
+                const tableHeader = (this.isOneCarGroup) ? this.CONF.vars.listOfAuto : `${this.CONF.vars.listOfAutoNum} ${carTablesCount} - ${this.CONF.vars.risksPack}: ${list.groups.map(x => x + 1).join(', ')}`;
                 const colWidths = widthsFromCols[colNumber];
                 const contentHeader = [
                     {
@@ -631,7 +631,7 @@ const currencySign = {
                         fontSize: BASEFONTSIZE,
                     }
                 )
-                if (myFactory.polisObj.insurants.length>1) contentHeader.push(
+                if (myFactory.polisObj.insurants.length > 1) contentHeader.push(
                     {
                         text: `${this.CONF.vars.companyHeader}`,
                         style: "firstHeader",
@@ -669,11 +669,11 @@ const currencySign = {
                     ]
                     if (!this.isOneCarGroup) content.push(
                         {
-                            text: car.tableGroup.map(x=>x+1).join(', '),
+                            text: car.tableGroup.map(x => x + 1).join(', '),
                             style: 'carInfo',
                         }
                     )
-                    if (myFactory.polisObj.insurants.length>1) content.push(
+                    if (myFactory.polisObj.insurants.length > 1) content.push(
                         {
                             text: car.data.insurant,
                             style: 'carInfo',
@@ -695,7 +695,7 @@ const currencySign = {
                                     alignment: 'left',
                                     fontSize: BASEFONTSIZE,
                                 },
-                                ...putEmptyCells(colNumber-1),
+                                ...putEmptyCells(colNumber - 1),
                             ],
                             contentHeader,
                         ]
@@ -720,11 +720,11 @@ const currencySign = {
         })
         listContent.push(table);
         listContent.push({
-            text:`${this.CONF.vars.allPaymentNotBigger} - ${this.CONF.AGR_LIMIT}`,
+            text: `${this.CONF.vars.allPaymentNotBigger} - ${this.CONF.AGR_LIMIT}`,
             bold: true,
             alignment: 'justify',
             fontSize: BASEFONTSIZE,
-        },'\n')
+        }, '\n')
         return listContent;
     }
     /**
@@ -845,7 +845,7 @@ const currencySign = {
                         },
                         emptyCell
                     ]);
-                    baseRisk.ToPDFinclude[1].ul.forEach(ul=>{
+                    baseRisk.ToPDFinclude[1].ul.forEach(ul => {
                         table.body.push([
                             {
                                 text: ` `,
@@ -904,7 +904,7 @@ const currencySign = {
                         },
                         emptyCell
                     ]);
-                    baseRisk.ToPDFnotInclude[1].ul.forEach(ul=>{
+                    baseRisk.ToPDFnotInclude[1].ul.forEach(ul => {
                         table.body.push([
                             {
                                 text: ` `,
@@ -929,7 +929,7 @@ const currencySign = {
                                 { text: ` - ${risk.title}. ` }
                             ],
                             border: NOBORDER,
-                            colSpan:2,
+                            colSpan: 2,
                             alignment: 'justify',
                             fontSize: BASEFONTSIZE,
                         },
@@ -1010,9 +1010,9 @@ const currencySign = {
          * Остается лишь преобразовать профильтрованные данные в формат pdf
          */
         //сортируем массив включенных рисков по очереди упоминания в таблице условий
-        const includedRisks = [...this.includedRisksOrder].map(risk=>{
-            if (risk!==BASENAME) return risks.find(r=>r.name===risk);
-        }).filter(val=>val!==undefined);
+        const includedRisks = [...this.includedRisksOrder].map(risk => {
+            if (risk !== BASENAME) return risks.find(r => r.name === risk);
+        }).filter(val => val !== undefined);
         content.push(prepareListToPDF(
             {
                 list: includedRisks,
@@ -1048,7 +1048,7 @@ const currencySign = {
      * @param {myFactory} mf 
      * @param {object} param1 объект с параметрами марджинов строк
      */
-    prepareInsurantsBlock (mf,{oneRowMargin,twoRowMargin}) {
+    prepareInsurantsBlock(mf, { oneRowMargin, twoRowMargin }) {
         const all = mf.polisObj.insurants;
         const makeBlock = (ins, name) => {
             return [
@@ -1075,14 +1075,14 @@ const currencySign = {
                 }
             ]
         }
-        if (all.length===1) {
-            return [makeBlock(all[0],`${this.CONF.vars.insurant}`)];
+        if (all.length === 1) {
+            return [makeBlock(all[0], `${this.CONF.vars.insurant}`)];
         }
-        return all.map((ins,i)=>makeBlock(ins,`${this.CONF.vars.insurant} ${i+1}`))
+        return all.map((ins, i) => makeBlock(ins, `${this.CONF.vars.insurant} ${i + 1}`))
     }
-    start (mf,risks) {
-        return new Promise (resolve=>{
-            this.makePDF(mf,risks);
+    start(mf, risks) {
+        return new Promise(resolve => {
+            this.makePDF(mf, risks);
             resolve();
         })
     }
@@ -1092,10 +1092,10 @@ const currencySign = {
      * @param  {array} risks Список рисков с описанием
      */
     makePDF(myFactory, risks) {
-        if (!myFactory.companyObj.card||myFactory.companyObj.card["Данные компании"]["Наименование организации"]==='') {
+        if (!myFactory.companyObj.card || myFactory.companyObj.card["Данные компании"]["Наименование организации"] === '') {
             // заполняем нужные поля заглушками, если компания не выбрана
             myFactory.companyObj.card = {
-                "Данные компании" : {
+                "Данные компании": {
                     "Форма организации": 'ООО',
                     "Наименование организации": 'ОБРАЗЕЦ',
                 },
@@ -1109,7 +1109,7 @@ const currencySign = {
             myFactory.polisObj.insurants.push(myFactory.companyObj);
             this.CONF.wasMocked = true;
         }
-        this.confConstructor (myFactory);
+        this.confConstructor(myFactory);
         const emptyCell = {
             text: '',
             border: [false, false, false, false],
@@ -1119,7 +1119,7 @@ const currencySign = {
         // собираем стоку с данными о территории страхования
         const territory = this.makeTerritory(myFactory);
         let pageWithExtraFooter = null;
-        const insurantsBlock = this.prepareInsurantsBlock (myFactory, {oneRowMargin,twoRowMargin});
+        const insurantsBlock = this.prepareInsurantsBlock(myFactory, { oneRowMargin, twoRowMargin });
         const docDefinition = {
             pageSize: 'A4',
             pageMargins: [50, 115, 50, 65],
@@ -1361,7 +1361,7 @@ const currencySign = {
                 {
                     table: {
                         headerRows: 1,
-                        widths: [242,242],
+                        widths: [242, 242],
                         body: [
                             [
                                 {
@@ -1452,7 +1452,7 @@ const currencySign = {
                 }
                 if (page > 1) {
                     const footer = {};
-                    footer.table = Object.assign({},this.CONF.footerObj.table);
+                    footer.table = Object.assign({}, this.CONF.footerObj.table);
                     const len = footer.table.widths.length;
                     const listCounter = [
                         {
@@ -1463,7 +1463,7 @@ const currencySign = {
                             fontSize: 7,
                         }
                     ];
-                    footer.table.body = [...footer.table.body,listCounter];
+                    footer.table.body = [...footer.table.body, listCounter];
                     return footer;
                 }
             },
@@ -1519,7 +1519,7 @@ const currencySign = {
         // const win = window.open('', '_blank');
         // delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
     }
-    deleteServiceData (mf) {
+    deleteServiceData(mf) {
         if (this.CONF.wasMocked) {
             mf.companyObj = {};
             mf.polisObj.insurants = [];
@@ -1532,32 +1532,32 @@ const polisMaker = new PolisMaker();
 
 
 class ContractMaker {
-    constructor (myFactory) {
+    constructor(myFactory) {
         this.CONF = {}
-        
+
     }
-    makeTerritory(mf){
-        const condition = mf.polisObj.conditions.filter(x=>x.name==='Страхование по полису не распространяется на перевозки из/в/через')
+    makeTerritory(mf) {
+        const condition = mf.polisObj.conditions.filter(x => x.name === 'Страхование по полису не распространяется на перевозки из/в/через')
         if (!condition) return '';
-        let territory = condition[0].values.reduce((acc,x)=>{
-            return (x.checked) ? [...acc,x.text] : acc 
-        },[])
-        if (territory.length===0) return '';
+        let territory = condition[0].values.reduce((acc, x) => {
+            return (x.checked) ? [...acc, x.text] : acc
+        }, [])
+        if (territory.length === 0) return '';
         territory = territory.join(', ');
         return territory;
     }
-    makeShipments (mf) {
-        const condition = mf.polisObj.conditions.filter(x=>x.name==='Страхование по полису не распространяется на следующие типы грузов');
+    makeShipments(mf) {
+        const condition = mf.polisObj.conditions.filter(x => x.name === 'Страхование по полису не распространяется на следующие типы грузов');
         if (!condition) return '';
-        let shipments = condition[0].values.reduce((acc,x)=>{
-            return (x.checked) ? [...acc,x.text] : acc 
-        },[])
-        if (shipments.length===0) return '';
+        let shipments = condition[0].values.reduce((acc, x) => {
+            return (x.checked) ? [...acc, x.text] : acc
+        }, [])
+        if (shipments.length === 0) return '';
         shipments.unshift('');
         shipments = shipments.join('\n  -   ');
         return shipments;
     }
-    confConstructor (mf) {
+    confConstructor(mf) {
         const conf = this.CONF;
         conf.vars = {
             contractCMR: 'ДОГОВОР CMR/ТТН - СТРАХОВАНИЯ ПЕРЕВОЗЧИКА',
@@ -1599,7 +1599,7 @@ class ContractMaker {
         }
         const company = mf.polisObj.insurants[0];
         conf.companyForm = company.card["Данные компании"]["Форма организации"];
-        conf.companyFullForm = GetFullForm (conf.companyForm);
+        conf.companyFullForm = GetFullForm(conf.companyForm);
         conf.companyName = company.card["Данные компании"]["Наименование организации"];
         conf.directorName = company.card["Генеральный директор"]["ФИО директора"];
         conf.roditelniyFIO = this.getShortFIO(conf.direcorName);
@@ -1609,26 +1609,26 @@ class ContractMaker {
         const startDate = this.getStrDate(mf.polisObj.dates.startDate);
         conf.date = `«${startDate.day}» ${startDate.month} ${startDate.year} года`;
         conf.cleanDate = `C ${startDate.day} ${startDate.month} ${startDate.year} года `
-        const endDate = this.getStrDate (mf.polisObj.dates.endDate);
+        const endDate = this.getStrDate(mf.polisObj.dates.endDate);
         conf.endDate = `по ${endDate.day} ${endDate.month} ${endDate.year} года`;
         conf.limit = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`;
-        conf.limitStr = GetWordsFromNumber(Math.round(mf.a_limit.value)); 
+        conf.limitStr = GetWordsFromNumber(Math.round(mf.a_limit.value));
     }
-    getStrDate (date) {
+    getStrDate(date) {
         let day = date.getDate();
-        if (day<10) day = '0'+day;
-        let month = GetLocaleMonth(date.getMonth(),false);
+        if (day < 10) day = '0' + day;
+        let month = GetLocaleMonth(date.getMonth(), false);
         const year = date.getFullYear();
-        return {day,month,year};
+        return { day, month, year };
     }
-    getShortFIO (FIO) {
-        if (FIO==='') return 'Иванова И.И.'
+    getShortFIO(FIO) {
+        if (FIO === '') return 'Иванова И.И.'
         return 'Иванова И.И.'
     }
-    makePDF (myFactory) {
+    makePDF(myFactory) {
         debugger;
-        this.confConstructor (myFactory);
-        const putEmptyCells = (num) => new Array(num).map(x=>new Object());
+        this.confConstructor(myFactory);
+        const putEmptyCells = (num) => new Array(num).map(x => new Object());
         const COLS = 6;
         const docDefinition = {
             pageSize: 'A4',
@@ -1653,7 +1653,7 @@ class ContractMaker {
                                     colSpan: COLS,
                                     style: 'firstHeader',
                                     fontSize: 16,
-                                },...putEmptyCells(COLS-1)
+                                }, ...putEmptyCells(COLS - 1)
                             ],
                             [
                                 {
@@ -1661,7 +1661,7 @@ class ContractMaker {
                                     colSpan: COLS,
                                     fontSize: 12,
                                     alignment: 'center',
-                                },...putEmptyCells(COLS-1)
+                                }, ...putEmptyCells(COLS - 1)
                             ],
                             [
                                 {
@@ -1671,32 +1671,32 @@ class ContractMaker {
                                     ],
                                     colSpan: COLS,
                                     alignment: 'center',
-                                },...putEmptyCells(COLS-1)
+                                }, ...putEmptyCells(COLS - 1)
                             ],
                             [
                                 {
                                     text: [
-                                        {text: `${this.CONF.vars.firstCell1} `},
-                                        {text: `${this.CONF.vars.firstCellKP} `, bold:true},
-                                        {text: `${this.CONF.vars.firstCellKPsmall} `},
-                                        {text: `${this.CONF.vars.firstCell2} `},
-                                        {text: `${this.CONF.companyFullForm} `, bold:true},
-                                        {text: `«${this.CONF.companyName}» `, bold:true},
-                                        {text: `(${this.CONF.companyForm} «${this.CONF.companyName}») `},
-                                        {text: `${this.CONF.vars.firstCell3} `},
-                                        {text: `${this.CONF.roditelniyFIO}`},
-                                        {text: `${this.CONF.vars.firstCell4}`}
+                                        { text: `${this.CONF.vars.firstCell1} ` },
+                                        { text: `${this.CONF.vars.firstCellKP} `, bold: true },
+                                        { text: `${this.CONF.vars.firstCellKPsmall} ` },
+                                        { text: `${this.CONF.vars.firstCell2} ` },
+                                        { text: `${this.CONF.companyFullForm} `, bold: true },
+                                        { text: `«${this.CONF.companyName}» `, bold: true },
+                                        { text: `(${this.CONF.companyForm} «${this.CONF.companyName}») ` },
+                                        { text: `${this.CONF.vars.firstCell3} ` },
+                                        { text: `${this.CONF.roditelniyFIO}` },
+                                        { text: `${this.CONF.vars.firstCell4}` }
                                     ],
                                     colSpan: COLS,
-                                },...putEmptyCells(COLS-1)
-                                
+                                }, ...putEmptyCells(COLS - 1)
+
                             ],
                             //РАЗРЫВ
                             [
                                 {
                                     text: ['\n'],
                                     colSpan: COLS,
-                                },...putEmptyCells(COLS-1)
+                                }, ...putEmptyCells(COLS - 1)
                             ],
                             [
                                 {
@@ -1710,8 +1710,8 @@ class ContractMaker {
                                 },
                                 {
                                     text: [this.CONF.vars.p1_1],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1723,8 +1723,8 @@ class ContractMaker {
                                 },
                                 {
                                     text: [this.CONF.vars.p1_2],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1735,9 +1735,9 @@ class ContractMaker {
                                     alignment: 'center',
                                 },
                                 {
-                                    text: [this.CONF.vars.p1_3,this.CONF.territory],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    text: [this.CONF.vars.p1_3, this.CONF.territory],
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1748,9 +1748,9 @@ class ContractMaker {
                                     alignment: 'center',
                                 },
                                 {
-                                    text: [this.CONF.vars.p1_4,this.CONF.shipments],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    text: [this.CONF.vars.p1_4, this.CONF.shipments],
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1764,8 +1764,8 @@ class ContractMaker {
                                 },
                                 {
                                     text: [''],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1779,15 +1779,15 @@ class ContractMaker {
                                 },
                                 {
                                     text: [''],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             //РАЗРЫВ
                             [
                                 {
                                     text: ['\n'],
                                     colSpan: COLS,
-                                },...putEmptyCells(COLS-1)
+                                }, ...putEmptyCells(COLS - 1)
                             ],
                             [
                                 {
@@ -1801,8 +1801,8 @@ class ContractMaker {
                                 },
                                 {
                                     text: [this.CONF.vars.p3_1],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1814,8 +1814,8 @@ class ContractMaker {
                                 },
                                 {
                                     text: [this.CONF.vars.p3_2],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1827,8 +1827,8 @@ class ContractMaker {
                                 },
                                 {
                                     text: [this.CONF.vars.p3_3],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1840,8 +1840,8 @@ class ContractMaker {
                                 },
                                 {
                                     text: [this.CONF.vars.p3_3],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1853,8 +1853,8 @@ class ContractMaker {
                                 },
                                 {
                                     text: [this.CONF.vars.p3_4],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1866,15 +1866,15 @@ class ContractMaker {
                                 },
                                 {
                                     text: [this.CONF.vars.p3_5],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             //РАЗРЫВ
                             [
                                 {
                                     text: ['\n'],
                                     colSpan: COLS,
-                                },...putEmptyCells(COLS-1)
+                                }, ...putEmptyCells(COLS - 1)
                             ],
                             [
                                 {
@@ -1887,16 +1887,16 @@ class ContractMaker {
                                     alignment: 'center',
                                 },
                                 {
-                                    text: [this.CONF.cleanDate,this.CONF.endDate],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    text: [this.CONF.cleanDate, this.CONF.endDate],
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             //РАЗРЫВ
                             [
                                 {
                                     text: ['\n'],
                                     colSpan: COLS,
-                                },...putEmptyCells(COLS-1)
+                                }, ...putEmptyCells(COLS - 1)
                             ],
                             [
                                 {
@@ -1910,8 +1910,8 @@ class ContractMaker {
                                 },
                                 {
                                     text: [this.CONF.vars.p5_1],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1923,8 +1923,8 @@ class ContractMaker {
                                 },
                                 {
                                     text: [this.CONF.vars.p5_2],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1936,8 +1936,8 @@ class ContractMaker {
                                 },
                                 {
                                     text: [this.CONF.vars.p5_3],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1949,8 +1949,8 @@ class ContractMaker {
                                 },
                                 {
                                     text: [this.CONF.vars.p5_4],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1962,8 +1962,8 @@ class ContractMaker {
                                 },
                                 {
                                     text: [this.CONF.vars.p5_5],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1975,12 +1975,12 @@ class ContractMaker {
                                 },
                                 {
                                     text: [
-                                        {text: `${this.CONF.vars.p5_6_first} `},
-                                        {text: `${this.CONF.limit} (${this.CONF.limitStr})`, bold:true},
-                                        {text: `${this.CONF.vars.p5_6_second} `},
+                                        { text: `${this.CONF.vars.p5_6_first} ` },
+                                        { text: `${this.CONF.limit} (${this.CONF.limitStr})`, bold: true },
+                                        { text: `${this.CONF.vars.p5_6_second} ` },
                                     ],
-                                    colSpan: COLS-2
-                                },...putEmptyCells(COLS-3)
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
                             ],
                             [
                                 {
@@ -1997,10 +1997,10 @@ class ContractMaker {
                                 {
                                     text: [this.CONF.vars.p5_6_1],
                                     colSpan: 2,
-                                },{},
+                                }, {},
                                 {
                                     text: [this.CONF.vars.executed], //ИСКЛЮЧЕНО
-                                    alignment: 'center', 
+                                    alignment: 'center',
                                 }
                             ],
                             [
@@ -2018,10 +2018,10 @@ class ContractMaker {
                                 {
                                     text: [this.CONF.vars.p5_6_2],
                                     colSpan: 2,
-                                },{},
+                                }, {},
                                 {
                                     text: [this.CONF.vars.executed], //ИСКЛЮЧЕНО
-                                    alignment: 'center', 
+                                    alignment: 'center',
                                 }
                             ],
                             [
@@ -2039,10 +2039,10 @@ class ContractMaker {
                                 {
                                     text: [this.CONF.vars.p5_6_3],
                                     colSpan: 2,
-                                },{},
+                                }, {},
                                 {
                                     text: [this.CONF.vars.executed], //ИСКЛЮЧЕНО
-                                    alignment: 'center', 
+                                    alignment: 'center',
                                 }
                             ],
                             [
@@ -2065,7 +2065,7 @@ class ContractMaker {
                                     text: `Не застраховано`,
                                 },
                             ],
-                            
+
                         ],
                         style: 'table',
                     },
@@ -2117,9 +2117,9 @@ class ContractMaker {
         }
         const win = window.open('', '_blank');
         delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
-    }    
+    }
 
 }
-const contractMaker = new ContractMaker ();
+const contractMaker = new ContractMaker();
 
-export {polisMaker,contractMaker}
+export { polisMaker, contractMaker }
