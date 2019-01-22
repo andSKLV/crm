@@ -1602,7 +1602,9 @@ class ContractMaker {
             p5_10: 'Безусловная франшиза по одному страховому случаю составляет ',
             p6: 'СТРАХОВАЯ ПРЕМИЯ',
             p6_1_first: 'Страховая премия по Договору составляет ',
-            p6_1_second: 'и подлежит уплате в рассрочку ежеквартальными платежами.'
+            p6_1_second: ' и подлежит уплате в рассрочку ежеквартальными платежами.',
+            p6_2: 'Страхователь обязан уплатить первый ежеквартальный платеж страховой премии до начала действия Договора, каждый последующий ежеквартальный платеж не позднее 5 рабочих дней после даты начала квартала (отчетного периода) согласно  следующему графику:',
+
         }
         const company = mf.polisObj.insurants[0];
         conf.companyForm = company.card["Данные компании"]["Форма организации"];
@@ -1636,6 +1638,16 @@ class ContractMaker {
     getShortFIO(FIO) {
         if (FIO === '') return 'Иванова И.И.'
         return 'Иванова И.И.'
+    }
+    /**
+     * Создается массив со строками из данных по финансам
+     * @param {myFactory} param0 
+     */
+    makeFinanceTable ({payment}) {
+        const finances = payment.array;
+        return finances.map((fin,i)=>{
+            return [`${i+1}`,`${fin.debtDate}`,`${fin.debt}`]
+        })        
     }
     makePDF(myFactory) {
         debugger;
@@ -2140,6 +2152,39 @@ class ContractMaker {
                                     ],
                                     colSpan: COLS - 2
                                 }, ...putEmptyCells(COLS - 3)
+                            ],
+                            [
+                                {
+                                    text: [''],
+                                },
+                                {
+                                    text: ['6.2'],
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: [this.CONF.vars.p6_2],
+                                    colSpan: COLS - 2
+                                }, ...putEmptyCells(COLS - 3)
+                            ],
+                            [
+                                {
+                                    text: ['']
+                                },
+                                {
+                                    text: ['']
+                                },
+                                {
+                                    table: {
+                                        headerRows: 1,
+                                        widths: [91, 131, 111],
+                                        body: [
+                                            ['№ очетного периода', 'Дата начала отчетного периода', 'Сумма платежа'],
+                                            ...this.makeFinanceTable(myFactory),
+                                        ]
+                                    },
+                                    colSpan: COLS - 2,
+                                    alignment: 'center',
+                                },...putEmptyCells(COLS - 3)
                             ],
                         // FIXME:
                             [
