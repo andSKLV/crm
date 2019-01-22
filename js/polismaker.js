@@ -1650,10 +1650,52 @@ class ContractMaker {
         })        
     }
     makePDF(myFactory) {
-        debugger;
         this.confConstructor(myFactory);
         const putEmptyCells = (num) => new Array(num).map(x => new Object());
         const COLS = 6;
+        const breaker = () => {
+            return [
+                {
+                    text: ['\n'],
+                    colSpan: COLS,
+                }, ...putEmptyCells(COLS - 1)
+            ]
+        }
+        const firstLine = (num,arr) => {
+            const innerText = arr ? arr : [this.CONF.vars[`p${num}_1`]];
+            return [
+                {
+                    text: [
+                        this.CONF.vars[`p${num}`].toUpperCase()
+                    ],
+                },
+                {
+                    text: [`${num}.1`],
+                    alignment: 'center',
+                },
+                {
+                    text: innerText,
+                    colSpan: COLS - 2
+                }, ...putEmptyCells(COLS - 3)
+            ]
+        }
+        const oneDepthPoint = (num,arr) => {
+            const varName = `p${num.toString().replace('.','_')}`;
+            const innerText = arr ? arr : [this.CONF.vars[varName]];
+            return [
+                {
+                    text: [''],
+                },
+                {
+                    text: [`${num}`],
+                    alignment: 'center',
+                },
+                {
+                    text: innerText,
+                    colSpan: COLS - 2
+                }, ...putEmptyCells(COLS - 3)
+            ]
+        }
         const docDefinition = {
             pageSize: 'A4',
             pageMargins: [50, 65, 50, 65],
@@ -1715,297 +1757,37 @@ class ContractMaker {
                                 }, ...putEmptyCells(COLS - 1)
 
                             ],
+                            //РАЗРЫВ 1
+                            breaker(),
+                            firstLine(1),
+                            oneDepthPoint(1.2),
+                            oneDepthPoint(1.3,[this.CONF.vars['p1_3'],this.CONF.territory]),
+                            oneDepthPoint(1.4,[this.CONF.vars['p1_4'],this.CONF.shipments]),
+                            //РАЗРЫВ 2
+                            breaker(),
+                            firstLine(2,['']),
+                            //РАЗРЫВ 3
+                            breaker(),
+                            firstLine(3),
+                            oneDepthPoint(3.2),
+                            oneDepthPoint(3.3),
+                            oneDepthPoint(3.4),
+                            oneDepthPoint(3.5),
                             //РАЗРЫВ
-                            [
-                                {
-                                    text: ['\n'],
-                                    colSpan: COLS,
-                                }, ...putEmptyCells(COLS - 1)
-                            ],
-                            [
-                                {
-                                    text: [
-                                        this.CONF.vars.p1
-                                    ],
-                                },
-                                {
-                                    text: ['1.1'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p1_1],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['1.2'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p1_2],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['1.3'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p1_3, this.CONF.territory],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['1.4'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p1_4, this.CONF.shipments],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [
-                                        this.CONF.vars.p2.toUpperCase()
-                                    ],
-                                },
-                                {
-                                    text: ['2.1'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [''],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [
-                                        this.CONF.vars.p2.toUpperCase()
-                                    ],
-                                },
-                                {
-                                    text: ['2.1'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [''],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
+                            breaker(),
+                            firstLine(4,[this.CONF.cleanDate, this.CONF.endDate]),
                             //РАЗРЫВ
-                            [
-                                {
-                                    text: ['\n'],
-                                    colSpan: COLS,
-                                }, ...putEmptyCells(COLS - 1)
-                            ],
-                            [
-                                {
-                                    text: [
-                                        this.CONF.vars.p3.toUpperCase()
-                                    ],
-                                },
-                                {
-                                    text: ['3.1'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p3_1],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['3.2'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p3_2],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['3.3'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p3_3],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['3.3'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p3_3],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['3.4'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p3_4],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['3.5'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p3_5],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            //РАЗРЫВ
-                            [
-                                {
-                                    text: ['\n'],
-                                    colSpan: COLS,
-                                }, ...putEmptyCells(COLS - 1)
-                            ],
-                            [
-                                {
-                                    text: [
-                                        this.CONF.vars.p4.toUpperCase()
-                                    ],
-                                },
-                                {
-                                    text: ['4.1'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.cleanDate, this.CONF.endDate],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            //РАЗРЫВ
-                            [
-                                {
-                                    text: ['\n'],
-                                    colSpan: COLS,
-                                }, ...putEmptyCells(COLS - 1)
-                            ],
-                            [
-                                {
-                                    text: [
-                                        this.CONF.vars.p5.toUpperCase()
-                                    ],
-                                },
-                                {
-                                    text: ['5.1'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p5_1],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['5.2'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p5_2],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['5.3'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p5_3],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['5.4'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p5_4],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['5.5'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p5_5],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['5.6'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [
-                                        { text: `${this.CONF.vars.p5_6_first} ` },
-                                        { text: `${this.CONF.limit} (${this.CONF.limitStr})`, bold: true },
-                                        { text: `${this.CONF.vars.p5_6_second} ` },
-                                    ],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
+                            breaker(),
+                            firstLine(5),
+                            oneDepthPoint(5.2),
+                            oneDepthPoint(5.3),
+                            oneDepthPoint(5.4),
+                            oneDepthPoint(5.5),
+                            oneDepthPoint(5.6,[
+                                { text: `${this.CONF.vars.p5_6_first} ` },
+                                { text: `${this.CONF.limit} (${this.CONF.limitStr})`, bold: true },
+                                { text: `${this.CONF.vars.p5_6_second} ` },
+                            ]),
                             [
                                 {
                                     text: [''],
@@ -2069,103 +1851,24 @@ class ContractMaker {
                                     alignment: 'center',
                                 }
                             ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['5.7'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [
-                                        { text: `${this.CONF.vars.p5_7} ` },
-                                        { text: `${this.CONF.limit} (${this.CONF.limitStr})`, bold: true },
-                                    ],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['5.8'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p5_8],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['5.9'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p5_9],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['5.10'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [
-                                        { text: `${this.CONF.vars.p5_10} ` },
-                                        { text: `${this.CONF.franchise} (${this.CONF.franchiseStr})`, bold: true },
-                                    ],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
+                            oneDepthPoint(5.7,[
+                                { text: `${this.CONF.vars.p5_7} ` },
+                                { text: `${this.CONF.limit} (${this.CONF.limitStr})`, bold: true },
+                            ]),
+                            oneDepthPoint(5.8),
+                            oneDepthPoint(5.9),
+                            oneDepthPoint(5.10,[
+                                { text: `${this.CONF.vars.p5_10} ` },
+                                { text: `${this.CONF.franchise} (${this.CONF.franchiseStr})`, bold: true },
+                            ]),
                             //РАЗРЫВ
-                            [
-                                {
-                                    text: ['\n'],
-                                    colSpan: COLS,
-                                }, ...putEmptyCells(COLS - 1)
-                            ],
-                            [
-                                {
-                                    text: [
-                                        this.CONF.vars.p6.toUpperCase()
-                                    ],
-                                },
-                                {
-                                    text: ['6.1'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [
-                                        { text: `${this.CONF.vars.p6_1_first} ` },
-                                        { text: `${this.CONF.price} (${this.CONF.priceStr})`, bold: true },
-                                        { text: `${this.CONF.vars.p6_1_second} ` },
-                                    ],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: ['6.2'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p6_2],
-                                    colSpan: COLS - 2
-                                }, ...putEmptyCells(COLS - 3)
-                            ],
+                            breaker(),
+                            firstLine(6,[
+                                { text: `${this.CONF.vars.p6_1_first} ` },
+                                { text: `${this.CONF.price} (${this.CONF.priceStr})`, bold: true },
+                                { text: `${this.CONF.vars.p6_1_second} ` },
+                            ]),
+                            oneDepthPoint(6.2),
                             [
                                 {
                                     text: ['']
@@ -2186,6 +1889,7 @@ class ContractMaker {
                                     alignment: 'center',
                                 },...putEmptyCells(COLS - 3)
                             ],
+                            
                         // FIXME:
                             [
                                 {
