@@ -1612,8 +1612,7 @@ class ContractMaker {
             p6_4: 'При наступлении страхового случая для полного возмещения убытков Страхователь обязан по требованию Страховщика уплатить полную (годовую) страховую премию, исчисленную на момент наступления страхового случая. В случае отказа Страхователя компенсировать задолженность по оплате страховой премии, выплата страхового возмещения производится пропорционально отношению оплаченной части премии к полной (годовой) величине премии, исчисленной на момент наступления страхового случая.',
             p6_5: 'После выплаты страхового возмещения Страхователь утрачивает право на отказ компенсировать задолженность по оплате страховой премии, исчисленной на момент наступления страхового случая.',
             p7: 'ПОРЯДОК ПРИНЯТИЯ НА СТРАХОВАНИЕ',
-            p7_1_first: 'Страхователем установлено, что на момент заключения Договора страхования парк транспортных средств Страхователя включает ',
-            p7_1_second: ' единиц.',
+            p7_1: 'Страхователем установлено, что на момент заключения Договора страхования парк транспортных средств Страхователя включает ',
             p7_2: 'Перечень транспортных средств, на осуществление перевозок которыми распространяется страхование (далее – Перечень), прикладывается Страхователем к Заявлению на страхование. Перечень транспортных средств является неотъемлемой частью Договора.',
             p7_3: 'Страховщик акцептует Перечень путем проставления номера Договора, даты акцепта и подписи уполномоченного представителя Страховщика в двух экземплярах.  Один экземпляр возвращается Страхователю. С момента акцепта Страховщиком Перечня страхование, предусмотренное Договором, распространяется только на перевозки, осуществляемые указанными в нём транспортными средствами.',
             p7_4: 'В случае изменения списка транспортных средств Страхователь направляет Страховщику заявление о внесении изменений в Перечень, которое Страховщик обязан рассмотреть в пределах двух рабочих дней.',
@@ -1644,13 +1643,25 @@ class ContractMaker {
         conf.endDate = `по ${endDate.day} ${endDate.month} ${endDate.year} года`;
         conf.limit = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`;
         conf.limitStr = GetWordsFromPrice(Math.round(mf.a_limit.value));
-        debugger;
         const fr = 1000000; //FIXME:
         conf.franchise = `${addSpaces(fr)} ${currencySign[mf.document.currency]}`
         conf.franchiseStr = GetWordsFromPrice(fr);
         conf.price = `${addSpaces(mf.totalPrice.toFixed(2))} ${currencySign[mf.document.currency]}`;
         conf.priceStr = GetWordsFromPrice(Number(mf.totalPrice.toFixed(2)));
         conf.carsNumber = polisMaker.carsNumber;
+        conf.carsNumberWords = `(${GetWordsFromNumber(conf.carsNumber)})`;
+        conf.carsEndWithOne = this.getMultipleWord(conf.carsNumber);
+    }
+    getMultipleWord(num) {
+        const it = num%10;
+        switch (true) {
+            case (it===1):
+                return ' единицу.'
+            case (it>1 && it<5):
+                return ' единицы.'
+            default:
+                return ' единиц.'
+        }
     }
     getStrDate(date) {
         let day = date.getDate();
@@ -1918,9 +1929,10 @@ class ContractMaker {
                             oneDepthPoint(6.5),
                             breaker(),
                             firstLine(7,[
-                                { text: `${this.CONF.vars.p7_1_first} ` },
+                                { text: `${this.CONF.vars.p7_1} ` },
                                 { text: `${this.CONF.carsNumber}`, bold: true },
-                                { text: `${this.CONF.vars.p7_1_second} ` },
+                                { text: ` ${this.CONF.carsNumberWords}`, bold: true },
+                                { text: `${this.CONF.carsEndWithOne} ` },
                             ]),
                         // FIXME:
                             [
