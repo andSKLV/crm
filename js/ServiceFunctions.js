@@ -122,37 +122,62 @@ const GetFullForm = (short,form = 'им') => {
   const selector = selectors[form] ? selectors[form] : selectors['им'];
   return forms[short][selector];
 }
-const GetWordsFromNumber = (num = 0) => {
-  return sum_letters(num) + `, ${getKop(num)}/100`;
+
+function GetWordsFromPrice (num=0) {
+  const arr1 = [
+    ['','тысяч','миллион','миллиард','триллион'],
+    ['и','',''],
+    ['а','ов','ов']
+  ];
+  const arr2 = [
+    ['',' одного',' двух',' трех',' четырех',' пяти',' шести',' семи',' восьми',' девяти'],
+    [' десяти',' одиннадцати',' двенадцати',' тринадцати',' четырнадцати',' пятнадцати',' шестнадцати',' семнадцати',' восемнадцати',' девятнадцати'],
+    ['','',' двадцати',' тридцати',' сорока',' пятидесяти',' шестидесяти',' семидесяти',' восьмидесяти',' девяноста'],
+    ['',' ста',' двухсот',' трехсот',' четырехсот',' пятисот',' шестисот',' семисот',' восьмисот',' девятисот'],
+    ['',' одной',' двух']
+  ];
+  return getWords(num,'price',arr1,arr2);
+}
+function GetWordsFromNumber (num=0) {
+  const arr1 = [
+    ['','тысяч','миллион','миллиард','триллион','квадриллион','квинтиллион','секстиллион','септиллион','октиллион','нониллион','дециллион'],
+    ['а','и',''],
+    ['','а','ов']
+  ];
+  const arr2 = [
+    ['',' один',' два',' три',' четыре',' пять',' шесть',' семь',' восемь',' девять'],
+    [' десять',' одиннадцать',' двенадцать',' тринадцать',' четырнадцать',' пятнадцать',' шестнадцать',' семнадцать',' восемнадцать',' девятнадцать'],
+    ['','',' двадцать',' тридцать',' сорок',' пятьдесят',' шестьдесят',' семьдесят',' восемьдесят',' девяносто'],
+    ['',' сто',' двести',' триста',' четыреста',' пятьсот',' шестьсот',' семьсот',' восемьсот',' девятьсот'],
+    ['',' одна',' две']
+  ];
+  return getWords(num,'number',arr1,arr2);
+}
+function getWords (num=0,type='number',arr1,arr2) {
+  switch (type) {
+    case 'number': 
+      return sum_letters(num);
+    case 'price':
+      return sum_letters(num) + `, ${getKop(num)}/100`;
+  }
   function getKop(num) {
     let kop = (Math.round((num-Math.floor(num))*100));
     kop = kop<10 ? `0${kop}` : kop;
     return kop;
   }
   function num_letters(num, d) {  // целое число прописью, это основа
-    let str = '', arr = [
-      ['','тысяч','миллион','миллиард','триллион'],
-      ['и','',''],
-      ['а','ов','ов']
-    ];
+    let str = '';
     if (num == '' || num == '0') return ' ноль'; // 0
     num = num.split(/(?=(?:\d{3})+$)/);  // разбить число в массив с трёхзначными числами
     if (num[0].length == 1) num[0] = '00'+num[0];
     if (num[0].length == 2) num[0] = '0'+num[0];
     for (let i = (num.length - 1); i >= 0; i--) {  // соединить трёхзначные числа в одно число, добавив названия разрядов с окончаниями
       if (num[i] != '000') {
-        str = (((d && i == (num.length - 1)) || i == (num.length - 2)) && (num[i][2] == '1' || num[i][2] == '2') ? t(num[i],1) : t(num[i])) + declOfNum(num[i], arr[0][num.length - 1 - i], (i == (num.length - 2) ? arr[1] : arr[2])) + str;
+        str = (((d && i == (num.length - 1)) || i == (num.length - 2)) && (num[i][2] == '1' || num[i][2] == '2') ? t(num[i],1) : t(num[i])) + declOfNum(num[i], arr1[0][num.length - 1 - i], (i == (num.length - 2) ? arr1[1] : arr1[2])) + str;
       }
     }
     function t(num, d) {  // преобразовать трёхзначные числа
-      let arr = [
-        ['',' одного',' двух',' трех',' четырех',' пяти',' шести',' семи',' восьми',' девяти'],
-        [' десяти',' одиннадцати',' двенадцати',' тринадцати',' четырнадцати',' пятнадцати',' шестнадцати',' семнадцати',' восемнадцати',' девятнадцати'],
-        ['','',' двадцати',' тридцати',' сорока',' пятидесяти',' шестидесяти',' семидесяти',' восьмидесяти',' девяноста'],
-        ['',' ста',' двухсот',' трехсот',' четырехсот',' пятисот',' шестисот',' семисот',' восьмисот',' девятисот'],
-        ['',' одной',' двух']
-      ];
-      return arr[3][num[0]] + (num[1] == 1 ? arr[1][num[2]] : arr[2][num[1]] + (d ? arr[4][num[2]] : arr[0][num[2]]));
+      return arr2[3][num[0]] + (num[1] == 1 ? arr2[1][num[2]] : arr2[2][num[1]] + (d ? arr2[4][num[2]] : arr2[0][num[2]]));
     }
     return str;
   }
@@ -165,7 +190,12 @@ const GetWordsFromNumber = (num = 0) => {
   }
   function sum_letters(num) {
     num = Number(num).toFixed(2).split('.');  // округлить до сотых и сделать массив двух чисел: до точки и после неё
-    return razUp(num_letters(num[0]) + declOfNum(num[0], 'рубл', ['я','ей','ей']));
+    switch (type) {
+      case 'number':
+        return razUp(num_letters(num[0]));
+      case 'price':
+        return razUp(num_letters(num[0]) + declOfNum(num[0], 'рубл', ['я','ей','ей']));
+    }
   }
 }
 export {
@@ -173,5 +203,6 @@ export {
   DeleteInsurant,
   GetLocaleMonth,
   GetFullForm,
-  GetWordsFromNumber
+  GetWordsFromPrice,
+  GetWordsFromNumber,
 }
