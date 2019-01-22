@@ -1711,6 +1711,23 @@ class ContractMaker {
                 },...putEmptyCells(COLS-1)
             ]
         }
+        const autoRow = (str,args) => {
+            const l = str.match(/\./g);
+            const level = l ? l.length : 1;
+            const varName = `p${str.replace(/\./g,'_')}`;
+            const innerText = args ? args : [this.CONF.vars[varName]];
+            let arr = [];
+            for (let i=1;i<level;i++) {
+                arr.push({text: ['']});
+            }
+            arr.push({text: [`${str}.`]});
+            arr.push({
+                text: innerText,
+                colSpan: COLS - level
+            })
+            if (level<3) arr = [...arr,...putEmptyCells(COLS-(level+1))];
+            return arr;
+        }
         const docDefinition = {
             pageSize: 'A4',
             pageMargins: [50, 65, 50, 65],
@@ -1777,44 +1794,20 @@ class ContractMaker {
                             breaker(),
                             makeHeader('1'),
                             breaker(),
-                            [
+                            autoRow('1.1'),
+                            autoRow('1.2'),
+                            autoRow('1.3',[
+                                this.CONF.vars.p1_3_first,
                                 {
-                                    text: ['1.1']
+                                    text: this.CONF.cleanDate,
+                                    bold: true,
                                 },
                                 {
-                                    text: [this.CONF.vars.p1_1],
-                                    colSpan: COLS-1
-                                },...putEmptyCells(COLS-2)
-                            ],
-                            [
-                                {
-                                    text: ['1.2']
+                                    text: this.CONF.endDate,
+                                    bold: true,
                                 },
-                                {
-                                    text: [this.CONF.vars.p1_2],
-                                    colSpan: COLS-1
-                                },...putEmptyCells(COLS-2)
-                            ],
-                            [
-                                {
-                                    text: ['1.3']
-                                },
-                                {
-                                    text: [
-                                        this.CONF.vars.p1_3_first,
-                                        {
-                                            text: this.CONF.cleanDate,
-                                            bold: true,
-                                        },
-                                        {
-                                            text: this.CONF.endDate,
-                                            bold: true,
-                                        },
-                                        this.CONF.vars.p1_3_second
-                                    ],
-                                    colSpan: COLS-1
-                                },...putEmptyCells(COLS-2)
-                            ],
+                                this.CONF.vars.p1_3_second
+                            ]),
                             autoRowWithMargin('2'),
                             autoRowWithMargin('2.1'),
                             autoRowWithMargin('2.1.1'),
