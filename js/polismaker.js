@@ -1568,13 +1568,12 @@ class ContractMaker {
             insuranceOfTransport: 'СТРАХОВАНИЕ ГРУЗОВ ДЛЯ ТРАНСПОРТНЫХ ОПЕРАТОРОВ',
             city: 'г. Санкт-Петербург',
             executed: 'Исключено',
-            firstCell1: '  В соответствии с настоящим Договором CMR/ТТН-страхования (далее - Договор)',
-            firstCellKP: 'Общество с ограниченной ответственностью «Страховая компания «Капитал-полис страхование»',
-            firstCellKPsmall: '(ООО «СК «Капитал-полис С»)',
-            firstCell2: 'в лице Заместителя генерального директора Корпусова Д.В, действующего на основании Доверенности № 2-1602/2012 от 20.02.2012, в дальнейшем именуемое «Страховщик», и ',
+            firstCell1: '  В соответствии с настоящим Договором CMR/ТТН - страхования перевозчика (далее - Договор)',
+            firstCellKP: 'ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ  «СТРАХОВАЯ КОМПАНИЯ «КАПИТАЛ-ПОЛИС» (ООО «СК «КАПИТАЛ-ПОЛИС»)',
+            firstCell2: ' в лице заместителя генерального директора Корпусова Д.В, действующего на основании Доверенности №132/2018 от 13.12.2018, в дальнейшем именуемое «Страховщик», и',
             firstCell3: 'в лице',
             firstCell4: ', действующего на основании Устава, именуемое в дальнейшем «Страхователь», договорились о следующем:',
-            p1: 'ПРЕДМЕТ ДОГОВОРА/ ОБЪЕКТ СТРАХОВАНИЯ',
+            predmet: 'ПРЕДМЕТ ДОГОВОРА',
             p1_1: 'Настоящим удостоверяется факт заключения Договора страхования грузов на основании Заявления страхователя и на условиях, содержащихся в настоящем Договоре и Правилах страхования грузов для транспортных операторов, утвержденных Приказом от 24.04.2012г. № 51-12 (далее – Правила), являющихся неотъемлемыми приложениями к настоящему Договору. В случае обнаружения расхождений между положениями настоящего Договора и положениями Правил приоритет имеют положения настоящего Договора.',
             p1_2: 'Страхователь передает, а Страховщик принимает на страхование в соответствии с процедурой, предусмотренной  Договором, груз – новые товарные автомобили, перевозимый Страхователем автомобильным транспортом по территории Российской федерации с учетом изъятий, предусмотренных настоящим Договором.',
             p1_3: 'Страхование не распространяется на перевозку грузов из/в/через «горячие точки»: ',
@@ -1637,7 +1636,7 @@ class ContractMaker {
         conf.territory = this.makeTerritory(mf);
         conf.shipments = this.makeShipments(mf);
         const startDate = this.getStrDate(mf.polisObj.dates.startDate);
-        conf.date = `«${startDate.day}» ${startDate.month} ${startDate.year} года`;
+        conf.date = `${startDate.day} ${startDate.month} ${startDate.year} г.`;
         conf.cleanDate = `C ${startDate.day} ${startDate.month} ${startDate.year} года `
         const endDate = this.getStrDate(mf.polisObj.dates.endDate);
         conf.endDate = `по ${endDate.day} ${endDate.month} ${endDate.year} года`;
@@ -1687,7 +1686,7 @@ class ContractMaker {
     makePDF(myFactory) {
         this.confConstructor(myFactory);
         const putEmptyCells = (num) => new Array(num).map(x => new Object());
-        const COLS = 6;
+        const COLS = 4;
         const breaker = () => {
             return [
                 {
@@ -1743,7 +1742,7 @@ class ContractMaker {
                 {
                     table: {
                         headerRows: 0,
-                        widths: [80, 25, 25, 25, 215, 70],
+                        widths: [25, 25, 25,390],
                         body: [
                             [
                                 {
@@ -1760,16 +1759,19 @@ class ContractMaker {
                                 {
                                     text: `\n${this.CONF.vars.insuranceOfTransport}`,
                                     colSpan: COLS,
-                                    fontSize: 12,
+                                    fontSize: 10,
                                     alignment: 'center',
                                 }, ...putEmptyCells(COLS - 1)
                             ],
                             [
                                 {
-                                    text: [
-                                        `\n${this.CONF.date}\n`,
-                                        `${this.CONF.vars.city}\n\n`
-                                    ],
+                                    table: {
+                                        widths: [235,235],
+                                        body: [
+                                            [this.CONF.date,this.CONF.vars.city]
+                                        ],
+                                        alignment: 'center',
+                                    },
                                     colSpan: COLS,
                                     alignment: 'center',
                                 }, ...putEmptyCells(COLS - 1)
@@ -1779,7 +1781,6 @@ class ContractMaker {
                                     text: [
                                         { text: `${this.CONF.vars.firstCell1} ` },
                                         { text: `${this.CONF.vars.firstCellKP} `, bold: true },
-                                        { text: `${this.CONF.vars.firstCellKPsmall} ` },
                                         { text: `${this.CONF.vars.firstCell2} ` },
                                         { text: `${this.CONF.companyFullForm} `, bold: true },
                                         { text: `«${this.CONF.companyName}» `, bold: true },
@@ -1792,169 +1793,18 @@ class ContractMaker {
                                 }, ...putEmptyCells(COLS - 1)
 
                             ],
-                            //РАЗРЫВ 1
                             breaker(),
-                            firstLine(1),
-                            oneDepthPoint(1.2),
-                            oneDepthPoint(1.3,[this.CONF.vars['p1_3'],this.CONF.territory]),
-                            oneDepthPoint(1.4,[this.CONF.vars['p1_4'],this.CONF.shipments]),
-                            //РАЗРЫВ 2
-                            breaker(),
-                            firstLine(2,['']),
-                            //РАЗРЫВ 3
-                            breaker(),
-                            firstLine(3),
-                            oneDepthPoint(3.2),
-                            oneDepthPoint(3.3),
-                            oneDepthPoint(3.4),
-                            oneDepthPoint(3.5),
-                            //РАЗРЫВ
-                            breaker(),
-                            firstLine(4,[this.CONF.cleanDate, this.CONF.endDate]),
-                            //РАЗРЫВ
-                            breaker(),
-                            firstLine(5),
-                            oneDepthPoint(5.2),
-                            oneDepthPoint(5.3),
-                            oneDepthPoint(5.4),
-                            oneDepthPoint(5.5),
-                            oneDepthPoint(5.6,[
-                                { text: `${this.CONF.vars.p5_6_first} ` },
-                                { text: `${this.CONF.limit} (${this.CONF.limitStr})`, bold: true },
-                                { text: `${this.CONF.vars.p5_6_second} ` },
-                            ]),
                             [
                                 {
-                                    text: [''],
-                                },
-                                {
-                                    text: [''],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: ['5.6.1'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p5_6_1],
-                                    colSpan: 2,
-                                }, {},
-                                {
-                                    text: [this.CONF.vars.executed], //ИСКЛЮЧЕНО
-                                    alignment: 'center',
-                                }
+                                    text: [{ text: `${this.CONF.vars.predmet} `, 
+                                        bold: true,
+                                        alignment: 'center',
+                                     }],
+                                    colSpan: COLS
+                                },...putEmptyCells(COLS-1)
                             ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: [''],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: ['5.6.2'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p5_6_2],
-                                    colSpan: 2,
-                                }, {},
-                                {
-                                    text: [this.CONF.vars.executed], //ИСКЛЮЧЕНО
-                                    alignment: 'center',
-                                }
-                            ],
-                            [
-                                {
-                                    text: [''],
-                                },
-                                {
-                                    text: [''],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: ['5.6.3'],
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: [this.CONF.vars.p5_6_3],
-                                    colSpan: 2,
-                                }, {},
-                                {
-                                    text: [this.CONF.vars.executed], //ИСКЛЮЧЕНО
-                                    alignment: 'center',
-                                }
-                            ],
-                            oneDepthPoint(5.7,[
-                                { text: `${this.CONF.vars.p5_7} ` },
-                                { text: `${this.CONF.limit} (${this.CONF.limitStr})`, bold: true },
-                            ]),
-                            oneDepthPoint(5.8),
-                            oneDepthPoint(5.9),
-                            oneDepthPoint(5.10,[
-                                { text: `${this.CONF.vars.p5_10} ` },
-                                { text: `${this.CONF.franchise} (${this.CONF.franchiseStr})`, bold: true },
-                            ]),
-                            //РАЗРЫВ
                             breaker(),
-                            firstLine(6,[
-                                { text: `${this.CONF.vars.p6_1_first} ` },
-                                { text: `${this.CONF.price} (${this.CONF.priceStr})`, bold: true },
-                                { text: `${this.CONF.vars.p6_1_second} ` },
-                            ]),
-                            oneDepthPoint(6.2),
-                            [
-                                {
-                                    text: ['']
-                                },
-                                {
-                                    text: ['']
-                                },
-                                {
-                                    table: {
-                                        headerRows: 1,
-                                        widths: [91, 131, 111],
-                                        body: [
-                                            ['№ очетного периода', 'Дата начала отчетного периода', 'Сумма платежа'],
-                                            ...this.makeFinanceTable(myFactory),
-                                        ]
-                                    },
-                                    colSpan: COLS - 2,
-                                    alignment: 'center',
-                                },...putEmptyCells(COLS - 3)
-                            ],
-                            oneDepthPoint(6.3),
-                            oneDepthPoint(6.4),
-                            oneDepthPoint(6.5),
-                            breaker(),
-                            firstLine(7,[
-                                { text: `${this.CONF.vars.p7_1} ` },
-                                { text: `${this.CONF.carsNumber}`, bold: true },
-                                { text: ` ${this.CONF.carsNumberWords}`, bold: true },
-                                { text: `${this.CONF.carsEndWithOne} ` },
-                            ]),
                         // FIXME:
-                            [
-                                {
-                                    text: `ПРЕДМЕТ ДОГОВОРА/ ОБЪЕКТ СТРАХОВАНИЯ`,
-                                },
-                                {
-                                    text: `10.6`,
-                                },
-                                {
-                                    text: `9.1.2`,
-                                },
-                                {
-                                    text: `8.1.2.3`,
-                                },
-                                {
-                                    text: `Гибель или повреждение всего или части груза вследствие дорожно-транспортного происшествия, наступившего в результате действий третьих лиц, - согласно п. 4.5.1. Правил.`,
-                                },
-                                {
-                                    text: `Не застраховано`,
-                                },
-                            ],
 
                         ],
                         style: 'table',
