@@ -476,6 +476,7 @@ app.directive("currencyInput", function ($filter, myFactory) {
                         if ($element.val() > 12) $element.val(12);
                         myFactory.payment.hand = true;
                     }
+                    if (![1,2,4,6,12].includes(Number($element.val()))) $element.val(1);
                     myFactory.payment.val = $element.val();
                     myFactory.finalCalc();
                     $scope.$apply();
@@ -608,6 +609,7 @@ app.directive("currencyInput", function ($filter, myFactory) {
                             if ($element.val() > 12) $element.val(12);
                             myFactory.payment.hand = true;
                         }
+                        if (![1,2,4,6,12].includes(Number($element.val()))) $element.val(1);
                         myFactory.payment.val = $element.val();
                         myFactory.finalCalc();
                         $scope.$apply();
