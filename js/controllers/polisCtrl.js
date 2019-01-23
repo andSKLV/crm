@@ -666,7 +666,6 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         $scope.calcFinances();
         myFactory.polisObj.financeSeen= true;
         myFactory.polisObj.dates = myFactory.polisObj.dates;
-        console.log('state updated');
         myFactory.applyAllScopes();
     }
     /**

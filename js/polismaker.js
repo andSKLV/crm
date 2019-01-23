@@ -1645,6 +1645,7 @@ class ContractMaker {
                 '6' : 'в рассрочку платежами раз в два месяца.',
                 '12' : 'в рассрочку ежемесячными платежами.',
             },
+            p6_2: 'Страхователь обязан оплатить первый ежеквартальный платеж страховой премии до начала действия Договора, каждый последующий ежеквартальный платеж согласно следующему графику:',
             p6_3: 'Страховая премия уплачивается на основании счетов Страховщика.',
             p6_4: 'При наступлении страхового случая для полного возмещения убытков Страхователь обязан по требованию Страховщика уплатить полную (годовую) страховую премию, исчисленную на момент наступления страхового случая. После выплаты страхового возмещения Страхователь утрачивает право на отказ компенсировать задолженность по оплате страховой премии.',
             p6_5: 'В случае отказа Страхователя компенсировать задолженность по оплате страховой премии (неоплаты премии в установленный срок) сумма страхового возмещения, рассчитанная в соответствии с условиями Договора, выплачивается пропорционально отношению оплаченной части премии к полной (годовой) величине премии, исчисленной на момент наступления страхового случая.  ',
@@ -1707,8 +1708,28 @@ class ContractMaker {
      */
     makeFinanceTable({ payment }) {
         const finances = payment.array;
+        const numOfPeriods = Number(payment.val);
+        let periodText = '';
+        switch (numOfPeriods) {
+            case 1:
+                periodText = '-й период';
+                break;
+            case 2:
+                periodText = '-е полугодие';
+                break;
+            case 4:
+                periodText = '-й квартал';
+                break;
+            case 6:
+                periodText = '-е два месяца';
+                break;
+            case 12:
+                periodText = '-й месяц';
+                break;
+        }
         return finances.map((fin, i) => {
-            return [`${i + 1}`, `${fin.debtDate}`, `${fin.debt}`]
+            const date = (i===0) ? `До ${fin.debtDate}`: fin.debtDate;
+            return [`${i + 1}${periodText}`, `${date}`, `${fin.debt}`]
         })
     }
     makePDF(myFactory) {
@@ -1954,6 +1975,25 @@ class ContractMaker {
                                 {text: `${this.CONF.price} (${this.CONF.priceStr}) `,bold:true},
                                 {text: [this.CONF.vars.p6_1_end,this.CONF.vars.payText[myFactory.payment.val]]}
                             ]),
+                            autoRow('6.2'),
+                            //таблица платежей 
+                            [
+                                {
+                                    text: ['']
+                                },
+                                {
+                                    table: {
+                                        headerRows: 1,
+                                        widths: [145, 145, 145],
+                                        body: [
+                                            ['№ очетного периода', 'Дата начала отчетного периода', 'Сумма платежа'],
+                                            ...this.makeFinanceTable(myFactory),
+                                        ]
+                                    },
+                                    colSpan: COLS-1,
+                                    alignment: 'center',
+                                },...putEmptyCells(COLS - 2)
+                            ],
                             breaker(),
                             makeHeader('7'),
                             breaker(),
