@@ -260,14 +260,15 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         }
 
         if (myFactory.parks.length === 0 || !(myFactory.polisObj.dates.start || myFactory.polisObj.dates.end)) return false;
-        if (!myFactory.payment.array) myFactory.payment.makeArray(myFactory.totalPrice, myFactory.polisObj.dates);
+        const price = (myFactory.practicalPrice.val==='') ? myFactory.totalPrice : myFactory.practicalPrice.val;
+        if (!myFactory.payment.array) myFactory.payment.makeArray(price, myFactory.polisObj.dates);
         else {
             let needToCreate = false;
             const payTotal = ((typeof myFactory.payment.totalPrice) === 'string') ? myFactory.payment.totalPrice : addSpaces(Math.round(myFactory.payment.totalPrice));
-            const calcTotal = addSpaces(Math.round(myFactory.totalPrice));
+            const calcTotal = addSpaces(Math.round(price));
             if (payTotal !== calcTotal) needToCreate = true; //если сумма расчета изменилась, то нужно пересчитать финансы
             if (checkDiffInDates()) needToCreate = true; //если изменились даты или продолжительность договора - надо пересчитать
-            if (needToCreate) myFactory.payment.makeArray(myFactory.totalPrice, myFactory.polisObj.dates);
+            if (needToCreate) myFactory.payment.makeArray(price, myFactory.polisObj.dates);
         }
     }
     $scope.returnToDashboard = () => {
