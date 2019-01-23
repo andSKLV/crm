@@ -184,7 +184,7 @@ function getWords (num=0,type='number',firstRow) {
       case 'number':
         return razUp(num_letters(num[0]));
       case 'price':
-        return razUp(num_letters(num[0]) + declOfNum(num[0], 'рубл', ['я','ей','ей']));
+        return razUp(num_letters(num[0]) + declOfNum(num[0], 'рубл', ['я','я','ей']));
     }
   }
 }
