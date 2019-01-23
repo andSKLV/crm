@@ -1673,9 +1673,8 @@ class ContractMaker {
         const fr = 1000000; //FIXME:
         conf.franchise = `${addSpaces(fr)} ${currencySign[mf.document.currency]}`
         conf.franchiseStr = GetWordsFromPrice(fr);
-        const price = (mf.practicalPrice.val===''|| mf.practicalPrice.val===0) ? mf.totalPrice : mf.practicalPrice.val;
-        conf.price = `${addSpaces(price.toFixed(2))} ${currencySign[mf.document.currency]}`;
-        conf.priceStr = GetWordsFromPrice(Number(price.toFixed(2)));
+        conf.price = `${mf.payment.leftPrice} ${currencySign[mf.document.currency]}`;
+        conf.priceStr = GetWordsFromPrice(Number(mf.payment.leftPrice.replace(new RegExp(' ','g'),'')));
         conf.carsNumber = polisMaker.carsNumber;
         conf.carsNumberWords = `(${GetWordsFromNumber(conf.carsNumber)})`;
         conf.carsEndWithOne = this.getMultipleWord(conf.carsNumber);
