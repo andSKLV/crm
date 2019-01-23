@@ -1488,6 +1488,7 @@ app.factory("myFactory", function () {
                 let mass = park.check(false);
                 park.replaceBase();
             });
+            myFactory.checkPracticalPriceKoef(true);
         },
         /**
          * основная функция для расчета, в которую входят все остальные
