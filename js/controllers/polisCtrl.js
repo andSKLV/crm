@@ -260,7 +260,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         }
 
         if (myFactory.parks.length === 0 || !(myFactory.polisObj.dates.start || myFactory.polisObj.dates.end)) return false;
-        const price = (myFactory.practicalPrice.val==='') ? myFactory.totalPrice : myFactory.practicalPrice.val;
+        const price = (myFactory.practicalPrice.val===''||myFactory.practicalPrice.val==0) ? myFactory.totalPrice : myFactory.practicalPrice.val;
         if (!myFactory.payment.array) myFactory.payment.makeArray(price, myFactory.polisObj.dates);
         else {
             let needToCreate = false;

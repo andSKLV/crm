@@ -481,7 +481,6 @@ app.directive("currencyInput", function ($filter, myFactory) {
                     myFactory.finalCalc();
                     $scope.$apply();
                 } else if ($attrs.currencyInput == "practicalPrice") {
-                    console.log(myFactory.totalPrice - (myFactory.totalPrice % 1));
                     if (
                         $element.val() == 0 ||
                         $element.val() == "" ||
@@ -496,6 +495,7 @@ app.directive("currencyInput", function ($filter, myFactory) {
                         )
                             $element.val("");
                         myFactory.bottom.priceMode = "price";
+                        myFactory.practicalPrice.koef = 1;
                     } else {
                         //если мы что-то ввели в фактическую премию
                         if (myFactory.bottom.singleAmount) {
@@ -616,7 +616,6 @@ app.directive("currencyInput", function ($filter, myFactory) {
                     }
                 } else if ($attrs.currencyInput == "practicalPrice") {
                     if (key == 13) {
-                        console.log(myFactory.totalPrice - (myFactory.totalPrice % 1));
                         if (
                             $element.val() == 0 ||
                             $element.val() == "" ||
@@ -631,6 +630,7 @@ app.directive("currencyInput", function ($filter, myFactory) {
                             )
                                 $element.val("");
                             myFactory.bottom.priceMode = "price";
+                            myFactory.practicalPrice.koef = 1;
                         } else {
                             //если мы что-то ввели в фактическую премию
                             if (myFactory.bottom.singleAmount) {
@@ -952,9 +952,9 @@ app.factory("myFactory", function () {
                 this.totalPrice = price;
                 this.datesWhenCreated = { start, end, time }; //записываем значение, чтобы потом сравнивать и если что обновлять финансы
 
-                let payment = addSpaces(Math.round(price / this.val)); //рассчитываем цену одного платежа
+                let payment = addSpaces(roundToFixed((price / this.val),2)); //рассчитываем цену одного платежа
                 this.calcDebt = payment; //устанавливаем долг равный полной цене
-                this.leftPrice = addSpaces(Math.round(price / this.val) * this.val);
+                this.leftPrice = addSpaces(roundToFixed((price / this.val),2)*this.val);
                 start = start.replace(/(\d+).(\d+).(\d+)/, "$2.$1.$3"); // меняем местами месяц и день в дате, чтобы js воспринимал нормально дату
                 end = end.replace(/(\d+).(\d+).(\d+)/, "$2.$1.$3");
                 const array = [];
@@ -975,6 +975,13 @@ app.factory("myFactory", function () {
                     });
                 }
                 this.array = array;
+                function roundToFixed(number, places) {
+                    var multiplier = Math.pow(10, places+2); 
+                    var fixed = Math.floor(number*multiplier); 
+                    fixed += 44; // round down on anything less than x.xxx56
+                    fixed = Math.floor(fixed/100);
+                    return fixed/Math.pow(10, places);
+                }
             }
         },
         agents: {
