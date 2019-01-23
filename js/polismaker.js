@@ -1,4 +1,4 @@
-import { GetLocaleMonth, GetFullForm, GetWordsFromPrice, GetWordsFromNumber} from './ServiceFunctions.js';
+import { GetLocaleMonth, GetFullForm, GetWordsFromPrice, GetWordsFromNumber } from './ServiceFunctions.js';
 
 const NOBORDER = [false, false, false, false];
 const emptyCell = {
@@ -363,9 +363,9 @@ class PolisMaker {
                 }
             });
         });
-        this.carsNumber = lists.reduce((acc,list)=>{
-            return (list.isFull) ? acc+list.cars.length : acc
-        },0);
+        this.carsNumber = lists.reduce((acc, list) => {
+            return (list.isFull) ? acc + list.cars.length : acc
+        }, 0);
         return lists;
         /**
          * Проверка, сущетсвует ли в нашем списке проц с такими же полями (кроме типа отсека)
@@ -1626,11 +1626,11 @@ class ContractMaker {
         conf.carsEndWithOne = this.getMultipleWord(conf.carsNumber);
     }
     getMultipleWord(num) {
-        const it = num%10;
+        const it = num % 10;
         switch (true) {
-            case (it===1):
+            case (it === 1):
                 return ' единицу.'
-            case (it>1 && it<5):
+            case (it > 1 && it < 5):
                 return ' единицы.'
             default:
                 return ' единиц.'
@@ -1651,11 +1651,11 @@ class ContractMaker {
      * Создается массив со строками из данных по финансам
      * @param {myFactory} param0 
      */
-    makeFinanceTable ({payment}) {
+    makeFinanceTable({ payment }) {
         const finances = payment.array;
-        return finances.map((fin,i)=>{
-            return [`${i+1}`,`${fin.debtDate}`,`${fin.debt}`]
-        })        
+        return finances.map((fin, i) => {
+            return [`${i + 1}`, `${fin.debtDate}`, `${fin.debt}`]
+        })
     }
     makePDF(myFactory) {
         this.confConstructor(myFactory);
@@ -1669,63 +1669,83 @@ class ContractMaker {
                 }, ...putEmptyCells(COLS - 1)
             ]
         }
-        const autoRowWithMargin = (str,args) => {
-            const l = str.match(/\./g);
-            const level = l ? l.length+1 : 1;
-            const varName = `p${str.replace(/\./g,'_')}`;
-            const innerText = args ? args : [this.CONF.vars[varName]];
+        /**
+         * Создание произвольной строки с заданной вложенностью и текстом
+         * @param {Number} level уровень вложенности
+         * @param {String} varName текст, который необходимо вывести 
+         */
+        const makeRow = (level, varName) => {
             let arr = [];
-            for (let i=1;i<level;i++) {
-                arr.push({text: ['']});
-            }
-            arr.push({text: [`${str}.`]});
-            arr.push({
-                text: innerText,
-                bold: (level===1),
-                colSpan: COLS - level
-            })
-            if (level<3) arr = [...arr,...putEmptyCells(COLS-(level+1))];
-            return arr;
-        }
-        const makeRow = (level,varName) => {
-            let arr = [];
-            for (let i=1;i<level;i++) {
-                arr.push({text: ['']});
+            for (let i = 1; i < level; i++) {
+                arr.push({ text: [''] });
             }
             arr.push({
                 text: varName,
                 colSpan: COLS - level + 1
             })
-            if (level<COLS) arr = [...arr,...putEmptyCells(COLS-level)];
+            if (level < COLS) arr = [...arr, ...putEmptyCells(COLS - level)];
             return arr;
         }
+        /**
+         * Создание строки с заголовком раздела
+         * @param {Number} point пункт договора
+         */
         const makeHeader = point => {
             const varName = `p${point}`
             return [
                 {
-                    text: [{ text: `${this.CONF.vars[varName]} `, 
+                    text: [{
+                        text: `${this.CONF.vars[varName]} `,
                         bold: true,
                         alignment: 'center',
-                     }],
+                    }],
                     colSpan: COLS
-                },...putEmptyCells(COLS-1)
+                }, ...putEmptyCells(COLS - 1)
             ]
         }
-        const autoRow = (str,args) => {
+        /**
+         * Формирование строки с вложенностью относительно пункта договора
+         * @param {String} str номер пункта
+         * @param {Array} args если нестандартный пункт, то передается архив с текстовыми полями, которые должны выводиться 
+         */
+        const autoRow = (str, args) => {
             const l = str.match(/\./g);
             const level = l ? l.length : 1;
-            const varName = `p${str.replace(/\./g,'_')}`;
+            const varName = `p${str.replace(/\./g, '_')}`;
             const innerText = args ? args : [this.CONF.vars[varName]];
             let arr = [];
-            for (let i=1;i<level;i++) {
-                arr.push({text: ['']});
+            for (let i = 1; i < level; i++) {
+                arr.push({ text: [''] });
             }
-            arr.push({text: [`${str}.`]});
+            arr.push({ text: [`${str}.`] });
             arr.push({
                 text: innerText,
                 colSpan: COLS - level
             })
-            if (level<3) arr = [...arr,...putEmptyCells(COLS-(level+1))];
+            if (level < 3) arr = [...arr, ...putEmptyCells(COLS - (level + 1))];
+            return arr;
+        }
+        /**
+         * Формирование строки с вложенностью относительно пункта договора с одним дополнительным отступом слева
+         * @param {String} str номер пункта
+         * @param {Array} args если нестандартный пункт, то передается архив с текстовыми полями, которые должны выводиться 
+         */
+        const autoRowWithMargin = (str, args) => {
+            const l = str.match(/\./g);
+            const level = l ? l.length + 1 : 1;
+            const varName = `p${str.replace(/\./g, '_')}`;
+            const innerText = args ? args : [this.CONF.vars[varName]];
+            let arr = [];
+            for (let i = 1; i < level; i++) {
+                arr.push({ text: [''] });
+            }
+            arr.push({ text: [`${str}.`] });
+            arr.push({
+                text: innerText,
+                bold: (level === 1),
+                colSpan: COLS - level
+            })
+            if (level < 3) arr = [...arr, ...putEmptyCells(COLS - (level + 1))];
             return arr;
         }
         const docDefinition = {
@@ -1740,7 +1760,7 @@ class ContractMaker {
                 {
                     table: {
                         headerRows: 0,
-                        widths: [25, 25, 25,390],
+                        widths: [25, 25, 25, 390],
                         body: [
                             [
                                 {
@@ -1764,9 +1784,9 @@ class ContractMaker {
                             [
                                 {
                                     table: {
-                                        widths: [235,235],
+                                        widths: [235, 235],
                                         body: [
-                                            [this.CONF.date,this.CONF.vars.city]
+                                            [this.CONF.date, this.CONF.vars.city]
                                         ],
                                         alignment: 'center',
                                     },
@@ -1796,7 +1816,7 @@ class ContractMaker {
                             breaker(),
                             autoRow('1.1'),
                             autoRow('1.2'),
-                            autoRow('1.3',[
+                            autoRow('1.3', [
                                 this.CONF.vars.p1_3_first,
                                 {
                                     text: this.CONF.cleanDate,
@@ -1820,8 +1840,8 @@ class ContractMaker {
                             autoRowWithMargin('3.1.1'),
                             autoRowWithMargin('3.1.2'),
                             autoRowWithMargin('3.1.3'),
-                            autoRowWithMargin('3.2',[{text:this.CONF.vars.p3_2,bold:true}]),
-                            makeRow(3,this.CONF.vars.p3_2_end),
+                            autoRowWithMargin('3.2', [{ text: this.CONF.vars.p3_2, bold: true }]),
+                            makeRow(3, this.CONF.vars.p3_2_end),
 
                             breaker(),
                             makeHeader('4'),
@@ -1850,7 +1870,7 @@ class ContractMaker {
                             breaker(),
                             makeHeader('10'),
                             breaker(),
-                        // FIXME:
+                            // FIXME:
 
                         ],
                         style: 'table',
