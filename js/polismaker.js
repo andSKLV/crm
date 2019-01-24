@@ -169,13 +169,13 @@ class PolisMaker {
      * Создание таблицы подписантов
      * @param {myFactory} myFactory 
      */
-    makeSignTable(myFactory,isContract) {
+    makeSignTable(myFactory, isContract) {
         const all = myFactory.polisObj.insurants;
         let headerFontSize, textFontSize, dash, pageWidth;
         //конфиг в зависимости от количества страхователей
         switch (all.length) {
             case 1:
-                pageWidth = isContract ? 485: 490;
+                pageWidth = isContract ? 485 : 490;
                 headerFontSize = 12;
                 textFontSize = 7;
                 dash = "__________________________________\n";
@@ -280,7 +280,7 @@ class PolisMaker {
             });
             return arr;
         }
-        const layout = (isContract) ? {hLineColor:'#ffffff',vLineColor:'#ffffff'} : {hLineColor: '#e6e6e6',vLineColor: '#e6e6e6'}
+        const layout = (isContract) ? { hLineColor: '#ffffff', vLineColor: '#ffffff' } : { hLineColor: '#e6e6e6', vLineColor: '#e6e6e6' }
         return {
             table: {
                 headerRows: 1,
@@ -1586,11 +1586,10 @@ class ContractMaker {
         conf.franchise = `${addSpaces(fr)} ${currencySign[mf.document.currency]}`
         conf.franchiseStr = GetWordsFromPrice(fr);
         conf.price = `${mf.payment.leftPrice} ${currencySign[mf.document.currency]}`;
-        conf.priceStr = GetWordsFromPrice(Number(mf.payment.leftPrice.replace(new RegExp(' ','g'),'')));
+        conf.priceStr = GetWordsFromPrice(Number(mf.payment.leftPrice.replace(new RegExp(' ', 'g'), '')));
         conf.carsNumber = polisMaker.carsNumber;
         conf.carsNumberWords = `(${GetWordsFromNumber(conf.carsNumber)})`;
         conf.carsEndWithOne = this.getMultipleWord(conf.carsNumber);
-        
         return conf.vars;
     }
     getMultipleWord(num) {
@@ -1641,7 +1640,7 @@ class ContractMaker {
                 break;
         }
         return finances.map((fin, i) => {
-            const date = (i===0) ? `До ${fin.debtDate}`: fin.debtDate;
+            const date = (i === 0) ? `До ${fin.debtDate}` : fin.debtDate;
             return [`${i + 1}${periodText}`, `${date}`, `${fin.debt}`]
         })
     }
@@ -1742,13 +1741,13 @@ class ContractMaker {
          */
         const makeHipRow = hipName => {
             const arr = [{}];
-            arr.push({text:`HIP-${hipName}.`,bold:true});
-            arr.push({text:this.CONF.vars[`hip_${hipName}`],bold:true,colSpan:2});
-            arr.push(...putEmptyCells(COLS-3))
+            arr.push({ text: `HIP-${hipName}.`, bold: true });
+            arr.push({ text: this.CONF.vars[`hip_${hipName}`], bold: true, colSpan: 2 });
+            arr.push(...putEmptyCells(COLS - 3))
             return arr;
         }
-        const repeatCreation = (func,arr) => {
-            const res = arr.map(param=>func(param));
+        const repeatCreation = (func, arr) => {
+            const res = arr.map(param => func(param));
             return res;
         }
         const docDefinition = {
@@ -1795,8 +1794,10 @@ class ContractMaker {
                                         body: [
                                             [this.CONF.date, this.CONF.vars.city]
                                         ],
+                                        
                                         alignment: 'center',
                                     },
+                                    layout: 'noBorders',
                                     colSpan: COLS,
                                     alignment: 'center',
                                 }, ...putEmptyCells(COLS - 1)
@@ -1822,7 +1823,7 @@ class ContractMaker {
                             breaker(),
                             makeHeader('1'),
                             breaker(),
-                            ...repeatCreation(autoRow,['1.1','1.2']),
+                            ...repeatCreation(autoRow, ['1.1', '1.2']),
                             autoRow('1.3', [
                                 this.CONF.vars.p1_3_first,
                                 {
@@ -1835,15 +1836,15 @@ class ContractMaker {
                                 },
                                 this.CONF.vars.p1_3_second
                             ]),
-                            ...repeatCreation(autoRowWithMargin,['2','2.1','2.1.1','2.1.2','2.1.3','2.2']),
+                            ...repeatCreation(autoRowWithMargin, ['2', '2.1', '2.1.1', '2.1.2', '2.1.3', '2.2']),
                             breaker(),
-                            ...repeatCreation(autoRowWithMargin,['3','3.1','3.1.1','3.1.2','3.1.3']),
+                            ...repeatCreation(autoRowWithMargin, ['3', '3.1', '3.1.1', '3.1.2', '3.1.3']),
                             autoRowWithMargin('3.2', [{ text: this.CONF.vars.p3_2, bold: true }]),
                             makeRow(3, this.CONF.vars.p3_2_end),
                             makeHipRow('R01'),
-                            makeRow(3,this.CONF.vars.hip_R01_text),
+                            makeRow(3, this.CONF.vars.hip_R01_text),
                             makeHipRow('R02'),
-                            makeRow(3,this.CONF.vars.hip_R02_text),
+                            makeRow(3, this.CONF.vars.hip_R02_text),
                             makeHipRow('C01'),
                             //вложенные списки
                             [
@@ -1853,7 +1854,7 @@ class ContractMaker {
                                 {
                                     text: ['']
                                 },
-                                {   
+                                {
                                     stack: [
                                         `${this.CONF.vars.hip_C01_text.start}\n`,
                                         {
@@ -1892,29 +1893,29 @@ class ContractMaker {
                                 },
                             ],
                             makeHipRow('R03'),
-                            makeRow(3,this.CONF.vars.hip_R03_text),
+                            makeRow(3, this.CONF.vars.hip_R03_text),
                             makeHipRow('R04'),
-                            makeRow(3,this.CONF.vars.hip_R04_text),
+                            makeRow(3, this.CONF.vars.hip_R04_text),
                             breaker(),
                             makeHeader('4'),
                             breaker(),
-                            ...repeatCreation(autoRow,['4.1','4.2','4.3','4.4','4.5','4.6','4.7','4.8']),
+                            ...repeatCreation(autoRow, ['4.1', '4.2', '4.3', '4.4', '4.5', '4.6', '4.7', '4.8']),
                             breaker(),
                             makeHeader('5'),
                             breaker(),
-                            ...repeatCreation(autoRow,['5.1','5.2']),
-                            autoRow('5.3',[
-                                {text: this.CONF.vars.p5_3},
-                                {text: ` ${this.CONF.carsNumber} ${this.CONF.carsNumberWords}${this.CONF.carsEndWithOne}`, bold:true}
+                            ...repeatCreation(autoRow, ['5.1', '5.2']),
+                            autoRow('5.3', [
+                                { text: this.CONF.vars.p5_3 },
+                                { text: ` ${this.CONF.carsNumber} ${this.CONF.carsNumberWords}${this.CONF.carsEndWithOne}`, bold: true }
                             ]),
-                            ...repeatCreation(autoRow,['5.4','5.4.1','5.4.2','5.4.2.1','5.4.2.2','5.4.3','5.5','5.6','5.7']),
+                            ...repeatCreation(autoRow, ['5.4', '5.4.1', '5.4.2', '5.4.2.1', '5.4.2.2', '5.4.3', '5.5', '5.6', '5.7']),
                             breaker(),
                             makeHeader('6'),
                             breaker(),
-                            autoRow('6.1',[
-                                {text: this.CONF.vars.p6_1},
-                                {text: `${this.CONF.price} (${this.CONF.priceStr}) `,bold:true},
-                                {text: [this.CONF.vars.p6_1_end,this.CONF.vars.payText[myFactory.payment.val]]}
+                            autoRow('6.1', [
+                                { text: this.CONF.vars.p6_1 },
+                                { text: `${this.CONF.price} (${this.CONF.priceStr}) `, bold: true },
+                                { text: [this.CONF.vars.p6_1_end, this.CONF.vars.payText[myFactory.payment.val]] }
                             ]),
                             autoRow('6.2'),
                             //таблица платежей 
@@ -1929,17 +1930,19 @@ class ContractMaker {
                                         body: [
                                             ['№ очетного периода', 'Дата начала отчетного периода', 'Сумма платежа'],
                                             ...this.makeFinanceTable(myFactory),
-                                        ]
+                                        ],
+                                        
                                     },
-                                    colSpan: COLS-1,
+                                    layout: 'noBorders',
+                                    colSpan: COLS - 1,
                                     alignment: 'center',
-                                },...putEmptyCells(COLS - 2)
+                                }, ...putEmptyCells(COLS - 2)
                             ],
-                            ...repeatCreation(autoRow,['6.3','6.4','6.5','6.6']),
+                            ...repeatCreation(autoRow, ['6.3', '6.4', '6.5', '6.6']),
                             breaker(),
                             makeHeader('7'),
                             breaker(),
-                            ...repeatCreation(autoRow,['7.1','7.2']),
+                            ...repeatCreation(autoRow, ['7.1', '7.2']),
                             //таблица убыточности
                             [
                                 {
@@ -1948,60 +1951,61 @@ class ContractMaker {
                                 {
                                     table: {
                                         headerRows: 1,
-                                        widths: [225,225],
+                                        widths: [225, 225],
                                         body: [
-                                            [this.CONF.vars.p7_2_table.h1,this.CONF.vars.p7_2_table.h2],
-                                            [this.CONF.vars.p7_2_table.r1_1,this.CONF.vars.p7_2_table.r1_2],
-                                            [this.CONF.vars.p7_2_table.r2_1,this.CONF.vars.p7_2_table.r2_2],
-                                            [this.CONF.vars.p7_2_table.r3_1,this.CONF.vars.p7_2_table.r3_2],
-                                        ]
+                                            [this.CONF.vars.p7_2_table.h1, this.CONF.vars.p7_2_table.h2],
+                                            [this.CONF.vars.p7_2_table.r1_1, this.CONF.vars.p7_2_table.r1_2],
+                                            [this.CONF.vars.p7_2_table.r2_1, this.CONF.vars.p7_2_table.r2_2],
+                                            [this.CONF.vars.p7_2_table.r3_1, this.CONF.vars.p7_2_table.r3_2],
+                                        ],
                                     },
-                                    colSpan: COLS-1,
+                                    layout: 'noBorders',
+                                    colSpan: COLS - 1,
                                     alignment: 'center',
-                                },...putEmptyCells(COLS - 2)
+                                }, ...putEmptyCells(COLS - 2)
                             ],
-                            ...repeatCreation(autoRow,['7.3','7.4']),
+                            ...repeatCreation(autoRow, ['7.3', '7.4']),
                             breaker(),
                             makeHeader('8'),
                             breaker(),
-                            ...repeatCreation(autoRow,['8.1','8.2']),
+                            ...repeatCreation(autoRow, ['8.1', '8.2']),
                             breaker(),
                             makeHeader('9'),
                             breaker(),
-                            ...repeatCreation(autoRow,['9.1','9.2','9.3','9.4','9.5','9.6','9.7','9.7.1','9.7.2','9.7.3','9.7.4','9.7.5','9.7.6']),
-                            makeRow(2,this.CONF.vars.p9_7_end),
+                            ...repeatCreation(autoRow, ['9.1', '9.2', '9.3', '9.4', '9.5', '9.6', '9.7', '9.7.1', '9.7.2', '9.7.3', '9.7.4', '9.7.5', '9.7.6']),
+                            makeRow(2, this.CONF.vars.p9_7_end),
                             breaker(),
                             makeHeader('10'),
-                            
+
                             breaker(),
                             // FIXME:
 
                         ],
                         style: 'table',
                     },
-                    // layout: 'noBorders',
+                    layout: 'noBorders',
                 },
                 '\n',
-                polisMaker.makeSignTable(myFactory,true),
+                polisMaker.makeSignTable(myFactory, true),
             ],
             footer: (page, pages, smth, pagesArr) => {
-                
-                    const footer = {};
-                    footer.table = Object.assign({},polisMaker.CONF.footerObj.table);
-                    const len = footer.table.widths.length;
-                    const listCounter = [
-                        {
-                            text: `${polisMaker.CONF.vars.page} ${page.toString()}/${pages.toString()} ${this.CONF.vars.ofContract} ${polisMaker.hipName}`,
-                            colSpan: len,
-                            border: NOBORDER,
-                            alignment: 'center',
-                            fontSize: 7,
-                        }
-                    ];
-                    const emptyRow = [{text:'\n\n\n',border: NOBORDER,colSpan:len}];
-                    footer.table.body = (page < pages) ? [...footer.table.body,listCounter] : [emptyRow,listCounter];
-                    return footer;
-                
+
+                const footer = {};
+                footer.table = Object.assign({}, polisMaker.CONF.footerObj.table);
+                const len = footer.table.widths.length;
+                const listCounter = [
+                    {
+                        text: `${polisMaker.CONF.vars.page} ${page.toString()}/${pages.toString()} ${this.CONF.vars.ofContract} ${polisMaker.hipName}`,
+                        colSpan: len,
+                        border: NOBORDER,
+                        alignment: 'center',
+                        fontSize: 7,
+                    }
+                ];
+                const emptyRow = [{ text: '\n\n\n', border: NOBORDER, colSpan: len }];
+                footer.table.body = (page < pages) ? [...footer.table.body, listCounter] : [emptyRow, listCounter];
+                return footer;
+
             },
             styles: {
                 leftCellFirstTable: {
