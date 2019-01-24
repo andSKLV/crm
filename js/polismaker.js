@@ -1985,23 +1985,23 @@ class ContractMaker {
                 polisMaker.makeSignTable(myFactory,true),
             ],
             footer: (page, pages, smth, pagesArr) => {
-                if (page > 1) {
-                    // const footer = {};
-                    // footer.table = Object.assign({},this.CONF.footerObj.table);
-                    // const len = footer.table.widths.length;
-                    // const listCounter = [
-                    //     {
-                    //         text: `${this.CONF.vars.page} ${page.toString()}/${pages.toString()} ${this.CONF.vars.ofPolis} ${this.hipName}`,
-                    //         colSpan: len,
-                    //         border: NOBORDER,
-                    //         alignment: 'center',
-                    //         fontSize: 7,
-                    //     }
-                    // ];
-                    // footer.table.body = [...footer.table.body,listCounter];
-                    // return footer;
-                    return {}
-                }
+                
+                    const footer = {};
+                    footer.table = Object.assign({},polisMaker.CONF.footerObj.table);
+                    const len = footer.table.widths.length;
+                    const listCounter = [
+                        {
+                            text: `${polisMaker.CONF.vars.page} ${page.toString()}/${pages.toString()} ${this.CONF.vars.ofContract} ${polisMaker.hipName}`,
+                            colSpan: len,
+                            border: NOBORDER,
+                            alignment: 'center',
+                            fontSize: 7,
+                        }
+                    ];
+                    const emptyRow = [{text:'\n\n\n',border: NOBORDER,colSpan:len}];
+                    footer.table.body = (page < pages) ? [...footer.table.body,listCounter] : [emptyRow,listCounter];
+                    return footer;
+                
             },
             styles: {
                 leftCellFirstTable: {
