@@ -1763,6 +1763,7 @@ class ContractMaker {
                         headerRows: 0,
                         widths: [15, 30, 25, 395],
                         body: [
+                            //заголовок
                             [
                                 {
                                     text: [
@@ -1774,6 +1775,7 @@ class ContractMaker {
                                     fontSize: 16,
                                 }, ...putEmptyCells(COLS - 1)
                             ],
+                            //подзаголовок
                             [
                                 {
                                     text: `\n${this.CONF.vars.insuranceOfTransport}`,
@@ -1782,6 +1784,8 @@ class ContractMaker {
                                     alignment: 'center',
                                 }, ...putEmptyCells(COLS - 1)
                             ],
+                            breaker(),
+                            //дата и город
                             [
                                 {
                                     table: {
@@ -1795,6 +1799,7 @@ class ContractMaker {
                                     alignment: 'center',
                                 }, ...putEmptyCells(COLS - 1)
                             ],
+                            //страхователь - страховщик
                             [
                                 {
                                     text: [
@@ -1838,7 +1843,52 @@ class ContractMaker {
                             makeHipRow('R02'),
                             makeRow(3,this.CONF.vars.hip_R02_text),
                             makeHipRow('C01'),
-                            //TODO:
+                            //вложенные списки
+                            [
+                                {
+                                    text: ['']
+                                },
+                                {
+                                    text: ['']
+                                },
+                                {   
+                                    stack: [
+                                        `${this.CONF.vars.hip_C01_text.start}\n`,
+                                        {
+                                            ol: [
+                                                `${this.CONF.vars.hip_C01_text.p1}`,
+                                                `${this.CONF.vars.hip_C01_text.p2}`,
+                                                `${this.CONF.vars.hip_C01_text.p3}`,
+                                                `${this.CONF.vars.hip_C01_text.p4}`,
+                                                `${this.CONF.vars.hip_C01_text.p5}`,
+                                                [
+                                                    `${this.CONF.vars.hip_C01_text.p6}`,
+                                                    {
+                                                        type: 'lower-alpha',
+                                                        ol: [
+                                                            `${this.CONF.vars.hip_C01_text.p6_a}`,
+                                                            `${this.CONF.vars.hip_C01_text.p6_b}`,
+                                                            {
+                                                                type: 'lower-roman',
+                                                                ol: [
+                                                                    `${this.CONF.vars.hip_C01_text.p6_b_i}`,
+                                                                    `${this.CONF.vars.hip_C01_text.p6_b_ii}`,
+                                                                    `${this.CONF.vars.hip_C01_text.p6_b_iii}`
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ],
+                                                `${this.CONF.vars.hip_C01_text.p7}`
+                                            ]
+                                        }
+                                    ],
+                                    colSpan: 2,
+                                },
+                                {
+                                    text: ['']
+                                },
+                            ],
                             makeHipRow('R03'),
                             makeRow(3,this.CONF.vars.hip_R03_text),
                             makeHipRow('R04'),
