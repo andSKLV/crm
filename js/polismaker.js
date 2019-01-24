@@ -1,6 +1,16 @@
 import { GetLocaleMonth, GetFullForm, GetWordsFromPrice, GetWordsFromNumber } from './ServiceFunctions.js';
 
 const NOBORDER = [false, false, false, false];
+const DASHBORDER = {
+    hLineStyle: function (i, node) {
+        
+        return {dash: {length: 1, space: 3}};
+    },
+    vLineStyle: function (i, node) {
+        
+        return {dash: {length: 1, space: 3}};
+    },
+};
 const emptyCell = {
     text: '',
     border: [false, false, false, false],
@@ -280,7 +290,7 @@ class PolisMaker {
             });
             return arr;
         }
-        const layout = (isContract) ? { hLineColor: '#ffffff', vLineColor: '#ffffff' } : { hLineColor: '#e6e6e6', vLineColor: '#e6e6e6' }
+        const layout = (isContract) ? DASHBORDER : { hLineColor: '#e6e6e6', vLineColor: '#e6e6e6' }
         return {
             table: {
                 headerRows: 1,
@@ -1933,7 +1943,7 @@ class ContractMaker {
                                         ],
                                         
                                     },
-                                    layout: 'noBorders',
+                                    layout: DASHBORDER,
                                     colSpan: COLS - 1,
                                     alignment: 'center',
                                 }, ...putEmptyCells(COLS - 2)
@@ -1959,7 +1969,7 @@ class ContractMaker {
                                             [this.CONF.vars.p7_2_table.r3_1, this.CONF.vars.p7_2_table.r3_2],
                                         ],
                                     },
-                                    layout: 'noBorders',
+                                    layout: DASHBORDER,
                                     colSpan: COLS - 1,
                                     alignment: 'center',
                                 }, ...putEmptyCells(COLS - 2)
