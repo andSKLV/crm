@@ -169,13 +169,13 @@ class PolisMaker {
      * Создание таблицы подписантов
      * @param {myFactory} myFactory 
      */
-    makeSignTable(myFactory) {
+    makeSignTable(myFactory,isContract) {
         const all = myFactory.polisObj.insurants;
         let headerFontSize, textFontSize, dash, pageWidth;
         //конфиг в зависимости от количества страхователей
         switch (all.length) {
             case 1:
-                pageWidth = 490;
+                pageWidth = isContract ? 485: 490;
                 headerFontSize = 12;
                 textFontSize = 7;
                 dash = "__________________________________\n";
@@ -199,6 +199,9 @@ class PolisMaker {
                 dash = "____________________\n";
                 break;
         }
+        if (isContract) {
+            headerFontSize = 8;
+        }
         const width = Math.floor(pageWidth / (all.length + 1));
         const widths = new Array(all.length + 1).fill(width);
         //заголовок таблицы
@@ -209,14 +212,14 @@ class PolisMaker {
                     text: sigleInsurant ? `${this.CONF.vars.insurant}` : `${this.CONF.vars.insurant} ${i + 1}:`,
                     style: "firstHeader",
                     fontSize: headerFontSize,
-                    fillColor: '#e6e6e6',
+                    fillColor: (isContract) ? '#ffffff' : '#e6e6e6',
                 }
             })
             arr.push({
                 text: this.CONF.vars.insurer,
                 style: "firstHeader",
                 fontSize: headerFontSize,
-                fillColor: '#e6e6e6',
+                fillColor: (isContract) ? '#ffffff' : '#e6e6e6',
             })
             return arr;
         }
@@ -277,6 +280,7 @@ class PolisMaker {
             });
             return arr;
         }
+        const layout = (isContract) ? {hLineColor:'#ffffff',vLineColor:'#ffffff'} : {hLineColor: '#e6e6e6',vLineColor: '#e6e6e6'}
         return {
             table: {
                 headerRows: 1,
@@ -288,10 +292,7 @@ class PolisMaker {
                     bodyMake()
                 ]
             },
-            layout: {// цвет границы 
-                hLineColor: '#e6e6e6',
-                vLineColor: '#e6e6e6',
-            }
+            layout,
         }
     }
     /**
@@ -1589,6 +1590,7 @@ class ContractMaker {
         conf.carsNumber = polisMaker.carsNumber;
         conf.carsNumberWords = `(${GetWordsFromNumber(conf.carsNumber)})`;
         conf.carsEndWithOne = this.getMultipleWord(conf.carsNumber);
+        
         return conf.vars;
     }
     getMultipleWord(num) {
@@ -1970,6 +1972,7 @@ class ContractMaker {
                             makeRow(2,this.CONF.vars.p9_7_end),
                             breaker(),
                             makeHeader('10'),
+                            
                             breaker(),
                             // FIXME:
 
@@ -1977,7 +1980,9 @@ class ContractMaker {
                         style: 'table',
                     },
                     // layout: 'noBorders',
-                }
+                },
+                '\n',
+                polisMaker.makeSignTable(myFactory,true),
             ],
             footer: (page, pages, smth, pagesArr) => {
                 if (page > 1) {
