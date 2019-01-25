@@ -1,4 +1,4 @@
-import { GetLocaleMonth, GetFullForm, GetWordsFromPrice, GetWordsFromNumber } from './ServiceFunctions.js';
+import { GetLocaleMonth, GetFullForm, GetWordsFromPrice, GetWordsFromNumber, ExampleCompany } from './ServiceFunctions.js';
 
 const NOBORDER = [false, false, false, false];
 const DASHBORDER = {
@@ -1109,18 +1109,7 @@ class PolisMaker {
     makePDF(myFactory, risks) {
         if (!myFactory.companyObj.card || myFactory.companyObj.card["Данные компании"]["Наименование организации"] === '') {
             // заполняем нужные поля заглушками, если компания не выбрана
-            myFactory.companyObj.card = {
-                "Данные компании": {
-                    "Форма организации": 'ООО',
-                    "Наименование организации": 'ОБРАЗЕЦ',
-                },
-                "Доп. информация": {
-                    "Юридический адрес": '',
-                },
-                "Генеральный директор": {
-                    "ФИО директора": '',
-                }
-            }
+            myFactory.companyObj.card = ExampleCompany({isOld: true});
             myFactory.polisObj.insurants.push(myFactory.companyObj);
             this.CONF.wasMocked = true;
         }

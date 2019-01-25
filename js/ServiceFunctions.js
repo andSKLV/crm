@@ -49,6 +49,86 @@ function GenerateClientCard(data) {
   }
 }
 /**
+ * Преобразование данных из объекта данных компании старого вида в новый
+ * @param {Object} obj 
+ */
+function ParseCardToObj (obj) {
+  return {
+    'Данные компании':
+      {
+        "Форма организации": obj.form,
+        "Наименование организации": obj.name,
+        "Дата регистрации": obj.registration_date,
+        "Наименование рег. органа": obj.who_registrate,
+      },
+    "Генеральный директор":
+      {
+        "ФИО директора": obj.director_name,
+        "Серия и номер паспорта": obj.general_director_passport,
+        "Когда выдан": obj.give_date,
+        "Кем выдан": obj.director_authority,
+      },
+    "Продолжение":
+      {
+        "Место рождения": obj.director_birth_place,
+        "Адрес регистрации": obj.director_address,
+      },
+    "Реквизиты компании":
+      {
+        "ОГРН": obj.OGRN,
+        "ИНН": obj.INN,
+        "КПП": obj.KPP,
+        "ОКПО": obj.OKPO,
+        "ОКВЭД": obj.OKVED,
+      },
+    "Банковские реквизиты": {
+      "р/счет": obj.r_account,
+      "к/счет": obj.k_account,
+      "Банк": obj.bank,
+      "БИК": obj.bik,
+    },
+    "Доп. информация":
+      {
+        "Телефон": obj.company_phone,
+        "Эл. почта": obj.company_mail,
+        "Юридический адрес": obj.Legal_address,
+        "Фактический адрес": obj.Real_address,
+      }
+  }
+}
+/**
+ * Создание мока клиента, ООО Образец
+ * @param {Boolean} param0 true - старый вид представления данных клиента, false - новый 
+ */
+function ExampleCompany ({isOld}) {
+  const obj = {
+    form: "ООО",
+    name: "Образец",
+    registration_date: "01.01.2000",
+    who_registrate: "УФМС РФ 1",
+    director_name: "Иванов Иван Иванович",
+    general_director_passport: "1000 203040",
+    give_date: "01.01.2001",
+    director_authority: "УФМС РФ 2",
+    director_birth_place: "г. Москва",
+    director_address: "г. Москва, ул. Любая, д.1",
+    OGRN: "***********",
+    INN: "***********",
+    KPP: "***********",
+    OKPO: "***********",
+    OKVED: "***********",
+    r_account: "***********",
+    k_account: "***********",
+    bank: "***********",
+    bik: "***********",
+    company_phone: "* *** *******",
+    company_mail: "****@******",
+    Legal_address: "г. Москва, ул. Любая, д.2",
+    Real_address: "г. Москва, ул. Любая, д.3",
+  }
+  return (isOld) ? ParseCardToObj(obj) : obj;
+}
+/**
  * Функция возвращает наименование формы компании 
  * @param {number} id 
  */
@@ -204,4 +284,5 @@ export {
   GetFullForm,
   GetWordsFromPrice,
   GetWordsFromNumber,
+  ExampleCompany,
 }
