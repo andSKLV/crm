@@ -1549,7 +1549,6 @@ const polisMaker = new PolisMaker();
 class ContractMaker {
     constructor(myFactory) {
         this.CONF = {}
-
     }
     makeTerritory(mf) {
         const condition = mf.polisObj.conditions.filter(x => x.name === 'Страхование по полису не распространяется на перевозки из/в/через')
@@ -1590,11 +1589,6 @@ class ContractMaker {
         conf.cleanDate = `c «${startDate.day}» ${startDate.month} ${startDate.year} года `
         const endDate = this.getStrDate(mf.polisObj.dates.endDate);
         conf.endDate = `по «${endDate.day}» ${endDate.month} ${endDate.year} года. `;
-        conf.limit = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`;
-        conf.limitStr = GetWordsFromPrice(Math.round(mf.a_limit.value));
-        const fr = 1000000; //FIXME:
-        conf.franchise = `${addSpaces(fr)} ${currencySign[mf.document.currency]}`
-        conf.franchiseStr = GetWordsFromPrice(fr);
         conf.price = `${mf.payment.leftPrice} ${currencySign[mf.document.currency]}`;
         conf.priceStr = GetWordsFromPrice(Number(mf.payment.leftPrice.replace(new RegExp(' ', 'g'), '')));
         conf.carsNumber = polisMaker.carsNumber;
@@ -1621,6 +1615,7 @@ class ContractMaker {
         return { day, month, year };
     }
     getShortFIO(FIO) {
+        //FIXME:
         if (FIO === '') return 'Иванова И.И.'
         return 'Иванова И.И.'
     }
@@ -1760,6 +1755,42 @@ class ContractMaker {
             const res = arr.map(param => func(param));
             return res;
         }
+        /**
+         * Создание таблицы п10 с юридической информацией
+         */
+        const legalInfoTable = () => {
+            
+            const tableRow = (obj1,obj2) => {
+                const form = ins.card["Данные компании"]["Форма организации"];
+                const compName = ins.card["Данные компании"]["Наименование организации"];
+                const legalAdres = ins.card["Доп. информация"]["Юридический адрес"];
+                const phone = ins.card["Доп. информация"]["Телефон"]
+                const mail = ins.card["Доп. информация"]["Эл. почта"]
+                const inn = ins.card["Реквизиты компании"]["ИНН"]
+                const kpp = ins.card["Реквизиты компании"]["КПП"]
+                const ogrn = ins.card["Реквизиты компании"]["ОГРН"]
+                const raccount = ins.card["Данные компании"]["Наименование организации"]
+                const kaccount = ins.card["Данные компании"]["Наименование организации"]
+                const bik = ins.card["Данные компании"]["Наименование организации"]
+                const bank = ins.card["Данные компании"]["Наименование организации"]
+
+                return [
+                    {text:''},
+                    {
+                        table: {
+                            widths: [235, 235],
+                            body: [
+                                [str1, str2],
+                            ],
+                        },
+                        layout: 'noBorders',
+                        colSpan: COLS-1,
+                        alignment: 'center',
+                    }, ...putEmptyCells(COLS - 2)
+                ]
+            }
+            
+        }
         const docDefinition = {
             pageSize: 'A4',
             pageMargins: [50, 65, 50, 65],
@@ -1819,7 +1850,7 @@ class ContractMaker {
                                         { text: `${this.CONF.vars.firstCell1} ` },
                                         { text: `${this.CONF.vars.firstCellKP} `, bold: true },
                                         { text: `${this.CONF.vars.firstCell2} ` },
-                                        { text: `${this.CONF.companyFullForm} `, bold: true },
+                                        { text: `${this.CONF.companyFullForm.toUpperCase()} `, bold: true },
                                         { text: `«${this.CONF.companyName}» `, bold: true },
                                         { text: `(${this.CONF.companyForm} «${this.CONF.companyName}») ` },
                                         { text: `${this.CONF.vars.firstCell3} ` },
@@ -1986,7 +2017,6 @@ class ContractMaker {
                             makeRow(2, this.CONF.vars.p9_7_end),
                             breaker(),
                             makeHeader('10'),
-
                             breaker(),
                             // FIXME:
 

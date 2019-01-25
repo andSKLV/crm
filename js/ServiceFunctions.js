@@ -30,7 +30,15 @@ function GenerateClientCard(data) {
         "ОГРН": data.OGRN,
         "ИНН": data.INN,
         "КПП": data.num,
+        "ОКПО": data.OKPO,
+        "ОКВЭД": data.OKVED,
       },
+    "Банковские реквизиты": {
+      "р/счет": data.r_account,
+      "к/счет": data.k_account,
+      "Банк": data.bank,
+      "БИК": data.bik,
+    },
     "Доп. информация":
       {
         "Телефон": data.company_phone,
