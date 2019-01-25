@@ -1793,39 +1793,72 @@ class ContractMaker {
                     return (obj.Legal_address.trim() === obj.Real_address.trim()) ? `Юридический, почтовый адрес: ${obj.Legal_address}` : `Юридический адрес: ${obj.Legal_address}, почтовый адрес: ${obj.Real_address}`;
                 }
                 return [
-                    { text: '' },
                     {
                         table: {
-                            widths: [235, 235],
+                            widths: [238, 5, 238],
                             body: [
                                 [
                                     {
                                         text: [
                                             { text: `${role1}: ` },
-                                            { text: `${obj1.form} ${obj1.name}`, bold: true }
+                                            { text: `${obj1.form} «${obj1.name.toUpperCase()}»`, bold: true }
                                         ]
-                                    }, {
+                                    }, {text:' '}, {
                                         text: [
                                             { text: `${role2}: ` },
-                                            { text: `${obj2.form} ${obj2.name}`, bold: true }
+                                            { text: `${obj2.form} «${obj2.name.toUpperCase()}»`, bold: true }
                                         ]
                                     }],
-                                [adresStr(obj1), adresStr(obj2)],
-                                [`телефон: ${obj1.company_phone}, e-mail: ${obj1.company_mail}`, `телефон: ${obj2.company_phone}, e-mail: ${obj2.company_mail}`],
-                                [`ИНН ${obj1.INN} КПП ${obj1.KPP} ОГРН ${obj1.OGRN}`, `ИНН ${obj2.INN} КПП ${obj2.KPP} ОГРН ${obj2.OGRN}`],
-                                [`р/счет ${obj1.r_account} ${obj1.bank} к/счет ${obj1.k_account} БИК ${obj1.bik}`, `р/счет ${obj2.r_account} ${obj2.bank} к/счет ${obj2.k_account} БИК ${obj2.bik}`]
+                                [adresStr(obj1),' ', adresStr(obj2)],
+                                [`телефон: ${obj1.company_phone}, e-mail: ${obj1.company_mail}`,' ', `телефон: ${obj2.company_phone}, e-mail: ${obj2.company_mail}`],
+                                [`ИНН ${obj1.INN} КПП ${obj1.KPP} ОГРН ${obj1.OGRN}`, ' ', `ИНН ${obj2.INN} КПП ${obj2.KPP} ОГРН ${obj2.OGRN}`],
+                                [`р/счет ${obj1.r_account} ${obj1.bank} к/счет ${obj1.k_account} БИК ${obj1.bik}`, ' ', `р/счет ${obj2.r_account} ${obj2.bank} к/счет ${obj2.k_account} БИК ${obj2.bik}`]
                             ],
                         },
                         layout: 'noBorders',
-                        colSpan: COLS - 1,
+                        colSpan: COLS,
                         alignment: 'justify',
-                    }, ...putEmptyCells(COLS - 2)
+                    }, ...putEmptyCells(COLS - 1)
+                ]
+            }
+            const oneCellTable = (arr,i) => {
+                const obj1 = parseInsurantToObj(arr[i]);
+                const role1 = `СТРАХОВАТЕЛЬ`;
+                /**
+                 * Создание нужной строки с адресами в зависимости от того, совпадают ли эти адреса
+                 * @param {Object} obj Объект с информацией о страхователе/страховщике
+                 */
+                const adresStr = obj => {
+                    return (obj.Legal_address.trim() === obj.Real_address.trim()) ? `Юридический, почтовый адрес: ${obj.Legal_address}` : `Юридический адрес: ${obj.Legal_address}, почтовый адрес: ${obj.Real_address}`;
+                }
+                return [
+                    {
+                        table: {
+                            widths: [485],
+                            body: [
+                                [
+                                    {
+                                        text: [
+                                            { text: `${role1}: ` },
+                                            { text: `${obj1.form} «${obj1.name.toUpperCase()}»`, bold: true }
+                                        ]
+                                    }],
+                                [adresStr(obj1)],
+                                [`телефон: ${obj1.company_phone}, e-mail: ${obj1.company_mail}`],
+                                [`ИНН ${obj1.INN} КПП ${obj1.KPP} ОГРН ${obj1.OGRN}`],
+                                [`р/счет ${obj1.r_account} ${obj1.bank} к/счет ${obj1.k_account} БИК ${obj1.bik}`]
+                            ],
+                        },
+                        layout: 'noBorders',
+                        colSpan: COLS,
+                        alignment: 'justify',
+                    }, ...putEmptyCells(COLS - 1)
                 ]
             }
             const arr = [...myFactory.polisObj.insurants, { isKP: true }]; //страхователи + страховщик
             const tables = [];
             for (let i = 0; i < arr.length; i = i + 2) {
-                const t = makeTable(arr, i);
+                const t = (arr[i+1]) ? makeTable(arr, i) : oneCellTable(arr,i);
                 tables.push(t);
             }
             return tables;
@@ -1890,8 +1923,8 @@ class ContractMaker {
                                         { text: `${this.CONF.vars.firstCellKP} `, bold: true },
                                         { text: `${this.CONF.vars.firstCell2} ` },
                                         { text: `${this.CONF.companyFullForm.toUpperCase()} `, bold: true },
-                                        { text: `«${this.CONF.companyName}» `, bold: true },
-                                        { text: `(${this.CONF.companyForm} «${this.CONF.companyName}») ` },
+                                        { text: `«${this.CONF.companyName.toUpperCase()}» `, bold: true },
+                                        { text: `(${this.CONF.companyForm} «${this.CONF.companyName.toUpperCase()}») ` },
                                         { text: `${this.CONF.vars.firstCell3} ` },
                                         { text: `${this.CONF.roditelniyFIO}` },
                                         { text: `${this.CONF.vars.firstCell4}` }
@@ -2058,8 +2091,6 @@ class ContractMaker {
                             makeHeader('10'),
                             breaker(),
                             ...legalInfoTable(),
-                            // FIXME:
-
                         ],
                         style: 'table',
                     },
