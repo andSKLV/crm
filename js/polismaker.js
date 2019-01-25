@@ -1,4 +1,5 @@
 import { GetLocaleMonth, GetFullForm, GetWordsFromPrice, GetWordsFromNumber, ExampleCompany } from './ServiceFunctions.js';
+import {g as declination} from '../build/declination.min.js';
 
 const NOBORDER = [false, false, false, false];
 const DASHBORDER = {
@@ -1569,7 +1570,7 @@ class ContractMaker {
         conf.companyFullForm = GetFullForm(conf.companyForm);
         conf.companyName = company.card["Данные компании"]["Наименование организации"];
         conf.directorName = company.card["Генеральный директор"]["ФИО директора"];
-        conf.roditelniyFIO = this.getShortFIO(conf.direcorName);
+        conf.roditelniyFIO = this.getShortFIO(conf.directorName);
         conf.contractNumber = HIP_NAME;
         conf.territory = this.makeTerritory(mf);
         conf.shipments = this.makeShipments(mf);
@@ -1604,9 +1605,17 @@ class ContractMaker {
         return { day, month, year };
     }
     getShortFIO(FIO) {
-        //FIXME:
-        if (FIO === '') return 'Иванова И.И.'
-        return 'Иванова И.И.'
+        const [last,first,middle] = FIO.trim().split(' ');
+        if (!last||!middle) {
+            // alert ('ФИО НЕ ЗАПОЛНЕНО'); //FIXME: включить на продакшене
+            return 'ФИО НЕ ЗАПОЛНЕНО';
+        };
+        let person = {
+            last,
+            middle,
+        };
+        const declitaned = declination(person, 'dative');
+        return `${declitaned.last} ${last[0]}.${middle[0]}.`;
     }
     /**
      * Создается массив со строками из данных по финансам
