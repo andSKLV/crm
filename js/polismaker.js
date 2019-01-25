@@ -3,12 +3,12 @@ import { GetLocaleMonth, GetFullForm, GetWordsFromPrice, GetWordsFromNumber } fr
 const NOBORDER = [false, false, false, false];
 const DASHBORDER = {
     hLineStyle: function (i, node) {
-        
-        return {dash: {length: 1, space: 3}};
+
+        return { dash: { length: 1, space: 3 } };
     },
     vLineStyle: function (i, node) {
-        
-        return {dash: {length: 1, space: 3}};
+
+        return { dash: { length: 1, space: 3 } };
     },
 };
 const emptyCell = {
@@ -1759,37 +1759,87 @@ class ContractMaker {
          * Создание таблицы п10 с юридической информацией
          */
         const legalInfoTable = () => {
-            
-            const tableRow = (obj1,obj2) => {
-                const form = ins.card["Данные компании"]["Форма организации"];
-                const compName = ins.card["Данные компании"]["Наименование организации"];
-                const legalAdres = ins.card["Доп. информация"]["Юридический адрес"];
-                const phone = ins.card["Доп. информация"]["Телефон"]
-                const mail = ins.card["Доп. информация"]["Эл. почта"]
-                const inn = ins.card["Реквизиты компании"]["ИНН"]
-                const kpp = ins.card["Реквизиты компании"]["КПП"]
-                const ogrn = ins.card["Реквизиты компании"]["ОГРН"]
-                const raccount = ins.card["Данные компании"]["Наименование организации"]
-                const kaccount = ins.card["Данные компании"]["Наименование организации"]
-                const bik = ins.card["Данные компании"]["Наименование организации"]
-                const bank = ins.card["Данные компании"]["Наименование организации"]
-
+            /**
+             * Создание объекта с удобными полями из объекта страхователя/страховщика
+             * @param {Object} ins  
+             */
+            const parseInsurantToObj = ins => {
+                if (ins.isKP) {
+                    const obj = this.CONF.vars.KP_info;
+                    obj.isKP = true;
+                    return obj;
+                }
+                return {
+                    form: ins.card["Данные компании"]["Форма организации"],
+                    compName: ins.card["Данные компании"]["Наименование организации"],
+                    legalAdres: ins.card["Доп. информация"]["Юридический адрес"],
+                    adres: ins.card["Доп. информация"]["Фактический адрес"],
+                    phone: ins.card["Доп. информация"]["Телефон"],
+                    mail: ins.card["Доп. информация"]["Эл. почта"],
+                    inn: ins.card["Реквизиты компании"]["ИНН"],
+                    kpp: ins.card["Реквизиты компании"]["КПП"],
+                    ogrn: ins.card["Реквизиты компании"]["ОГРН"],
+                    raccount: ins.card["Банковские реквизиты"]["р/счет"],
+                    kaccount: ins.card["Банковские реквизиты"]["к/счет"],
+                    bik: ins.card["Банковские реквизиты"]["БИК"],
+                    bank: ins.card["Банковские реквизиты"]["Банк"],
+                }
+            }
+            /**
+             * Создание таблицы с информацией в нужном виде
+             * @param {Array} arr массив всех страхователей и страховщика
+             * @param {Number} i индекс номера в массиве, таблица создается для двух элементов, левый i, правый i+1
+             */
+            const makeTable = (arr, i) => {
+                const isIndexed = arr.length > 2;
+                const obj1 = parseInsurantToObj(arr[i]);
+                const obj2 = parseInsurantToObj(arr[i + 1]);
+                const role1 = (isIndexed) ? `СТРАХОВАТЕЛЬ ${i + 1}` : `СТРАХОВАТЕЛЬ`;
+                const role2 = (!obj2.isKP) ? `СТРАХОВАТЕЛЬ ${i + 2}` : `СТРАХОВЩИК`;
+                /**
+                 * Создание нужной строки с адресами в зависимости от того, совпадают ли эти адреса
+                 * @param {Object} obj Объект с информацией о страхователе/страховщике
+                 */
+                const adresStr = obj => {
+                    return (obj.legalAdres.trim() === obj.adres.trim()) ? `Юридический, почтовый адрес: ${obj.legalAdres}` : `Юридический адрес: ${obj.legalAdres}, почтовый адрес: ${obj.adres}`;
+                }
                 return [
-                    {text:''},
+                    { text: '' },
                     {
                         table: {
                             widths: [235, 235],
                             body: [
-                                [str1, str2],
+                                [
+                                    {
+                                        text: [
+                                            { text: `${role1}: ` },
+                                            { text: `${obj1.form} ${obj1.compName}`, bold: true }
+                                        ]
+                                    }, {
+                                        text: [
+                                            { text: `${role2}: ` },
+                                            { text: `${obj2.form} ${obj2.compName}`, bold: true }
+                                        ]
+                                    }],
+                                [adresStr(obj1), adresStr(obj2)],
+                                [`телефон: ${obj1.phone}, e-mail: ${obj1.mail}`, `телефон: ${obj2.phone}, e-mail: ${obj2.mail}`],
+                                [`ИНН ${obj1.inn} КПП ${obj1.kpp} ОГРН ${obj1.ogrn}`, `ИНН ${obj2.inn} КПП ${obj2.kpp} ОГРН ${obj2.ogrn}`],
+                                [`р/счет ${obj1.raccount} ${obj1.bank} к/счет ${obj1.kaccount} БИК ${obj1.bik}`, `р/счет ${obj2.raccount} ${obj2.bank} к/счет ${obj2.kaccount} БИК ${obj2.bik}`]
                             ],
                         },
                         layout: 'noBorders',
-                        colSpan: COLS-1,
-                        alignment: 'center',
+                        colSpan: COLS - 1,
+                        alignment: 'justify',
                     }, ...putEmptyCells(COLS - 2)
                 ]
             }
-            
+            const arr = [...myFactory.polisObj.insurants, { isKP: true }]; //страхователи + страховщик
+            const tables = [];
+            for (let i = 0; i < arr.length; i = i + 2) {
+                const t = makeTable(arr, i);
+                tables.push(t);
+            }
+            return tables;
         }
         const docDefinition = {
             pageSize: 'A4',
@@ -1835,7 +1885,7 @@ class ContractMaker {
                                         body: [
                                             [this.CONF.date, this.CONF.vars.city]
                                         ],
-                                        
+
                                         alignment: 'center',
                                     },
                                     layout: 'noBorders',
@@ -1972,7 +2022,7 @@ class ContractMaker {
                                             ['№ очетного периода', 'Дата начала отчетного периода', 'Сумма платежа'],
                                             ...this.makeFinanceTable(myFactory),
                                         ],
-                                        
+
                                     },
                                     layout: DASHBORDER,
                                     colSpan: COLS - 1,
@@ -2018,6 +2068,7 @@ class ContractMaker {
                             breaker(),
                             makeHeader('10'),
                             breaker(),
+                            ...legalInfoTable(),
                             // FIXME:
 
                         ],
