@@ -1771,16 +1771,16 @@ class ContractMaker {
                 }
                 return {
                     form: ins.card["Данные компании"]["Форма организации"],
-                    compName: ins.card["Данные компании"]["Наименование организации"],
-                    legalAdres: ins.card["Доп. информация"]["Юридический адрес"],
-                    adres: ins.card["Доп. информация"]["Фактический адрес"],
-                    phone: ins.card["Доп. информация"]["Телефон"],
-                    mail: ins.card["Доп. информация"]["Эл. почта"],
-                    inn: ins.card["Реквизиты компании"]["ИНН"],
-                    kpp: ins.card["Реквизиты компании"]["КПП"],
-                    ogrn: ins.card["Реквизиты компании"]["ОГРН"],
-                    raccount: ins.card["Банковские реквизиты"]["р/счет"],
-                    kaccount: ins.card["Банковские реквизиты"]["к/счет"],
+                    name: ins.card["Данные компании"]["Наименование организации"],
+                    Legal_address: ins.card["Доп. информация"]["Юридический адрес"],
+                    Real_address: ins.card["Доп. информация"]["Фактический адрес"],
+                    company_phone: ins.card["Доп. информация"]["Телефон"],
+                    company_mail: ins.card["Доп. информация"]["Эл. почта"],
+                    INN: ins.card["Реквизиты компании"]["ИНН"],
+                    KPP: ins.card["Реквизиты компании"]["КПП"],
+                    OGRN: ins.card["Реквизиты компании"]["ОГРН"],
+                    r_account: ins.card["Банковские реквизиты"]["р/счет"],
+                    k_account: ins.card["Банковские реквизиты"]["к/счет"],
                     bik: ins.card["Банковские реквизиты"]["БИК"],
                     bank: ins.card["Банковские реквизиты"]["Банк"],
                 }
@@ -1801,7 +1801,7 @@ class ContractMaker {
                  * @param {Object} obj Объект с информацией о страхователе/страховщике
                  */
                 const adresStr = obj => {
-                    return (obj.legalAdres.trim() === obj.adres.trim()) ? `Юридический, почтовый адрес: ${obj.legalAdres}` : `Юридический адрес: ${obj.legalAdres}, почтовый адрес: ${obj.adres}`;
+                    return (obj.Legal_address.trim() === obj.Real_address.trim()) ? `Юридический, почтовый адрес: ${obj.Legal_address}` : `Юридический адрес: ${obj.Legal_address}, почтовый адрес: ${obj.Real_address}`;
                 }
                 return [
                     { text: '' },
@@ -1813,18 +1813,18 @@ class ContractMaker {
                                     {
                                         text: [
                                             { text: `${role1}: ` },
-                                            { text: `${obj1.form} ${obj1.compName}`, bold: true }
+                                            { text: `${obj1.form} ${obj1.name}`, bold: true }
                                         ]
                                     }, {
                                         text: [
                                             { text: `${role2}: ` },
-                                            { text: `${obj2.form} ${obj2.compName}`, bold: true }
+                                            { text: `${obj2.form} ${obj2.name}`, bold: true }
                                         ]
                                     }],
                                 [adresStr(obj1), adresStr(obj2)],
-                                [`телефон: ${obj1.phone}, e-mail: ${obj1.mail}`, `телефон: ${obj2.phone}, e-mail: ${obj2.mail}`],
-                                [`ИНН ${obj1.inn} КПП ${obj1.kpp} ОГРН ${obj1.ogrn}`, `ИНН ${obj2.inn} КПП ${obj2.kpp} ОГРН ${obj2.ogrn}`],
-                                [`р/счет ${obj1.raccount} ${obj1.bank} к/счет ${obj1.kaccount} БИК ${obj1.bik}`, `р/счет ${obj2.raccount} ${obj2.bank} к/счет ${obj2.kaccount} БИК ${obj2.bik}`]
+                                [`телефон: ${obj1.company_phone}, e-mail: ${obj1.company_mail}`, `телефон: ${obj2.company_phone}, e-mail: ${obj2.company_mail}`],
+                                [`ИНН ${obj1.INN} КПП ${obj1.KPP} ОГРН ${obj1.OGRN}`, `ИНН ${obj2.INN} КПП ${obj2.KPP} ОГРН ${obj2.OGRN}`],
+                                [`р/счет ${obj1.r_account} ${obj1.bank} к/счет ${obj1.k_account} БИК ${obj1.bik}`, `р/счет ${obj2.r_account} ${obj2.bank} к/счет ${obj2.k_account} БИК ${obj2.bik}`]
                             ],
                         },
                         layout: 'noBorders',

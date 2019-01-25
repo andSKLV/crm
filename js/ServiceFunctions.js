@@ -29,7 +29,7 @@ function GenerateClientCard(data) {
       {
         "ОГРН": data.OGRN,
         "ИНН": data.INN,
-        "КПП": data.num,
+        "КПП": data.KPP,
         "ОКПО": data.OKPO,
         "ОКВЭД": data.OKVED,
       },
