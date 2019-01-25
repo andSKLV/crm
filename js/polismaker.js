@@ -1565,12 +1565,6 @@ class ContractMaker {
         const conf = this.CONF;
         const resp = await fetch('./src/contract.json');
         conf.vars = await resp.json();
-        const company = mf.polisObj.insurants[0];
-        conf.companyForm = company.card["Данные компании"]["Форма организации"];
-        conf.companyFullForm = GetFullForm(conf.companyForm);
-        conf.companyName = company.card["Данные компании"]["Наименование организации"];
-        conf.directorName = company.card["Генеральный директор"]["ФИО директора"];
-        conf.roditelniyFIO = this.getShortFIO(conf.directorName);
         conf.contractNumber = HIP_NAME;
         conf.territory = this.makeTerritory(mf);
         conf.shipments = this.makeShipments(mf);
@@ -1607,14 +1601,13 @@ class ContractMaker {
     getShortFIO(FIO) {
         const [last,first,middle] = FIO.trim().split(' ');
         if (!last||!middle) {
-            // alert ('ФИО НЕ ЗАПОЛНЕНО'); //FIXME: включить на продакшене
-            return 'ФИО НЕ ЗАПОЛНЕНО';
+            return '_____________';
         };
         let person = {
             last,
             middle,
         };
-        const declitaned = declination(person, 'dative');
+        const declitaned = declination(person, 'accusative');
         return `${declitaned.last} ${last[0]}.${middle[0]}.`;
     }
     /**
@@ -1832,7 +1825,7 @@ class ContractMaker {
             }
             const oneCellTable = (arr,i) => {
                 const obj1 = parseInsurantToObj(arr[i]);
-                const role1 = `СТРАХОВАТЕЛЬ`;
+                const role1 = `СТРАХОВЩИК`;
                 /**
                  * Создание нужной строки с адресами в зависимости от того, совпадают ли эти адреса
                  * @param {Object} obj Объект с информацией о страхователе/страховщике
@@ -1871,6 +1864,26 @@ class ContractMaker {
                 tables.push(t);
             }
             return tables;
+        }
+        const insurantsNamesText = insurants => {
+            const arr = [];
+            const isIndexed = (insurants.length>1);
+            insurants.forEach((ins,i)=>{
+                const ind = isIndexed ? `-${i+1}` : '';
+                const companyForm = ins.card["Данные компании"]["Форма организации"];
+                const companyFullForm = GetFullForm(companyForm);
+                const name = ins.card["Данные компании"]["Наименование организации"];
+                const directorName = ins.card["Генеральный директор"]["ФИО директора"];
+                const roditelniyFIO = this.getShortFIO(directorName);
+                arr.push({ text: `${companyFullForm.toUpperCase()} `, bold: true },
+                { text: `«${name.toUpperCase()}» `, bold: true },
+                { text: `(${companyForm} «${name.toUpperCase()}») ` },
+                { text: `${this.CONF.vars.firstCell3}` },
+                { text: ` ${roditelniyFIO} ${this.CONF.vars.firstCell4}` },
+                { text: `«Страхователь${ind}»,` })
+            })
+            arr.push({ text: `${this.CONF.vars.firstCell5}` })
+            return arr;
         }
         const docDefinition = {
             pageSize: 'A4',
@@ -1931,12 +1944,7 @@ class ContractMaker {
                                         { text: `${this.CONF.vars.firstCell1} ` },
                                         { text: `${this.CONF.vars.firstCellKP} `, bold: true },
                                         { text: `${this.CONF.vars.firstCell2} ` },
-                                        { text: `${this.CONF.companyFullForm.toUpperCase()} `, bold: true },
-                                        { text: `«${this.CONF.companyName.toUpperCase()}» `, bold: true },
-                                        { text: `(${this.CONF.companyForm} «${this.CONF.companyName.toUpperCase()}») ` },
-                                        { text: `${this.CONF.vars.firstCell3} ` },
-                                        { text: `${this.CONF.roditelniyFIO}` },
-                                        { text: `${this.CONF.vars.firstCell4}` }
+                                        ...insurantsNamesText(myFactory.polisObj.insurants)
                                     ],
                                     colSpan: COLS,
                                 }, ...putEmptyCells(COLS - 1)
