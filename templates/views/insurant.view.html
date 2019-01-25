@@ -13,7 +13,7 @@
                     ng-click="moveInsurant(company, 'down')">
               </td>
               <td ng-click="loadCompanyProfile(company.id)">
-                 <div class="p--centered">{{company.name}}</div> 
+                 <div class="p--centered">{{company.card['Данные компании']["Наименование организации"]}}</div> 
               </td>
               <td ng-click="loadCompanyProfile(company.id)">
                 <div class="p--centered">{{company.card['Генеральный директор']['ФИО директора']}}</div> 

@@ -1,7 +1,8 @@
 import Polis from '../protos/polis.js';
-import {Car, CarGroup} from "../protos/car.js";
+import { Car, CarGroup } from "../protos/car.js";
 import Company from '../protos/company.js';
 import { DeleteInsurant } from '../ServiceFunctions.js';
+import { polisMaker, contractMaker } from '../polismaker.js';
 
 app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $rootScope, $timeout) {
 
@@ -109,18 +110,18 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             $scope.myFactory.polisObj.dates.startDate = setDay;
             $scope.setEndByTime(setDay, $scope.myFactory.polisObj.dates.time);
         }
-        
+
         makePolisObj();
         myFactory.polisObj.updateNames();
         selectNames();
         switchMakingPolis();
         clearSearchResults();
-        const baseRiskNeeded = myFactory.parks.some(park=>{
+        const baseRiskNeeded = myFactory.parks.some(park => {
             return park.risks.includes(BASENAME);
-        }) 
+        })
         //по необходимости загружаем каретку и "оговорки"
         if (!myFactory.polisObj || !myFactory.polisObj.isRequested || !$scope.currObj || $scope.currObj.length === 0) {
-            if (!myFactory.polisObj.conditions && myFactory.parks.length>0) {
+            if (!myFactory.polisObj.conditions && myFactory.parks.length > 0) {
                 const type = (myFactory.calcObj.factory) ? myFactory.calcObj.factory.HIPname : 'Перевозчики';
                 await myFactory.polisObj.loadConditions(type, baseRiskNeeded);
                 myFactory.polisObj.additionsSeen = true;
@@ -135,26 +136,26 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             myFactory.polisObj.type = myFactory.calcObj.factory.HIPname;
             myFactory.polisObj.additionsSeen = true;
         }
-        
+
         // если даты не назначены, то ставим их сегодняшним днем начало
-        if (!$scope.myFactory.polisObj.dates.start && !$scope.myFactory.polisObj.dates.end) setInitialDates ();
+        if (!$scope.myFactory.polisObj.dates.start && !$scope.myFactory.polisObj.dates.end) setInitialDates();
 
         myFactory.polisObj.updateConditionsCheck();
         // нужно ли обновить оговорки, машины, финансы после перехода
-        const needRefreshCalc = myFactory.parks.length>0 &&
-            (myFactory.cameFrom.path==='/calculation' ||
-            !myFactory.parks[0].processes[0].cars);
+        const needRefreshCalc = myFactory.parks.length > 0 &&
+            (myFactory.cameFrom.path === '/calculation' ||
+                !myFactory.parks[0].processes[0].cars);
         if (needRefreshCalc) $scope.updateState();
-        
-        const needToClearState = myFactory.parks.length===0 && (myFactory.payment.array&&myFactory.payment.array.length>0);
+
+        const needToClearState = myFactory.parks.length === 0 && (myFactory.payment.array && myFactory.payment.array.length > 0);
         if (needToClearState) $scope.clearState();
         openTab();
 
         //добавляем открытую компанию в сострахователи
-        if (myFactory.companyObj.id && 
-            !myFactory.polisObj.insurants.some(ins=>ins.id===myFactory.companyObj.id)) {
-                if (myFactory.polisObj.insurants.length===4) $scope.deleteInsurant (myFactory.polisObj.insurants[0]);
-                myFactory.polisObj.insurants.push(myFactory.companyObj);
+        if (myFactory.companyObj.id &&
+            !myFactory.polisObj.insurants.some(ins => ins.id === myFactory.companyObj.id)) {
+            if (myFactory.polisObj.insurants.length === 4) $scope.deleteInsurant(myFactory.polisObj.insurants[0]);
+            myFactory.polisObj.insurants.push(myFactory.companyObj);
         }
     }
     /**
@@ -162,11 +163,11 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      */
     $scope.createCars = () => {
         const mf = $scope.myFactory;
-        mf.parks.forEach(park=>{
+        mf.parks.forEach(park => {
             let max = -Infinity;
             //считаем максимальное количество машин в парке
-            park.processes.forEach(pr=>{
-                max = Math.max(max,pr.amount/24);
+            park.processes.forEach(pr => {
+                max = Math.max(max, pr.amount / 24);
             })
             const carGroup = new CarGroup();
             carGroup.park = park;
@@ -178,23 +179,23 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 carGroup.add(car);
             }
             // назначаем каждому процессу в парке машины
-            park.processes.forEach(pr=>{
+            park.processes.forEach(pr => {
                 pr.cars = [];
                 pr.showCars = false;
-                if ((pr.amount/24)===max) pr.isFull = true;
-                for (let i = 0; i < pr.amount/24; i++) {
+                if ((pr.amount / 24) === max) pr.isFull = true;
+                for (let i = 0; i < pr.amount / 24; i++) {
                     const car = pr.park.carGroup.cars[i];
                     pr.cars.push(car);
                     //добавляем поле селектора, для того чтобы привязать к модели ng-change машины
-                    car.selectorAutNumber = car.data.autNumber; 
+                    car.selectorAutNumber = car.data.autNumber;
                 }
             })
-            park.processes.forEach(pr=>{
+            park.processes.forEach(pr => {
                 if (!pr.isFull) pr.carSelector = ''; //вспомогательный ничего не значащий объект, нужен чтобы поставить ng-change на выбор машины
             })
         })
-        mf.setCarsFromExcel = async (cars,park, parkIndex, procIndex) => {
-            park.carGroup.cars.forEach((car,index)=>{
+        mf.setCarsFromExcel = async (cars, park, parkIndex, procIndex) => {
+            park.carGroup.cars.forEach((car, index) => {
                 const excelCar = cars[index];
                 for (let key in excelCar) {
                     car.data[key] = excelCar[key];
@@ -207,7 +208,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             // inpUI.focus();
             // await delay(50);
             // inpUI.blur();
-            mf.applyAllScopes ();
+            mf.applyAllScopes();
         }
 
     }
@@ -229,15 +230,15 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         if (!car.selectorAutNumber) {
             //событие вызывается также на изменение имени в инпуте, этот случай надо отсекать
             car.selectorAutNumber = car.data.autNumber;
-            return false; 
+            return false;
         }
-        const nextCar = group.find(c=>c.data.autNumber===car.selectorAutNumber);
+        const nextCar = group.find(c => c.data.autNumber === car.selectorAutNumber);
         const oldCarIndex = process.cars.indexOf(car);
         car.selectorAutNumber = car.data.autNumber;
         if (process.cars.includes(nextCar)) {
             //если в проце уже есть эта машина, тогда меняем их местами
             const nextCarIndex = process.cars.indexOf(nextCar);
-            [process.cars[oldCarIndex],process.cars[nextCarIndex]] = [process.cars[nextCarIndex],process.cars[oldCarIndex]];
+            [process.cars[oldCarIndex], process.cars[nextCarIndex]] = [process.cars[nextCarIndex], process.cars[oldCarIndex]];
         }
         else {
             //меняем на выбранную машину
@@ -259,14 +260,15 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         }
 
         if (myFactory.parks.length === 0 || !(myFactory.polisObj.dates.start || myFactory.polisObj.dates.end)) return false;
-        if (!myFactory.payment.array) myFactory.payment.makeArray(myFactory.totalPrice, myFactory.polisObj.dates);
+        const price = (myFactory.practicalPrice.val === '' || myFactory.practicalPrice.val == 0) ? myFactory.totalPrice : myFactory.practicalPrice.val;
+        if (!myFactory.payment.array) myFactory.payment.makeArray(price, myFactory.polisObj.dates);
         else {
             let needToCreate = false;
             const payTotal = ((typeof myFactory.payment.totalPrice) === 'string') ? myFactory.payment.totalPrice : addSpaces(Math.round(myFactory.payment.totalPrice));
-            const calcTotal = addSpaces(Math.round(myFactory.totalPrice));
+            const calcTotal = addSpaces(Math.round(price));
             if (payTotal !== calcTotal) needToCreate = true; //если сумма расчета изменилась, то нужно пересчитать финансы
             if (checkDiffInDates()) needToCreate = true; //если изменились даты или продолжительность договора - надо пересчитать
-            if (needToCreate) myFactory.payment.makeArray(myFactory.totalPrice, myFactory.polisObj.dates);
+            if (needToCreate) myFactory.payment.makeArray(price, myFactory.polisObj.dates);
         }
     }
     $scope.returnToDashboard = () => {
@@ -373,12 +375,12 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     param.values[0].name = "";
                 }
             })
-            $scope.currObj[index].values.forEach(val=>{
-                if (val.type==='btn-switch') {
+            $scope.currObj[index].values.forEach(val => {
+                if (val.type === 'btn-switch') {
                     val.selected = val.values[0];
                     val.switch = () => {
                         const i = val.values.indexOf(val.selected);
-                        const setInd = (i===val.values.length-1) ? 0 : i+1;
+                        const setInd = (i === val.values.length - 1) ? 0 : i + 1;
                         val.selected = val.values[setInd];
                     }
                 }
@@ -411,7 +413,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             for (let i = 1; i < 5; i++) {
                 if (!$scope.newDashboard.alreadySelected(i)) return false;
             }
-            
+
             return true;
         }
     }
@@ -447,7 +449,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                 xhr.send();
             })
         };
-        getRisks().then((data) => {
+        getRisks().then(async (data) => {
             let risks = [];
             data.forEach(({ model, values }) => {
                 if (model == "risk") {
@@ -456,7 +458,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     })
                 }
             })
-            polisMaker.makePDF(myFactory, risks);
+            debugger;
+            await polisMaker.start(myFactory, risks);
+            contractMaker.makePDF(myFactory);
             return null;
         }, function error(response) {
             console.error(response);
@@ -502,8 +506,8 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             const newDate = new Date(dates[3], Number(dates[2]) - 1, dates[1]);
             return newDate;
         }
-        const BTN_SWITCH_TODAY = $scope.currObj[$scope.newDashboard.currentPage].values.filter(val=>(val.type==='btn-switch'&&val.control==='today'))[0];
-        const BTN_SWITCH_TIME = $scope.currObj[$scope.newDashboard.currentPage].values.filter(val=>(val.type==='btn-switch'&&val.control==='time'))[0];
+        const BTN_SWITCH_TODAY = $scope.currObj[$scope.newDashboard.currentPage].values.filter(val => (val.type === 'btn-switch' && val.control === 'today'))[0];
+        const BTN_SWITCH_TIME = $scope.currObj[$scope.newDashboard.currentPage].values.filter(val => (val.type === 'btn-switch' && val.control === 'time'))[0];
         switch (control) {
             case 'start':
                 if (valiDate(dates.start)) {
@@ -576,7 +580,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      */
     $scope.keyHandler = (event, param, val) => {
         if (event.keyCode !== 13) return false;
-        if (param.type==='dates') {
+        if (param.type === 'dates') {
             const inputId = `#input_${val.control}`;
             document.querySelector(inputId).blur();
         }
@@ -588,8 +592,8 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
     $scope.switchBtnClick = control => {
         const dates = $scope.myFactory.polisObj.dates;
         control.switch();
-        if (control.control==='today') setStartDay(control);
-        if (control.control==='time') {
+        if (control.control === 'today') setStartDay(control);
+        if (control.control === 'time') {
             dates.time = control.selected;
             control.name = 'Срок: '; //на всякий случай возвращаем исходное имя, так как оно может меняться, если инпут вручную
             $scope.setEndByTime(dates.startDate, dates.time);
@@ -598,15 +602,15 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
          * Функция выставления дня начала по переключению кнопки
          * @param {obj} control 
          */
-        function setStartDay (control) {
+        function setStartDay(control) {
             const ind = control.values.indexOf(control.selected);
             let setDay = new Date();
             const dd = setDay.getDate();
-            setDay.setDate(dd+ind);
+            setDay.setDate(dd + ind);
             $scope.myFactory.polisObj.dates.start = parseDate(setDay);
             $scope.myFactory.polisObj.dates.startDate = setDay;
             $scope.setEndByTime(setDay, $scope.myFactory.polisObj.dates.time);
-        }   
+        }
     }
     /**
      * Преобразование объекта даты в строку
@@ -621,34 +625,34 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         if (month < 10) month = `0${month}`;
         return `${day}.${month}.${year}`;
     }
-    $scope.loadCompanyProfile = async function (id){
+    $scope.loadCompanyProfile = async function (id) {
         myFactory.cameFrom = {
             name: getPathName($location.$$path),
             path: $location.$$path,
         }
-        if (!myFactory.companyObj || !myFactory.companyObj.id) $scope.changeLocation('Компания');
+        if (myFactory.companyObj.id === id || !myFactory.companyObj || !myFactory.companyObj.id) $scope.changeLocation('Компания');
         else {
             myFactory.companyObj.id = id;
             $location.path('/profile');
         }
     }
     $scope.updateState = async (id) => {
-        const baseRiskNeeded = myFactory.parks.some(park=>{
+        const baseRiskNeeded = myFactory.parks.some(park => {
             return park.risks.includes(BASENAME);
-        }) 
+        })
         // проверяем когда расчеты загрузятся
         const calcIsLoaded = async () => {
-            function check () {
-                return (id) ? myFactory.calcObj.id===id : myFactory.parks.length>0 && myFactory.calcObj.isInited;
+            function check() {
+                return (id) ? myFactory.calcObj.id === id : myFactory.parks.length > 0 && myFactory.calcObj.isInited;
             }
-            return new Promise (resolve=>{
-                const id = setInterval(()=>{
+            return new Promise(resolve => {
+                const id = setInterval(() => {
                     if (check()) {
                         clearInterval(id);
                         resolve();
-                        
+
                     }
-                },100)
+                }, 100)
             })
         }
         await calcIsLoaded();
@@ -657,12 +661,11 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         myFactory.polisObj.type = myFactory.calcObj.factory.HIPname;
         myFactory.polisObj.additionsSeen = true;
         myFactory.polisObj.updateConditionsCheck();
-        if (myFactory.parks.length>0) $scope.createCars ();
+        if (myFactory.parks.length > 0) $scope.createCars();
         myFactory.polisObj.datesSeen = true;
         $scope.calcFinances();
-        myFactory.polisObj.financeSeen= true;
+        myFactory.polisObj.financeSeen = true;
         myFactory.polisObj.dates = myFactory.polisObj.dates;
-        console.log('state updated');
         myFactory.applyAllScopes();
     }
     /**
@@ -670,9 +673,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      */
     $scope.clearState = () => {
         myFactory.polisObj.additionsSeen = false;
-        myFactory.polisObj.conditions = undefined; 
+        myFactory.polisObj.conditions = undefined;
         myFactory.polisObj.datesSeen = false;
-        myFactory.polisObj.financeSeen= false;
+        myFactory.polisObj.financeSeen = false;
         myFactory.payment.array = undefined;
         console.log('state cleared');
     }
@@ -680,8 +683,8 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      * удаление страхователя из списка страхователей
      * @param {Company} insurant - страхователь на удаление
      */
-    $scope.deleteInsurant= (insurant) => {
-        DeleteInsurant (insurant, myFactory);
+    $scope.deleteInsurant = (insurant) => {
+        DeleteInsurant(insurant, myFactory);
     }
     /**
      * Перемещаем страхователя вниз или вверх по списку
@@ -690,12 +693,12 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
      */
     $scope.moveInsurant = (insurant, direction) => {
         const all = myFactory.polisObj.insurants;
-        if (all.length===1) return false;
+        if (all.length === 1) return false;
         const ind = all.indexOf(insurant);
-        if (direction==='up' && ind===0) return false;
-        if (direction==='down' && ind===all.length-1) return false;
-        const newInd = direction==='up' ? ind-1 : ind+1;
-        [all[ind],all[newInd]] = [all[newInd],all[ind]]; //swap elements
+        if (direction === 'up' && ind === 0) return false;
+        if (direction === 'down' && ind === all.length - 1) return false;
+        const newInd = direction === 'up' ? ind - 1 : ind + 1;
+        [all[ind], all[newInd]] = [all[newInd], all[ind]]; //swap elements
     }
 
     $scope.init();

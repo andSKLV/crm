@@ -359,6 +359,7 @@ div.dashboard_container{
 .mi_slider:focus,.dashboard_container:focus { outline: none; }
 .red{
     border: 1px solid red;
+    box-sizing: border-box;
 }
 .btnDelete,.btnCopy, .btnArrowUp{
     background: var(--gray);

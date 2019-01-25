@@ -29,7 +29,7 @@
                      ng-if="process.showRows==key && process.park.processes.length-1==process.park.processes.indexOf(process) && process.park.processes.length>1"
                      ng-mouseenter="process.unselectable=true;" ng-mouseleave="calculation.deleteProperty(process, 'unselectable')">&#9650</div>
             </td>
-            <td class="properties price" width="150px" ng-if="process.multi===undefined || process.multi.show  || process.multi=='deleted'" ng-class="{red: process.practicalPriceKoef!==undefined}">{{ calculation.applyFilter(process.totalPrice, "cost") }}</td>
+            <td class="properties price" width="150px" ng-if="process.multi===undefined || process.multi.show  || process.multi=='deleted'" ng-class="{red: (process.practicalPriceKoef!==undefined&&process.practicalPriceKoef!==1)}">{{ calculation.applyFilter(process.totalPrice, "cost") }}</td>
 
             <!-- Для мультистрок -->
             <td class="properties btns" width="20px" ng-if="process.multi!==undefined && !process.multi.show  && !process.multi.show && process.multi.processes.indexOf(process)==0">
@@ -60,7 +60,7 @@
 
             </td>
 
-            <td class="properties price" width="150px" ng-if="process.multi!==undefined && !process.multi.show  && !process.multi.show && process.multi.processes.indexOf(process)==0" ng-class="{red: process.practicalPriceKoef!==undefined}">{{ calculation.applyFilter(process.multi.price, "cost") }}</td>
+            <td class="properties price" width="150px" ng-if="process.multi!==undefined && !process.multi.show  && !process.multi.show && process.multi.processes.indexOf(process)==0" ng-class="{red: (process.practicalPriceKoef!==undefined&&process.practicalPriceKoef!==1)">{{ calculation.applyFilter(process.multi.price, "cost") }}</td>
             <!-- Для мультистрок -->
         </tr>
 
