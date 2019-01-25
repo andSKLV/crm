@@ -1519,10 +1519,10 @@ class PolisMaker {
                 bold: 'PTN-bold.ttf'
             }
         }
-        // pdfMake.createPdf(docDefinition).download('optionalName.pdf');
+        // pdfMake.createPdf(docDefinition).download(`Полис ${HIP_NAME}.pdf`);
         // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
-        // const win = window.open('', '_blank');
-        // delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+        const win = window.open('', '_blank');
+        delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
     }
     deleteServiceData(mf) {
         if (this.CONF.wasMocked) {
@@ -2159,6 +2159,7 @@ class ContractMaker {
                 bold: 'PTN-bold.ttf'
             }
         }
+        // pdfMake.createPdf(docDefinition).download(`Договор ${HIP_NAME}.pdf`);
         const win = window.open('', '_blank');
         delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
     }
