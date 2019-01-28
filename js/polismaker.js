@@ -1916,9 +1916,9 @@ class ContractMaker {
                 return `${addSpaces(fin)} ${currencySign[mf.document.currency]}`
             }
             return [
-                [row(this.CONF.vars.p7_2_table.r1_1), row(this.CONF.vars.p7_2_table.r1_2)],
-                [row(this.CONF.vars.p7_2_table.r2_1), row(this.CONF.vars.p7_2_table.r2_2)],
-                [row(this.CONF.vars.p7_2_table.r3_1), row(this.CONF.vars.p7_2_table.r3_2)],
+                [`${this.CONF.vars.p7_2_table.r1_1}%`, row(this.CONF.vars.p7_2_table.r1_2)],
+                [`${this.CONF.vars.p7_2_table.r2_1}%`, row(this.CONF.vars.p7_2_table.r2_2)],
+                [`${this.CONF.vars.p7_2_table.r3_1}%`, row(this.CONF.vars.p7_2_table.r3_2)],
             ]
         }
         const docDefinition = {
