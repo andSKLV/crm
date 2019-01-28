@@ -1535,7 +1535,6 @@ class PolisMaker {
 
 const polisMaker = new PolisMaker();
 
-
 class ContractMaker {
     constructor(myFactory) {
         this.CONF = {}
@@ -1578,7 +1577,28 @@ class ContractMaker {
         conf.carsNumber = polisMaker.carsNumber;
         conf.carsNumberWords = `(${GetWordsFromNumber(conf.carsNumber)})`;
         conf.carsEndWithOne = this.getMultipleWord(conf.carsNumber);
+        conf.periodName = this.choosePeriod(mf)
         return conf.vars;
+    }
+    choosePeriod ({payment}) {
+        const numOfPeriods = Number(payment.val);
+        switch (numOfPeriods) {
+            case 1:
+                return 'ежегодный';
+                break;
+            case 2:
+                return 'первый полугодовой';
+                break;
+            case 4:
+                return 'первый ежеквартальный';
+                break;
+            case 6:
+                return 'первый двухмесячный';
+                break;
+            case 12:
+                return 'первый ежемесячный';
+                break;
+        }
     }
     getMultipleWord(num) {
         const it = num % 10;
@@ -2047,7 +2067,7 @@ class ContractMaker {
                                 { text: `${this.CONF.price} (${this.CONF.priceStr}) `, bold: true },
                                 { text: [this.CONF.vars.p6_1_end, this.CONF.vars.payText[myFactory.payment.val]] }
                             ]),
-                            autoRow('6.2'),
+                            autoRow('6.2', [this.CONF.vars.p6_2_first,this.CONF.periodName,this.CONF.vars.p6_2_second]),
                             //таблица платежей 
                             [
                                 {
