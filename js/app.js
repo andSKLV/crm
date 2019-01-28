@@ -949,12 +949,33 @@ app.factory("myFactory", function () {
                             break;
                     }
                 };
-                this.totalPrice = price;
+                const calcPrices = (price,payments) => {
+                    debugger;
+                    price = Math.round(Number(price));
+                    const res = {}
+                    res.total = addSpaces(price);
+                    if (payments===1) {
+                        res.month = res.total;
+                        return res;
+                    }
+                    const month = price/payments;
+                    if (month%1===0 || month%1===0.5) {
+                        res.month = addSpaces(month);
+                        return res;
+                    };
+                    res.month = Math.round(month);
+                    res.last = addSpaces(roundToFixed((price-res.month*payments),2) + res.month);
+                    return res;
+                }
+                const {total, month, last} = calcPrices (price, this.val);
+                // this.totalPrice = Number(price.toFixed(0));
+                this.totalPrice = total;
                 this.datesWhenCreated = { start, end, time }; //записываем значение, чтобы потом сравнивать и если что обновлять финансы
-
-                let payment = addSpaces(roundToFixed((price / this.val),2)); //рассчитываем цену одного платежа
+                // let payment = addSpaces(roundToFixed((price / this.val),2)); //рассчитываем цену одного платежа
+                const payment = month;
                 this.calcDebt = payment; //устанавливаем долг равный полной цене
-                this.leftPrice = addSpaces(roundToFixed((price / this.val),2)*this.val);
+                // this.leftPrice = addSpaces(roundToFixed((price / this.val),2)*this.val);
+                this.leftPrice = total;
                 start = start.replace(/(\d+).(\d+).(\d+)/, "$2.$1.$3"); // меняем местами месяц и день в дате, чтобы js воспринимал нормально дату
                 end = end.replace(/(\d+).(\d+).(\d+)/, "$2.$1.$3");
                 const array = [];
@@ -969,7 +990,7 @@ app.factory("myFactory", function () {
                     array.push({
                         price: "",
                         date: "",
-                        debt: payment,
+                        debt: (last && i===this.val-1) ? last : payment,
                         debtDate: date,
                         manual: false
                     });
