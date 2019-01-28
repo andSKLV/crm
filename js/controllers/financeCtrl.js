@@ -124,12 +124,13 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
             $scope.newDashboard.currPayment.manual = false;
             return false;
         }
-        let newDebt = Math.round((notPayed - manualPrice) / notPayedCounter); // пересчитанная часть долга
-        newDebt = addSpaces(newDebt);
+        const newDebtRow = Math.round((notPayed - manualPrice) / notPayedCounter); // пересчитанная часть долга
+        const newDebt = addSpaces(newDebtRow);
+        const last = addSpaces(notPayed - manualPrice - (newDebtRow*notPayedCounter) + newDebtRow);
         // вставляем пересчитанные значения
-        pay.array.forEach(p => {
+        pay.array.forEach((p,i) => {
             if (!p.manual && !p.payed) {
-                p.debt = newDebt;
+                p.debt = (i===pay.array.length-1) ? last : newDebt;
             }
         });
         pay.calcDebt = newDebt;
