@@ -1521,8 +1521,8 @@ class PolisMaker {
         }
         // pdfMake.createPdf(docDefinition).download(`Полис ${HIP_NAME}.pdf`);
         // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
-        // const win = window.open('', '_blank');
-        // delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+        const win = window.open('', '_blank');
+        delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
     }
     deleteServiceData(mf) {
         if (this.CONF.wasMocked) {
@@ -1562,7 +1562,7 @@ class ContractMaker {
     }
     async confConstructor(mf) {
         const conf = this.CONF;
-        const resp = await fetch('./src/contract.json');
+        const resp = await fetch('./src/contract.json', {cache: "no-cache"});
         conf.vars = await resp.json();
         conf.contractNumber = HIP_NAME;
         conf.territory = this.makeTerritory(mf);
