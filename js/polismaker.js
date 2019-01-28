@@ -1521,8 +1521,8 @@ class PolisMaker {
         }
         // pdfMake.createPdf(docDefinition).download(`Полис ${HIP_NAME}.pdf`);
         // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
-        const win = window.open('', '_blank');
-        delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+        // const win = window.open('', '_blank');
+        // delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
     }
     deleteServiceData(mf) {
         if (this.CONF.wasMocked) {
@@ -1905,6 +1905,22 @@ class ContractMaker {
             arr.push({ text: `${this.CONF.vars.firstCell5}` })
             return arr;
         }
+        /**
+         * Создание таблицы убыточности
+         * @param {myFactory} mf 
+         */
+        const makeLossTable = (mf) => {
+            const price = mf.payment.leftPrice.replace(new RegExp(' ', 'g'), '');
+            const row = str => {
+                const fin = ((Number(str)/100)*Number(price)).toFixed(2);
+                return `${addSpaces(fin)} ${currencySign[mf.document.currency]}`
+            }
+            return [
+                [row(this.CONF.vars.p7_2_table.r1_1), row(this.CONF.vars.p7_2_table.r1_2)],
+                [row(this.CONF.vars.p7_2_table.r2_1), row(this.CONF.vars.p7_2_table.r2_2)],
+                [row(this.CONF.vars.p7_2_table.r3_1), row(this.CONF.vars.p7_2_table.r3_2)],
+            ]
+        }
         const docDefinition = {
             pageSize: 'A4',
             pageMargins: [50, 65, 50, 65],
@@ -2104,9 +2120,7 @@ class ContractMaker {
                                         widths: [225, 225],
                                         body: [
                                             [this.CONF.vars.p7_2_table.h1, this.CONF.vars.p7_2_table.h2],
-                                            [this.CONF.vars.p7_2_table.r1_1, this.CONF.vars.p7_2_table.r1_2],
-                                            [this.CONF.vars.p7_2_table.r2_1, this.CONF.vars.p7_2_table.r2_2],
-                                            [this.CONF.vars.p7_2_table.r3_1, this.CONF.vars.p7_2_table.r3_2],
+                                            ...makeLossTable(myFactory)
                                         ],
                                     },
                                     layout: DASHBORDER,
