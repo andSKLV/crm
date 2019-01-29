@@ -53,19 +53,32 @@ class PolisMaker {
         }
         conf.vars = {
             insurer: 'СТРАХОВЩИК',
+            insurer_eng: 'THE INSURER',
             insurant: 'СТРАХОВАТЕЛЬ',
+            insurant_eng: 'THE INSURED',
             polisCMRTTH: 'ПОЛИС CMR/ТТН - СТРАХОВАНИЯ ПЕРЕВОЗЧИКА',
+            polisCMRTTH_eng: 'POLICY OF CMR/TTN - INSURANCE TO ROAD HAULIER',
             inrulesofdoc: 'Страхование действует в соответствии с Договором CMR/ТТН - страхования перевозчика',
+            inrulesofdoc_eng: 'asdfghjk',
             kapitalpolis: 'ООО «СК «КАПИТАЛ-ПОЛИС»',
+            kapitalpolis_eng: 'CAPITAL-POLICY INSURANCE COMPANY, LLC',
             kpadress: 'Московский пр., д.22, лит. 3, Санкт-Петербург, 190013',
+            kpadress_eng: 'Moskovsky ave. 22, lit. Z, room 516, St. Petersburg, 190013, Russia',
             period: 'ПЕРИОД СТРАХОВАНИЯ',
+            period_eng: 'PERIOD OF INSURANCE',
             territory: 'ТЕРРИТОРИЯ СТРАХОВАНИЯ',
+            territory_eng: 'INSURED TRADING AREA',
             agrlimit: 'АГРЕГАТНЫЙ ЛИМИТ ОТВЕТСТВЕННОСТИ СТРАХОВЩИКА ПО ПОЛИСУ',
+            agrlimit_eng: 'LIABILITY LIMIT PER POLICY',
             fromdate: 'ДАТА ВЫДАЧИ',
             allcargo: 'Страхованием покрывается любой и каждый груз, с учетом исключений, предусмотренных полисом.',
+            allcargo_eng: 'qwertyuio',
             kpdirector: '/Корпусов Д.В/',
+            kpdirector_eng: '/D.V. Korpusov/',
             attorney: 'Доверенность №74/2018 от 10.03.2018',
+            attorney_eng: 'p.a. №74/2018 dd 10.03.2018',
             cargocenter: 'ЦЕНТР СТРАХОВАНИЯ ТРАНСПОРТНЫХ РИСКОВ',
+            cargocenter_eng: 'TRANSPORT RISKS INSURANCE CENTRE',
             lesionCenter: `УРЕГУЛИРОВАНИЕ УБЫТКОВ`,
             clientsCenter: 'КЛИЕНТСКАЯ СЛУЖБА',
             lesionCenterMail: 'claims@capitalpolis.ru',
@@ -1064,23 +1077,37 @@ class PolisMaker {
      * @param {myFactory} mf 
      * @param {object} param1 объект с параметрами марджинов строк
      */
-    prepareInsurantsBlock(mf, { oneRowMargin, twoRowMargin }) {
+    prepareInsurantsBlock(mf, { oneRowMargin, twoRowMargin }, eng) {
         const all = mf.polisObj.insurants;
-        const makeBlock = (ins, name) => {
+        const makeBlock = (ins, blockName) => {
+            let name = ins.card["Данные компании"]["Наименование организации"];
+            let form = ins.card["Данные компании"]["Форма организации"];
+            let adres = ins.card["Доп. информация"]["Юридический адрес"];
+            if (eng) {
+                const engForms = {
+                    "ЗАО": "PJSC",
+                    "ООО": "LLC",
+                    "ОАО": "PJSC",
+                    "ИП": "IE"
+                }
+                form = engForms[form];
+                adres = transliterate(adres);
+                name = transliterate (name);
+            }
             return [
                 {
-                    text: `${name}`,
+                    text: `${blockName}`,
                     style: "leftCellFirstTable",
                     margin: oneRowMargin
                 },
                 {
                     text: [
                         {
-                            text: `${ins.card["Данные компании"]["Форма организации"]} ${ins.card["Данные компании"]["Наименование организации"].toUpperCase()}\n`,
+                            text: `${form} ${name.toUpperCase()}\n`,
                             bold: true,
                         },
                         {
-                            text: `${ins.card["Доп. информация"]["Юридический адрес"]}`,
+                            text: `${adres}`,
                             fontSize: 10,
                         }
 
@@ -1091,10 +1118,11 @@ class PolisMaker {
                 }
             ]
         }
+        const textInsurant = eng ? this.CONF.vars.insurant_eng : this.CONF.vars.insurant;
         if (all.length === 1) {
-            return [makeBlock(all[0], `${this.CONF.vars.insurant}`)];
+            return [makeBlock(all[0], `${textInsurant}`)];
         }
-        return all.map((ins, i) => makeBlock(ins, `${this.CONF.vars.insurant} ${i + 1}`))
+        return all.map((ins, i) => makeBlock(ins, `${textInsurant} ${i + 1}`))
     }
     start(mf, risks) {
         return new Promise(resolve => {
@@ -1125,6 +1153,7 @@ class PolisMaker {
         const territory = this.makeTerritory(myFactory);
         let pageWithExtraFooter = null;
         const insurantsBlock = this.prepareInsurantsBlock(myFactory, { oneRowMargin, twoRowMargin });
+        const insurantsBlockEng = this.prepareInsurantsBlock(myFactory, { oneRowMargin, twoRowMargin },true);
         const docDefinition = {
             pageSize: 'A4',
             pageMargins: [50, 115, 50, 65],
@@ -1519,11 +1548,333 @@ class PolisMaker {
                 bold: 'PTN-bold.ttf'
             }
         }
+    
+        const englishTitle = {
+            pageSize: 'A4',
+            pageMargins: [50, 115, 50, 65],
+            content: [
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: [150, 150, 175],
+                        body: [
+                            [
+                                {
+                                    text: [
+                                        `${this.CONF.vars.polisCMRTTH_eng} \n`,
+                                        `${this.hipName}`
+                                    ],
+                                    colSpan: 3,
+                                    style: 'firstHeader',
+                                    fontSize: 20,
+                                    fillColor: '#e6e6e6',
+                                },
+                                {},
+                                {}
+                            ],
+                            [
+                                {
+                                    text: `${this.CONF.vars.inrulesofdoc_eng} ${this.hipName}.`,
+                                    colSpan: 3,
+                                    fontSize: 10,
+                                    alignment: 'center'
+                                },
+                                {},
+                                {}
+                            ],
+                        ],
+                        style: 'table',
+                    },
+                    layout: {// цвет границы 
+                        hLineColor: '#e6e6e6',
+                        vLineColor: '#e6e6e6',
+                    }
+                },
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: [150, 150, 175],
+                        body: [
+                            [
+                                {
+                                    text: this.CONF.vars.insurer_eng,
+                                    style: "leftCellFirstTable",
+                                    margin: oneRowMargin,
+                                },
+                                {
+                                    text: [
+                                        {
+                                            text: `${this.CONF.vars.kapitalpolis_eng}\n`,
+                                            bold: true,
+                                        },
+                                        {
+                                            text: `${this.CONF.vars.kpadress_eng}\n`,
+                                            fontSize: 10
+                                        }
+                                    ],
+                                    colSpan: 2,
+                                    alignment: 'center',
+                                    margin: twoRowMargin,
+                                },
+                                {}
+                            ],
+                            [
+                                {
+                                    text: this.CONF.vars.period_eng,
+                                    style: "leftCellFirstTable",
+                                    margin: oneRowMargin
+                                },
+                                {
+                                    text: `${myFactory.polisObj.dates.start} - ${myFactory.polisObj.dates.end}`,
+                                    alignment: 'center',
+                                    bold: true,
+                                    colSpan: 2,
+                                    margin: oneRowMargin
+                                }
+                            ]
+                        ],
+                        style: 'table',
+                    },
+                    layout: {// цвет границы 
+                        hLineColor: '#e6e6e6',
+                        vLineColor: '#e6e6e6',
+                    }
+                },
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: [150, 150, 175],
+                        body: [
+                            ...insurantsBlockEng,
+                        ]
+                    },
+                    layout: {// цвет границы 
+                        hLineColor: '#e6e6e6',
+                        vLineColor: '#e6e6e6',
+                    }
+                },
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: [150, 150, 175],
+                        body: [
+                            [
+                                {
+                                    text: this.CONF.vars.territory_eng,
+                                    style: "leftCellFirstTable",
+                                    margin: oneRowMargin.map((v, i) => (i === 1) ? v + 2 : v)
+                                },
+                                {
+                                    text: `${territory}`,
+                                    colSpan: 2,
+                                    alignment: 'center',
+                                    margin: (territory.length < 65) ? oneRowMargin : twoRowMargin
+                                },
+                            ],
+                            [
+                                {
+                                    text: this.CONF.vars.agrlimit_eng,
+                                    style: "leftCellFirstTable",
+                                    margin: twoRowMargin
+                                },
+                                {
+                                    text: `${this.CONF.AGR_LIMIT}`,
+                                    margin: twoRowMargin,
+                                    bold: true,
+                                    colSpan: 2,
+                                    alignment: 'center'
+                                },
+                            ],
+                            [
+                                {
+                                    text: this.CONF.vars.fromdate_eng,
+                                    style: "leftCellFirstTable",
+                                    margin: oneRowMargin
+                                },
+                                {
+                                    text: `${parseDate(new Date())}`,
+                                    bold: true,
+                                    colSpan: 2,
+                                    alignment: 'center',
+                                    margin: oneRowMargin
+                                },
+                            ]
+                        ]
+                    },
+                    layout: {// цвет границы 
+                        hLineColor: '#e6e6e6',
+                        vLineColor: '#e6e6e6',
+                    }
+                },
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: [493],
+                        body: [
+                            [
+                                {
+                                    text: this.CONF.vars.allcargo_eng,
+                                    style: "leftCellFirstTable",
+                                    alignment: 'center',
+                                    bold: true
+                                },
+                            ],
+                        ]
+                    },
+                    layout: {// цвет границы 
+                        hLineColor: '#e6e6e6',
+                        vLineColor: '#e6e6e6',
+                    }
+                },
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: [100, 300, 75],
+                        body: [
+                            [
+                                {
+                                    text: [
+                                        {
+                                            text: `${this.CONF.vars.kapitalpolis_eng}\n`,
+                                            bold: true,
+                                        },
+                                        {
+                                            text: "\n\n"
+                                        },
+                                        {
+                                            text: "__________________________________________\n",
+                                        },
+                                        {
+                                            text: `${this.CONF.vars.kpdirector_eng}\n`,
+                                            fontSize: 7
+                                        },
+                                        {
+                                            text: `${this.CONF.vars.attorney_eng}\n`,
+                                            fontSize: 7
+                                        }
+                                    ],
+                                    alignment: "center",
+                                    colSpan: 3
+                                },
+                                {},
+                                {}
+                            ]
+                        ]
+                    },
+                    layout: {// цвет границы 
+                        hLineColor: '#e6e6e6',
+                        vLineColor: '#e6e6e6',
+                    }
+                },
+                {
+                    text: '\n',
+                    fontSize: this.CONF.titleBreakerFontSize,
+                },
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: [242, 242],
+                        body: [
+                            [
+                                {
+                                    text: `${this.CONF.vars.cargocenter_eng}\n`,
+                                    bold: true,
+                                    fontSize: 12,
+                                    alignment: "center",
+                                    colSpan: 2
+                                },
+                                {
+                                }
+                            ],
+                            [
+                                {
+                                    text: `${this.CONF.vars.lesionCenter}В\n`,
+                                    fontSize: 10,
+                                    bold: true,
+                                    alignment: "center",
+                                },
+                                {
+                                    text: `${this.CONF.vars.clientsCenter}\n`,
+                                    fontSize: 10,
+                                    bold: true,
+                                    alignment: "center",
+                                }
+                            ],
+                            [
+                                {
+                                    text: `${this.CONF.vars.lesionCenterMail}\n`,
+                                    fontSize: 10,
+                                    alignment: "center",
+                                },
+                                {
+                                    text: `${this.CONF.vars.clientsCenterMail}\n`,
+                                    fontSize: 10,
+                                    alignment: "center",
+                                }
+                            ],
+                            [
+                                {
+                                    text: this.CONF.vars.kpadress_eng,
+                                    fontSize: 10,
+                                    alignment: "center",
+                                    colSpan: 2,
+                                },
+                                {
+                                }
+                            ]
+                        ]
+                    },
+                    layout: {// цвет границы 
+                        hLineColor: '#e6e6e6',
+                        vLineColor: '#e6e6e6',
+                    }
+                }
+            ],
+            styles: {
+                leftCellFirstTable: {
+                    fillColor: '#e6e6e6',
+                    fontSize: 10,
+                },
+                table: {
+                    fontStyle: "PT Sans Narrow",
+                    alignment: 'center'
+                },
+                firstHeader: {
+                    bold: true,
+                    fillColor: '#DBE5F1',
+                    alignment: 'center',
+                },
+                carInfo: {
+                    fontSize: 9,
+                }
+            }
+        };
+
         // pdfMake.createPdf(docDefinition).download(`Полис ${HIP_NAME}.pdf`);
         // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
         // const win = window.open('', '_blank');
         // delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+
+        const win = window.open('', '_blank');
+        delay(500).then(() => pdfMake.createPdf(englishTitle).open({}, win));
     }
+    
     deleteServiceData(mf) {
         if (this.CONF.wasMocked) {
             mf.companyObj = {};
@@ -2194,8 +2545,8 @@ class ContractMaker {
             }
         }
         // pdfMake.createPdf(docDefinition).download(`Договор ${HIP_NAME}.pdf`);
-        const win = window.open('', '_blank');
-        delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+        // const win = window.open('', '_blank');
+        // delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
     }
 
 }
