@@ -1913,7 +1913,7 @@ class ContractMaker {
     }
     async confConstructor(mf) {
         const conf = this.CONF;
-        const resp = await fetch('./src/contract.json');
+        const resp = await fetch('./src/contract.json', {cache: "no-cache"});
         conf.vars = await resp.json();
         conf.contractNumber = HIP_NAME;
         conf.territory = this.makeTerritory(mf);
