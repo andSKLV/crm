@@ -18,6 +18,11 @@ export default class Polis {
       time: 'Год',
     }
     this.insurants = [];
+    this.docsIncluded = {
+      contract : true,
+      engTitle : true,
+      policy : true, 
+    }
     if (mf) this.bindMyFactory(mf);
   }
   bindMyFactory (myFactory) {

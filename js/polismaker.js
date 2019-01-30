@@ -85,6 +85,7 @@ class PolisMaker {
             clientsCenter_eng: 'CUSTOMER SERVICE',
             lesionCenterMail: 'claims@capitalpolis.ru',
             clientsCenterMail: 'cargo@capitalpolis.ru',
+            discrepancy: 'In case of any discrepancy between English and Russian texts the Russian original has the priority',
             page: 'Лист',
             ofPolis: 'Полиса',
             riskAndRules: '1. Риски и условия страхования для транспортных средств, перечисленных в Приложении 1',
@@ -1073,7 +1074,7 @@ class PolisMaker {
         const translate = {
             "Россия" : "Russia",
             "Казахстан, Беларусь, Украина" : 'Kazakhstan, Belarus, Ukraine',
-            "Страны Европы" : 'Countries of Europe',
+            "Страны Европы" : 'States of Europe',
             "Весь мир" : 'whole world',
         }
         myFactory.polisObj.conditions.find(c => c.type === 'territory').values.forEach(v => {
@@ -1562,7 +1563,7 @@ class PolisMaker {
         }
         const englishTitle = {
             pageSize: 'A4',
-            pageMargins: [50, 115, 50, 65],
+            pageMargins: [50, 115, 50, 45],
             content: [
                 {
                     table: {
@@ -1698,11 +1699,11 @@ class PolisMaker {
                                 {
                                     text: this.CONF.vars.agrlimit_eng,
                                     style: "leftCellFirstTable",
-                                    margin: twoRowMargin
+                                    margin: oneRowMargin
                                 },
                                 {
                                     text: `${this.CONF.AGR_LIMIT}`,
-                                    margin: twoRowMargin,
+                                    margin: oneRowMargin,
                                     bold: true,
                                     colSpan: 2,
                                     alignment: 'center'
@@ -1855,7 +1856,8 @@ class PolisMaker {
                         hLineColor: '#e6e6e6',
                         vLineColor: '#e6e6e6',
                     }
-                }
+                },
+                {text:`\n${this.CONF.vars.discrepancy}`,fontSize:8,alignment:'center'}
             ],
             styles: {
                 leftCellFirstTable: {
@@ -1876,14 +1878,15 @@ class PolisMaker {
                 }
             }
         };
-
         // pdfMake.createPdf(docDefinition).download(`Полис ${HIP_NAME}.pdf`);
         // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
-        // const win = window.open('', '_blank');
-        // delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+        const win = window.open('', 'ПОЛИИС');
+        const win2 = window.open('', '_blank');
 
-        const win = window.open('', '_blank');
-        delay(500).then(() => pdfMake.createPdf(englishTitle).open({}, win));
+        //англ титульник
+        if (myFactory.polisObj.docsIncluded.engTitle) delay(100).then(() => pdfMake.createPdf(englishTitle).open({}, win));
+        //полис
+        if (myFactory.polisObj.docsIncluded.policy) delay(100).then(() => pdfMake.createPdf(docDefinition).open({}, win2));
     }
     
     deleteServiceData(mf) {
@@ -2556,8 +2559,8 @@ class ContractMaker {
             }
         }
         // pdfMake.createPdf(docDefinition).download(`Договор ${HIP_NAME}.pdf`);
-        // const win = window.open('', '_blank');
-        // delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+        const win = window.open('', '_blank');
+        if (myFactory.polisObj.docsIncluded.contract) delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
     }
 
 }
