@@ -58,8 +58,8 @@ class PolisMaker {
             insurant_eng: 'THE INSURED',
             polisCMRTTH: 'ПОЛИС CMR/ТТН - СТРАХОВАНИЯ ПЕРЕВОЗЧИКА',
             polisCMRTTH_eng: 'POLICY OF CMR/TTN - INSURANCE TO ROAD HAULIER',
-            inrulesofdoc: 'Страхование действует в соответствии с Договором CMR/ТТН - страхования перевозчика',
-            inrulesofdoc_eng: 'asdfghjk',
+            inrulesofdoc: 'Страхование действует в соответствии с Договором CMR/ТТН - страхования перевозчика ',
+            inrulesofdoc_eng: 'The insurance is valid in accordance with the CMR/TTN Contract - Insurance to road haulier ',
             kapitalpolis: 'ООО «СК «КАПИТАЛ-ПОЛИС»',
             kapitalpolis_eng: 'CAPITAL-POLICY INSURANCE COMPANY, LLC',
             kpadress: 'Московский пр., д.22, лит. 3, Санкт-Петербург, 190013',
@@ -72,7 +72,7 @@ class PolisMaker {
             agrlimit_eng: 'LIABILITY LIMIT PER POLICY',
             fromdate: 'ДАТА ВЫДАЧИ',
             allcargo: 'Страхованием покрывается любой и каждый груз, с учетом исключений, предусмотренных полисом.',
-            allcargo_eng: 'qwertyuio',
+            allcargo_eng: 'Insurance covers any and every cargo, subject to the exceptions provided for by the policy.',
             kpdirector: '/Корпусов Д.В/',
             kpdirector_eng: '/D.V. Korpusov/',
             attorney: 'Доверенность №74/2018 от 10.03.2018',
@@ -80,7 +80,9 @@ class PolisMaker {
             cargocenter: 'ЦЕНТР СТРАХОВАНИЯ ТРАНСПОРТНЫХ РИСКОВ',
             cargocenter_eng: 'TRANSPORT RISKS INSURANCE CENTRE',
             lesionCenter: `УРЕГУЛИРОВАНИЕ УБЫТКОВ`,
+            lesionCenter_eng: 'LOSS SETTLEMENT',
             clientsCenter: 'КЛИЕНТСКАЯ СЛУЖБА',
+            clientsCenter_eng: 'CUSTOMER SERVICE',
             lesionCenterMail: 'claims@capitalpolis.ru',
             clientsCenterMail: 'cargo@capitalpolis.ru',
             page: 'Лист',
@@ -1067,10 +1069,20 @@ class PolisMaker {
      */
     makeTerritory(myFactory) {
         const territoryVals = [];
+        const territoryVals_eng = [];
+        const translate = {
+            "Россия" : "Russia",
+            "Казахстан, Беларусь, Украина" : 'Kazakhstan, Belarus, Ukraine',
+            "Страны Европы" : 'Countries of Europe',
+            "Весь мир" : 'whole world',
+        }
         myFactory.polisObj.conditions.find(c => c.type === 'territory').values.forEach(v => {
-            if (v.checked) territoryVals.push(v.text.toUpperCase());
+            if (v.checked) {
+                territoryVals.push(v.text.toUpperCase());
+                territoryVals_eng.push(translate[v.text].toUpperCase());
+            } 
         });
-        return territoryVals.join(', ');
+        return [territoryVals.join(', '), territoryVals_eng.join(', ')];
     }
     /**
      * Создание блока с страхователями
@@ -1150,7 +1162,7 @@ class PolisMaker {
         const oneRowMargin = [0, 10, 0, 10];
         const twoRowMargin = [0, 5, 0, 5];
         // собираем стоку с данными о территории страхования
-        const territory = this.makeTerritory(myFactory);
+        const [territory,territory_eng] = this.makeTerritory(myFactory);
         let pageWithExtraFooter = null;
         const insurantsBlock = this.prepareInsurantsBlock(myFactory, { oneRowMargin, twoRowMargin });
         const insurantsBlockEng = this.prepareInsurantsBlock(myFactory, { oneRowMargin, twoRowMargin },true);
@@ -1548,7 +1560,6 @@ class PolisMaker {
                 bold: 'PTN-bold.ttf'
             }
         }
-    
         const englishTitle = {
             pageSize: 'A4',
             pageMargins: [50, 115, 50, 65],
@@ -1677,10 +1688,10 @@ class PolisMaker {
                                     margin: oneRowMargin.map((v, i) => (i === 1) ? v + 2 : v)
                                 },
                                 {
-                                    text: `${territory}`,
+                                    text: `${territory_eng}`,
                                     colSpan: 2,
                                     alignment: 'center',
-                                    margin: (territory.length < 65) ? oneRowMargin : twoRowMargin
+                                    margin: (territory_eng.length < 65) ? oneRowMargin : twoRowMargin
                                 },
                             ],
                             [
@@ -1804,13 +1815,13 @@ class PolisMaker {
                             ],
                             [
                                 {
-                                    text: `${this.CONF.vars.lesionCenter}В\n`,
+                                    text: `${this.CONF.vars.lesionCenter_eng}\n`,
                                     fontSize: 10,
                                     bold: true,
                                     alignment: "center",
                                 },
                                 {
-                                    text: `${this.CONF.vars.clientsCenter}\n`,
+                                    text: `${this.CONF.vars.clientsCenter_eng}\n`,
                                     fontSize: 10,
                                     bold: true,
                                     alignment: "center",
