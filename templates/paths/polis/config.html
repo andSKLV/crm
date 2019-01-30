@@ -1,16 +1,21 @@
 <div class='config_plate'>
   <h3>Выберите создаваемые документы:</h3>
   <div class="checkbox_host">
-    <input type="checkbox" name="polisNeeded"checked>
-    <label for="polisNeeded">Полис</label>
+    <input type="checkbox" name="policy" 
+      ng-checked="myFactory.polisObj.docsIncluded.policy" 
+      ng-click="onClickConfigCheckbox($event.target)">
+    <label for="policy">Полис</label>
   </div>
   <div class="checkbox_host">
-    <input type="checkbox" name="engTitleNeeded"checked>
-    <label for="engTitleNeeded">Титульник на английском</label>
+    <input type="checkbox" name="engTitle"
+      ng-checked="myFactory.polisObj.docsIncluded.engTitle" 
+      ng-click="onClickConfigCheckbox($event.target)">
+    <label for="engTitle">Титульный лист на английском</label>
   </div>
   <div class="checkbox_host">
-    <input type="checkbox" name="contractNeeded"checked>
-    <label for="contractNeeded">Договор</label>
+    <input type="checkbox" name="contract"
+      ng-checked="myFactory.polisObj.docsIncluded.contract" 
+      ng-click="onClickConfigCheckbox($event.target)">
+    <label for="contract">Договор</label>
   </div>
-
 </div>

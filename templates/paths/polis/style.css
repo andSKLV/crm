@@ -284,12 +284,18 @@ ul.park li table .td_cars{
     padding: 16px;
 }
 .checkbox_host{
+    display: flex;
+    flex-direction: row;
     margin: 8px 0px 8px 0px;
 }
+.checkbox_host label {
+    margin-left: 16px;
+}
 .checkbox_host input{
-    -ms-transform: scale(1.4); /* IE */
-    -moz-transform: scale(1.4); /* FF */
-    -webkit-transform: scale(1.4); /* Safari and Chrome */
-    -o-transform: scale(1.4); /* Opera */
+    -ms-transform: scale(1.4);
+    -moz-transform: scale(1.4);
+    -webkit-transform: scale(1.4);
+    -o-transform: scale(1.4);
+    transform: scale(1.4);
     padding: 8px;
 }

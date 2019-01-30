@@ -6,7 +6,6 @@ let app = angular.module("mainApp", [
     "ngRoute",
     "ngCookies",
     "ngAnimate",
-    "as.sortable"
 ]);
 app.config(function ($routeProvider) {
     //с помощью .config мы определяем маршруты приложения. Для конфигурации маршрутов используется объект $routeProvider.

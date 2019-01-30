@@ -19,9 +19,9 @@ export default class Polis {
     }
     this.insurants = [];
     this.docsIncluded = {
-      contract : true,
+      contract : false,
       engTitle : true,
-      policy : true, 
+      policy : false, 
     }
     if (mf) this.bindMyFactory(mf);
   }

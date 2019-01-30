@@ -1880,13 +1880,17 @@ class PolisMaker {
         };
         // pdfMake.createPdf(docDefinition).download(`Полис ${HIP_NAME}.pdf`);
         // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
-        const win = window.open('', 'ПОЛИИС');
-        const win2 = window.open('', '_blank');
-
+        
         //англ титульник
-        if (myFactory.polisObj.docsIncluded.engTitle) delay(100).then(() => pdfMake.createPdf(englishTitle).open({}, win));
+        if (myFactory.polisObj.docsIncluded.engTitle) {
+            const win = window.open('', 'ПОЛИИС');
+            delay(100).then(() => pdfMake.createPdf(englishTitle).open({}, win));
+        }
         //полис
-        if (myFactory.polisObj.docsIncluded.policy) delay(100).then(() => pdfMake.createPdf(docDefinition).open({}, win2));
+        if (myFactory.polisObj.docsIncluded.policy) {
+            const win2 = window.open('', '_blank');
+            delay(100).then(() => pdfMake.createPdf(docDefinition).open({}, win2));
+        } 
     }
     
     deleteServiceData(mf) {
@@ -2559,8 +2563,11 @@ class ContractMaker {
             }
         }
         // pdfMake.createPdf(docDefinition).download(`Договор ${HIP_NAME}.pdf`);
-        const win = window.open('', '_blank');
-        if (myFactory.polisObj.docsIncluded.contract) delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+        
+        if (myFactory.polisObj.docsIncluded.contract) {
+            const win = window.open('', '_blank');
+            delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+        } 
     }
 
 }
