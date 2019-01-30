@@ -277,3 +277,19 @@ ul.park li table .td_cars{
     font-family: 'Lato', Calibri, Arial, sans-serif;
     color: var(--dark-blue);
 }
+
+.config_plate{
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+}
+.checkbox_host{
+    margin: 8px 0px 8px 0px;
+}
+.checkbox_host input{
+    -ms-transform: scale(1.4); /* IE */
+    -moz-transform: scale(1.4); /* FF */
+    -webkit-transform: scale(1.4); /* Safari and Chrome */
+    -o-transform: scale(1.4); /* Opera */
+    padding: 8px;
+}
