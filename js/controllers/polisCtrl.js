@@ -713,6 +713,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         el[field] = value.trim();
     }
     $scope.onClickFocus = (type,elem) => {
+        if (elem.tagName==='TEXTAREA') return true;
         if (elem.tagName==='DIV') elem = elem.parentNode;
         if (type==='sibling') elem = elem.nextElementSibling;
         const focusEl = elem.children[0];
