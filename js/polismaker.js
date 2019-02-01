@@ -17,7 +17,6 @@ const emptyCell = {
     border: [false, false, false, false],
     fontSize: 1,
 }
-const HIP_NAME = '№ HIP-0000000-00-17';
 const BASEFONTSIZE = 10.5;
 const BIGFONTSIZE = BASEFONTSIZE + 1.5;
 const currencySign = {
@@ -35,7 +34,6 @@ class PolisMaker {
             return [...this].indexOf(val);
         }
         this.isOneCarGroup = false;
-        this.hipName = HIP_NAME; //FIXME: изменить потом, когда дойдет до генерации индекса полиса
         this.CONF = {
             wasMocked: false,
         }
@@ -45,6 +43,7 @@ class PolisMaker {
      * @param {myFactory} mf 
      */
     confConstructor(mf) {
+        this.hipName = mf.polisObj.polisName;
         const conf = this.CONF;
         conf.AGR_LIMIT = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`;
         conf.RISK_CHANGER = {
@@ -57,9 +56,9 @@ class PolisMaker {
             insurant: 'СТРАХОВАТЕЛЬ',
             insurant_eng: 'THE INSURED',
             polisCMRTTH: 'ПОЛИС CMR/ТТН - СТРАХОВАНИЯ ПЕРЕВОЗЧИКА',
-            polisCMRTTH_eng: 'POLICY OF CMR/TTN - INSURANCE TO ROAD HAULIER',
+            polisCMRTTH_eng: 'CMR/TTN INSURANCE POLICY TO ROAD HAULIER',
             inrulesofdoc: 'Страхование действует в соответствии с Договором CMR/ТТН - страхования перевозчика ',
-            inrulesofdoc_eng: 'The insurance is valid in accordance with the CMR/TTN Contract - Insurance to road haulier ',
+            inrulesofdoc_eng: 'The insurance is valid in accordance with the CMR/TTN insurance Contract to road haulier ',
             kapitalpolis: 'ООО «СК «КАПИТАЛ-ПОЛИС»',
             kapitalpolis_eng: 'CAPITAL-POLICY INSURANCE COMPANY, LLC',
             kpadress: 'Московский пр., д.22, лит. 3, Санкт-Петербург, 190013',
@@ -72,7 +71,7 @@ class PolisMaker {
             agrlimit_eng: 'LIABILITY LIMIT PER POLICY',
             fromdate: 'ДАТА ВЫДАЧИ',
             allcargo: 'Страхованием покрывается любой и каждый груз, с учетом исключений, предусмотренных полисом.',
-            allcargo_eng: 'Insurance covers any and every cargo, subject to the exceptions provided for by the policy.',
+            allcargo_eng: 'Insurance covers each and any cargo, subject to the exceptions provided for by the policy.',
             kpdirector: '/Корпусов Д.В/',
             kpdirector_eng: '/D.V. Korpusov/',
             attorney: 'Доверенность №74/2018 от 10.03.2018',
@@ -80,10 +79,14 @@ class PolisMaker {
             cargocenter: 'ЦЕНТР СТРАХОВАНИЯ ТРАНСПОРТНЫХ РИСКОВ',
             cargocenter_eng: 'TRANSPORT RISKS INSURANCE CENTRE',
             lesionCenter: `УРЕГУЛИРОВАНИЕ УБЫТКОВ`,
-            lesionCenter_eng: 'LOSS SETTLEMENT',
+            lesionCenter_eng: 'CLAIMS HANDLING',
             clientsCenter: 'КЛИЕНТСКАЯ СЛУЖБА',
             clientsCenter_eng: 'CUSTOMER SERVICE',
             lesionCenterMail: 'claims@capitalpolis.ru',
+            lesionCenterPhone: '+7 (812) 322-63-51 доб.2061',
+            lesionCenterPhone_eng: '+7 (812) 322-63-51 ext.2061',
+            clientsCenterPhone: '+7 (812) 322-63-51 доб.2064',
+            clientsCenterPhone_eng: '+7 (812) 322-63-51 ext.2064',
             clientsCenterMail: 'cargo@capitalpolis.ru',
             discrepancy: 'In case of any discrepancy between English and Russian texts the Russian original has the priority',
             page: 'Лист',
@@ -333,9 +336,9 @@ class PolisMaker {
             case 2:
                 return BASEFONTSIZE + 3;
             case 3:
-                return BASEFONTSIZE - 1;
+                return 4;
             case 4:
-                return 4; // с таким значением помещается на одном листе
+                return 0; // с таким значением помещается на одном листе
             default:
                 return BASEFONTSIZE;
         }
@@ -1104,8 +1107,8 @@ class PolisMaker {
                     "ИП": "IE"
                 }
                 form = engForms[form];
-                adres = transliterate(adres);
-                name = transliterate (name);
+                adres = ins.engAdres;
+                name = ins.engName;
             }
             return [
                 {
@@ -1152,6 +1155,8 @@ class PolisMaker {
         if (!myFactory.companyObj.card || myFactory.companyObj.card["Данные компании"]["Наименование организации"] === '') {
             // заполняем нужные поля заглушками, если компания не выбрана
             myFactory.companyObj.card = ExampleCompany({isOld: true});
+            myFactory.companyObj.engAdres = 'adres on engish language';
+            myFactory.companyObj.engName = 'OBRAZEC';
             myFactory.polisObj.insurants.push(myFactory.companyObj);
             this.CONF.wasMocked = true;
         }
@@ -1432,6 +1437,18 @@ class PolisMaker {
                                     text: `${this.CONF.vars.clientsCenter}\n`,
                                     fontSize: 10,
                                     bold: true,
+                                    alignment: "center",
+                                }
+                            ],
+                            [
+                                {
+                                    text: `${this.CONF.vars.lesionCenterPhone}\n`,
+                                    fontSize: 10,
+                                    alignment: "center",
+                                },
+                                {
+                                    text: `${this.CONF.vars.clientsCenterPhone}\n`,
+                                    fontSize: 10,
                                     alignment: "center",
                                 }
                             ],
@@ -1830,6 +1847,18 @@ class PolisMaker {
                             ],
                             [
                                 {
+                                    text: `${this.CONF.vars.lesionCenterPhone_eng}\n`,
+                                    fontSize: 10,
+                                    alignment: "center",
+                                },
+                                {
+                                    text: `${this.CONF.vars.clientsCenterPhone_eng}\n`,
+                                    fontSize: 10,
+                                    alignment: "center",
+                                }
+                            ],
+                            [
+                                {
                                     text: `${this.CONF.vars.lesionCenterMail}\n`,
                                     fontSize: 10,
                                     alignment: "center",
@@ -1880,13 +1909,17 @@ class PolisMaker {
         };
         // pdfMake.createPdf(docDefinition).download(`Полис ${HIP_NAME}.pdf`);
         // console.log(JSON.stringify(docDefinition,null,'    ')); // временно для вставки в редактор
-        const win = window.open('', 'ПОЛИИС');
-        const win2 = window.open('', '_blank');
-
+        
         //англ титульник
-        if (myFactory.polisObj.docsIncluded.engTitle) delay(100).then(() => pdfMake.createPdf(englishTitle).open({}, win));
+        if (myFactory.polisObj.docsIncluded.engTitle) {
+            const win = window.open('', 'ПОЛИИС');
+            delay(100).then(() => pdfMake.createPdf(englishTitle).open({}, win));
+        }
         //полис
-        if (myFactory.polisObj.docsIncluded.policy) delay(100).then(() => pdfMake.createPdf(docDefinition).open({}, win2));
+        if (myFactory.polisObj.docsIncluded.policy) {
+            const win2 = window.open('', '_blank');
+            delay(100).then(() => pdfMake.createPdf(docDefinition).open({}, win2));
+        } 
     }
     
     deleteServiceData(mf) {
@@ -1929,7 +1962,7 @@ class ContractMaker {
         const conf = this.CONF;
         const resp = await fetch('./src/contract.json', {cache: "no-cache"});
         conf.vars = await resp.json();
-        conf.contractNumber = HIP_NAME;
+        conf.contractNumber = mf.polisObj.polisName;
         conf.territory = this.makeTerritory(mf);
         conf.shipments = this.makeShipments(mf);
         const startDate = this.getStrDate(mf.polisObj.dates.startDate);
@@ -2559,8 +2592,11 @@ class ContractMaker {
             }
         }
         // pdfMake.createPdf(docDefinition).download(`Договор ${HIP_NAME}.pdf`);
-        const win = window.open('', '_blank');
-        if (myFactory.polisObj.docsIncluded.contract) delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+        
+        if (myFactory.polisObj.docsIncluded.contract) {
+            const win = window.open('', '_blank');
+            delay(500).then(() => pdfMake.createPdf(docDefinition).open({}, win)); // временно, чтобы не плодить кучу файлов
+        } 
     }
 
 }

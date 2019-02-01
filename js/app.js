@@ -6,7 +6,6 @@ let app = angular.module("mainApp", [
     "ngRoute",
     "ngCookies",
     "ngAnimate",
-    "as.sortable"
 ]);
 app.config(function ($routeProvider) {
     //с помощью .config мы определяем маршруты приложения. Для конфигурации маршрутов используется объект $routeProvider.
@@ -222,6 +221,12 @@ app.directive("polisNav", function () {
     return {
         restrict: "A",
         templateUrl: "./templates/paths/polis/navigation.html"
+    };
+});
+app.directive("polisConfig", function () {
+    return {
+        restrict: "A",
+        templateUrl: "./templates/paths/polis/config.html"
     };
 });
 app.directive("companyDashboard", function () {

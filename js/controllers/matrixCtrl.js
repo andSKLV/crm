@@ -468,6 +468,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             companyObj.card = myFactory.newClientCard;
             companyObj.markAsLoaded();
             await loadAddresses();
+            companyObj.transliterate();
             if (myFactory.polisObj &&
                 !myFactory.polisObj.insurants.some(ins=>ins.id===companyObj.id) ) {
                     if (myFactory.polisObj.insurants.length===4) {

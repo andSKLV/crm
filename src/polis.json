@@ -62,5 +62,26 @@
                 "name": "Редактировать"
             }
         ]
+    },
+    {
+        "name": "Конфигуратор",
+        "type": "config",
+        "values": [
+            {
+                "name": "Полис",
+                "type": "check",
+                "field": "policy"
+            },
+            {
+                "name": "Титульный лист на английском",
+                "type": "check",
+                "field": "engTitle"
+            },
+            {
+                "name": "Договор",
+                "type": "check",
+                "field": "contract"
+            }
+        ]
     }
 ]
