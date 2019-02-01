@@ -704,7 +704,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         myFactory.polisObj.docsIncluded[name] = !myFactory.polisObj.docsIncluded[name];
     }
     $scope.onChange = (el,field,value) => {
-        el[field] = value;
+        el[field] = value.trim();
     }
 
     $scope.init();

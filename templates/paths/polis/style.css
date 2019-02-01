@@ -285,6 +285,7 @@ ul.park li table .td_cars{
 .input_box {
     background-color: white;
     border: 1px solid var(--dark-blue);
+    box-sizing: content-box;
 }
 .input_cell {
     width: 99%;
@@ -292,11 +293,6 @@ ul.park li table .td_cars{
     border: none;
     background-color: white;
     text-align: center;
-    line-height: 1;
     font-size: 12pt;
     resize: none;
-}
-.input_cell:focus {
-    box-shadow: 0px 1px 0px 1px white inset !important;
-    outline-color: white;
 }
