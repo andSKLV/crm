@@ -19,10 +19,11 @@ export default class Polis {
     }
     this.insurants = [];
     this.docsIncluded = {
-      contract : false,
-      engTitle : true,
+      contract : true,
+      engTitle : false,
       policy : false, 
     }
+    this.polisName = '№ HIP-0000000-00-00';
     if (mf) this.bindMyFactory(mf);
   }
   bindMyFactory (myFactory) {

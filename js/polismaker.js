@@ -17,7 +17,6 @@ const emptyCell = {
     border: [false, false, false, false],
     fontSize: 1,
 }
-const HIP_NAME = '№ HIP-0000000-00-17';
 const BASEFONTSIZE = 10.5;
 const BIGFONTSIZE = BASEFONTSIZE + 1.5;
 const currencySign = {
@@ -35,7 +34,6 @@ class PolisMaker {
             return [...this].indexOf(val);
         }
         this.isOneCarGroup = false;
-        this.hipName = HIP_NAME; //FIXME: изменить потом, когда дойдет до генерации индекса полиса
         this.CONF = {
             wasMocked: false,
         }
@@ -45,6 +43,7 @@ class PolisMaker {
      * @param {myFactory} mf 
      */
     confConstructor(mf) {
+        this.hipName = mf.polisObj.polisName;
         const conf = this.CONF;
         conf.AGR_LIMIT = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`;
         conf.RISK_CHANGER = {
@@ -1156,6 +1155,8 @@ class PolisMaker {
         if (!myFactory.companyObj.card || myFactory.companyObj.card["Данные компании"]["Наименование организации"] === '') {
             // заполняем нужные поля заглушками, если компания не выбрана
             myFactory.companyObj.card = ExampleCompany({isOld: true});
+            myFactory.companyObj.engAdres = 'adres on engish language';
+            myFactory.companyObj.engName = 'OBRAZEC';
             myFactory.polisObj.insurants.push(myFactory.companyObj);
             this.CONF.wasMocked = true;
         }
@@ -1961,7 +1962,7 @@ class ContractMaker {
         const conf = this.CONF;
         const resp = await fetch('./src/contract.json', {cache: "no-cache"});
         conf.vars = await resp.json();
-        conf.contractNumber = HIP_NAME;
+        conf.contractNumber = mf.polisObj.polisName;
         conf.territory = this.makeTerritory(mf);
         conf.shipments = this.makeShipments(mf);
         const startDate = this.getStrDate(mf.polisObj.dates.startDate);

@@ -1,5 +1,22 @@
-<div class='config_plate' ng-if="myFactory.polisObj.docsIncluded.engTitle&&myFactory.polisObj.insurants.length">
-  <div ng-repeat="ins in myFactory.polisObj.insurants">
+<div class='config_plate' >
+    <table class="matrix">
+      <tbody>
+        <tr class="matrix_row">
+          <td>
+            <div style="text-align: center">
+              Номер Полиса:
+            </div>
+          </td>
+          <td class="input_box">
+            <textarea rows="1" class="input_cell" spellcheck="false"
+              ng-value="myFactory.polisObj.polisName" 
+            ng-blur="onChange(myFactory.polisObj,'polisName',$event.target.value)"></textarea>
+          </td>
+        </tr>
+      </tbody>
+    </table> 
+  <div ng-if="myFactory.polisObj.docsIncluded.engTitle&&myFactory.polisObj.insurants.length"
+    ng-repeat="ins in myFactory.polisObj.insurants">
     <fieldset>
       <legend>Страхователь {{$index+1}}:</legend>
       <table class="matrix">
@@ -11,7 +28,7 @@
                 </div>
               </td>
               <td class="input_box">
-                <textarea rows="3" class="input_cell" spellcheck="false"
+                <textarea rows="1" class="input_cell" spellcheck="false"
                   ng-value="ins.engName" 
                   ng-blur="onChange(ins,'engName',$event.target.value)"></textarea>
               </td>
