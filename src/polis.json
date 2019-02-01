@@ -68,8 +68,19 @@
         "type": "config",
         "values": [
             {
-                "name": "ЧТо то",
-                "type": "input"
+                "name": "Полис",
+                "type": "check",
+                "field": "policy"
+            },
+            {
+                "name": "Титульный лист на английском",
+                "type": "check",
+                "field": "engTitle"
+            },
+            {
+                "name": "Договор",
+                "type": "check",
+                "field": "contract"
             }
         ]
     }

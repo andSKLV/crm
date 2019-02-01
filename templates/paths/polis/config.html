@@ -1,21 +1,30 @@
-<div class='config_plate'>
-  <h3>Выберите создаваемые документы:</h3>
-  <div class="checkbox_host">
-    <input type="checkbox" name="policy" 
-      ng-checked="myFactory.polisObj.docsIncluded.policy" 
-      ng-click="onClickConfigCheckbox($event.target)">
-    <label for="policy">Полис</label>
-  </div>
-  <div class="checkbox_host">
-    <input type="checkbox" name="engTitle"
-      ng-checked="myFactory.polisObj.docsIncluded.engTitle" 
-      ng-click="onClickConfigCheckbox($event.target)">
-    <label for="engTitle">Титульный лист на английском</label>
-  </div>
-  <div class="checkbox_host">
-    <input type="checkbox" name="contract"
-      ng-checked="myFactory.polisObj.docsIncluded.contract" 
-      ng-click="onClickConfigCheckbox($event.target)">
-    <label for="contract">Договор</label>
+<div class='config_plate' ng-if="myFactory.polisObj.docsIncluded.engTitle&&myFactory.polisObj.insurants.length">
+  <div ng-repeat="ins in myFactory.polisObj.insurants">
+    <fieldset>
+      <legend>Страхователь {{$index+1}}:</legend>
+      <table class="matrix">
+          <tbody>
+            <tr class="matrix_row">
+              <td>
+                <div style="text-align: center">
+                  {{ins.name}}
+                </div>
+              </td>
+              <td class="input_box">
+                <textarea rows="3" class="input_cell" ng-value="ins.engName" ng-blur="onChange(ins,'engName',$event.target.value)"></textarea>
+              </td>
+              <td>
+                <div style="text-align: center">
+                  {{ins.card["Доп. информация"]["Юридический адрес"]}}
+                </div>
+              </td>
+              <td class="input_box">
+                <textarea rows="3" class="input_cell" ng-value="ins.engAdres" ng-blur="onChange(ins,'engAdres',$event.target.value)"></textarea>
+              </td>
+            </tr>
+          </tbody>
+      </table>
+    </fieldset>
+    
   </div>
 </div>

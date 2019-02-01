@@ -700,8 +700,11 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         const newInd = direction === 'up' ? ind - 1 : ind + 1;
         [all[ind], all[newInd]] = [all[newInd], all[ind]]; //swap elements
     }
-    $scope.onClickConfigCheckbox = ({name,checked}) => {
-        myFactory.polisObj.docsIncluded[name] = checked;
+    $scope.onClickConfigCheckbox = (name) => {
+        myFactory.polisObj.docsIncluded[name] = !myFactory.polisObj.docsIncluded[name];
+    }
+    $scope.onChange = (el,field,value) => {
+        el[field] = value;
     }
 
     $scope.init();
