@@ -466,9 +466,9 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             myFactory.companyObj = companyObj;
             companyObj.parseFromCompaniesResponse(data) //создаем объект с  id  из ответа и сохраняем ответ внутри
             companyObj.card = myFactory.newClientCard;
-            companyObj.transliterate();
             companyObj.markAsLoaded();
             await loadAddresses();
+            companyObj.transliterate();
             if (myFactory.polisObj &&
                 !myFactory.polisObj.insurants.some(ins=>ins.id===companyObj.id) ) {
                     if (myFactory.polisObj.insurants.length===4) {
