@@ -44,6 +44,7 @@ class PolisMaker {
      */
     confConstructor(mf) {
         this.hipName = mf.polisObj.polisName;
+        this.engIncluded = mf.polisObj.docsIncluded.engTitle;
         const conf = this.CONF;
         conf.AGR_LIMIT = `${addSpaces(mf.a_limit.value)} ${currencySign[mf.document.currency]}`;
         conf.RISK_CHANGER = {
@@ -1495,26 +1496,36 @@ class PolisMaker {
                 if (pageWithExtraFooter === null) {
                     findExtraPage(pagesArr);
                 }
-                if (page === pageWithExtraFooter) return {
-                    table: {
-                        headerRows: 0,
-                        widths: [50, 70, 150, 70, 150, 50],
-                        body: [
-                            [
-                                {
-                                    text: `${this.CONF.vars.page} ${page.toString()}/${pages.toString()} ${this.CONF.vars.ofPolis} ${this.hipName}`,
-                                    colSpan: 6,
-                                    border: NOBORDER,
-                                    alignment: 'center',
-                                    fontSize: 7,
-                                    margin: [0, 40, 0, 0],
-                                }
-                            ]
-                        ],
-                        style: 'table'
+                if (page === pageWithExtraFooter) {
+                    if (this.engIncluded) {
+                        page = page + 1;
+                        pages = pages + 1;
                     }
-                }
+                    return {
+                        table: {
+                            headerRows: 0,
+                            widths: [50, 70, 150, 70, 150, 50],
+                            body: [
+                                [
+                                    {
+                                        text: `${this.CONF.vars.page} ${page.toString()}/${pages.toString()} ${this.CONF.vars.ofPolis} ${this.hipName}`,
+                                        colSpan: 6,
+                                        border: NOBORDER,
+                                        alignment: 'center',
+                                        fontSize: 7,
+                                        margin: [0, 40, 0, 0],
+                                    }
+                                ]
+                            ],
+                            style: 'table'
+                        }
+                    }
+                }    
                 if (page > 1) {
+                    if (this.engIncluded) {
+                        page = page + 1;
+                        pages = pages + 1;
+                    }
                     const footer = {};
                     footer.table = Object.assign({}, this.CONF.footerObj.table);
                     const len = footer.table.widths.length;
