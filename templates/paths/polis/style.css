@@ -283,16 +283,21 @@ ul.park li table .td_cars{
     flex-direction: column;
 }
 .input_box {
-    background-color: white;
-    border: 1px solid var(--dark-blue);
+    background-color: var(--gray);
     box-sizing: content-box;
+    cursor: text;
 }
 .input_cell {
     width: 99%;
     height: 100%;
     border: none;
-    background-color: white;
+    background-color: var(--gray);
     text-align: center;
     font-size: 12pt;
     resize: none;
+}
+
+.no_hover:hover { 
+    color: black !important;
+    background-color: var(--gray) !important;
 }

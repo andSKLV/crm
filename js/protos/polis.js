@@ -20,7 +20,7 @@ export default class Polis {
     this.insurants = [];
     this.docsIncluded = {
       contract : true,
-      engTitle : false,
+      engTitle : true,
       policy : false, 
     }
     this.polisName = '№ HIP-0000000-00-00';

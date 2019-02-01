@@ -1,16 +1,16 @@
 <div class='config_plate' >
-    <table class="matrix">
+    <table class="matrix" style="margin-bottom: 25px">
       <tbody>
-        <tr class="matrix_row">
-          <td>
+        <tr class="matrix_row no_hover">
+          <td ng-click="onClickFocus('sibling',$event.target)">
             <div style="text-align: center">
               Номер Полиса:
             </div>
           </td>
-          <td class="input_box">
+          <td class="input_box" ng-click="onClickFocus('child',$event.target)">
             <textarea rows="1" class="input_cell" spellcheck="false"
               ng-value="myFactory.polisObj.polisName" 
-            ng-blur="onChange(myFactory.polisObj,'polisName',$event.target.value)"></textarea>
+              ng-blur="onChange(myFactory.polisObj,'polisName',$event.target.value)"></textarea>
           </td>
         </tr>
       </tbody>
@@ -18,26 +18,26 @@
   <div ng-if="myFactory.polisObj.docsIncluded.engTitle&&myFactory.polisObj.insurants.length"
     ng-repeat="ins in myFactory.polisObj.insurants">
     <fieldset>
-      <legend>Страхователь {{$index+1}}:</legend>
+      <legend>Транслитерация наименований. Страхователь {{$index+1}}:</legend>
       <table class="matrix">
           <tbody>
             <tr class="matrix_row">
-              <td>
+              <td ng-click="onClickFocus('sibling',$event.target)">
                 <div style="text-align: center">
                   {{ins.name}}
                 </div>
               </td>
-              <td class="input_box">
+              <td class="input_box" ng-click="onClickFocus('child',$event.target)">
                 <textarea rows="1" class="input_cell" spellcheck="false"
                   ng-value="ins.engName" 
                   ng-blur="onChange(ins,'engName',$event.target.value)"></textarea>
               </td>
-              <td>
+              <td ng-click="onClickFocus('sibling',$event.target)">
                 <div style="text-align: center">
                   {{ins.card["Доп. информация"]["Юридический адрес"]}}
                 </div>
               </td>
-              <td class="input_box">
+              <td class="input_box" ng-click="onClickFocus('child',$event.target)">
                 <textarea rows="3" class="input_cell" spellcheck="false"
                   ng-value="ins.engAdres" 
                   ng-blur="onChange(ins,'engAdres',$event.target.value)"></textarea>
