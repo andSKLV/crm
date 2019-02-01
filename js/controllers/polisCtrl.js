@@ -366,6 +366,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
             if (index === 3) $scope.myFactory.polisObj.datesSeen = true;
             if (index === 4) $scope.calcFinances();
             if (index === 4 && $scope.myFactory.payment.array && $scope.myFactory.payment.array.length > 0) $scope.myFactory.polisObj.financeSeen = true;
+            if (index === 5) $scope.myFactory.polisObj.configSeen = true;
             $rootScope.search_result = [];
             if (!$scope.currObj) {
                 return false; // происходит из-за повторной инициализации
@@ -402,6 +403,9 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     break;
                 case 4:
                     return myFactory.polisObj.financeSeen && myFactory.payment.array && myFactory.payment.array.length > 0;
+                    break;
+                case 5:
+                return myFactory.polisObj.configSeen;
                     break;
                 default:
                     return false;
@@ -665,6 +669,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         myFactory.polisObj.datesSeen = true;
         $scope.calcFinances();
         myFactory.polisObj.financeSeen = true;
+        myFactory.polisObj.configSeen = true;
         myFactory.polisObj.dates = myFactory.polisObj.dates;
         myFactory.applyAllScopes();
     }
@@ -676,6 +681,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
         myFactory.polisObj.conditions = undefined;
         myFactory.polisObj.datesSeen = false;
         myFactory.polisObj.financeSeen = false;
+        myFactory.polisObj.configSeen = false;
         myFactory.payment.array = undefined;
         console.log('state cleared');
     }

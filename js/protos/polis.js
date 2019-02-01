@@ -8,6 +8,7 @@ export default class Polis {
     this.multi = true;
     this.additionsSeen = false;
     this.financeSeen = false;
+    this.configSeen = false;
     this.type = 'Перевозчики';
     this.dates = {
       start: null,
@@ -21,7 +22,7 @@ export default class Polis {
     this.docsIncluded = {
       contract : true,
       engTitle : true,
-      policy : false, 
+      policy : true, 
     }
     this.polisName = '№ HIP-0000000-00-00';
     if (mf) this.bindMyFactory(mf);
