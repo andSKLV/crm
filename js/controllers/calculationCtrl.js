@@ -860,8 +860,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 multi.arrays[param.model].splice(multi.arrays[param.model].indexOf(val.name),1);
             })
         }
-        console.log(scope.myFactory.multi);
-        //this.addPropertyToProcess(param, "multi");
     };
 
     this.clickedOnMulti=function(param, value){//при нажатии на верх каретки в мульти параметры при режиме мульти
@@ -957,7 +955,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 }
                 //если такого процесса нету
                 else{
-                    console.log(param, value);
                     // если нажали "выбрать все"
                     if(value.action=="selectAll"){
                         if(multi.packName===undefined) this.clickedSelectAll(param, value);
@@ -1137,7 +1134,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
 
                 }
             });
-            console.log(scope.myFactory.multi);
         }
         else if(multi.arrays[param.model].indexOf(value.name)==-1){//если такой элемент не был выбран
             value.selected=true;
@@ -1182,7 +1178,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
          */
         copyMulti(multi) {
             scope.clean();
-            console.log(multi);
             let array=[];
             //создаем массив с копиями объектов процессов 
             multi.processes.forEach(function (process) {
@@ -1261,7 +1256,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             if(multi.parent) this.deleteMultiFromParent(multi);
             myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi), 1);
             scope.clean();
-            console.log(myFactory.parks, myFactory.multi.multies);
         },
         // удаление мульти из всех родителей и их родителей, проверка всех родителей на наличие детей
         deleteMultiFromParent (multi) {
@@ -1450,7 +1444,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
          * @param {*} key 
          */
         loadPark(park, key) {
-            console.log(scope.currObj);
             scope.clean();
             scope.selectParam(transportProp.indexOf(key));
             scope.karetka.mode="changing process";
@@ -1539,7 +1532,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.karetka={
         mode:"listener",
         multiClicked: function (param) {
-            console.log(param);
         },
         clicked: function(param, value){
             if(this.mode=="listener") this.mode="making new process";
@@ -1576,7 +1568,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                 if(myFactory.process.constructor.name=="Park"){
                     let park=myFactory.process;
                     if(Array.isArray(park[param.model]) || !isNumeric(park[param.model]) && park[param.model].indexOf("-")!=-1){
-                        console.log(param, value);
                         if(value.selected){
                             let mass=[];
                             park.processes.forEach(function (process) {
@@ -1670,7 +1661,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                                     }
                                 }
                                 scope.clean();
-                                console.log(myFactory.parks);
                             }
                         }
                         else if(multi[param.model][0]==multi.packName && param.model=="risk"){//если меняется риск с пакетом в мультистроке
@@ -1697,11 +1687,8 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                                 scope.addPropertyToProcess(param, value.name);
                                 delete scope.myFactory.process.changing;//убираем выделение строки которую меняли
                             }
-                            console.log(myFactory.parks, myFactory.multi.multies);
                             myFactory.removeCellSelection();
                             scope.clean();
-                            console.log(myFactory.parks, myFactory.multi.multies);
-
                         }
                         else{//если числовое значение       здесь нужно прикрутить изменение пакета
                             // создаем копию мульти узла с новыми параметрами для проверки
@@ -1781,7 +1768,6 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
                                 if(process.package && process.package==pack) delete process.package;
                             });
                             delete myFactory.process.package;
-                            console.log(myFactory.process.multi);
                         }
                         // проверяем есть ли такой проц в парке, эта проблема встречается внутри мульти-узлов
                         if (myFactory.process.multi && myFactory.process.multi.show) {
@@ -1954,7 +1940,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             }
 
         }, function error(response) {
-            console.log(response);
+            console.error(response);
         }
         );
     };

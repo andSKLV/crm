@@ -61,7 +61,6 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
                 }
             }, function error(response) {
                 console.log(response);
-                
             });
         }
     }
@@ -269,7 +268,7 @@ app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $ti
                 return resp.data;
             }
         },(err)=>{
-            console.log(err);
+            console.error(err);
         }).then((id)=>{
             if (id===undefined) return false;
             // добавляем информацию в фактори

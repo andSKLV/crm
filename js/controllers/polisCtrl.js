@@ -62,7 +62,7 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     $scope.currObj = resp.data;
                 }
             }, (err) => {
-                console.log(err);
+                console.error(err);
             })
         }
         /**
@@ -462,7 +462,6 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     })
                 }
             })
-            debugger;
             await polisMaker.start(myFactory, risks);
             contractMaker.makePDF(myFactory);
             return null;

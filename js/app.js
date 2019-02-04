@@ -563,7 +563,6 @@ app.directive("currencyInput", function ($filter, myFactory) {
                                 let target = $event.target;
                                 target.blur();
                                 document.querySelector(".dashboard_container").focus();
-                                console.log(myFactory.process);
                                 return;
                             }
                             i++;
@@ -602,7 +601,6 @@ app.directive("currencyInput", function ($filter, myFactory) {
                         }
                         myFactory.applyAlimit();
                         myFactory.finalCalc();
-                        console.log(myFactory.a_limit.value);
                         $scope.$apply();
                     }
                 } else if ($attrs.currencyInput == "payment") {
@@ -701,7 +699,6 @@ app.directive("currencyInput", function ($filter, myFactory) {
                                     let target = $event.target;
                                     target.blur();
                                     document.querySelector(".dashboard_container").focus();
-                                    console.log(myFactory.process);
                                     return;
                                 }
                                 i++;
@@ -793,7 +790,6 @@ app.factory("myFactory", function () {
                     this.multi.mode = true;
                 } else this.multi.mode = false;
             } else this.multi.mode = mode;
-            console.log(this.multi.mode);
         },
         /**
          * этот раздел с keyCodes можно удалить
@@ -955,7 +951,6 @@ app.factory("myFactory", function () {
                     }
                 };
                 const calcPrices = (price,payments) => {
-                    debugger;
                     price = Math.round(Number(price));
                     const res = {}
                     res.total = addSpaces(price);
@@ -1706,7 +1701,6 @@ app.factory("myFactory", function () {
                             throw new Error(
                                 "Верхний мульти с другой структурой. Нет .processes"
                             );
-                            debugger;
                         }
                         newMulti.processes.push(process.multi.processes[0]);
                     }
