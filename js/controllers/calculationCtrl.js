@@ -20,7 +20,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
          * Инициализация каретки
          */
         const param = this.myFactory.karetkaTypes[this.myFactory.HIPname];
-        await $http.post(`./src/${param}`).then(function success (response) {
+        await $http.post(`./php/${param}`).then(function success (response) {
             if (myFactory.isLoading) {
                 const loading = new Loading (true);
                 myFactory.isLoading = loading;
@@ -2019,7 +2019,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.saveJSON = async () => {
 
         let resp;
-        await $http.post(`./src/HIP.json`).then(response=> {
+        await $http.post(`./php/HIP.json`).then(response=> {
             resp = response.data;
         })
         const data = resp;
@@ -2027,6 +2027,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         // формирование запроса
         const fd = new FormData();
         fd.append("json", obj);
+        fd.append("filename", 'HIP.json');
         const req = new Request("php/json.php", { method: "POST", body: fd });
         return fetch(req).then(
             resp => {

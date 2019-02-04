@@ -63,7 +63,7 @@ function initDB(resp) {
 async function loadRisks (param = 'HIP.json') {
     try {
         let currObj=[];
-        const resp = await fetch(`./src/${param}`);
+        const resp = await fetch(`./php/${param}`);
         try {
             let data = await resp.json();
             currObj=data;

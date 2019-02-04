@@ -290,7 +290,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                         myFactory.choosePark(array,park, 0);
                     }
                     if (myFactory.packages===undefined) {
-                        let resp = await fetch('./src/HIP.json');
+                        let resp = await fetch('./php/HIP.json');
                         resp = await resp.json();
                         resp = resp.filter(r=>r.url=='Пакеты');
                         resp = resp[0].values;
