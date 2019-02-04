@@ -2016,6 +2016,27 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         const inp = ev.currentTarget;
         if (inp.value==="") putNameInInput(this.myFactory);
     }
+    this.saveJSON = async () => {
+
+        let resp;
+        await $http.post(`./src/HIP.json`).then(response=> {
+            resp = response.data;
+        })
+        const data = resp;
+        const obj = JSON.stringify(data,null,'\t');
+        // формирование запроса
+        const fd = new FormData();
+        fd.append("json", obj);
+        const req = new Request("php/json.php", { method: "POST", body: fd });
+        return fetch(req).then(
+            resp => {
+                console.log('success');
+            },
+            err => {
+                console.error("Ошибка ");
+            }
+        );
+    }
     function deepRemoveMulti(multi) {
         multi.processes.forEach(process => {
             if (process.constructor.name === "Process") delete process.multi;
