@@ -1530,7 +1530,6 @@ app.factory("myFactory", function () {
          */
         finalCalc() {
             this.parkTemplate = [];
-
             //**************************при загрузке расчета из БД**************************
             if (risks.length == 0 && this.currObj !== undefined) {
                 for (let i = 0; i < this.currObj.length; i++) {
@@ -1548,6 +1547,10 @@ app.factory("myFactory", function () {
             let myFactory = this;
             this.parks.forEach(park => {
                 park.processes.forEach(process => {
+                    if (process.limit===0) {
+                        process.limit=process.cost;
+                        console.warn('Process limit 0 was changed to process price');
+                    }
                     delete process.showRows;
                 });
             });

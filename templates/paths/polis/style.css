@@ -295,6 +295,7 @@ ul.park li table .td_cars{
     text-align: center;
     font-size: 12pt;
     resize: none;
+    font-family: Calibri, Arial, sans-serif;
 }
 
 .no_hover:hover { 
