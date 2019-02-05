@@ -7,8 +7,7 @@
   min-height: 48px !important;
 }
 .param_input {
-  width: 99%;
-  height: 100%;
+  width: 90%;
   border: none;
   line-height: 1;
   background: var(--gray);
