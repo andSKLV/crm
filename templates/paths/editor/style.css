@@ -6,3 +6,15 @@
 .param_row {
   min-height: 48px !important;
 }
+.param_input {
+  width: 99%;
+  height: 100%;
+  border: none;
+  line-height: 1;
+  background: var(--gray);
+  text-align: center;
+  font-family: 'Lato', Calibri, Arial, sans-serif;
+  font-size: 12pt;
+  resize: none;
+  padding: 4px;
+}

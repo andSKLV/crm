@@ -38,7 +38,7 @@
         <div 
             class="clickable param_row" ng-class="{alreadySelected: editor.active.stage4===editor.stage4.indexOf(param)}"
             >
-                <input type="text" ng-value="param[1]" ng-blur="inputChange(param,$event.target.value)">
+                <textarea rows="{{param[0]==='title'?3:1}}" class="param_input" type="text" ng-value="param[1]" ng-blur="inputChange(param,$event.target.value)">
         </div>
     </div>
 </div>
