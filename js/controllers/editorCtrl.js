@@ -24,6 +24,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             stage3: null,
             stage4: null,
         },
+        editingObj: null,
         editingParam: null,
         stage1: null,
         stage2: null,
@@ -56,6 +57,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         res.forEach(name=>$scope.editor[name]===null);
     }
     $scope.makeEditing = (param) => {
+        $scope.editor.editingObj = param;
         $scope.editor.editingParam = Object.entries(param).filter(x=>x[0]!=='values'&&x[0]!=='$$hashKey');
     }
     $scope.makeStageName = arr => {
@@ -72,7 +74,9 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         $scope.editor.activeStage = ind;
         $scope.editor[name] = res;
     }
-
+    $scope.inputChange = (param,val) => {
+        $scope.editor.editingObj[param[0]] = val;
+    }
 
   this.loadMatrix = async function () {
     /**
@@ -554,11 +558,8 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     
     
     this.saveJSON = async () => {
-
-        let resp;
-        await $http.post(`./php/HIP2.json`).then(response=> {
-            resp = response.data;
-        })
+        const hip = $scope.editor.all;
+        return false;
         const data = resp;
         const obj = JSON.stringify(data,null,'\t');
         // формирование запроса
