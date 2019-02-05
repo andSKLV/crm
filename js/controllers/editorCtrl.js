@@ -79,9 +79,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     }
 
   this.loadMatrix = async function () {
-    /**
-     * Инициализация каретки
-     */
+
     const param = this.myFactory.karetkaTypes[this.myFactory.HIPname];
     await $http.post(`./php/${param}`).then(function success (response) {
       scope.currObj = response.data;
@@ -557,11 +555,12 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     };
     
     
-    this.saveJSON = async () => {
-        const hip = $scope.editor.all;
-        return false;
-        const data = resp;
-        const obj = JSON.stringify(data,null,'\t');
+    $scope.saveJSON = async () => {
+        const data = $scope.editor.all;
+        let obj = JSON.stringify(data);
+        obj = obj.replace(/,\"\$\$hashKey\":\"object:\d+\"/g, '');
+        obj = JSON.parse(obj);
+        obj = JSON.stringify(obj,null,'\n');
         // формирование запроса
         const fd = new FormData();
         fd.append("json", obj);
