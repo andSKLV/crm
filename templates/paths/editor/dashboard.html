@@ -28,13 +28,20 @@
         </div>
     </div>
 </div>
-<div class="nav" ng-if="editor.stage4">
-    <div>
-        <div  ng-repeat="param in editor.stage4" 
-        ng-click="selectParam(editor.stage4,$index,4)" 
-        class="clickable" ng-class="{alreadySelected: editor.active.stage4===editor.stage4.indexOf(param)}"
-        >
-            {{param.name||param.url||param.risk}}
+<div class="nav param_info" ng-if="editor.editingParam" style="border: none; margin-top: 32px;">
+    <div ng-repeat="param in editor.editingParam" >
+        <div  
+            ng-click="selectParam(editor.stage4,$index,4)" 
+            class="clickable" ng-class="{alreadySelected: editor.active.stage4===editor.stage4.indexOf(param)}"
+            >
+                {{param[0]}}
+        </div>
+        <div  
+            ng-click="selectParam(editor.stage4,$index,4)" 
+            class="clickable" ng-class="{alreadySelected: editor.active.stage4===editor.stage4.indexOf(param)}"
+            >
+                {{param[1]}}
         </div>
     </div>
 </div>
+

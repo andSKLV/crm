@@ -24,7 +24,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             stage3: null,
             stage4: null,
         },
-        nowParam: [],
+        editingParam: null,
         stage1: null,
         stage2: null,
         stage3: null,
@@ -32,16 +32,31 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     }
     $scope.selectParam = (stage,index,stageNum) => {
         let selectedParam = stage[index];
-        $scope.editor.active[`stage${$scope.editor.activeStage}`] = index;
+        $scope.clearActive (stageNum);
+        $scope.editor.active[`stage${stageNum}`] = index;
         if (selectedParam.type==="relocate_here") {
             const url = selectedParam.urlTo;
             selectedParam = $scope.editor.all.find(x=>x.url===url);
         }
         $scope.editor.activeStage = stageNum+1;
         if (selectedParam.values) $scope.makeStageName(selectedParam.values);
+        $scope.clearRest(stageNum);
+        $scope.makeEditing (selectedParam);
         
         debugger;
-        
+    }
+    $scope.clearActive = stageNum => {
+        for (stageNum;stageNum<5;stageNum++) {
+            $scope.editor.active[`stage${stageNum}`] = null;
+        }
+    }
+    $scope.clearRest = (stageNum) => {
+        const stages = Object.keys($scope.editor).filter(x=>x.match(/stage\d/));
+        const res = stages.map((name,i)=>(i>stageNum)&&$scope.editor[name]&&name)
+        res.forEach(name=>$scope.editor[name]===null);
+    }
+    $scope.makeEditing = (param) => {
+        $scope.editor.editingParam = Object.entries(param).filter(x=>x[0]!=='values'&&x[0]!=='$$hashKey');
     }
     $scope.makeStageName = arr => {
         const res = arr.filter(x=>x.name||x.risk);
