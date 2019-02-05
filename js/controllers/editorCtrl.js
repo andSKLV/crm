@@ -54,7 +54,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     $scope.clearRest = (stageNum) => {
         const stages = Object.keys($scope.editor).filter(x=>x.match(/stage\d/));
         const res = stages.map((name,i)=>(i>stageNum)&&$scope.editor[name]&&name)
-        res.forEach(name=>$scope.editor[name]===null);
+        res.forEach(name=>{if ($scope.editor[name]) $scope.editor[name]=null});
     }
     $scope.makeEditing = (param) => {
         $scope.editor.editingObj = param;
@@ -80,7 +80,8 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
 
   this.loadMatrix = async function () {
 
-    const param = this.myFactory.karetkaTypes[this.myFactory.HIPname];
+    // const param = this.myFactory.karetkaTypes[this.myFactory.HIPname];
+    const param = 'HIP-conf.json'
     await $http.post(`./php/${param}`).then(function success (response) {
       scope.currObj = response.data;
       scope.myFactory.currObj = response.data;
