@@ -1,0 +1,40 @@
+<div class="nav">
+    <div>
+        <div  ng-repeat="param in editor.stage1" 
+        ng-click="selectParam(editor.stage1,$index,1)" 
+        class="clickable" ng-class="{alreadySelected: editor.active.stage1===editor.stage1.indexOf(param)}"
+        >
+            {{param.name||param.url}}
+        </div>
+    </div>
+</div>
+<div class="nav" ng-if="editor.stage2">
+    <div>
+        <div  ng-repeat="param in editor.stage2" 
+        ng-click="selectParam(editor.stage2,$index,2)" 
+        class="clickable" ng-class="{alreadySelected: editor.active.stage2===editor.stage2.indexOf(param)}"
+        >
+            {{param.name||param.url}}
+        </div>
+    </div>
+</div>
+<div class="nav" ng-if="editor.stage3">
+    <div>
+        <div  ng-repeat="param in editor.stage3" 
+        ng-click="selectParam(editor.stage3,$index,3)" 
+        class="clickable" ng-class="{alreadySelected: editor.active.stage3===editor.stage3.indexOf(param)}"
+        >
+            {{param.name||param.url}}
+        </div>
+    </div>
+</div>
+<div class="nav" ng-if="editor.stage4">
+    <div>
+        <div  ng-repeat="param in editor.stage4" 
+        ng-click="selectParam(editor.stage4,$index,4)" 
+        class="clickable" ng-class="{alreadySelected: editor.active.stage4===editor.stage4.indexOf(param)}"
+        >
+            {{param.name||param.url||param.risk}}
+        </div>
+    </div>
+</div>

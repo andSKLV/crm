@@ -54,6 +54,10 @@ app.config(function ($routeProvider) {
             templateUrl: "dashboard.html",
             controller: "dashboardCtrl as dashboard"
         })
+        .when('/editor',{
+            templateUrl: "./templates/paths/editor/index.html",
+            controller: "editorCtrl"
+        })
         .when("/company", {
             templateUrl: "./templates/paths/company/index.html",
             controller: "companyCtrl"
@@ -185,6 +189,12 @@ app.directive("calculationDashboard", function () {
     return {
         restrict: "A",
         templateUrl: "./templates/paths/calculation/dashboard.html"
+    };
+});
+app.directive("editorDashboard", function () {
+    return {
+        restrict: "A",
+        templateUrl: "./templates/paths/editor/dashboard.html"
     };
 });
 app.directive("calculationView", function () {

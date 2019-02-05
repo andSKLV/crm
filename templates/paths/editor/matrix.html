@@ -1,0 +1,35 @@
+<table class="matrix park" ng-repeat="park in HIP.myFactory.parks track by $index" ng-init="parentIndex = $index">
+    <tbody ng-if="park.show" class="matrix_table">
+        <tr class="matrix_row" ng-repeat="process in park.processes track by $index"
+            ng-if="process.multi!==undefined && !process.multi.show && process.multi.processes.indexOf(process)==0 || process.multi===undefined|| process.multi!==undefined && process.multi.show || process.multi=='deleted'">
+            <td class="properties btns" width="20px" ng-if="process.multi===undefined || process.multi.show || process.multi=='deleted'">
+                <input type="button" class="btnCopy clickable" ng-click="calculation.matrix.loadProcess(HIP.copy(process), 'risk')" value="+">
+                <input type="button" class="btnDelete clickable" ng-click="HIP.delete(process); scope.clean();" value="-">
+
+            </td>
+            <td  ng-mouseenter="process.showRows=key; key=='risk' ? calculation.tooltip.fadeIn(value) : '';"
+                 ng-mouseleave="calculation.deleteProperty(process, 'showRows'); calculation.tooltip.fadeOut();"
+                 class="properties" ng-class="[{mi_selected : process.changing && calculation.myFactory.document.selectedParam==calculation.checkTransportProp(key)},{repeated: calculation.isRepeated(process,key)}]"
+                ng-repeat="(key,value) in process track by $index" ng-if="calculation.checkTransportProp(key)!=-1 && (process.multi===undefined || process.multi.show || process.multi=='deleted')"
+                ng-right-click="calculation.setParamToAllProcess(value, key, process)"  ng-click="!process.unselectable ? calculation.matrix.loadProcess(process, key) : ''">
+                {{(key=="wrapping" || key=="risk") ? value : calculation.applyFilter(value, key) }}
+                <div class="arrow_up"
+                     ng-click="process.multi.close(calculation.myFactory.multi.multies, false, process, calculation.myFactory); calculation.clean()"
+                     ng-if="process.showRows==key && process.multi!==undefined && process.multi!=='deleted'"
+                     ng-mouseenter="process.unselectable=true" ng-mouseleave="calculation.deleteProperty(process, 'unselectable')">&#9650</div>
+                <div class="copyDown"
+                     ng-click="calculation.setParamToAllProcess(value, key, process)"
+                     ng-class="{copyDownLeft: key==='cost'}"
+                     ng-if="process.showRows==key && process.park.processes.length>1 && key!='risk' && process.park.processes.length-1!==process.park.processes.indexOf(process)"
+                     ng-mouseenter="process.unselectable=true" ng-mouseleave="calculation.deleteProperty(process, 'unselectable')">&#9660</div>
+                <div class="closePark"
+                    ng-class="{closeParkLeft: key==='cost'}"
+                     ng-click="park.show=false; calculation.clean()"
+                     ng-if="process.showRows==key && process.park.processes.length-1==process.park.processes.indexOf(process) && process.park.processes.length>1"
+                     ng-mouseenter="process.unselectable=true;" ng-mouseleave="calculation.deleteProperty(process, 'unselectable')">&#9650</div>
+            </td>
+            <td class="properties price" width="150px" ng-if="process.multi===undefined || process.multi.show  || process.multi=='deleted'" ng-class="{red: (process.practicalPriceKoef!==undefined&&process.practicalPriceKoef!==1)}">{{ calculation.applyFilter(process.totalPrice, "cost") }}</td>
+        </tr>
+    </tbody>
+</table>
+
