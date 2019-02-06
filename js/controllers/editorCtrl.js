@@ -101,7 +101,6 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         $scope.editor.editingObj[param[0]] = val;
     }
     $scope.switchOrder = direction => {
-        debugger;
         let st = $scope.editor[`stage${($scope.editor.activeStage - 1)}`];
         const ind = $scope.editor.activeIndex;
         let newInd;
@@ -110,7 +109,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             newInd = ind - 1;
         }
         else {
-            // if ()FIXME:
+            if (ind === st.length-1) return false;
             newInd = ind + 1;
         }
         [st[newInd], st[ind]] = [st[ind], st[newInd]];
