@@ -15,6 +15,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     this.myFactory.scop = this;
 
     $scope.editor = {
+        fileName: null,
         activeStage: 0,
         activeIndex: 0,
         all: [],
@@ -38,6 +39,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     }
     $scope.selectParam = (stage, index, stageNum) => {
         let selectedParam = stage[index];
+        $scope.editor.editingStage = stageNum;
         $scope.editor.exactEditingObj = selectedParam;
         $scope.editor.editingObjCanDelete = $scope.isDeletable (selectedParam);
         $scope.clearActive(stageNum);
@@ -77,8 +79,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     }
     $scope.makeStageName = (arr,stageNum) => {
         if (!arr) return false;
-        $scope.editor.activeStage = stageNum + 1;
-        const ind = $scope.editor.activeStage
+        const ind = stageNum + 1;
         const name = `stage${ind}`;
         $scope.editor.activeStage = ind;
         $scope.editor[name] = arr;
@@ -102,6 +103,10 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     }
     $scope.onDeleteActiveElement = () => {
         const el = $scope.editor.exactEditingObj;
+        if (el.type==='relocate_here') {
+            const urlInd = $scope.editor.urls.indexOf($scope.editor.editingObj);
+            $scope.editor.urls.splice(urlInd,1);
+        }
         let deletingStageName, parentStageInd;
         Object.entries($scope.editor.active).forEach((x,i)=>{
             [name,val] = x;
@@ -111,11 +116,12 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             }
         })
         const st = $scope.editor[deletingStageName];
-        st.splice(st.indexOf(el),1);
-        $scope.selectParam($scope.editor[`stage${parentStageInd}`],$scope.editor.active[`stage${parentStageInd}`],parentStageInd)
+        st.splice(st.indexOf(el),1); //удаляем элемент из стейджа
+        $scope.selectParam($scope.editor[`stage${parentStageInd}`],$scope.editor.active[`stage${parentStageInd}`],parentStageInd) //делаем родителя активным элементом
     }
     $scope.switchOrder = direction => {
-        let st = $scope.editor[`stage${($scope.editor.activeStage - 1)}`];
+        const stageName = `stage${($scope.editor.editingStage)}`;
+        let st = $scope.editor[stageName];
         const ind = $scope.editor.activeIndex;
         let newInd;
         if (direction === 'left') {
@@ -127,16 +133,15 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             newInd = ind + 1;
         }
         [st[newInd], st[ind]] = [st[ind], st[newInd]];
-        $scope.editor.active[`stage${$scope.editor.activeStage - 1}`] = newInd;
+        $scope.editor.active[stageName] = newInd;
         $scope.editor.activeIndex = newInd;
-        // const el = st[$scope.editor.activeIndex];
         debugger;
     }
     this.loadMatrix = async function () {
-
         // const param = this.myFactory.karetkaTypes[this.myFactory.HIPname];
-        const param = 'HIP-conf.json'
-        await $http.post(`./php/${param}`).then(function success(response) {
+        const param = 'HIP-conf.json';
+        $scope.editor.fileName = param;
+        await $http.post(`./src/${param}`).then(function success(response) {
             scope.currObj = response.data;
             scope.myFactory.currObj = response.data;
             let pack = scope.currObj.find(function (param) {
@@ -613,15 +618,15 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
 
 
     $scope.saveJSON = async () => {
-        const data = $scope.editor.all;
+        const data = [...$scope.editor.objs,...$scope.editor.urls];
         let obj = JSON.stringify(data);
         obj = obj.replace(/,\"\$\$hashKey\":\"object:\d+\"/g, '');
         obj = JSON.parse(obj);
-        obj = JSON.stringify(obj, null, '\n');
+        obj = JSON.stringify(obj, null, '\t');
         // формирование запроса
         const fd = new FormData();
         fd.append("json", obj);
-        fd.append("filename", 'HIP.json');
+        fd.append("filename", $scope.editor.fileName);
         const req = new Request("php/json.php", { method: "POST", body: fd });
         return fetch(req).then(
             resp => {
