@@ -38,6 +38,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         stage5: null,
     }
     $scope.selectParam = (stage, index, stageNum) => {
+        $scope.deleteSelectedStyles (stageNum);
         let selectedParam = stage[index];
         $scope.editor.editingStage = stageNum;
         $scope.editor.exactEditingObj = selectedParam;
@@ -52,6 +53,17 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         $scope.makeStageName(selectedParam.values, stageNum);
         $scope.clearRest(stageNum);
         $scope.makeEditing(selectedParam);
+    }
+    $scope.deleteSelectedStyles = num => {
+        let rows = document.querySelectorAll('.nav_modified:not(.param_info)');
+        rows = Array.prototype.slice.call(rows,num);
+        if (!rows.length) return true;
+        const elems = [];
+        rows.forEach(r=>{
+            elems.push(r.querySelector('.alreadySelected'))
+            elems.push(r.querySelector('.mi_selected'));
+        });
+        elems.forEach(el=>el&&el.classList.remove('mi_selected','alreadySelected'));
     }
     $scope.isDeletable = (obj) => {
         const notDeleteTypes = ["inputForCurrency", "currencyValue", "amountType", "inputForCurrency"];
@@ -125,11 +137,8 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         const store = parentEl.values;
         const example = Object.assign({}, store[store.length - 1]);
         example.name = 'Введите название';
-        clearFields(example);
-        //TODO: обнуление полей
+        clearFields(example);//обнуление полей
         store.push(example);
-        console.log($scope.editor);
-        debugger;
         function clearFields(obj) {
             if (obj.$$hashKey) delete obj.$$hashKey;
             const emptyName = 'Введите название';
@@ -137,7 +146,6 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             if (obj.urlTo) {
                 obj.urlTo = emptyName;
                 $scope.editor.urls.push($scope.createUrl(emptyName,parentEl.model));
-                debugger;
             }
         }
     }

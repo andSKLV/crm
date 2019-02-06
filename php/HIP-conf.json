@@ -12,7 +12,7 @@
 				"type": "inputForCurrency"
 			},
 			{
-				"name": "1000002",
+				"name": "1000000",
 				"type": "currency"
 			},
 			{
@@ -101,11 +101,6 @@
 				"name": "Форма собственности",
 				"type": "relocate_here",
 				"urlTo": "Форма собственности"
-			},
-			{
-				"name": "углубление",
-				"type": "relocate_here",
-				"urlTo": "углубление"
 			}
 		]
 	},
@@ -387,7 +382,7 @@
 						"limit": 0.3
 					},
 					{
-						"risk": "Стихийные бедствия2"
+						"risk": "Стихийные бедствия"
 					}
 				],
 				"times": 1
@@ -490,22 +485,6 @@
 				"name": "3 - 2",
 				"type": "risk",
 				"value": 3
-			}
-		]
-	},
-	{
-		"url": "углубление",
-		"model": "wrapping",
-		"values": [
-			{
-				"name": "Введите название1",
-				"type": "risk",
-				"value": 0
-			},
-			{
-				"name": "Введите название2",
-				"type": "risk",
-				"value": "1"
 			}
 		]
 	}
