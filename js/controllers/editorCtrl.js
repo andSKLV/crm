@@ -26,11 +26,13 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             stage2: null,
             stage3: null,
             stage4: null,
+            stage5: null,
         },
         parent: {
             stage2: null,
             stage3: null,
             stage4: null,
+            stage5: null,
         },
         editingObj: null,
         editingParam: null,
@@ -38,10 +40,11 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         stage2: null,
         stage3: null,
         stage4: null,
+        stage5: null,
     }
     $scope.selectParam = (stage, index, stageNum) => {
-        // $scope.unselectAll ();
         let selectedParam = stage[index];
+        $scope.editor.editingObjForSelect = selectedParam;
         $scope.clearActive(stageNum);
         $scope.editor.active[`stage${stageNum}`] = index;
         if (selectedParam.type === "relocate_here") {
@@ -55,7 +58,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         $scope.makeEditing(selectedParam);
         debugger;
     }
-    
+
     $scope.clearActive = stageNum => {
         for (stageNum; stageNum < 5; stageNum++) {
             $scope.editor.active[`stage${stageNum}`] = null;

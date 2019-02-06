@@ -2,7 +2,8 @@
     <div>
         <div  ng-repeat="param in editor.stage1" 
         ng-click="selectParam(editor.stage1,$index,1)" 
-        class="clickable" ng-class="{alreadySelected: editor.active.stage1===editor.stage1.indexOf(param)}"
+        class="clickable" 
+        ng-class="[{alreadySelected: editor.active.stage1===editor.stage1.indexOf(param)},{mi_selected: editor.editingObjForSelect===param}]"
         >
             {{param.name||param.url}}
         </div>
@@ -12,9 +13,10 @@
     <div>
         <div  ng-repeat="param in editor.stage2" 
         ng-click="selectParam(editor.stage2,$index,2)" 
-        class="clickable" ng-class="{alreadySelected: editor.active.stage2===editor.stage2.indexOf(param)}"
+        class="clickable" 
+        ng-class="[{alreadySelected: editor.active.stage2===editor.stage2.indexOf(param)},{mi_selected: editor.editingObjForSelect===param}]"
         >
-            {{param.name||param.url||param.risk}}
+            {{param.name||param.url||param.risk||0}}
         </div>
     </div>
 </div>
@@ -22,9 +24,10 @@
     <div>
         <div  ng-repeat="param in editor.stage3" 
         ng-click="selectParam(editor.stage3,$index,3)" 
-        class="clickable" ng-class="{alreadySelected: editor.active.stage3===editor.stage3.indexOf(param)}"
+        class="clickable" 
+        ng-class="[{alreadySelected: editor.active.stage3===editor.stage3.indexOf(param)},{mi_selected: editor.editingObjForSelect===param}]"
         >
-            {{param.name||param.url||param.risk}}
+            {{param.name||param.url||param.risk||0}}
         </div>
     </div>
 </div>
@@ -32,9 +35,21 @@
     <div>
         <div  ng-repeat="param in editor.stage4" 
         ng-click="selectParam(editor.stage4,$index,4)" 
-        class="clickable" ng-class="{alreadySelected: editor.active.stage4===editor.stage4.indexOf(param)}"
+        class="clickable" 
+        ng-class="[{alreadySelected: editor.active.stage4===editor.stage4.indexOf(param)},{mi_selected: editor.editingObjForSelect===param}]"
         >
-            {{param.name||param.url||param.risk}}
+            {{param.name||param.url||param.risk||0}}
+        </div>
+    </div>
+</div>
+<div class="nav" ng-if="editor.stage5">
+    <div>
+        <div  ng-repeat="param in editor.stage5" 
+        ng-click="selectParam(editor.stage5,$index,5)" 
+        class="clickable" 
+        ng-class="[{alreadySelected: editor.active.stage5===editor.stage5.indexOf(param)},{mi_selected: editor.editingObjForSelect===param}]"
+        >
+            {{param.name||param.url||param.risk||0}}
         </div>
     </div>
 </div>
