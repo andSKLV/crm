@@ -101,14 +101,26 @@
                 <p ng-switch-when='limit'>
                     Лимит
                 </p> 
+                <p ng-switch-when='baseRisk'>
+                    Является базовым
+                </p> 
                 <p ng-switch-default>
                     {{param[0]}}
                 </p>
         </div>
         <div 
             class="clickable param_row" ng-class="{alreadySelected: editor.active.stage4===editor.stage4.indexOf(param)}"
+            ng-switch="param[1]"
             >
-                <textarea rows="{{param[0]==='title'?3:1}}" class="param_input" type="text" ng-value="param[1]" ng-blur="inputChange(param,$event.target.value)">
+                <p ng-switch-when="amount">
+                    Количество
+                </p>
+                <p ng-switch-when="cost">
+                    Цена
+                </p>
+                <textarea ng-switch-default
+                    rows="{{param[0]==='title'?3:1}}" class="param_input" type="text" ng-value="param[1]" 
+                    ng-blur="inputChange(param,$event.target.value)">
         </div>
     </div>
     

@@ -41,7 +41,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         let selectedParam = stage[index];
         $scope.editor.editingStage = stageNum;
         $scope.editor.exactEditingObj = selectedParam;
-        $scope.editor.editingObjCanDelete = $scope.isDeletable (selectedParam);
+        $scope.editor.editingObjCanDelete = $scope.isDeletable(selectedParam);
         $scope.clearActive(stageNum);
         $scope.editor.active[`stage${stageNum}`] = index;
         if (selectedParam.type === "relocate_here") {
@@ -49,14 +49,15 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             selectedParam = $scope.editor.urls.find(x => x.url === url);
         }
         $scope.editor.activeIndex = index;
-        $scope.makeStageName(selectedParam.values,stageNum);
-        $scope.clearRest(stageNum); 
+        $scope.makeStageName(selectedParam.values, stageNum);
+        $scope.clearRest(stageNum);
         $scope.makeEditing(selectedParam);
     }
     $scope.isDeletable = (obj) => {
-        const notDeleteTypes = ["inputForCurrency","currencyValue","amountType","inputForCurrency"];
+        const notDeleteTypes = ["inputForCurrency", "currencyValue", "amountType", "inputForCurrency"];
         if ($scope.editor.stage1.includes(obj)) return false;
         if (notDeleteTypes.includes(obj.type)) return false;
+        if (obj.baseRisk) return false;
         return true;
     }
     $scope.clearActive = stageNum => {
@@ -77,7 +78,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         $scope.editor.editingObj = param;
         $scope.editor.editingParam = Object.entries(param).filter(x => x[0] !== 'values' && x[0] !== '$$hashKey');
     }
-    $scope.makeStageName = (arr,stageNum) => {
+    $scope.makeStageName = (arr, stageNum) => {
         if (!arr) return false;
         const ind = stageNum + 1;
         const name = `stage${ind}`;
@@ -103,21 +104,55 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     }
     $scope.onDeleteActiveElement = () => {
         const el = $scope.editor.exactEditingObj;
-        if (el.type==='relocate_here') {
+        if (el.type === 'relocate_here') {
             const urlInd = $scope.editor.urls.indexOf($scope.editor.editingObj);
-            $scope.editor.urls.splice(urlInd,1);
+            $scope.editor.urls.splice(urlInd, 1);
         }
         let deletingStageName, parentStageInd;
-        Object.entries($scope.editor.active).forEach((x,i)=>{
-            [name,val] = x;
-            if (val!==null) {
-                deletingStageName=name;
-                parentStageInd=i;
+        Object.entries($scope.editor.active).forEach((x, i) => {
+            [name, val] = x;
+            if (val !== null) {
+                deletingStageName = name;
+                parentStageInd = i;
             }
         })
         const st = $scope.editor[deletingStageName];
-        st.splice(st.indexOf(el),1); //удаляем элемент из стейджа
-        $scope.selectParam($scope.editor[`stage${parentStageInd}`],$scope.editor.active[`stage${parentStageInd}`],parentStageInd) //делаем родителя активным элементом
+        st.splice(st.indexOf(el), 1); //удаляем элемент из стейджа
+        $scope.selectParam($scope.editor[`stage${parentStageInd}`], $scope.editor.active[`stage${parentStageInd}`], parentStageInd) //делаем родителя активным элементом
+    }
+    $scope.onAddNew = () => {
+        const parentEl = $scope.editor.editingObj;
+        const store = parentEl.values;
+        const example = Object.assign({}, store[store.length - 1]);
+        example.name = 'Введите название';
+        clearFields(example);
+        //TODO: обнуление полей
+        store.push(example);
+        console.log($scope.editor);
+        debugger;
+        function clearFields(obj) {
+            if (obj.$$hashKey) delete obj.$$hashKey;
+            const emptyName = 'Введите название';
+            if (obj.name) obj.name = emptyName;
+            if (obj.urlTo) {
+                obj.urlTo = emptyName;
+                $scope.editor.urls.push($scope.createUrl(emptyName,parentEl.model));
+                debugger;
+            }
+        }
+    }
+    $scope.createUrl = (name,model) => {
+        const obj = {
+            url: name,
+            model};
+        obj.values = [$scope.createEl()];
+        return obj;
+    }
+    $scope.createEl = (name='Введите название',type='risk') => {
+        return {
+            name,type,
+            "value": 0,
+        }
     }
     $scope.switchOrder = direction => {
         const stageName = `stage${($scope.editor.editingStage)}`;
@@ -129,7 +164,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             newInd = ind - 1;
         }
         else {
-            if (ind === st.length-1) return false;
+            if (ind === st.length - 1) return false;
             newInd = ind + 1;
         }
         [st[newInd], st[ind]] = [st[ind], st[newInd]];
@@ -141,7 +176,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         // const param = this.myFactory.karetkaTypes[this.myFactory.HIPname];
         const param = 'HIP-conf.json';
         $scope.editor.fileName = param;
-        await $http.post(`./src/${param}`).then(function success(response) {
+        await $http.post(`./php/${param}`).then(function success(response) {
             scope.currObj = response.data;
             scope.myFactory.currObj = response.data;
             let pack = scope.currObj.find(function (param) {
@@ -618,7 +653,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
 
 
     $scope.saveJSON = async () => {
-        const data = [...$scope.editor.objs,...$scope.editor.urls];
+        const data = [...$scope.editor.objs, ...$scope.editor.urls];
         let obj = JSON.stringify(data);
         obj = obj.replace(/,\"\$\$hashKey\":\"object:\d+\"/g, '');
         obj = JSON.parse(obj);
