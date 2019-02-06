@@ -4,7 +4,9 @@
 <div class="dashboard_container" style="height: unset;" ng-class="{nomarginleft: dashboard.myFactory.matrixType!=='HIP'}" editor-dashboard></div>
 <div class="manipulate" ng-if="editor.editingParam">
   <div class="manipulate_row">
-    <div class="manipulate_cell">
+    <div class="manipulate_cell" 
+      ng-if="editor.editingObjCanDelete"
+      ng-click="onDeleteActiveElement()">
       <p>Удалить этот элемент</p>
     </div>
     <div class="manipulate_cell">
