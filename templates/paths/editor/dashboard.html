@@ -39,6 +39,16 @@
     </div>
 </div>
 <div class="nav param_info" ng-if="editor.editingParam">
+    <div>
+        <div>
+            <p>Порядковый номер</p> 
+        </div>
+        <div style="display: flex;flex-direction: row;justify-content: space-around;">
+            <p style="cursor: pointer;" ng-click="switchOrder('left')">	◄   </p>
+            <p>{{editor.activeIndex+1}}</p>
+            <p style="cursor: pointer;" ng-click="switchOrder('right')">   	►</p>
+        </div>
+    </div>
     <div ng-repeat="param in editor.editingParam">
         <!-- Блок названий левого столбца -->
         <div  
