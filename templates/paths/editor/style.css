@@ -1,7 +1,6 @@
 .param_info {
-  border: none !important; 
+  border: 1px solid var(--dark-blue) !important;
   margin-top: 32px !important;
-  
 }
 .param_row {
   min-height: 48px !important;
@@ -16,4 +15,28 @@
   font-size: 12pt;
   resize: none;
   padding: 4px;
+}
+.manipulate {
+  display: inline-block;
+  margin: 16px 50px 0px 50px;
+  width: inherit;
+}
+.manipulate_row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.manipulate_cell {
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--gray);
+  padding: 0px 8px 0px 8px;
+}
+.manipulate_cell:hover{
+  color: white;
+  background: var(--light-blue);
+  opacity: 1;
+}
+.nav_modified {
+  height: 60px !important;
 }

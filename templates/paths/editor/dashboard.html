@@ -1,4 +1,4 @@
-<div class="nav">
+<div class="nav nav_modified">
     <div>
         <div  ng-repeat="param in editor.stage1" 
         ng-click="selectParam(editor.stage1,$index,1)" 
@@ -9,7 +9,7 @@
         </div>
     </div>
 </div>
-<div class="nav" ng-if="editor.stage2">
+<div class="nav nav_modified" ng-if="editor.stage2">
     <div>
         <div  ng-repeat="param in editor.stage2" 
         ng-click="selectParam(editor.stage2,$index,2)" 
@@ -20,7 +20,7 @@
         </div>
     </div>
 </div>
-<div class="nav" ng-if="editor.stage3">
+<div class="nav nav_modified" ng-if="editor.stage3">
     <div>
         <div  ng-repeat="param in editor.stage3" 
         ng-click="selectParam(editor.stage3,$index,3)" 
@@ -31,7 +31,7 @@
         </div>
     </div>
 </div>
-<div class="nav" ng-if="editor.stage4">
+<div class="nav nav_modified" ng-if="editor.stage4">
     <div>
         <div  ng-repeat="param in editor.stage4" 
         ng-click="selectParam(editor.stage4,$index,4)" 
@@ -42,7 +42,7 @@
         </div>
     </div>
 </div>
-<div class="nav" ng-if="editor.stage5">
+<div class="nav nav_modified" ng-if="editor.stage5">
     <div>
         <div  ng-repeat="param in editor.stage5" 
         ng-click="selectParam(editor.stage5,$index,5)" 
@@ -53,7 +53,8 @@
         </div>
     </div>
 </div>
-<div class="nav param_info" ng-if="editor.editingParam">
+<div class="nav param_info nav_modified" ng-if="editor.editingParam">
+    Параметры выбранного объекта:
     <div>
         <div>
             <p>Порядковый номер</p> 
@@ -110,8 +111,8 @@
                 <textarea rows="{{param[0]==='title'?3:1}}" class="param_input" type="text" ng-value="param[1]" ng-blur="inputChange(param,$event.target.value)">
         </div>
     </div>
+    
 </div>
 
-<div>
-    <button ng-click="saveJSON()">SAVE JSON</button>
-</div>
+
+

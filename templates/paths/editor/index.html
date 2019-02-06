@@ -1,5 +1,17 @@
 <link rel="stylesheet" href="./templates/paths/calculation/style.css">
 <link rel="stylesheet" href="./templates/paths/editor/style.css">
-<div id="loading_modal" loading></div>
 <div class="window-header" ng-class="{nomarginleft: dashboard.myFactory.matrixType!=='HIP'}">Редактор каретки</div>
-<div class="dashboard_container" ng-class="{nomarginleft: dashboard.myFactory.matrixType!=='HIP'}" editor-dashboard></div>
+<div class="dashboard_container" style="height: unset;" ng-class="{nomarginleft: dashboard.myFactory.matrixType!=='HIP'}" editor-dashboard></div>
+<div class="manipulate" ng-if="editor.editingParam">
+  <div class="manipulate_row">
+    <div class="manipulate_cell">
+      <p>Удалить этот элемент</p>
+    </div>
+    <div class="manipulate_cell">
+      <p>Добавить дочерний элемент</p>
+    </div>
+  </div>
+</div>
+<!-- <div>
+    <button ng-click="saveJSON()">SAVE JSON</button>
+</div> -->
