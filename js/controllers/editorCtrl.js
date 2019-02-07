@@ -111,7 +111,10 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         $scope.editor[name] = res;
     }
     $scope.inputChange = (param, val) => {
-        if ($scope.editor.editingObj.type==='risk'&&$scope.editor.editingObj.value!==undefined) $scope.editRiskInPool(param[1],val);
+        if ($scope.editor.editingObj.type==='risk'&&$scope.editor.editingObj.value!==undefined) {
+            $scope.editRiskInPool(param[1],val);
+            $scope.editRiskInPackages(param[1],val);
+        }
         if (param[0] === 'url') {
             const changing = $scope.editor.urls.find(el => el.url === param[1]);
             changing.url = val;
@@ -269,6 +272,14 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     $scope.editRiskInPool = (from,to) => {
         $scope.editor.risksReserverNames = $scope.editor.risksReserverNames.map((rName) => (rName===from) ? to : rName);
         $scope.editor.risksCanUse = $scope.editor.risksCanUse.map((rName) => (rName===from) ? to : rName);
+    }
+    $scope.editRiskInPackages = (from,to) => {
+        const risks = [...$scope.editor.objs.filter(x=>x.model==='risk'),...$scope.editor.urls.filter(x=>x.model==='risk')]
+        const packages = [];
+        risks.forEach(store=>store.values.forEach(pack=>{
+            if (pack.action==="package") packages.push(pack);
+        }))
+        packages.forEach(pack=>pack.values.forEach(val=>{if (val.risk===from) val.risk = to }))
     }
     this.loadMatrix = async function () {
         const param = 'HIP-conf.json';
