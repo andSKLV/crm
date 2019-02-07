@@ -31,7 +31,6 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         let selectedParam = stage[index];
         $scope.editor.editingStage = stageNum;
         $scope.editor.exactEditingObj = selectedParam;
-        $scope.editor.editingObjCanDelete = $scope.isDeletable(selectedParam);
         $scope.clearActive(stageNum);
         $scope.editor.active[`stage${stageNum}`] = index;
         if (selectedParam.type === "relocate_here") {
@@ -40,6 +39,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         }
         $scope.editor.activeIndex = index;
         $scope.makeStageName(selectedParam.values, stageNum);
+        $scope.editor.editingObjCanDelete = $scope.isDeletable(selectedParam);
         $scope.clearRest(stageNum);
         $scope.makeEditing(selectedParam);
     }
@@ -56,9 +56,23 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     }
     $scope.isDeletable = (obj) => {
         const notDeleteTypes = ["inputForCurrency", "currencyValue", "amountType", "inputForCurrency"];
-        if ($scope.editor.stage1.includes(obj)) return false;
-        if (notDeleteTypes.includes(obj.type)) return false;
-        if (obj.baseRisk) return false;
+        if ($scope.editor.stage1.includes(obj)) {
+            $scope.editor.notDeleteMessage = 'Нельзя удалить корневой элемент'
+            return false;
+        }
+        if (notDeleteTypes.includes(obj.type)) {
+            $scope.editor.notDeleteMessage = 'Нельзя удалить обязательный элемент'
+            return false;
+        }
+        if (obj.baseRisk) {
+            $scope.editor.notDeleteMessage = 'Нельзя удалить базовый риск'
+            return false;
+        }
+        if ($scope.editor[`stage${$scope.editor.editingStage}`].length<3) {
+            $scope.editor.notDeleteMessage = 'Нельзя удалить элемент, если у родителя осталось меньше трех дочерних элементов'
+            return false;
+        } //если 2 и меньше элементов, то нельзя удалить, чтоб не оставить один
+        $scope.editor.notDeleteMessage = null;
         return true;
     }
     $scope.clearActive = stageNum => {
@@ -102,6 +116,13 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             parent.urlTo = val;
         }
         $scope.editor.editingObj[param[0]] = val;
+    }
+    /**
+     * Поиск родителя активного элемента
+     */
+    $scope.findParent = () => {
+        const nullIndex = Object.values($scope.editor.active).findIndex(x=>x===null); //смотрим на каком стейдже нет выбранных значений
+        return (nullIndex>0) ? $scope.editor[`stage${nullIndex-1}`] : []; //если это корень, то родителя нет, если не корень, то возвращаем предпоследний выделенный стейдж
     }
     $scope.onDeleteActiveElement = () => {
         const el = $scope.editor.exactEditingObj;

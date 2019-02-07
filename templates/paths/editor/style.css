@@ -31,12 +31,23 @@
   border-radius: 10px;
   background-color: var(--gray);
   padding: 0px 8px 0px 8px;
+  border: 1px solid var(--dark-blue);
 }
 .manipulate_cell:hover{
   color: white;
   background: var(--light-blue);
   opacity: 1;
 }
+.disabled_cell {
+  border-radius: 10px;
+  background-color: white;
+  padding: 0px 8px 0px 8px;
+  border: 1px solid var(--dark-blue);
+  opacity: .4;
+}
 .nav_modified {
   height: 60px !important;
+}
+.resizable {
+  resize: vertical !important;
 }

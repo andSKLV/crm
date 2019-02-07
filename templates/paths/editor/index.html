@@ -9,6 +9,10 @@
       ng-click="onDeleteActiveElement()">
       <p>Удалить этот элемент</p>
     </div>
+    <div class="disabled_cell" 
+      ng-if="!editor.editingObjCanDelete">
+      <p>{{editor.notDeleteMessage}}</p>
+    </div>
     <div class="manipulate_cell"
       ng-click="onAddNew('risk')"
       ng-if="editor.editingObj.model==='risk'||editor.editingObj.model==='wrapping'">
