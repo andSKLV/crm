@@ -65,7 +65,8 @@
             <p style="cursor: pointer;" ng-click="switchOrder('right')">   	►</p>
         </div>
     </div>
-    <div ng-repeat="param in editor.editingParam">
+    <div ng-repeat="param in editor.editingParam"
+        ng-if="param[0]!=='model'">
         <!-- Блок названий левого столбца -->
         <div  
             class="clickable param_row" ng-class="{alreadySelected: editor.active.stage4===editor.stage4.indexOf(param)}"
@@ -74,11 +75,11 @@
                 <p ng-switch-when='name'>
                     Название
                 </p>
-                <p ng-switch-when='model'>
+                <!-- <p ng-switch-when='model'>
                     Модель
-                </p>
+                </p> -->
                 <p ng-switch-when='url'>
-                    Углубление
+                    Название углубления
                 </p>
                 <p ng-switch-when='type'>
                     Тип
@@ -117,6 +118,21 @@
                 </p>
                 <p ng-switch-when="cost">
                     Цена
+                </p>
+                <p ng-switch-when="risk">
+                    Риск
+                </p>
+                <p ng-switch-when="url">
+                    Углубление
+                </p>
+                <p ng-switch-when="true">
+                    Да
+                </p>
+                <p ng-switch-when="package">
+                    Пакет рисков
+                </p>
+                <p ng-switch-when="selectAll">
+                    Выбрать все
                 </p>
                 <textarea ng-switch-default
                     rows="{{param[0]==='title'?3:1}}" class="param_input" type="text" ng-value="param[1]" 
