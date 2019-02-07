@@ -121,21 +121,48 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         st.splice(st.indexOf(el), 1); //удаляем элемент из стейджа
         $scope.selectParam($scope.editor[`stage${parentStageInd}`], $scope.editor.active[`stage${parentStageInd}`], parentStageInd) //делаем родителя активным элементом
     }
-    $scope.onAddNew = () => {
+    $scope.onAddNew = type => {
         const parentEl = $scope.editor.editingObj;
         const store = parentEl.values;
-        const example = Object.assign({}, store[store.length - 1]);
-        example.name = 'Введите название';
-        clearFields(example);//обнуление полей
-        store.push(example);
-        function clearFields(obj) {
+        const name = `Введите название${Math.floor(Math.random() * 1000)}`;
+        let child;
+        switch (type) {
+            case 'risk':
+                child = $scope.createRisk(name);
+                break;
+            case 'url':
+                child = $scope.createRelocate(name);
+                const url = $scope.createUrl(name, parentEl.model);
+                $scope.editor.urls.push(url);
+                break;
+            case 'copy':
+                child = clearFields(Object.assign({}, store[store.length - 1]), name);
+                break;
+            default:
+                return false;
+                break;
+        }
+        store.push(child);
+        function clearFields(obj, name) {
             if (obj.$$hashKey) delete obj.$$hashKey;
-            const emptyName = 'Введите название';
-            if (obj.name) obj.name = emptyName;
-            if (obj.urlTo) {
-                obj.urlTo = emptyName;
-                $scope.editor.urls.push($scope.createUrl(emptyName, parentEl.model));
-            }
+            if (obj.name) obj.name = name;
+            return obj;
+        }
+    }
+    $scope.createRisk = name => {
+        name = name || `Введите название${Math.floor(Math.random() * 1000)}`;
+        return {
+            name,
+            type: 'risk',
+            value: 0,
+            title: 'Описание риска'
+        }
+    }
+    $scope.createRelocate = name => {
+        return {
+            name,
+            type: 'relocate_here',
+            urlTo: name,
         }
     }
     $scope.createUrl = (name, model) => {
@@ -143,14 +170,8 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             url: name,
             model
         };
-        obj.values = [$scope.createEl()];
+        obj.values = [$scope.createRisk(), $scope.createRisk()];
         return obj;
-    }
-    $scope.createEl = (name = 'Введите название', type = 'risk') => {
-        return {
-            name, type,
-            "value": 0,
-        }
     }
     $scope.switchOrder = direction => {
         const stageName = `stage${($scope.editor.editingStage)}`;
