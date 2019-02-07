@@ -10,15 +10,18 @@
       <p>Удалить этот элемент</p>
     </div>
     <div class="manipulate_cell"
-      ng-click="onAddNew('risk')">
+      ng-click="onAddNew('risk')"
+      ng-if="editor.editingObj.model==='risk'||editor.editingObj.model==='wrapping'">
       <p>Добавить риск</p>
     </div>
     <div class="manipulate_cell"
-      ng-click="onAddNew('url')">
+      ng-click="onAddNew('url')"
+      ng-if="editor.editingObj.model==='risk'||editor.editingObj.model==='wrapping'">
       <p>Добавить углубление</p>
     </div>
     <div class="manipulate_cell"
-      ng-click="onAddNew('copy')">
+      ng-click="onAddNew('copy')"
+      ng-if="editor.editingObj.model&&editor.editingObj.model!=='risk'&&editor.editingObj.model!=='wrapping'">
       <p>Добавить дочерний элемент</p>
     </div>
   </div>
