@@ -111,6 +111,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         $scope.editor[name] = res;
     }
     $scope.inputChange = (param, val) => {
+        if ($scope.editor.editingObj.type==='risk'&&$scope.editor.editingObj.value!==undefined) $scope.editRiskInPool(param[1],val);
         if (param[0] === 'url') {
             const changing = $scope.editor.urls.find(el => el.url === param[1]);
             changing.url = val;
@@ -141,6 +142,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
                 parentStageInd = i;
             }
         })
+        if (el.type==='risk'&&el.value!==undefined) $scope.removeRiskFromPool (el.name);
         const st = $scope.editor[deletingStageName];
         st.splice(st.indexOf(el), 1); //удаляем элемент из стейджа
         $scope.selectParam($scope.editor[`stage${parentStageInd}`], $scope.editor.active[`stage${parentStageInd}`], parentStageInd) //делаем родителя активным элементом
@@ -191,6 +193,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     }
     $scope.createRisk = name => {
         name = name || `Введите название${Math.floor(Math.random() * 1000)}`;
+        $scope.addRiskToPool (name);
         return {
             name,
             type: 'risk',
@@ -258,6 +261,14 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     $scope.addRiskToPool = name => {
         $scope.editor.risksReserverNames.push(name);
         $scope.editor.risksCanUse.push(name);
+    }
+    $scope.removeRiskFromPool = name => {
+        $scope.editor.risksReserverNames = $scope.editor.risksReserverNames.filter(r=>r!==name);
+        $scope.editor.risksCanUse = $scope.editor.risksCanUse.filter(r=>r!==name);
+    }
+    $scope.editRiskInPool = (from,to) => {
+        $scope.editor.risksReserverNames = $scope.editor.risksReserverNames.map((rName) => (rName===from) ? to : rName);
+        $scope.editor.risksCanUse = $scope.editor.risksCanUse.map((rName) => (rName===from) ? to : rName);
     }
     this.loadMatrix = async function () {
         const param = 'HIP-conf.json';
