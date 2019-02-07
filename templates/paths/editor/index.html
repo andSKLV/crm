@@ -14,6 +14,11 @@
       <p>{{editor.notDeleteMessage}}</p>
     </div>
     <div class="manipulate_cell"
+      ng-click="onAddNew('packageRisk')"
+      ng-if="editor.editingObj.action==='package'">
+      <p>Добавить риск пакетный</p>
+    </div>
+    <div class="manipulate_cell"
       ng-click="onAddNew('risk')"
       ng-if="editor.editingObj.model==='risk'||editor.editingObj.model==='wrapping'">
       <p>Добавить риск</p>
@@ -32,4 +37,15 @@
 </div>
 <div>
     <button ng-click="saveJSON()">SAVE JSON</button>
+</div>
+<div class='modal_picker' style="display: none">
+  <div class="modal_picker_box">
+      <div ng-repeat="risk in editor.pickerRisks"
+        style="cursor: pointer;"
+        ng-click="onClickNameInPack(risk)">
+          <p>{{risk}}</p>
+        </div>
+  </div>
+    
+  
 </div>

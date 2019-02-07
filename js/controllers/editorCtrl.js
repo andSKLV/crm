@@ -4,6 +4,8 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     this.myFactory = myFactory;
 
     $scope.editor = {
+        risksReserverNames: [],
+        risksCanUse: [],
         fileName: null,
         activeStage: 0,
         activeIndex: 0,
@@ -20,6 +22,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         editingObj: null,
         editingParam: null,
         editingObjCanDelete: false,
+        pickerRisks: null,
         stage1: null,
         stage2: null,
         stage3: null,
@@ -151,6 +154,9 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             case 'risk':
                 child = $scope.createRisk(name);
                 break;
+            case 'packageRisk':
+                child = $scope.createPackageRisk(store);
+                break;
             case 'url':
                 child = $scope.createRelocate(name);
                 const url = $scope.createUrl(name, parentEl.model);
@@ -163,12 +169,25 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
                 return false;
                 break;
         }
+        if (!child) return false;
         store.push(child);
         function clearFields(obj, name) {
             if (obj.$$hashKey) delete obj.$$hashKey;
             if (obj.name) obj.name = name;
             return obj;
         }
+    }
+    $scope.createPackageRisk = store => {
+        const names = $scope.getNamesForPack (store);
+        if (names.length>0) return {
+            risk: names[0],
+            limit: 0.1,
+        }
+        return false;
+    }
+    $scope.getNamesForPack = store => {
+        const risks = store.map(val=>val.risk);
+        return $scope.editor.risksCanUse.filter(el=>!risks.includes(el));
     }
     $scope.createRisk = name => {
         name = name || `Введите название${Math.floor(Math.random() * 1000)}`;
@@ -210,7 +229,35 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         [st[newInd], st[ind]] = [st[ind], st[newInd]];
         $scope.editor.active[stageName] = newInd;
         $scope.editor.activeIndex = newInd;
-        debugger;
+    }
+    $scope.switchRiskInPack = direction => {
+        const el = $scope.editor.editingObj;
+        const name = el.risk;
+        const store = $scope.editor[`stage${$scope.editor.activeStage}`];
+        const names = $scope.getNamesForPack(store);
+        $scope.editor.pickerRisks = [name,...names];
+        const picker = document.querySelector('.modal_picker');
+        picker.style.display = 'block';
+    }
+    $scope.makeRiskPool = () => {
+        const allRisks = $scope.editor.all.filter(x=>x.model==='risk');
+        allRisks.forEach(host=>{
+            host.values.forEach(val=>{
+                if (val.type==='risk'&&!val.action) {
+                    (val.baseRisk) ? $scope.editor.risksReserverNames.push(val.name) : $scope.addRiskToPool(val.name);
+                } 
+            })
+        })
+    }
+    $scope.onClickNameInPack = name => {
+        $scope.editor.editingObj.risk = name;
+        const picker = document.querySelector('.modal_picker');
+        picker.style.display = 'none';
+        $scope.selectParam($scope.editor[`stage${$scope.editor.activeStage}`],$scope.editor.activeIndex,$scope.editor.activeStage)
+    }
+    $scope.addRiskToPool = name => {
+        $scope.editor.risksReserverNames.push(name);
+        $scope.editor.risksCanUse.push(name);
     }
     this.loadMatrix = async function () {
         const param = 'HIP-conf.json';
@@ -225,6 +272,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             $scope.editor.all = response.data;
             $scope.editor.objs = response.data.filter(x => !x.url);
             $scope.editor.urls = response.data.filter(x => x.url);
+            $scope.makeRiskPool ();
             $scope.makeFirstStage($scope.editor.objs);
         }, function error(response) {
             console.error(response);

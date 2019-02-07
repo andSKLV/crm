@@ -51,3 +51,24 @@
 .resizable {
   resize: vertical !important;
 }
+.modal_picker {
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.modal_picker_box{
+  width: 40%;
+  min-height: 40%;
+  position: absolute;
+  top: 20%;
+  left: 30%;
+  background-color: white;
+  z-index: 1001;
+  opacity: 1;
+  padding: 20px;
+  border-radius: 20px;
+  border: 2px solid var(--dark-blue);
+}

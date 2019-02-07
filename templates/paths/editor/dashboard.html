@@ -134,10 +134,16 @@
                 <p ng-switch-when="selectAll">
                     Выбрать все
                 </p>
+                <div style="display: flex;flex-direction: row;justify-content: center;" 
+                    ng-if="editor.editingObj.limit&&param[0]==='risk'">
+                    <p>{{param[1]}}</p>
+                    <p style="cursor: pointer;margin-left: 20px;" ng-click="switchRiskInPack()">▼</p>
+                </div>
                 <textarea ng-switch-default
                     rows="{{param[0]==='title'?3:1}}" class="param_input" type="text" ng-value="param[1]"
                     ng-class="{resizable: param[0]==='title'}" 
-                    ng-blur="inputChange(param,$event.target.value)">
+                    ng-blur="inputChange(param,$event.target.value)"
+                    ng-if="!(editor.editingObj.limit&&param[0]==='risk')">
         </div>
     </div>
     
