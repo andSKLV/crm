@@ -104,22 +104,22 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         return true;
     }
     $scope.isSelectAllPosible = (obj) => {
-        if (obj.type !== 'url'||obj.model==='wrapping') return false;
+        if (obj.type !== 'url' || obj.model === 'wrapping') return false;
         return obj.values.every(val => val.type === 'risk' && isNumeric(val.value));
     }
     $scope.canAddRisk = obj => {
         return $scope.editor.editingObj.model === 'risk' || $scope.editor.editingObj.model === 'wrapping';
     }
     $scope.canAddPack = obj => {
-        if (obj.values&&obj.values.some(val=>val.action==='selectAll')||obj.model==='wrapping') return false;
+        if (obj.values && obj.values.some(val => val.action === 'selectAll') || obj.model === 'wrapping') return false;
         return $scope.editor.editingObj.model === 'risk' || $scope.editor.editingObj.model === 'wrapping';
     }
     $scope.canAddChild = obj => {
         return $scope.editor.editingObj.model && $scope.editor.editingObj.model !== 'risk' && $scope.editor.editingObj.model !== 'wrapping'
     }
     $scope.canAddDepth = obj => {
-        if (obj.values&&obj.values.some(val=>val.action==='selectAll')) return false;
-        return $scope.editor.editingObj.model==='risk'||$scope.editor.editingObj.model==='wrapping';
+        if (obj.values && obj.values.some(val => val.action === 'selectAll')) return false;
+        return $scope.editor.editingObj.model === 'risk' || $scope.editor.editingObj.model === 'wrapping';
     }
     $scope.clearActive = stageNum => {
         for (stageNum; stageNum < 5; stageNum++) {
@@ -133,10 +133,12 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     $scope.clearRest = (stageNum) => {
         const stages = Object.keys($scope.editor).filter(x => x.match(/stage\d/));
         const res = stages.map((name, i) => ((i + 1) > stageNum) && $scope.editor[name] && name)
-        res.forEach(name => { if ($scope.editor[name]) {
-            $scope.editor[name] = null 
-            $scope.editor.active[name]=null;
-        }});
+        res.forEach(name => {
+            if ($scope.editor[name]) {
+                $scope.editor[name] = null
+                $scope.editor.active[name] = null;
+            }
+        });
     }
     $scope.makeEditing = (param) => {
         $scope.editor.editingObj = param;
@@ -181,7 +183,31 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         const el = $scope.editor.exactEditingObj;
         if (el.type === 'relocate_here') {
             const urlInd = $scope.editor.urls.indexOf($scope.editor.editingObj);
+            const deletingRisks = [];
+            const deletingUrls = [];
+            console.time();
+            $scope.editor.urls[urlInd].values.forEach(el => {
+                if (el.type === "risk" && isNumeric(el.value)) deletingRisks.push(el);
+                if (el.type === "relocate_here") deletingUrls.push(el);
+            });
+            while (deletingUrls.length) {
+                const url = deletingUrls.pop();
+                const ind = $scope.editor.urls.findIndex(u => u.url === url.urlTo);
+                $scope.editor.urls[ind].values.forEach(el => {
+                    if (el.type === "risk" && isNumeric(el.value)) deletingRisks.push(el);
+                    if (el.type === "relocate_here") deletingUrls.push(el);
+                });
+                $scope.editor.urls.splice(ind, 1);
+            }
+            deletingRisks.forEach(el => {
+                $scope.removeRiskFromPool(el.name);
+                $scope.removeRiskFromPackages(el.name);
+            })
             $scope.editor.urls.splice(urlInd, 1);
+            console.timeEnd();
+            debugger;
+            /////
+
         }
         //определение стейджа
         let deletingStageName, parentStageInd;
@@ -199,7 +225,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             $scope.removeRiskFromPool(el.name);
             $scope.removeRiskFromPackages(el.name);
         }
-        
+
         $scope.selectParam($scope.editor[`stage${parentStageInd}`], $scope.editor.active[`stage${parentStageInd}`], parentStageInd) //делаем родителя активным элементом
     }
     $scope.onAddNew = type => {
@@ -233,9 +259,9 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         }
         if (!child) return false;
         store.push(child);
-        const nextStageInd = $scope.editor.editingStage+1;
+        const nextStageInd = $scope.editor.editingStage + 1;
         const nextStage = $scope.editor[`stage${nextStageInd}`];
-        $scope.selectParam (nextStage, nextStage.length-1, nextStageInd);
+        $scope.selectParam(nextStage, nextStage.length - 1, nextStageInd);
         function clearFields(obj, name) {
             if (obj.$$hashKey) delete obj.$$hashKey;
             if (obj.name) obj.name = name;
@@ -374,30 +400,30 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
                 packages[packInd].values.splice(riskInd, 1);
             })
         }
-        $scope.checkPackagesForLength (packages);
+        $scope.checkPackagesForLength(packages);
     }
     $scope.checkPackagesForLength = packages => {
         const toDelete = [];
-        packages.forEach(pack=>{
-            if (pack.values.length<2) toDelete.push(pack);
+        packages.forEach(pack => {
+            if (pack.values.length < 2) toDelete.push(pack);
         })
         if (toDelete.length) {
             console.time();
-            toDelete.forEach(pack=>{
+            toDelete.forEach(pack => {
                 const deleteFrom = [];
-                $scope.editor.objs.forEach(obj=>{
-                    obj.values.forEach(val=>{
-                        if (val===pack) deleteFrom.push(obj); 
+                $scope.editor.objs.forEach(obj => {
+                    obj.values.forEach(val => {
+                        if (val === pack) deleteFrom.push(obj);
                     })
                 })
-                $scope.editor.urls.forEach(url=>{
-                    url.values.forEach(val=>{
-                        if (val===pack) deleteFrom.push(url);
+                $scope.editor.urls.forEach(url => {
+                    url.values.forEach(val => {
+                        if (val === pack) deleteFrom.push(url);
                     })
                 })
-                deleteFrom.forEach(store=>{
+                deleteFrom.forEach(store => {
                     const ind = store.values.indexOf(pack)
-                    store.values.splice(ind,1);
+                    store.values.splice(ind, 1);
                 })
             })
         }

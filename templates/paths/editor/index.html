@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="./templates/paths/calculation/style.css">
 <link rel="stylesheet" href="./templates/paths/editor/style.css">
-<div class="window-header" ng-class="{nomarginleft: dashboard.myFactory.matrixType!=='HIP'}">{{editor.editingObj.name || editor.editingObj.risk || 'Редактор каретки'}}</div>
+<div class="window-header" ng-class="{nomarginleft: dashboard.myFactory.matrixType!=='HIP'}">{{editor.editingObj.name || editor.editingObj.risk || editor.editingObj.url || 'Редактор каретки'}}</div>
 <div class="dashboard_container" style="height: unset;" ng-class="{nomarginleft: dashboard.myFactory.matrixType!=='HIP'}" editor-dashboard></div>
 <div class="manipulate" ng-if="editor.editingParam" manipulate-row></div>
 <div>
