@@ -30,22 +30,22 @@
   </div>
   <div class="manipulate_cell"
     ng-click="onAddNew('risk')"
-    ng-if="editor.editingObj.model==='risk'||editor.editingObj.model==='wrapping'">
+    ng-if="editor.editingObjCanAddRisk">
     <p>Добавить риск</p>
   </div>
   <div class="manipulate_cell"
     ng-click="onAddNew('package')"
-    ng-if="editor.editingObj.model==='risk'||editor.editingObj.model==='wrapping'">
+    ng-if="editor.editingObjCanAddPack">
     <p>Добавить Пакет рисков</p>
   </div>
   <div class="manipulate_cell"
     ng-click="onAddNew('url')"
-    ng-if="editor.editingObj.model==='risk'||editor.editingObj.model==='wrapping'">
+    ng-if="editor.canAddDepth">
     <p>Добавить углубление</p>
   </div>
   <div class="manipulate_cell"
     ng-click="onAddNew('copy')"
-    ng-if="editor.editingObj.model&&editor.editingObj.model!=='risk'&&editor.editingObj.model!=='wrapping'">
+    ng-if="editor.canAddChild">
     <p>Добавить дочерний элемент</p>
   </div>
 </div>
