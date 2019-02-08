@@ -378,7 +378,26 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         packages.forEach(pack=>{
             if (pack.values.length<2) toDelete.push(pack);
         })
-        if (toDelete.length) debugger;
+        if (toDelete.length) {
+            console.time();
+            toDelete.forEach(pack=>{
+                const deleteFrom = [];
+                $scope.editor.objs.forEach(obj=>{
+                    obj.values.forEach(val=>{
+                        if (val===pack) deleteFrom.push(obj); 
+                    })
+                })
+                $scope.editor.urls.forEach(url=>{
+                    url.values.forEach(val=>{
+                        if (val===pack) deleteFrom.push(url);
+                    })
+                })
+                deleteFrom.forEach(store=>{
+                    const ind = store.values.indexOf(pack)
+                    store.values.splice(ind,1);
+                })
+            })
+        }
     }
     $scope.getAllPackages = () => {
         const risks = [...$scope.editor.objs.filter(x => x.model === 'risk'), ...$scope.editor.urls.filter(x => x.model === 'risk')]
