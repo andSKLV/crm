@@ -185,7 +185,6 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             const urlInd = $scope.editor.urls.indexOf($scope.editor.editingObj);
             const deletingRisks = [];
             const deletingUrls = [];
-            console.time();
             $scope.editor.urls[urlInd].values.forEach(el => {
                 if (el.type === "risk" && isNumeric(el.value)) deletingRisks.push(el);
                 if (el.type === "relocate_here") deletingUrls.push(el);
@@ -204,10 +203,6 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
                 $scope.removeRiskFromPackages(el.name);
             })
             $scope.editor.urls.splice(urlInd, 1);
-            console.timeEnd();
-            debugger;
-            /////
-
         }
         //определение стейджа
         let deletingStageName, parentStageInd;
@@ -408,7 +403,6 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             if (pack.values.length < 2) toDelete.push(pack);
         })
         if (toDelete.length) {
-            console.time();
             toDelete.forEach(pack => {
                 const deleteFrom = [];
                 $scope.editor.objs.forEach(obj => {
@@ -477,11 +471,13 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         fd.append("filename", $scope.editor.fileName);
         const req = new Request("php/json.php", { method: "POST", body: fd });
         return fetch(req).then(
-            resp => {
-                console.log('success');
+            async resp => {
+                const res = await resp.text();
+                if (res==='saved') alert ('Успешно сохранено');
+                (res==='saved') ? console.log(res) : console.error(res);;
             },
             err => {
-                console.error("Ошибка ");
+                console.error("Ошибка ",err);
             }
         );
     }
