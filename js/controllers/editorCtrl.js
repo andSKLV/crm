@@ -41,9 +41,9 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             selectedParam = $scope.editor.urls.find(x => x.url === url);
         }
         $scope.editor.activeIndex = index;
+        $scope.clearRest(stageNum);
         $scope.makeStageName(selectedParam.values, stageNum);
         $scope.editor.editingObjCanDelete = $scope.isDeletable(selectedParam);
-        $scope.clearRest(stageNum);
         $scope.makeEditing(selectedParam);
     }
     $scope.deleteSelectedStyles = num => {
@@ -89,7 +89,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
      */
     $scope.clearRest = (stageNum) => {
         const stages = Object.keys($scope.editor).filter(x => x.match(/stage\d/));
-        const res = stages.map((name, i) => (i > stageNum) && $scope.editor[name] && name)
+        const res = stages.map((name, i) => ((i+1) > stageNum) && $scope.editor[name] && name)
         res.forEach(name => { if ($scope.editor[name]) $scope.editor[name] = null });
     }
     $scope.makeEditing = (param) => {
@@ -269,16 +269,25 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         $scope.editor.risksReserverNames = $scope.editor.risksReserverNames.filter(r=>r!==name);
         $scope.editor.risksCanUse = $scope.editor.risksCanUse.filter(r=>r!==name);
     }
-    $scope.editRiskInPool = (from,to) => {
-        $scope.editor.risksReserverNames = $scope.editor.risksReserverNames.map((rName) => (rName===from) ? to : rName);
-        $scope.editor.risksCanUse = $scope.editor.risksCanUse.map((rName) => (rName===from) ? to : rName);
+    $scope.removeRiskFromPackages = name => {
+        debugger;
+        const packages = $scope.getAllPackages ();
+        //FIXME:
     }
-    $scope.editRiskInPackages = (from,to) => {
+    $scope.getAllPackages = () => {
         const risks = [...$scope.editor.objs.filter(x=>x.model==='risk'),...$scope.editor.urls.filter(x=>x.model==='risk')]
         const packages = [];
         risks.forEach(store=>store.values.forEach(pack=>{
             if (pack.action==="package") packages.push(pack);
         }))
+        return packages;
+    }
+    $scope.editRiskInPool = (from,to) => {
+        $scope.editor.risksReserverNames = $scope.editor.risksReserverNames.map((rName) => (rName===from) ? to : rName);
+        $scope.editor.risksCanUse = $scope.editor.risksCanUse.map((rName) => (rName===from) ? to : rName);
+    }
+    $scope.editRiskInPackages = (from,to) => {
+        const packages = $scope.getAllPackages ();
         packages.forEach(pack=>pack.values.forEach(val=>{if (val.risk===from) val.risk = to }))
     }
     this.loadMatrix = async function () {
