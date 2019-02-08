@@ -22,6 +22,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         editingObj: null,
         editingParam: null,
         editingObjCanDelete: false,
+        editingObjCanSelectAll: false,
         pickerRisks: null,
         stage1: null,
         stage2: null,
@@ -56,6 +57,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         $scope.clearRest(stageNum);
         $scope.makeStageName(selectedParam.values, stageNum);
         $scope.editor.editingObjCanDelete = $scope.isDeletable(selectedParam);
+        $scope.editor.editingObjCanSelectAll = $scope.isSelectAllPosible (selectedParam);
         $scope.makeEditing(selectedParam);
     }
     $scope.deleteSelectedStyles = num => {
@@ -89,6 +91,10 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         } //если 2 и меньше элементов, то нельзя удалить, чтоб не оставить один
         $scope.editor.notDeleteMessage = null;
         return true;
+    }
+    $scope.isSelectAllPosible = (obj) => {
+        if (obj.type!=='url') return false;
+        return obj.values.every(val=>val.type==='risk'&&isNumeric(val.value));
     }
     $scope.clearActive = stageNum => {
         for (stageNum; stageNum < 5; stageNum++) {
@@ -255,7 +261,8 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     $scope.createUrl = (name, model) => {
         const obj = {
             url: name,
-            model
+            model,
+            type: 'url',
         };
         obj.values = [$scope.createRisk(), $scope.createRisk()];
         return obj;

@@ -19,6 +19,11 @@
     <p>Добавить Кол-во случаев</p>
   </div>
   <div class="manipulate_cell"
+    ng-click="makeTimesRow()"
+    ng-if="editor.editingObjCanSelectAll">
+    <p>Добавить "Выбрать все"</p>
+  </div>
+  <div class="manipulate_cell"
     ng-click="deleteTimesRow()"
     ng-if="editor.editingObj.action==='package'&&editor.editingObj.times">
     <p>Удалить Кол-во случаев</p>
