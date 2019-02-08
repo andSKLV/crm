@@ -1,0 +1,46 @@
+<div class="manipulate_row">
+  <div class="manipulate_cell" 
+    ng-if="editor.editingObjCanDelete"
+    ng-click="onDeleteActiveElement()">
+    <p>Удалить этот элемент</p>
+  </div>
+  <div class="disabled_cell" 
+    ng-if="!editor.editingObjCanDelete">
+    <p>{{editor.notDeleteMessage}}</p>
+  </div>
+  <div class="manipulate_cell"
+    ng-click="onAddNew('packageRisk')"
+    ng-if="editor.editingObj.action==='package'">
+    <p>Добавить риск в пакет</p>
+  </div>
+  <div class="manipulate_cell"
+    ng-click="makeTimesRow()"
+    ng-if="editor.editingObj.action==='package'&&!editor.editingObj.times">
+    <p>Добавить Кол-во случаев</p>
+  </div>
+  <div class="manipulate_cell"
+    ng-click="deleteTimesRow()"
+    ng-if="editor.editingObj.action==='package'&&editor.editingObj.times">
+    <p>Удалить Кол-во случаев</p>
+  </div>
+  <div class="manipulate_cell"
+    ng-click="onAddNew('risk')"
+    ng-if="editor.editingObj.model==='risk'||editor.editingObj.model==='wrapping'">
+    <p>Добавить риск</p>
+  </div>
+  <div class="manipulate_cell"
+    ng-click="onAddNew('package')"
+    ng-if="editor.editingObj.model==='risk'||editor.editingObj.model==='wrapping'">
+    <p>Добавить Пакет рисков</p>
+  </div>
+  <div class="manipulate_cell"
+    ng-click="onAddNew('url')"
+    ng-if="editor.editingObj.model==='risk'||editor.editingObj.model==='wrapping'">
+    <p>Добавить углубление</p>
+  </div>
+  <div class="manipulate_cell"
+    ng-click="onAddNew('copy')"
+    ng-if="editor.editingObj.model&&editor.editingObj.model!=='risk'&&editor.editingObj.model!=='wrapping'">
+    <p>Добавить дочерний элемент</p>
+  </div>
+</div>
