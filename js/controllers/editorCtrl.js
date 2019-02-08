@@ -220,7 +220,8 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
                 $scope.editor.urls.push(url);
                 break;
             case 'copy':
-                name = `Введите название ${Math.floor(Math.random() * 1000)}`;
+
+                name = `${Math.floor(Math.random() * 1000)}`;
                 child = clearFields(Object.assign({}, store[store.length - 1]), name);
                 break;
             case 'package':
