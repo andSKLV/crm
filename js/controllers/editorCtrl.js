@@ -145,7 +145,10 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
                 parentStageInd = i;
             }
         })
-        if (el.type==='risk'&&el.value!==undefined) $scope.removeRiskFromPool (el.name);
+        if (el.type==='risk'&&el.value!==undefined) { //если это риск, то нужно удалить его из пула рисков и из всех пакетов
+            $scope.removeRiskFromPool (el.name);
+            $scope.removeRiskFromPackages (el.name);
+        }
         const st = $scope.editor[deletingStageName];
         st.splice(st.indexOf(el), 1); //удаляем элемент из стейджа
         $scope.selectParam($scope.editor[`stage${parentStageInd}`], $scope.editor.active[`stage${parentStageInd}`], parentStageInd) //делаем родителя активным элементом
@@ -270,9 +273,14 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         $scope.editor.risksCanUse = $scope.editor.risksCanUse.filter(r=>r!==name);
     }
     $scope.removeRiskFromPackages = name => {
-        debugger;
+        const containsRisk = [];
         const packages = $scope.getAllPackages ();
-        //FIXME:
+        packages.forEach((pack,packInd)=>pack.values.forEach((val,valInd)=>{if (val.risk===name) containsRisk.push([packInd,valInd])}));
+        if (containsRisk.length) {
+            containsRisk.forEach(([packInd,riskInd])=>{
+                packages[packInd].values.splice(riskInd,1);
+            })
+        }
     }
     $scope.getAllPackages = () => {
         const risks = [...$scope.editor.objs.filter(x=>x.model==='risk'),...$scope.editor.urls.filter(x=>x.model==='risk')]
