@@ -156,22 +156,26 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     $scope.onAddNew = type => {
         const parentEl = $scope.editor.editingObj;
         const store = parentEl.values;
-        const name = `Введите название${Math.floor(Math.random() * 1000)}`;
-        let child;
+        let child,name;
         switch (type) {
             case 'risk':
-                child = $scope.createRisk(name);
+                child = $scope.createRisk();
                 break;
             case 'packageRisk':
                 child = $scope.createPackageRisk(store);
                 break;
             case 'url':
+                name = `Углубление ${Math.floor(Math.random() * 1000)}`;
                 child = $scope.createRelocate(name);
                 const url = $scope.createUrl(name, parentEl.model);
                 $scope.editor.urls.push(url);
                 break;
             case 'copy':
+                name = `Введите название ${Math.floor(Math.random() * 1000)}`;
                 child = clearFields(Object.assign({}, store[store.length - 1]), name);
+                break;
+            case 'package':
+                child = $scope.createPackage ();
                 break;
             default:
                 return false;
@@ -184,6 +188,18 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             if (obj.name) obj.name = name;
             return obj;
         }
+    }
+    $scope.createPackage = name => {
+        name = name || `Пакет ${Math.floor(Math.random() * 1000)}`;
+        const pack = {
+            name,
+            type: 'risk',
+            action: "package",
+            values: []
+        };
+        pack.values.push($scope.createPackageRisk(pack.values));
+        pack.values.push($scope.createPackageRisk(pack.values));
+        return pack;
     }
     $scope.createPackageRisk = store => {
         const names = $scope.getNamesForPack (store);
@@ -198,7 +214,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         return $scope.editor.risksCanUse.filter(el=>!risks.includes(el));
     }
     $scope.createRisk = name => {
-        name = name || `Введите название${Math.floor(Math.random() * 1000)}`;
+        name = name || `Риск ${Math.floor(Math.random() * 1000)}`;
         $scope.addRiskToPool (name);
         return {
             name,
