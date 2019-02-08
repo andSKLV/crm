@@ -232,7 +232,9 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         }
         if (!child) return false;
         store.push(child);
-        $scope.selectActiveCell ();
+        const nextStageInd = $scope.editor.editingStage+1;
+        const nextStage = $scope.editor[`stage${nextStageInd}`];
+        $scope.selectParam (nextStage, nextStage.length-1, nextStageInd);
         function clearFields(obj, name) {
             if (obj.$$hashKey) delete obj.$$hashKey;
             if (obj.name) obj.name = name;
