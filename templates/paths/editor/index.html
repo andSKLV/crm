@@ -19,6 +19,16 @@
       <p>Добавить риск в пакет</p>
     </div>
     <div class="manipulate_cell"
+      ng-click="makeTimesRow()"
+      ng-if="editor.editingObj.action==='package'&&!editor.editingObj.times">
+      <p>Добавить Кол-во случаев</p>
+    </div>
+    <div class="manipulate_cell"
+      ng-click="deleteTimesRow()"
+      ng-if="editor.editingObj.action==='package'&&editor.editingObj.times">
+      <p>Удалить Кол-во случаев</p>
+    </div>
+    <div class="manipulate_cell"
       ng-click="onAddNew('risk')"
       ng-if="editor.editingObj.model==='risk'||editor.editingObj.model==='wrapping'">
       <p>Добавить риск</p>

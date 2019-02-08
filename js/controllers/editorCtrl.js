@@ -29,6 +29,18 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         stage4: null,
         stage5: null,
     }
+    $scope.reselectParam = () => {
+        const stage = $scope.editor[`stage${$scope.editor.activeStage}`];
+        const elIndex = $scope.editor.activeIndex;
+        const stageInd = $scope.editor.activeStage;
+        $scope.selectParam(stage, elIndex, stageInd);
+    }
+    $scope.selectActiveCell = () => {
+        const stage = $scope.editor[`stage${$scope.editor.editingStage}`];
+        const elIndex = $scope.editor.activeIndex;
+        const stageInd = $scope.editor.editingStage;
+        $scope.selectParam(stage, elIndex, stageInd);
+    }
     $scope.selectParam = (stage, index, stageNum) => {
         $scope.deleteSelectedStyles(stageNum);
         let selectedParam = stage[index];
@@ -209,6 +221,16 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         }
         return false;
     }
+    $scope.makeTimesRow = () => {
+        const parentEl = $scope.editor.editingObj;
+        parentEl.times = "1";
+        $scope.selectActiveCell ();
+    }
+    $scope.deleteTimesRow = () => {
+        const parentEl = $scope.editor.editingObj;
+        delete parentEl.times;
+        $scope.selectActiveCell ();
+    }
     $scope.getNamesForPack = store => {
         const risks = store.map(val=>val.risk);
         return $scope.editor.risksCanUse.filter(el=>!risks.includes(el));
@@ -278,7 +300,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         $scope.editor.editingObj.risk = name;
         const picker = document.querySelector('.modal_picker');
         picker.style.display = 'none';
-        $scope.selectParam($scope.editor[`stage${$scope.editor.activeStage}`],$scope.editor.activeIndex,$scope.editor.activeStage)
+        $scope.reselectParam();
     }
     $scope.addRiskToPool = name => {
         $scope.editor.risksReserverNames.push(name);
