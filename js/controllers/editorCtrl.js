@@ -111,12 +111,14 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         return $scope.editor.editingObj.model === 'risk' || $scope.editor.editingObj.model === 'wrapping';
     }
     $scope.canAddPack = obj => {
+        if (obj.values&&obj.values.some(val=>val.action==='selectAll')) return false;
         return $scope.editor.editingObj.model === 'risk' || $scope.editor.editingObj.model === 'wrapping';
     }
     $scope.canAddChild = obj => {
         return $scope.editor.editingObj.model && $scope.editor.editingObj.model !== 'risk' && $scope.editor.editingObj.model !== 'wrapping'
     }
     $scope.canAddDepth = obj => {
+        if (obj.values&&obj.values.some(val=>val.action==='selectAll')) return false;
         return $scope.editor.editingObj.model==='risk'||$scope.editor.editingObj.model==='wrapping';
     }
     $scope.clearActive = stageNum => {
@@ -224,6 +226,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         }
         if (!child) return false;
         store.push(child);
+        $scope.selectActiveCell ();
         function clearFields(obj, name) {
             if (obj.$$hashKey) delete obj.$$hashKey;
             if (obj.name) obj.name = name;
@@ -268,6 +271,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             action: 'selectAll',
         }
         store.push(selectAll);
+        $scope.selectActiveCell();
     }
     $scope.getNamesForPack = store => {
         const risks = store.map(val => val.risk);
