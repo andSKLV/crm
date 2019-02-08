@@ -237,6 +237,15 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         delete parentEl.times;
         $scope.selectActiveCell ();
     }
+    $scope.makeSelectAll = () => {
+        const store = $scope.editor.editingObj.values;
+        const selectAll =  {
+            name: 'Выбрать все',
+            type: 'risk',
+            action: 'selectAll',
+        }
+        store.push(selectAll);
+    }
     $scope.getNamesForPack = store => {
         const risks = store.map(val=>val.risk);
         return $scope.editor.risksCanUse.filter(el=>!risks.includes(el));
