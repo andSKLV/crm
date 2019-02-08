@@ -176,10 +176,12 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     }
     $scope.onDeleteActiveElement = () => {
         const el = $scope.editor.exactEditingObj;
+
         if (el.type === 'relocate_here') {
             const urlInd = $scope.editor.urls.indexOf($scope.editor.editingObj);
             $scope.editor.urls.splice(urlInd, 1);
         }
+        //определение стейджа
         let deletingStageName, parentStageInd;
         Object.entries($scope.editor.active).forEach((x, i) => {
             [name, val] = x;
@@ -192,6 +194,7 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
             $scope.removeRiskFromPool(el.name);
             $scope.removeRiskFromPackages(el.name);
         }
+        //удаление
         const st = $scope.editor[deletingStageName];
         st.splice(st.indexOf(el), 1); //удаляем элемент из стейджа
         $scope.selectParam($scope.editor[`stage${parentStageInd}`], $scope.editor.active[`stage${parentStageInd}`], parentStageInd) //делаем родителя активным элементом
@@ -278,7 +281,10 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         return $scope.editor.risksCanUse.filter(el => !risks.includes(el));
     }
     $scope.createRisk = name => {
-        name = name || `Риск ${Math.floor(Math.random() * 1000)}`;
+        while (!name) {
+            name = `Риск ${Math.floor(Math.random() * 1000)}`;
+            if ($scope.editor.risksReserverNames.includes(name)) name = null;
+        }
         $scope.addRiskToPool(name);
         return {
             name,
