@@ -104,14 +104,14 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         return true;
     }
     $scope.isSelectAllPosible = (obj) => {
-        if (obj.type !== 'url') return false;
+        if (obj.type !== 'url'||obj.model==='wrapping') return false;
         return obj.values.every(val => val.type === 'risk' && isNumeric(val.value));
     }
     $scope.canAddRisk = obj => {
         return $scope.editor.editingObj.model === 'risk' || $scope.editor.editingObj.model === 'wrapping';
     }
     $scope.canAddPack = obj => {
-        if (obj.values&&obj.values.some(val=>val.action==='selectAll')) return false;
+        if (obj.values&&obj.values.some(val=>val.action==='selectAll')||obj.model==='wrapping') return false;
         return $scope.editor.editingObj.model === 'risk' || $scope.editor.editingObj.model === 'wrapping';
     }
     $scope.canAddChild = obj => {
