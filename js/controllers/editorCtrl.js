@@ -133,7 +133,10 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     $scope.clearRest = (stageNum) => {
         const stages = Object.keys($scope.editor).filter(x => x.match(/stage\d/));
         const res = stages.map((name, i) => ((i + 1) > stageNum) && $scope.editor[name] && name)
-        res.forEach(name => { if ($scope.editor[name]) $scope.editor[name] = null });
+        res.forEach(name => { if ($scope.editor[name]) {
+            $scope.editor[name] = null 
+            $scope.editor.active[name]=null;
+        }});
     }
     $scope.makeEditing = (param) => {
         $scope.editor.editingObj = param;
@@ -176,7 +179,6 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
     }
     $scope.onDeleteActiveElement = () => {
         const el = $scope.editor.exactEditingObj;
-
         if (el.type === 'relocate_here') {
             const urlInd = $scope.editor.urls.indexOf($scope.editor.editingObj);
             $scope.editor.urls.splice(urlInd, 1);
@@ -190,13 +192,14 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
                 parentStageInd = i;
             }
         })
+        //удаление
+        const st = $scope.editor[deletingStageName];
+        st.splice(st.indexOf(el), 1); //удаляем элемент из стейджа
         if (el.type === 'risk' && el.value !== undefined) { //если это риск, то нужно удалить его из пула рисков и из всех пакетов
             $scope.removeRiskFromPool(el.name);
             $scope.removeRiskFromPackages(el.name);
         }
-        //удаление
-        const st = $scope.editor[deletingStageName];
-        st.splice(st.indexOf(el), 1); //удаляем элемент из стейджа
+        
         $scope.selectParam($scope.editor[`stage${parentStageInd}`], $scope.editor.active[`stage${parentStageInd}`], parentStageInd) //делаем родителя активным элементом
     }
     $scope.onAddNew = type => {
@@ -368,6 +371,14 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
                 packages[packInd].values.splice(riskInd, 1);
             })
         }
+        $scope.checkPackagesForLength (packages);
+    }
+    $scope.checkPackagesForLength = packages => {
+        const toDelete = [];
+        packages.forEach(pack=>{
+            if (pack.values.length<2) toDelete.push(pack);
+        })
+        if (toDelete.length) debugger;
     }
     $scope.getAllPackages = () => {
         const risks = [...$scope.editor.objs.filter(x => x.model === 'risk'), ...$scope.editor.urls.filter(x => x.model === 'risk')]
