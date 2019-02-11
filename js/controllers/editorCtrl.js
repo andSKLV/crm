@@ -9,37 +9,38 @@ app.controller("editorCtrl", function(
   $scope.myFactory = myFactory;
   const scope = this;
   this.myFactory = myFactory;
-
-  $scope.editor = {
-    risksReservedNames: [],
-    risksCanUse: [],
-    fileName: null,
-    activeStage: 0,
-    activeIndex: 0,
-    all: [],
-    urls: [],
-    objs: [],
-    active: {
+  $scope.createEditor = () => {
+    $scope.editor = {
+      risksReservedNames: [],
+      risksCanUse: [],
+      fileName: null,
+      activeStage: 0,
+      activeIndex: 0,
+      all: [],
+      urls: [],
+      objs: [],
+      active: {
+        stage1: null,
+        stage2: null,
+        stage3: null,
+        stage4: null,
+        stage5: null
+      },
+      editingObj: null,
+      editingParam: null,
+      editingObjCanDelete: false,
+      editingObjCanSelectAll: false,
+      editingObjCanAddRisk: false,
+      editingObjCanAddPack: false,
+      editingObjCanAddChild: false,
+      editingObjCanAddDepth: false,
+      pickerRisks: null,
       stage1: null,
       stage2: null,
       stage3: null,
       stage4: null,
       stage5: null
-    },
-    editingObj: null,
-    editingParam: null,
-    editingObjCanDelete: false,
-    editingObjCanSelectAll: false,
-    editingObjCanAddRisk: false,
-    editingObjCanAddPack: false,
-    editingObjCanAddChild: false,
-    editingObjCanAddDepth: false,
-    pickerRisks: null,
-    stage1: null,
-    stage2: null,
-    stage3: null,
-    stage4: null,
-    stage5: null
+    };
   };
   $scope.reselectParam = () => {
     const stage = $scope.editor[`stage${$scope.editor.activeStage}`];
@@ -78,7 +79,7 @@ app.controller("editorCtrl", function(
     $scope.editor.editingObjCanAddChild = $scope.canAddChild(obj);
     $scope.editor.editingObjCanAddDepth = $scope.canAddDepth(obj);
   };
-  $scope.deleteSelectedStyles = num => {
+  $scope.deleteSelectedStyles = (num = 0) => {
     let rows = document.querySelectorAll(".nav_modified:not(.param_info)");
     rows = Array.prototype.slice.call(rows, num);
     if (!rows.length) return true;
@@ -531,8 +532,15 @@ app.controller("editorCtrl", function(
       })
     );
   };
-  this.loadMatrix = async function() {
-    const param = "HIP-conf.json";
+  $scope.reloadPage = () => {
+    $scope.deleteSelectedStyles();
+    $scope.createEditor();
+    $scope.loadMatrix();
+  };
+  $scope.loadMatrix = async function() {
+    myFactory.HIPname = "Экспедиторы";
+    const param = myFactory.karetkaTypes[myFactory.HIPname];
+    this.myFactory.karetkaTypes[this.myFactory.HIPname];
     $scope.editor.fileName = param;
     await $http.post(`./php/${param}`).then(
       function success(response) {
@@ -553,7 +561,10 @@ app.controller("editorCtrl", function(
       }
     );
   };
-
+  $scope.relocatePage = location => {
+    location = location === "dashboard" ? "" : location;
+    $location.path(`/${location}`);
+  };
   $scope.saveJSON = async () => {
     const data = [...$scope.editor.objs, ...$scope.editor.urls];
     let obj = JSON.stringify(data);
@@ -577,5 +588,6 @@ app.controller("editorCtrl", function(
     );
   };
 
-  this.loadMatrix("HIP.json");
+  $scope.createEditor();
+  $scope.loadMatrix("HIP.json");
 });

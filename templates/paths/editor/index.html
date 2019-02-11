@@ -3,9 +3,6 @@
 <div class="window-header" ng-class="{nomarginleft: dashboard.myFactory.matrixType!=='HIP'}">{{editor.editingObj.name || editor.editingObj.risk || editor.editingObj.url || 'Редактор каретки'}}</div>
 <div class="dashboard_container" style="height: unset;" ng-class="{nomarginleft: dashboard.myFactory.matrixType!=='HIP'}" editor-dashboard></div>
 <div class="manipulate" ng-if="editor.editingParam" manipulate-row></div>
-<div>
-    <button ng-click="saveJSON()">SAVE JSON</button>
-</div>
 <div editor-nav></div>
 <div class='modal_picker' style="display: none">
   <div class="modal_picker_box">
