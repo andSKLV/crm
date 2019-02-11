@@ -72,3 +72,19 @@
   border-radius: 20px;
   border: 2px solid var(--dark-blue);
 }
+#calc:hover::after{
+  top: 29%;
+}
+#save:hover::after{
+  top: 90px;
+}
+#reload:hover::after{
+  top: 76%;
+}
+#home:hover::after{
+  top: 8%;
+}
+#karetka:hover::after{
+  top: 100%;
+  left: 10%;
+}

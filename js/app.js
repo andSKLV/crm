@@ -197,6 +197,12 @@ app.directive("editorDashboard", function () {
         templateUrl: "./templates/paths/editor/dashboard.html"
     };
 });
+app.directive("editorNav", function () {
+    return {
+        restrict: "A",
+        templateUrl: "./templates/paths/editor/navigation.html"
+    };
+});
 app.directive("manipulateRow", function () {
     return {
         restrict: "A",
