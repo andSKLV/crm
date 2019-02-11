@@ -28,6 +28,7 @@ app.controller("editorCtrl", function(
       editingObjCanAddPack: false,
       editingObjCanAddChild: false,
       editingObjCanAddDepth: false,
+      newBaseName: null,
       pickerRisks: null
     };
     for (let i = 1; i < 7; i++) {
@@ -197,6 +198,7 @@ app.controller("editorCtrl", function(
       $scope.editor.editingObj.value !== undefined
     ) {
       if (param[0] === "name") {
+        if (param[1] === BASENAME) $scope.editor.newBaseName = val;
         $scope.editRiskInPool(param[1], val);
         $scope.editRiskInPackages(param[1], val);
       }
@@ -230,6 +232,7 @@ app.controller("editorCtrl", function(
       parent.name = val;
       parent.urlTo = val;
     }
+    if (isNumeric(val)) val = Number(val);
     $scope.editor.editingObj[param[0]] = val;
   };
   /**
@@ -536,6 +539,7 @@ app.controller("editorCtrl", function(
     const param = myFactory.karetkaTypes[myFactory.HIPname];
     this.myFactory.karetkaTypes[this.myFactory.HIPname];
     $scope.editor.fileName = param;
+    hipFileName = param;
     await $http.post(`./php/${param}`).then(
       function success(response) {
         scope.currObj = response.data;
@@ -559,7 +563,31 @@ app.controller("editorCtrl", function(
     location = location === "dashboard" ? "" : location;
     $location.path(`/${location}`);
   };
+  $scope.baseNameSave = async () => {
+    const data = OLDBASENAMES;
+    let obj = JSON.stringify(data);
+    // формирование запроса
+    const fd = new FormData();
+    fd.append("json", obj);
+    const req = new Request("php/baseNames.php", { method: "POST", body: fd });
+    return fetch(req).then(
+      async resp => {
+        const res = await resp.text();
+        res === "saved"
+          ? console.log("old base names saved")
+          : console.error(res);
+      },
+      err => {
+        console.error("Ошибка ", err);
+      }
+    );
+  };
   $scope.saveJSON = async () => {
+    if ($scope.editor.newBaseName && BASENAME !== $scope.editor.newBaseName) {
+      OLDBASENAMES.push(BASENAME);
+      BASENAME = $scope.editor.newBaseName;
+      await $scope.baseNameSave();
+    }
     const data = [...$scope.editor.objs, ...$scope.editor.urls];
     let obj = JSON.stringify(data);
     obj = obj.replace(/,\"\$\$hashKey\":\"object:\d+\"/g, "");

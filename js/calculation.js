@@ -13,8 +13,9 @@ let MC = [[], []];
 let MD = [[], []];
 let risks = [];
 let koef_pow;
-const BASENAME = "CMR/TTH пакет";
-const OLDBASENAMES = ["Базовые риски"];
+let BASENAME = "CMR/TTH пакет";
+let OLDBASENAMES = ["Базовые риски"];
+let hipFileName = "HIP.json";
 
 init();
 // SKLV: функция для асинхронной загрузки БД
@@ -24,8 +25,13 @@ async function init() {
   initDB(response);
   //Функция загрузки рисков из json и создания массива risks
   loadRisks();
+  loadBaseNames();
 }
-
+async function loadBaseNames() {
+  let resp = await fetch("php/baseNames.json");
+  resp = await resp.json();
+  OLDBASENAMES = resp;
+}
 /**
  * загружаем точки из БД
  */
@@ -66,10 +72,10 @@ function initDB(resp) {
  * Функция создания массива риск - коэф. из файла конфигурации
  * @param {string} param - название файла конфигурации каретки
  */
-async function loadRisks(param = "HIP.json") {
+async function loadRisks() {
   try {
     let currObj = [];
-    const resp = await fetch(`./php/${param}`);
+    const resp = await fetch(`./php/${hipFileName}`);
     try {
       let data = await resp.json();
       currObj = data;
@@ -78,6 +84,9 @@ async function loadRisks(param = "HIP.json") {
           for (let j = 0; j < currObj[i].values.length; j++) {
             if (currObj[i].values[j].type == "risk")
               risks[currObj[i].values[j].name] = currObj[i].values[j].value;
+            if (currObj[i].values[j].baseRisk) {
+              BASENAME = currObj[i].values[j].name;
+            }
           }
         }
       }
