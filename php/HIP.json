@@ -120,7 +120,7 @@
 				"urlTo": "Пакеты"
 			},
 			{
-				"name": "Новейший ТОЧНО",
+				"name": "CMR/TTH пакет",
 				"type": "risk",
 				"value": 0,
 				"baseRisk": true,

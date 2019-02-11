@@ -114,7 +114,7 @@
 				"urlTo": "Пакеты"
 			},
 			{
-				"name": "CMR/TTH пакет2",
+				"name": "CMR/TTH пакет",
 				"type": "risk",
 				"value": 0,
 				"baseRisk": "true",
