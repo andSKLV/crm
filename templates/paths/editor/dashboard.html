@@ -53,6 +53,17 @@
         </div>
     </div>
 </div>
+<div class="nav nav_modified" ng-if="editor.stage6">
+    <div>
+        <div  ng-repeat="param in editor.stage6" 
+        ng-click="selectParam(editor.stage6,$index,6)" 
+        class="clickable" 
+        ng-class="[{alreadySelected: editor.active.stage6===editor.stage6.indexOf(param)},{mi_selected: editor.exactEditingObj===param}]"
+        >
+            {{param.name||param.url||param.risk||0}}
+        </div>
+    </div>
+</div>
 <div class="nav param_info nav_modified" ng-if="editor.editingParam">
     Параметры выбранного объекта:
     <div>

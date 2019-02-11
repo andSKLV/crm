@@ -19,13 +19,7 @@ app.controller("editorCtrl", function(
       all: [],
       urls: [],
       objs: [],
-      active: {
-        stage1: null,
-        stage2: null,
-        stage3: null,
-        stage4: null,
-        stage5: null
-      },
+      active: {},
       editingObj: null,
       editingParam: null,
       editingObjCanDelete: false,
@@ -34,13 +28,13 @@ app.controller("editorCtrl", function(
       editingObjCanAddPack: false,
       editingObjCanAddChild: false,
       editingObjCanAddDepth: false,
-      pickerRisks: null,
-      stage1: null,
-      stage2: null,
-      stage3: null,
-      stage4: null,
-      stage5: null
+      pickerRisks: null
     };
+    for (let i = 1; i < 7; i++) {
+      const stageName = `stage${i}`;
+      $scope.editor.active[stageName] = null;
+      $scope.editor[stageName] = null;
+    }
   };
   $scope.reselectParam = () => {
     const stage = $scope.editor[`stage${$scope.editor.activeStage}`];
