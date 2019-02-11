@@ -158,10 +158,30 @@ app.controller('editorCtrl', function ($scope, $rootScope, $http, $q, $location,
         $scope.editor.activeStage = ind;
         $scope.editor[name] = res;
     };
-    $scope.inputChange = (param, val) => {
+    $scope.inputChange = (param, target) => {
+        let val = target.value;
         if ($scope.editor.editingObj.type === 'risk' && $scope.editor.editingObj.value !== undefined) {
-            $scope.editRiskInPool(param[1], val);
-            $scope.editRiskInPackages(param[1], val);
+            if (param[0]==='name') {
+                $scope.editRiskInPool(param[1], val);
+                $scope.editRiskInPackages(param[1], val);
+            }
+            if (param[0]==='value') {
+                if (!isNumeric(val)) target.value = param[1];
+                if (Number(val)<0) {
+                    target.value = 0
+                    val = 0;
+                }
+                if (Number(val)>5) {
+                    target.value = 5;
+                    val = 5;
+                }
+            }
+        }
+        if ($scope.editor.editingObj.type==='amount'||$scope.editor.editingObj.type==='currency') {
+            if (!isNumeric(val)||Number(val)<0) {
+                target.value = 0;
+                val = 0;
+            }
         }
         if (param[0] === 'url') {
             const changing = $scope.editor.urls.find(el => el.url === param[1]);
