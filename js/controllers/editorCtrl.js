@@ -535,7 +535,7 @@ app.controller("editorCtrl", function(
     $scope.loadMatrix();
   };
   $scope.loadMatrix = async function() {
-    myFactory.HIPname = "Экспедиторы";
+    myFactory.HIPname = "Перевозчики";
     const param = myFactory.karetkaTypes[myFactory.HIPname];
     this.myFactory.karetkaTypes[this.myFactory.HIPname];
     $scope.editor.fileName = param;
@@ -583,7 +583,11 @@ app.controller("editorCtrl", function(
     );
   };
   $scope.saveJSON = async () => {
-    if ($scope.editor.newBaseName && BASENAME !== $scope.editor.newBaseName) {
+    if (
+      $scope.editor.newBaseName &&
+      BASENAME !== $scope.editor.newBaseName &&
+      !OLDBASENAMES.includes(BASENAME)
+    ) {
       OLDBASENAMES.push(BASENAME);
       BASENAME = $scope.editor.newBaseName;
       await $scope.baseNameSave();

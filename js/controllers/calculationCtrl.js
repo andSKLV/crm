@@ -1828,6 +1828,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         //  удаляем выделение ячеек, чтобы анимация не прыгала
         myFactory.removeCellSelection('dashboard_container');
         // обновляем массив риск - коэф.
+        hipFileName = HIP_name;
         await loadRisks(HIP_name);
         // переключаем типа каретки
         this.myFactory.HIPname = param;      
