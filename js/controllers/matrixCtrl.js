@@ -94,6 +94,8 @@ app.controller("matrixCtrl", function(
         $location.path("/calculation");
         await delay(200);
       }
+      await loadRisks();
+      await loadPrevNames();
       const loading = new Loading(true);
       myFactory.isLoading = loading;
       let data = {};

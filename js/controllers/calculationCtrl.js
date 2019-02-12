@@ -21,6 +21,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         /**
          * Инициализация каретки
          */
+        await loadPrevNames();
         const param = this.myFactory.karetkaTypes[this.myFactory.HIPname];
         await $http.post(`./php/${param}`).then(function success (response) {
             if (myFactory.isLoading) {

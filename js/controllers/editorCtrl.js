@@ -547,6 +547,7 @@ app.controller("editorCtrl", function(
     if (regRisk.test(prev) || regWrap.test(prev)) return false;
     const store = $scope.editor.prevNames;
     const prevArr = store[prev] ? store[prev] : [];
+    if (prevArr.includes(now)) return false;
     delete store[prev];
     store[now] = prevArr;
     prevArr.push(prev);
@@ -627,6 +628,7 @@ app.controller("editorCtrl", function(
     );
   };
   $scope.savePrevNames = async () => {
+    PREVNAMES = $scope.editor.prevNames;
     const data = $scope.editor.prevNames;
     const obj = JSON.stringify(data, null, "\t");
     const fd = new FormData();

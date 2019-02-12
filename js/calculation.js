@@ -32,11 +32,13 @@ async function loadPrevNames() {
   let resp = await fetch("php/prevNames.json");
   resp = await resp.json();
   PREVNAMES = resp;
+  return resp;
 }
 async function loadBaseNames() {
   let resp = await fetch("php/baseNames.json");
   resp = await resp.json();
   OLDBASENAMES = resp;
+  return resp;
 }
 /**
  * загружаем точки из БД
@@ -81,6 +83,7 @@ function initDB(resp) {
 async function loadRisks() {
   try {
     let currObj = [];
+    risks = [];
     const resp = await fetch(`./php/${hipFileName}`);
     try {
       let data = await resp.json();
@@ -96,6 +99,7 @@ async function loadRisks() {
           }
         }
       }
+      return data;
     } catch (error) {
       console.error(`Parsing risks json failed: ${error}`);
     }
