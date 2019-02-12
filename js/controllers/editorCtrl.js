@@ -296,7 +296,7 @@ app.controller("editorCtrl", function(
   };
   $scope.onAddNew = type => {
     const parentEl = $scope.editor.editingObj;
-    if (parentEl.model === "wrapping") type = "wrapRisk";
+    if (type === "risk" && parentEl.model === "wrapping") type = "wrapRisk";
     const store = parentEl.values;
     let child, name;
     switch (type) {
