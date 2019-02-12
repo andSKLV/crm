@@ -3,7 +3,7 @@ import Calculation from '../protos/calc.js';
 import Loading from '../protos/loading.js';
 
 app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, $filter, $timeout, $location, $scope){
-    window.title = 'Расчет';
+    document.title = 'Расчет';
     this.span=1;
     this.karetkaDepth = 1;
     this.myFactory=myFactory;
