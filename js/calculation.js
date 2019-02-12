@@ -12,7 +12,7 @@ let MB = [[], []];
 let MC = [[], []];
 let MD = [[], []];
 let risks = [];
-let koef_pow;
+let koef_pow, PREVNAMES;
 let BASENAME = "CMR/TTH пакет";
 let OLDBASENAMES = ["Базовые риски"];
 let hipFileName = "HIP.json";
@@ -24,8 +24,14 @@ async function init() {
   let response = await loadDB();
   initDB(response);
   //Функция загрузки рисков из json и создания массива risks
+  await loadPrevNames();
   loadRisks();
   loadBaseNames();
+}
+async function loadPrevNames() {
+  let resp = await fetch("php/prevNames.json");
+  resp = await resp.json();
+  PREVNAMES = resp;
 }
 async function loadBaseNames() {
   let resp = await fetch("php/baseNames.json");

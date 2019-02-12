@@ -112,7 +112,10 @@ app.controller("matrixCtrl", function(
               let multi = [];
               let array = []; //создаем массив из процессов new Process
               park.processes.forEach(function(process) {
-                debugger;
+                if (!Object.keys(risks).includes(process.risk))
+                  changeRiskName(process, "risk");
+                if (!Object.keys(risks).includes(process.wrapping))
+                  changeRiskName(process, "wrapping");
                 if (OLDBASENAMES.includes(process.risk))
                   process.risk = BASENAME;
                 let proc = new Process(process);
@@ -250,6 +253,10 @@ app.controller("matrixCtrl", function(
               delete process[3];
               process.risk = process[4];
               delete process[4];
+              if (!Object.keys(risks).includes(process.risk))
+                changeRiskName(process, "risk");
+              if (!Object.keys(risks).includes(process.wrapping))
+                changeRiskName(process, "wrapping");
               if (OLDBASENAMES.includes(process.risk)) process.risk = BASENAME;
               process.limit = process[5].split(" Р");
               process.limit = process.limit[0] * 1;
@@ -672,6 +679,17 @@ app.controller("matrixCtrl", function(
       $rootScope.search_result = [];
     } catch (err) {
       console.error(`Clear search results problem: ${err}`);
+    }
+  }
+  function changeRiskName(process, type) {
+    const name = process[type];
+    for (const key in PREVNAMES) {
+      if (PREVNAMES.hasOwnProperty(key)) {
+        const arr = PREVNAMES[key];
+        if (arr.includes(name)) {
+          process[type] = key;
+        }
+      }
     }
   }
 });
