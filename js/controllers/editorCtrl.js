@@ -30,7 +30,8 @@ app.controller("editorCtrl", function(
       editingObjCanAddChild: false,
       editingObjCanAddDepth: false,
       newBaseName: null,
-      pickerRisks: null
+      pickerRisks: null,
+      prevNames: {}
     };
     for (let i = 1; i < 7; i++) {
       const stageName = `stage${i}`;
@@ -193,13 +194,19 @@ app.controller("editorCtrl", function(
     $scope.editor[name] = res;
   };
   $scope.inputChange = (param, target) => {
-    let val = target.value;
+    let val = target.value.trim();
     if (
       $scope.editor.editingObj.type === "risk" &&
       $scope.editor.editingObj.value !== undefined
     ) {
       if (param[0] === "name") {
+        if (val === "") {
+          val = param[1];
+          target.value = val;
+          return false;
+        }
         if (param[1] === BASENAME) $scope.editor.newBaseName = val;
+        $scope.editNameInPrev(param[1], val);
         $scope.editRiskInPool(param[1], val);
         $scope.editRiskInPackages(param[1], val);
       }
@@ -235,6 +242,7 @@ app.controller("editorCtrl", function(
     }
     if (isNumeric(val)) val = Number(val);
     $scope.editor.editingObj[param[0]] = val;
+    param[1] = val;
   };
   /**
    * Поиск родителя активного элемента
@@ -533,6 +541,14 @@ app.controller("editorCtrl", function(
     );
     return packages;
   };
+  $scope.editNameInPrev = (prev, now) => {
+    const store = $scope.editor.prevNames;
+    const prevArr = store[prev] ? store[prev] : [];
+    delete store[prev];
+    store[now] = prevArr;
+    prevArr.push(prev);
+    console.log(store);
+  };
   $scope.editRiskInPool = (from, to) => {
     $scope.editor.risksReservedNames = $scope.editor.risksReservedNames.map(
       rName => (rName === from ? to : rName)
@@ -553,6 +569,11 @@ app.controller("editorCtrl", function(
     $scope.deleteSelectedStyles();
     $scope.createEditor();
     $scope.loadMatrix();
+    $scope.loadPrevNames();
+  };
+  $scope.loadPrevNames = async () => {
+    const resp = await $http.post("./php/prevNames.json");
+    $scope.editor.prevNames = resp.data;
   };
   $scope.loadMatrix = async function() {
     myFactory.HIPname = "Перевозчики";
@@ -602,6 +623,24 @@ app.controller("editorCtrl", function(
       }
     );
   };
+  $scope.savePrevNames = async () => {
+    const data = $scope.editor.prevNames;
+    const obj = JSON.stringify(data, null, "\t");
+    const fd = new FormData();
+    fd.append("json", obj);
+    const req = new Request("php/prevNames.php", { method: "POST", body: fd });
+    return fetch(req).then(
+      async resp => {
+        const res = await resp.text();
+        res === "saved"
+          ? console.log("prev names saved")
+          : console.error("prev names saving error ", res);
+      },
+      err => {
+        console.error(err);
+      }
+    );
+  };
   $scope.saveJSON = async () => {
     if (
       $scope.editor.newBaseName &&
@@ -612,6 +651,7 @@ app.controller("editorCtrl", function(
       BASENAME = $scope.editor.newBaseName;
       await $scope.baseNameSave();
     }
+    $scope.savePrevNames();
     const data = [...$scope.editor.objs, ...$scope.editor.urls];
     let obj = JSON.stringify(data);
     obj = obj.replace(/,\"\$\$hashKey\":\"object:\d+\"/g, "");
@@ -636,4 +676,5 @@ app.controller("editorCtrl", function(
 
   $scope.createEditor();
   $scope.loadMatrix("HIP.json");
+  $scope.loadPrevNames();
 });
