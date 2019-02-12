@@ -1,3 +1,4 @@
+import { GetAllPackages } from '../ServiceFunctions.js';
 import Calculation from '../protos/calc.js';
 import Loading from '../protos/loading.js';
 
@@ -31,11 +32,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             data = putDepth(data);
             scope.currObj = data;
             scope.myFactory.currObj = data;
-            let pack=scope.currObj.filter(function (param) {
-                return param.url=="Пакеты";
-            });
-            pack=pack[0];
-            scope.myFactory.packages=pack.values;
+            scope.myFactory.packages=GetAllPackages (scope.currObj);
             if ($location.$$path==='/calculation') scope.myFactory.removeCellSelection('dashboard_container');
             scope.selectParam(0);
             if(myFactory.parks.length===0) {
@@ -592,11 +589,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
             scope.myFactory.currObj=response.data;
             if(string!="HIP.json")scope.selectParam(0);
             else{
-                let pack=scope.currObj.filter(function (param) {
-                    return param.url=="Пакеты";
-                });
-                pack=pack[0];
-                scope.myFactory.packages=pack.values;
+                scope.myFactory.packages=GetAllPackages (scope.currObj);
                 if(myFactory.parks.length!=0) scope.selectParam(0);
                 else{
                     scope.selectParam(0);
