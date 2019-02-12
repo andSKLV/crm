@@ -9,6 +9,7 @@ app.controller("editorCtrl", function(
   $scope.myFactory = myFactory;
   const scope = this;
   this.myFactory = myFactory;
+  document.title = "Редактор каретки";
   $scope.createEditor = () => {
     $scope.editor = {
       risksReservedNames: [],
@@ -295,9 +296,13 @@ app.controller("editorCtrl", function(
   };
   $scope.onAddNew = type => {
     const parentEl = $scope.editor.editingObj;
+    if (parentEl.model === "wrapping") type = "wrapRisk";
     const store = parentEl.values;
     let child, name;
     switch (type) {
+      case "wrapRisk":
+        child = $scope.createWrapRisk();
+        break;
       case "risk":
         child = $scope.createRisk();
         break;
@@ -375,6 +380,14 @@ app.controller("editorCtrl", function(
   $scope.getNamesForPack = store => {
     const risks = store.map(val => val.risk);
     return $scope.editor.risksCanUse.filter(el => !risks.includes(el));
+  };
+  $scope.createWrapRisk = name => {
+    name = name || `Модификатор ${Math.floor(Math.random() * 1000)}`;
+    return {
+      name,
+      type: "risk",
+      value: 0
+    };
   };
   $scope.createRisk = name => {
     while (!name) {
