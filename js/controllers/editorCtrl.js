@@ -415,7 +415,14 @@ app.controller("editorCtrl", function(
       model,
       type: "url"
     };
-    obj.values = [$scope.createRisk(), $scope.createRisk()];
+    switch (model) {
+      case "wrapping":
+        obj.values = [$scope.createWrapRisk(), $scope.createWrapRisk()];
+        break;
+      case "risk":
+        obj.values = [$scope.createRisk(), $scope.createRisk()];
+        break;
+    }
     return obj;
   };
   $scope.switchOrder = direction => {
