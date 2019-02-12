@@ -542,6 +542,9 @@ app.controller("editorCtrl", function(
     return packages;
   };
   $scope.editNameInPrev = (prev, now) => {
+    const regRisk = new RegExp(/Риск \d+/);
+    const regWrap = new RegExp(/Модификатор \d+/);
+    if (regRisk.test(prev) || regWrap.test(prev)) return false;
     const store = $scope.editor.prevNames;
     const prevArr = store[prev] ? store[prev] : [];
     delete store[prev];
