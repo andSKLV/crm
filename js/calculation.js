@@ -26,7 +26,22 @@ async function init() {
   //Функция загрузки рисков из json и создания массива risks
   await loadPrevNames();
   loadRisks();
+  loadKaretkaNames();
   loadBaseNames();
+}
+async function loadKaretkaNames() {
+  const fd = new FormData();
+  fd.append("type", "GET");
+  const req = new Request("php/karetkaNames.php", { method: "POST", body: fd });
+  return fetch(req).then(
+    async resp => {
+      const res = await resp.json();
+      debugger;
+    },
+    err => {
+      console.error("Ошибка ", err);
+    }
+  );
 }
 async function loadPrevNames() {
   let resp = await fetch("php/prevNames.json");

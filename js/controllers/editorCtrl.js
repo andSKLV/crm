@@ -678,6 +678,65 @@ app.controller("editorCtrl", function(
       }
     );
   };
+  $scope.addKaretkaNameToDB = async () => {
+    const fd = new FormData();
+    fd.append("type", "POST");
+    fd.append("name", "new");
+    fd.append("fileName", "new.json");
+    const req = new Request("php/karetkaNames.php", {
+      method: "POST",
+      body: fd
+    });
+    return fetch(req).then(
+      async resp => {
+        const id = await resp.text();
+        if (isNumeric(id)) console.log("saved by ID=", id);
+        else console.error("problem with saving karetka name");
+      },
+      err => {
+        console.error("Ошибка ", err);
+      }
+    );
+  };
+  $scope.deleteKaretkaNameFromDB = async () => {
+    const fd = new FormData();
+    fd.append("type", "DELETE");
+    fd.append("id", "3");
+    const req = new Request("php/karetkaNames.php", {
+      method: "POST",
+      body: fd
+    });
+    return fetch(req).then(
+      async resp => {
+        const res = await resp.text();
+        if (res !== "success")
+          console.error("problem with deleting karetka name from DB");
+      },
+      err => {
+        console.error("Ошибка ", err);
+      }
+    );
+  };
+  $scope.renameKaretkaNameInDB = async () => {
+    const fd = new FormData();
+    fd.append("type", "UPDATE");
+    fd.append("id", "4");
+    fd.append("name", "updated");
+    const req = new Request("php/karetkaNames.php", {
+      method: "POST",
+      body: fd
+    });
+    return fetch(req).then(
+      async resp => {
+        const res = await resp.text();
+        if (res !== "success")
+          console.error("problem with deleting karetka name from DB");
+      },
+      err => {
+        console.error("Ошибка ", err);
+      }
+    );
+  };
 
   $scope.createEditor();
   $scope.loadMatrix("HIP.json");
