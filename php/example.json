@@ -1,0 +1,286 @@
+[
+	{
+		"name": "Стоимость груза",
+		"model": "cost",
+		"values": [
+			{
+				"name": "currencyValue",
+				"type": "currencyValue"
+			},
+			{
+				"name": "input",
+				"type": "inputForCurrency"
+			},
+			{
+				"name": 1000000,
+				"type": "currency"
+			},
+			{
+				"name": 2000000,
+				"type": "currency"
+			},
+			{
+				"name": 3000000,
+				"type": "currency"
+			},
+			{
+				"name": 5000000,
+				"type": "currency"
+			},
+			{
+				"name": 7000000,
+				"type": "currency"
+			},
+			{
+				"name": 10000000,
+				"type": "currency"
+			}
+		]
+	},
+	{
+		"name": "Объем перевозок",
+		"model": "amount",
+		"values": [
+			{
+				"name": "Тягачей",
+				"type": "amountType"
+			},
+			{
+				"name": "input",
+				"type": "inputForCurrency"
+			},
+			{
+				"name": 24,
+				"type": "amount"
+			},
+			{
+				"name": 72,
+				"type": "amount"
+			},
+			{
+				"name": 120,
+				"type": "amount"
+			},
+			{
+				"name": 240,
+				"type": "amount"
+			},
+			{
+				"name": 360,
+				"type": "amount"
+			},
+			{
+				"name": 480,
+				"type": "amount"
+			},
+			{
+				"name": 720,
+				"type": "amount"
+			}
+		]
+	},
+	{
+		"name": "Конфигурация",
+		"model": "wrapping",
+		"values": [
+			{
+				"name": "Модификатор 570",
+				"type": "risk",
+				"value": 0
+			},
+			{
+				"name": "Модификатор 887",
+				"type": "risk",
+				"value": 0
+			},
+			{
+				"name": "Углубление 903",
+				"type": "relocate_here",
+				"urlTo": "Углубление 903"
+			}
+		]
+	},
+	{
+		"name": "Риски",
+		"model": "risk",
+		"values": [
+			{
+				"name": "Пакеты",
+				"type": "relocate_here",
+				"urlTo": "Пакеты"
+			},
+			{
+				"name": "CMR/TTH пакет",
+				"type": "risk",
+				"value": 0,
+				"baseRisk": true,
+				"title": "Повреждение, утрата или гибель всего или части груза в результате: ДТП по вине экипажа; ДТП по вине третьих лиц; Хищения путем кражи, грабежа, разбойного нападения; Скрытых дефектов транспортного средства; Расходы по спасанию ТС с грузом; Расходы по удалению остатков груза после происшествия"
+			},
+			{
+				"name": "Риск 375",
+				"type": "risk",
+				"value": 0,
+				"title": "Описание риска"
+			},
+			{
+				"name": "Риск 624",
+				"type": "risk",
+				"value": 0,
+				"title": "Описание риска"
+			},
+			{
+				"name": "Углубление 758",
+				"type": "relocate_here",
+				"urlTo": "Углубление 758"
+			}
+		]
+	},
+	{
+		"name": "Лимит",
+		"model": "limit",
+		"values": [
+			{
+				"name": "currencyValue",
+				"type": "currencyValue"
+			},
+			{
+				"name": "input",
+				"type": "inputForCurrency"
+			},
+			{
+				"name": 1000000,
+				"type": "currency"
+			},
+			{
+				"name": 2000000,
+				"type": "currency"
+			},
+			{
+				"name": 3000000,
+				"type": "currency"
+			},
+			{
+				"name": 5000000,
+				"type": "currency"
+			},
+			{
+				"name": 7000000,
+				"type": "currency"
+			},
+			{
+				"name": 10000000,
+				"type": "currency"
+			}
+		]
+	},
+	{
+		"name": "Франшиза",
+		"model": "franchise",
+		"values": [
+			{
+				"name": "currencyValue",
+				"type": "currencyValue"
+			},
+			{
+				"name": "input",
+				"type": "inputForCurrency"
+			},
+			{
+				"name": 0,
+				"type": "currency"
+			},
+			{
+				"name": 5000,
+				"type": "currency"
+			},
+			{
+				"name": 10000,
+				"type": "currency"
+			},
+			{
+				"name": 20000,
+				"type": "currency"
+			},
+			{
+				"name": 50000,
+				"type": "currency"
+			},
+			{
+				"name": 100000,
+				"type": "currency"
+			}
+		]
+	},
+	{
+		"url": "Пакеты",
+		"model": "risk",
+		"values": [
+			{
+				"name": "Пакет 291",
+				"type": "risk",
+				"action": "package",
+				"values": [
+					{
+						"risk": "Риск 375",
+						"limit": 0.1
+					},
+					{
+						"risk": "Риск 624",
+						"limit": 0.1
+					}
+				]
+			},
+			{
+				"name": "Пакет 270",
+				"type": "risk",
+				"action": "package",
+				"values": [
+					{
+						"risk": "Риск 375",
+						"limit": 0.1
+					},
+					{
+						"risk": "Риск 624",
+						"limit": 0.1
+					}
+				]
+			}
+		]
+	},
+	{
+		"url": "Углубление 758",
+		"model": "risk",
+		"type": "url",
+		"values": [
+			{
+				"name": "Риск 464",
+				"type": "risk",
+				"value": 0,
+				"title": "Описание риска"
+			},
+			{
+				"name": "Риск 922",
+				"type": "risk",
+				"value": 0,
+				"title": "Описание риска"
+			}
+		]
+	},
+	{
+		"url": "Углубление 903",
+		"model": "wrapping",
+		"type": "url",
+		"values": [
+			{
+				"name": "Модификатор 377",
+				"type": "risk",
+				"value": 0
+			},
+			{
+				"name": "Модификатор 273",
+				"type": "risk",
+				"value": 0
+			}
+		]
+	}
+]
