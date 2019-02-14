@@ -652,6 +652,20 @@ app.controller("editorCtrl", function(
     );
   };
   $scope.saveJSON = async () => {
+    if ($scope.editor.filename === "example.json") {
+      //сохранение новой каретки
+      let karetkaName = "";
+      while (!karetkaName) {
+        karetkaName = prompt("Введите название для новой каретки");
+      }
+      const filename = `${transliterate(karetkaName)}.json`;
+      $scope.editor.filename = filename;
+      myFactory.HIPname = karetkaName;
+      await $scope.addKaretkaNameToDB(karetkaName, filename);
+      KARETKA.data = await loadKaretkaNames();
+      prepareKaretkaValues();
+    }
+    //save basename changes
     if (
       $scope.editor.newBaseName &&
       BASENAME !== $scope.editor.newBaseName &&
@@ -661,7 +675,9 @@ app.controller("editorCtrl", function(
       BASENAME = $scope.editor.newBaseName;
       await $scope.baseNameSave();
     }
+    //saving previous names of risks
     $scope.savePrevNames();
+    //saving JSON
     const data = [...$scope.editor.objs, ...$scope.editor.urls];
     let obj = JSON.stringify(data);
     obj = obj.replace(/,\"\$\$hashKey\":\"object:\d+\"/g, "");
@@ -683,11 +699,11 @@ app.controller("editorCtrl", function(
       }
     );
   };
-  $scope.addKaretkaNameToDB = async () => {
+  $scope.addKaretkaNameToDB = async (name, filename) => {
     const fd = new FormData();
     fd.append("type", "POST");
-    fd.append("name", "new");
-    fd.append("fileName", "new.json");
+    fd.append("name", name);
+    fd.append("fileName", filename);
     const req = new Request("php/karetkaNames.php", {
       method: "POST",
       body: fd
