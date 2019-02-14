@@ -82,6 +82,7 @@ app.controller("matrixCtrl", function(
     myFactory.calcObj = {};
     clearSearch();
     $timeout(async function() {
+      myFactory.karetkaTypes = await getKaretkaTypes();
       $rootScope.cacheTemplate = {};
       if (
         $location.$$path !== "/calculation" &&

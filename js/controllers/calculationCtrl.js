@@ -9,6 +9,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
     this.myFactory=myFactory;
     let scope=this;
     myFactory.scopes.calculation = $scope;
+    
     this.search_params=[];
     this.isArray = angular.isArray;
     this.config="HIP.json";
@@ -21,6 +22,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         /**
          * Инициализация каретки
          */
+        myFactory.karetkaTypes = await getKaretkaTypes ();
         await loadPrevNames();
         const param = this.myFactory.karetkaTypes[this.myFactory.HIPname];
         await $http.post(`./php/${param}`).then(function success (response) {
@@ -2023,7 +2025,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         // формирование запроса
         const fd = new FormData();
         fd.append("json", obj);
-        fd.append("filename", 'HIP.json');
+        fd.append("fileName", 'HIP.json');
         const req = new Request("php/json.php", { method: "POST", body: fd });
         return fetch(req).then(
             resp => {

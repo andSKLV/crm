@@ -30,6 +30,12 @@ async function init() {
   prepareKaretkaValues();
   loadBaseNames();
 }
+async function getKaretkaTypes() {
+  KARETKA.data = await loadKaretkaNames();
+  const obj = {};
+  KARETKA.data.forEach(val => (obj[val.name] = val.fileName));
+  return obj;
+}
 function prepareKaretkaValues() {
   KARETKA.show = KARETKA.data.map(val => {
     const kar = Object.assign({}, val);
@@ -37,7 +43,7 @@ function prepareKaretkaValues() {
   });
   KARETKA.show.push({
     name: "Новая",
-    filename: "example.json"
+    fileName: "example.json"
   });
 }
 async function loadKaretkaNames() {

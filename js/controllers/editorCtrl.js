@@ -14,7 +14,7 @@ app.controller("editorCtrl", function(
     $scope.editor = {
       risksReservedNames: [],
       risksCanUse: [],
-      filename: null,
+      fileName: null,
       activeStage: 0,
       activeIndex: 0,
       all: [],
@@ -585,12 +585,12 @@ app.controller("editorCtrl", function(
         ? myFactory.karetkaEditor.show.find(
             val => val.name === myFactory.karetkaEditor.chosen
           )
-        : { name: "Перевозчики", filename: "HIP.json", id: "1" };
-    const { name, filename } = karetkaObj;
-    $scope.editor.filename = filename;
+        : { name: "Перевозчики", fileName: "HIP.json", id: "1" };
+    const { name, fileName } = karetkaObj;
+    $scope.editor.fileName = fileName;
     myFactory.HIPname = name;
-    console.log(name, filename);
-    await $http.post(`./php/${filename}`).then(
+    console.log(name, fileName);
+    await $http.post(`./php/${fileName}`).then(
       function success(response) {
         scope.currObj = response.data;
         scope.myFactory.currObj = response.data;
@@ -652,16 +652,16 @@ app.controller("editorCtrl", function(
     );
   };
   $scope.saveJSON = async () => {
-    if ($scope.editor.filename === "example.json") {
+    if ($scope.editor.fileName === "example.json") {
       //сохранение новой каретки
       let karetkaName = "";
       while (!karetkaName) {
         karetkaName = prompt("Введите название для новой каретки");
       }
-      const filename = `${transliterate(karetkaName)}.json`;
-      $scope.editor.filename = filename;
+      const fileName = `${transliterate(karetkaName)}.json`;
+      $scope.editor.fileName = fileName;
       myFactory.HIPname = karetkaName;
-      await $scope.addKaretkaNameToDB(karetkaName, filename);
+      await $scope.addKaretkaNameToDB(karetkaName, fileName);
       KARETKA.data = await loadKaretkaNames();
       prepareKaretkaValues();
     }
@@ -686,7 +686,7 @@ app.controller("editorCtrl", function(
     // формирование запроса
     const fd = new FormData();
     fd.append("json", obj);
-    fd.append("filename", $scope.editor.filename);
+    fd.append("fileName", $scope.editor.fileName);
     const req = new Request("php/json.php", { method: "POST", body: fd });
     return fetch(req).then(
       async resp => {
@@ -699,11 +699,11 @@ app.controller("editorCtrl", function(
       }
     );
   };
-  $scope.addKaretkaNameToDB = async (name, filename) => {
+  $scope.addKaretkaNameToDB = async (name, fileName) => {
     const fd = new FormData();
     fd.append("type", "POST");
     fd.append("name", name);
-    fd.append("fileName", filename);
+    fd.append("fileName", fileName);
     const req = new Request("php/karetkaNames.php", {
       method: "POST",
       body: fd
