@@ -112,7 +112,8 @@ function initDB(resp) {
  * Функция создания массива риск - коэф. из файла конфигурации
  * @param {string} param - название файла конфигурации каретки
  */
-async function loadRisks() {
+async function loadRisks(fileName) {
+  if (fileName) hipFileName = fileName;
   try {
     let currObj = [];
     risks = [];
