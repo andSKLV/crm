@@ -2041,7 +2041,19 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         if (multi.parent) deepRemoveMulti(multi.parent);
         myFactory.multi.multies.splice(myFactory.multi.multies.indexOf(multi), 1);
     }
-
+    this.openEditor = () => {
+        // debugger;
+        const pswrd = prompt ('Введите пароль');
+        if (pswrd!=='1234') return false;
+        myFactory.karetkaEditor = {};
+        myFactory.karetkaEditor.show = [...KARETKA.show];
+        const picker = document.querySelector(".modal_picker");
+        picker.style.display = "block";
+    }
+    this.chooseEditor = (name) => {
+        myFactory.karetkaEditor.chosen = name;
+        this.relocatePage('editor');
+    }
     if ($location.$$path==='/calculation') this.loadMatrix('HIP.json');
 
 });

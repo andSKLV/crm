@@ -63,3 +63,48 @@
   margin-left: 50px;
   width: calc(100% - 50px);
 }
+.settings_btn{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+
+}
+.settings_btn:hover::after{
+  content: attr(data-name);
+  position: absolute;
+  z-index: 10;
+  background-color: white;
+  color: black;
+  font-size: 14px;
+  width: 100px;
+  height: auto;
+  border: 2px solid rgb(0, 111, 167);
+  border-radius: 15px;
+  padding: 2px 6px 2px 6px;
+  font-weight: bold;
+  right: 120%;
+  top: 30%;
+  text-align: center;
+}
+.modal_picker {
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.modal_picker_box{
+  width: 40%;
+  min-height: 40%;
+  position: absolute;
+  top: 20%;
+  left: 30%;
+  background-color: white;
+  z-index: 1001;
+  opacity: 1;
+  padding: 20px;
+  border-radius: 20px;
+  border: 2px solid var(--dark-blue);
+}

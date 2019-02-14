@@ -14,7 +14,7 @@ app.controller("editorCtrl", function(
     $scope.editor = {
       risksReservedNames: [],
       risksCanUse: [],
-      fileName: null,
+      filename: null,
       activeStage: 0,
       activeIndex: 0,
       all: [],
@@ -580,12 +580,17 @@ app.controller("editorCtrl", function(
     $scope.editor.prevNames = resp.data;
   };
   $scope.loadMatrix = async function() {
-    myFactory.HIPname = "Перевозчики";
-    const param = myFactory.karetkaTypes[myFactory.HIPname];
-    this.myFactory.karetkaTypes[this.myFactory.HIPname];
-    $scope.editor.fileName = param;
-    hipFileName = param;
-    await $http.post(`./php/${param}`).then(
+    const karetkaObj =
+      myFactory.karetkaEditor && myFactory.karetkaEditor.show
+        ? myFactory.karetkaEditor.show.find(
+            val => val.name === myFactory.karetkaEditor.chosen
+          )
+        : { name: "Перевозчики", filename: "HIP.json", id: "1" };
+    const { name, filename } = karetkaObj;
+    $scope.editor.filename = filename;
+    myFactory.HIPname = name;
+    console.log(name, filename);
+    await $http.post(`./php/${filename}`).then(
       function success(response) {
         scope.currObj = response.data;
         scope.myFactory.currObj = response.data;
@@ -665,7 +670,7 @@ app.controller("editorCtrl", function(
     // формирование запроса
     const fd = new FormData();
     fd.append("json", obj);
-    fd.append("filename", $scope.editor.fileName);
+    fd.append("filename", $scope.editor.filename);
     const req = new Request("php/json.php", { method: "POST", body: fd });
     return fetch(req).then(
       async resp => {

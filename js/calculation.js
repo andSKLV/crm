@@ -16,6 +16,7 @@ let koef_pow, PREVNAMES;
 let BASENAME = "CMR/TTH пакет";
 let OLDBASENAMES = ["Базовые риски"];
 let hipFileName = "HIP.json";
+const KARETKA = {};
 
 init();
 // SKLV: функция для асинхронной загрузки БД
@@ -25,9 +26,19 @@ async function init() {
   initDB(response);
   //Функция загрузки рисков из json и создания массива risks
   await loadPrevNames();
-  loadRisks();
-  loadKaretkaNames();
+  KARETKA.data = await loadKaretkaNames();
+  prepareKaretkaValues();
   loadBaseNames();
+}
+function prepareKaretkaValues() {
+  KARETKA.show = KARETKA.data.map(val => {
+    const kar = Object.assign({}, val);
+    return kar;
+  });
+  KARETKA.show.push({
+    name: "Новая",
+    filename: "example.json"
+  });
 }
 async function loadKaretkaNames() {
   const fd = new FormData();
@@ -36,7 +47,7 @@ async function loadKaretkaNames() {
   return fetch(req).then(
     async resp => {
       const res = await resp.json();
-      debugger;
+      return res;
     },
     err => {
       console.error("Ошибка ", err);

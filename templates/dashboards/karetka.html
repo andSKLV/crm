@@ -37,6 +37,10 @@
 </div>
 <div class="nav">
     <div>
-        <div key="{{dashboard.addQwertyKey($index)}}" ng-repeat="param in dashboard.currObj" ng-click="param.able=='none' ? '' : dashboard.karetka.mode!='changing process' ? dashboard.selectParam($index) : dashboard.selectParam($index) " ng-if="param.name" ng-class="[{mi_selected: dashboard.myFactory.document.selectedParam===$index}]">{{param.able=='none' ? '' : param.selected ? param.model=="amount" ? dashboard.applyFilter(param.selected, "badAssAmount") : dashboard.applyFilter(param.selected,param.model) : param.name}}</div>
+        <div key="{{dashboard.addQwertyKey($index)}}" 
+        ng-repeat="param in dashboard.currObj" 
+        ng-click="param.able=='none' ? '' : dashboard.karetka.mode!='changing process' ? dashboard.selectParam($index) : dashboard.selectParam($index) " 
+        ng-if="param.name" 
+        ng-class="[{mi_selected: dashboard.myFactory.document.selectedParam===$index}]">{{param.able=='none' ? '' : param.selected ? param.model=="amount" ? dashboard.applyFilter(param.selected, "badAssAmount") : dashboard.applyFilter(param.selected,param.model) : param.name}}</div>
     </div>
 </div>

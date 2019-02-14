@@ -16,3 +16,15 @@
 </div>
 <div calculation-nav></div>
 <div ng-if="dashboard.myFactory.matrixType=='HIP' && dashboard.myFactory.totalPrice!=undefined && dashboard.myFactory.totalPrice!=0" calculation-bottom></div>
+<div class="settings_btn" data-name="Редактор кареток" ng-click="calculation.openEditor()">
+    <img src="img/gearwheel.png" alt="settings" alt="settings">
+</div>
+<div class='modal_picker' style="display: none">
+    <div class="modal_picker_box">
+        <div ng-repeat="val in calculation.myFactory.karetkaEditor.show"
+          style="cursor: pointer;"
+          ng-click="calculation.chooseEditor(val.name)">
+            <p>{{val.name}}</p>
+          </div>
+    </div>
+</div>
