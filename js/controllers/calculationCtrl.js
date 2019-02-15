@@ -2049,13 +2049,24 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         if (pswrd!=='1234') return false;
         myFactory.karetkaEditor = {};
         myFactory.karetkaEditor.show = [...KARETKA.show];
-        const picker = document.querySelector(".modal_picker");
+        const picker = document.querySelector("#modal_hipeditor");
         picker.style.display = "block";
     }
     this.chooseEditor = (name) => {
         myFactory.karetkaEditor.chosen = name;
         this.relocatePage('editor');
     }
+    this.openHipChangeMenu = () => {
+        if (!myFactory.karetkaEditor) myFactory.karetkaEditor = {};
+        myFactory.karetkaEditor.data = [...KARETKA.data];
+        const picker = document.querySelector("#modal_hipchanger");
+        picker.style.display = "block";
+    }
+    this.closeHipChanger = () => {
+        const picker = document.querySelector("#modal_hipchanger");
+        picker.style.display = "none";
+    }
+
     if ($location.$$path==='/calculation') this.loadMatrix('HIP.json');
 
 });

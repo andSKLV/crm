@@ -3,18 +3,9 @@
         <img class="nav-icon" src="./img/nav/home.png" alt="Главное меню">
     </div>
     <div class="nav-option">
-        <div class="select_HIP" ng-click="calculation.toogleMenu()" ng-if="calculation.myFactory.parks.length===0">
+        <div class="select_HIP" ng-click="calculation.openHipChangeMenu()" ng-if="calculation.myFactory.parks.length===0">
             <div class="hover-hint" id="karetka" data-name="Тип каретки">
-                <img ng-src="./img/{{(calculation.myFactory.HIPname==='Перевозчики')?'truck.png':'call-center.png'}}" alt="" class="nav-icon hover-hint" title="Тип каретки">
-            </div>
-            
-            <div class="select_container select--hidden"> 
-                <div class="select_option hover-hint" id="truck" data-name="Перевозчики" ng-click="calculation.setHIP('Перевозчики')">
-                    <img src="./img/truck.png" alt="">
-                </div>
-                <div class="select_option hover-hint" id="call-center" data-name="Экспедиторы" ng-click="calculation.setHIP('Экспедиторы')">
-                    <img src="./img/call-center.png" alt="">
-                </div>
+                <img ng-src="./img/truck.png" alt="" class="nav-icon hover-hint" title="Тип каретки">
             </div>
         </div>
     </div>

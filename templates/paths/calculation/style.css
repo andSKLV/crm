@@ -56,8 +56,7 @@
   top: 8%;
 }
 #karetka:hover::after{
-  top: 100%;
-  left: 10%;
+  top: 60%;
 }
 .window-header {
   margin-left: 50px;
