@@ -577,6 +577,7 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         return height;
     };
     this.reloadDashboard=function(string, type){
+        if (!string) string = hipFileName;
         if(string==="Компания"){
             string="HIP.json", type="HIP";
         }
