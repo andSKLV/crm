@@ -581,7 +581,9 @@ app.controller("editorCtrl", function(
   };
   $scope.loadMatrix = async function() {
     const karetkaObj =
-      myFactory.karetkaEditor && myFactory.karetkaEditor.show
+      myFactory.karetkaEditor &&
+      myFactory.karetkaEditor.show &&
+      myFactory.karetkaEditor.chosen
         ? myFactory.karetkaEditor.show.find(
             val => val.name === myFactory.karetkaEditor.chosen
           )
@@ -589,7 +591,7 @@ app.controller("editorCtrl", function(
     const { name, fileName } = karetkaObj;
     $scope.editor.fileName = fileName;
     myFactory.HIPname = name;
-    console.log(name, fileName);
+    console.log("loaded:", name, fileName);
     await $http.post(`./php/${fileName}`).then(
       function success(response) {
         scope.currObj = response.data;
@@ -664,6 +666,19 @@ app.controller("editorCtrl", function(
       await $scope.addKaretkaNameToDB(karetkaName, fileName);
       KARETKA.data = await loadKaretkaNames();
       prepareKaretkaValues();
+    } else {
+      const karetkaName = prompt(
+        "Введите название для новой каретки или пересохраните старую",
+        myFactory.HIPname
+      );
+      if (karetkaName !== myFactory.HIPname) {
+        const fileName = `${transliterate(karetkaName)}.json`;
+        $scope.editor.fileName = fileName;
+        myFactory.HIPname = karetkaName;
+        await $scope.addKaretkaNameToDB(karetkaName, fileName);
+        KARETKA.data = await loadKaretkaNames();
+        prepareKaretkaValues();
+      }
     }
     //save basename changes
     if (
@@ -719,10 +734,10 @@ app.controller("editorCtrl", function(
       }
     );
   };
-  $scope.deleteKaretkaNameFromDB = async () => {
+  $scope.deleteKaretkaNameFromDB = async id => {
     const fd = new FormData();
     fd.append("type", "DELETE");
-    fd.append("id", "3");
+    fd.append("id", id.toString());
     const req = new Request("php/karetkaNames.php", {
       method: "POST",
       body: fd
@@ -738,11 +753,11 @@ app.controller("editorCtrl", function(
       }
     );
   };
-  $scope.renameKaretkaNameInDB = async () => {
+  $scope.renameKaretkaNameInDB = async (id, name) => {
     const fd = new FormData();
     fd.append("type", "UPDATE");
-    fd.append("id", "4");
-    fd.append("name", "updated");
+    fd.append("id", id.toString());
+    fd.append("name", name);
     const req = new Request("php/karetkaNames.php", {
       method: "POST",
       body: fd
