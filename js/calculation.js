@@ -42,7 +42,7 @@ function prepareKaretkaValues() {
     return kar;
   });
   KARETKA.show.push({
-    name: "Новая",
+    name: "+ Новая каретка",
     fileName: "example.json"
   });
 }

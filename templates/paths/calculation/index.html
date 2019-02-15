@@ -21,6 +21,7 @@
 </div>
 <div class='modal_picker' id="modal_hipeditor" style="display: none">
     <div class="modal_picker_box">
+        <div class="close_cross" ng-click="calculation.closeModal('modal_hipeditor')">X</div>
         <div ng-repeat="val in calculation.myFactory.karetkaEditor.show"
           style="cursor: pointer;"
           ng-click="calculation.chooseEditor(val.name)">
@@ -30,6 +31,7 @@
 </div>
 <div class='modal_picker' id="modal_hipchanger" style="display: none">
     <div class="modal_picker_box">
+        <div class="close_cross" ng-click="calculation.closeModal('modal_hipchanger')">X</div>
         <div ng-repeat="val in calculation.myFactory.karetkaEditor.data"
           style="cursor: pointer;"
           ng-click="calculation.closeHipChanger();calculation.setHIP(val.name);">

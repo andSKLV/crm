@@ -2067,7 +2067,10 @@ app.controller('calculationCtrl',function($rootScope,$http,$cookies, myFactory, 
         const picker = document.querySelector("#modal_hipchanger");
         picker.style.display = "none";
     }
-
+    this.closeModal = (name) => {
+        const picker = document.querySelector(`#${name}`);
+        picker.style.display = "none";
+    }
     if ($location.$$path==='/calculation') this.loadMatrix('HIP.json');
 
 });
