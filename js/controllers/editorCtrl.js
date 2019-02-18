@@ -659,6 +659,7 @@ app.controller("editorCtrl", function(
       let karetkaName = "";
       while (!karetkaName) {
         karetkaName = prompt("Введите название для новой каретки");
+        if (karetkaName === null) return false;
       }
       const fileName = `${transliterate(karetkaName)}.json`;
       $scope.editor.fileName = fileName;
@@ -671,6 +672,7 @@ app.controller("editorCtrl", function(
         "Введите название для новой каретки или пересохраните старую",
         myFactory.HIPname
       );
+      if (karetkaName === null) return false;
       if (karetkaName !== myFactory.HIPname) {
         const fileName = `${transliterate(karetkaName)}.json`;
         $scope.editor.fileName = fileName;
