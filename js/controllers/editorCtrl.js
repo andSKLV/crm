@@ -773,6 +773,9 @@ app.controller("editorCtrl", function(
       }
     );
   };
+  $scope.onSubmitInput = e => {
+    if (e.code === "Enter") e.target.blur();
+  };
 
   $scope.createEditor();
   $scope.loadMatrix("HIP.json");

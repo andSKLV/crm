@@ -169,7 +169,8 @@
                     rows="{{param[0]==='title'?3:1}}" class="param_input" type="text" ng-value="param[1]"
                     ng-class="{resizable: param[0]==='title'}" 
                     ng-blur="inputChange(param,$event.target)"
-                    ng-if="!(editor.editingObj.limit&&param[0]==='risk')">
+                    ng-if="!(editor.editingObj.limit&&param[0]==='risk')"
+                    ng-keypress="onSubmitInput($event)">
         </div>
     </div>
     
