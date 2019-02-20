@@ -175,7 +175,7 @@ app.controller("matrixCtrl", function(
               const HIP_name = myFactory.karetkaTypes[response.data.HIPname]; //достаем название файла конфигурации каретки
               await loadRisks(HIP_name); //загрузка новых рисков
               myFactory.HIPname = response.data.HIPname;
-              myFactory.scop.loadMatrix(); // перезагружаем матрицу
+              await myFactory.scop.loadMatrix(); // перезагружаем матрицу
             }
             myFactory.calculationName = response.data.name;
             myFactory.finalCalc();
@@ -403,7 +403,7 @@ app.controller("matrixCtrl", function(
               const HIP_name = myFactory.karetkaTypes[response.data.HIPname]; //достаем название файла конфигурации каретки
               await loadRisks(HIP_name); //загрузка новых рисков
               myFactory.HIPname = response.data.HIPname;
-              myFactory.scop.loadMatrix(); // перезагружаем матрицу
+              await myFactory.scop.loadMatrix(); // перезагружаем матрицу
             }
             // сохраняем имя загруженного расчета в верхней части матрицы
             myFactory.calculationName = response.data.name;

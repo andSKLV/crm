@@ -1195,6 +1195,7 @@ app.factory("myFactory", function() {
       this.parks.forEach(function(park) {
         max = Math.max(park.findMaxLimit(), max);
       });
+      if (isNaN(max)) max = 0;
       this.a_limit.max_limit = max;
       //if(!this.a_limit.hand) this.a_limit.value=max;
     },

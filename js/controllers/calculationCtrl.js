@@ -45,6 +45,7 @@ app.controller("calculationCtrl", function(
         scope.currObj = [];
         //TODO:
         const toDelete = [];
+        KARETKA_MODELS = [];
         response.data.forEach(x => {
           if (x.model) KARETKA_MODELS.push(x.model);
         });
