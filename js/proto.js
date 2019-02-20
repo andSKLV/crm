@@ -362,7 +362,8 @@ class Process {
     // базовая ставка price
     let price = spline * (1 + spline1 / 100);
     // учет франшизы
-    price *= Franchise(this.cost, this.franchise);
+    if (KARETKA_MODELS.includes("franchise"))
+      price *= Franchise(this.cost, this.franchise);
 
     /**
      * влияние лимита по случаю на данный риск

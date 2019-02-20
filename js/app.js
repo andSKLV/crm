@@ -1063,7 +1063,7 @@ app.factory("myFactory", function() {
       amount: "",
       wrapping: "",
       risk: "",
-      limit: "", //FIXME:
+      limit: "",
       franchise: ""
     },
     cleanProcess: function() {
@@ -1571,17 +1571,19 @@ app.factory("myFactory", function() {
       //******************************************************************************
       this.cleanUpProcessesInParks(); //обнуляем все значения, необходимые для парка:     +//смотрим есть ли повторяющиеся риски                   +
       this.calculateParksAmount();
-      //   this.findMaxLimit();
+      this.findMaxLimit(); //FIXME:
       let myFactory = this;
-      //   this.parks.forEach(park => {
-      //     park.processes.forEach(process => {
-      //       if (process.limit === 0) {
-      //         process.limit = process.cost;
-      //         console.warn("Process limit 0 was changed to process price");
-      //       }
-      //       delete process.showRows;
-      //     });
-      //   });
+      if (KARETKA_MODELS.includes("limit")) {
+        this.parks.forEach(park => {
+          park.processes.forEach(process => {
+            if (process.limit === 0) {
+              process.limit = process.cost;
+              console.warn("Process limit 0 was changed to process price");
+            }
+            delete process.showRows;
+          });
+        });
+      }
       this.multi.multies.forEach(function(multi) {
         if (multi.processes.length == 1) {
           delete multi.processes[0].multi;
@@ -1600,6 +1602,7 @@ app.factory("myFactory", function() {
       });
       //подсчет премии с агрегатным лимитом, отличным от обычного
       //***************** считаем Агр. лимит
+      console.warn(JSON.stringify(this.a_limit));
       if (
         this.a_limit.hand &&
         ((this.a_limit.type == "Агр. лимит" &&
@@ -1614,6 +1617,7 @@ app.factory("myFactory", function() {
         this.a_limit.value = this.a_limit.max_limit;
         this.a_limit.type = "Агр. лимит";
       }
+      console.warn(JSON.stringify(this.a_limit));
       this.totalPrice = this.getTotal();
       //****************
       if (isNaN(this.totalPrice)) return;
