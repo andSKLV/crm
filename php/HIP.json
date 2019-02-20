@@ -168,44 +168,7 @@
 			}
 		]
 	},
-	{
-		"name": "Лимит по случаю",
-		"model": "limit",
-		"values": [
-			{
-				"name": "currencyValue",
-				"type": "currencyValue"
-			},
-			{
-				"name": "input",
-				"type": "inputForCurrency"
-			},
-			{
-				"name": 1000000,
-				"type": "currency"
-			},
-			{
-				"name": 2000000,
-				"type": "currency"
-			},
-			{
-				"name": 3000000,
-				"type": "currency"
-			},
-			{
-				"name": 5000000,
-				"type": "currency"
-			},
-			{
-				"name": 7000000,
-				"type": "currency"
-			},
-			{
-				"name": 10000000,
-				"type": "currency"
-			}
-		]
-	},
+	
 	{
 		"name": "Франшиза по случаю",
 		"model": "franchise",

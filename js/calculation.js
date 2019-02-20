@@ -17,6 +17,7 @@ let BASENAME = "CMR/TTH пакет";
 let OLDBASENAMES = ["Базовые риски"];
 let hipFileName = "HIP.json";
 const KARETKA = {};
+const KARETKA_MODELS = [];
 
 init();
 // SKLV: функция для асинхронной загрузки БД
