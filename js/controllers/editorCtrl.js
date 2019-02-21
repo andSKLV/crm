@@ -96,7 +96,11 @@ app.controller("editorCtrl", function(
       "amountType",
       "inputForCurrency"
     ];
-    if ($scope.editor.stage1.includes(obj)) {
+    const rootDeletable = ["limit", "franchise"];
+    if (
+      $scope.editor.stage1.includes(obj) &&
+      !rootDeletable.includes(obj.model)
+    ) {
       $scope.editor.notDeleteMessage = "Нельзя удалить корневой элемент";
       return false;
     }
@@ -295,7 +299,17 @@ app.controller("editorCtrl", function(
       $scope.removeRiskFromPool(el.name);
       $scope.removeRiskFromPackages(el.name);
     }
-
+    if (deletingStageName === "stage1") {
+      parentStageInd = 1;
+      debugger;
+      if (
+        $scope.editor[`stage${parentStageInd}`].length <=
+        $scope.editor.active[`stage${parentStageInd}`]
+      ) {
+        $scope.editor.active[`stage${parentStageInd}`] =
+          $scope.editor[`stage${parentStageInd}`].length - 1;
+      }
+    }
     $scope.selectParam(
       $scope.editor[`stage${parentStageInd}`],
       $scope.editor.active[`stage${parentStageInd}`],
