@@ -54,11 +54,9 @@ app.controller("calculationCtrl", function(
           toDelete.push(x);
           return false;
         });
-        console.warn("transportProp", transportProp);
         toDelete.forEach(x => {
           delete myFactory.process[x];
         });
-        console.warn("mf.process", myFactory.process);
         //
         let data = replaceSingleDepth(response.data);
         data = putDepth(data);
