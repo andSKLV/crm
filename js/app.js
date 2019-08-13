@@ -3,7 +3,7 @@ import { loadRisks, SplineKoeff, Spline, Franchise, BubbleSort, Limit, isNumeric
 
 const app = angular.module("mainApp", [
     "ngRoute",
-    "ngCookies",
+    "ngCookies"
 ]);
 window.app = app;
 app.config(function ($routeProvider) {
@@ -222,6 +222,12 @@ app.directive("polisNav", function () {
         templateUrl: "./templates/paths/polis/navigation.html"
     };
 });
+app.directive("polisConfig", function () {
+    return {
+        restrict: "A",
+        templateUrl: "./templates/paths/polis/config.html"
+    };
+});
 app.directive("companyDashboard", function () {
     return {
         restrict: "A",
@@ -414,6 +420,7 @@ app.directive("importSheetJs", function SheetJSImportDirective(myFactory) {
                 autNumber: (list[`C${i}`]) ? list[`C${i}`].w : '',
                 VIN: (list[`D${i}`]) ? list[`D${i}`].w : '',
                 prodYear: (list[`E${i}`]) ? list[`E${i}`].w : '',
+                insurant: (list[`F${i}`] && (list[`F${i}`].w.match(/\d/))) ? list[`F${i}`].w : '',
             }
             cars.push(car);
         }
@@ -473,11 +480,11 @@ app.directive("currencyInput", function ($filter, myFactory) {
                         if ($element.val() > 12) $element.val(12);
                         myFactory.payment.hand = true;
                     }
+                    if (![1,2,4,6,12].includes(Number($element.val()))) $element.val(1);
                     myFactory.payment.val = $element.val();
                     myFactory.finalCalc();
                     $scope.$apply();
                 } else if ($attrs.currencyInput == "practicalPrice") {
-                    console.log(myFactory.totalPrice - (myFactory.totalPrice % 1));
                     if (
                         $element.val() == 0 ||
                         $element.val() == "" ||
@@ -492,6 +499,7 @@ app.directive("currencyInput", function ($filter, myFactory) {
                         )
                             $element.val("");
                         myFactory.bottom.priceMode = "price";
+                        myFactory.practicalPrice.koef = 1;
                     } else {
                         //если мы что-то ввели в фактическую премию
                         if (myFactory.bottom.singleAmount) {
@@ -592,7 +600,6 @@ app.directive("currencyInput", function ($filter, myFactory) {
                         }
                         myFactory.applyAlimit();
                         myFactory.finalCalc();
-                        console.log(myFactory.a_limit.value);
                         $scope.$apply();
                     }
                 } else if ($attrs.currencyInput == "payment") {
@@ -604,13 +611,13 @@ app.directive("currencyInput", function ($filter, myFactory) {
                             if ($element.val() > 12) $element.val(12);
                             myFactory.payment.hand = true;
                         }
+                        if (![1,2,4,6,12].includes(Number($element.val()))) $element.val(1);
                         myFactory.payment.val = $element.val();
                         myFactory.finalCalc();
                         $scope.$apply();
                     }
                 } else if ($attrs.currencyInput == "practicalPrice") {
                     if (key == 13) {
-                        console.log(myFactory.totalPrice - (myFactory.totalPrice % 1));
                         if (
                             $element.val() == 0 ||
                             $element.val() == "" ||
@@ -625,6 +632,7 @@ app.directive("currencyInput", function ($filter, myFactory) {
                             )
                                 $element.val("");
                             myFactory.bottom.priceMode = "price";
+                            myFactory.practicalPrice.koef = 1;
                         } else {
                             //если мы что-то ввели в фактическую премию
                             if (myFactory.bottom.singleAmount) {
@@ -690,7 +698,6 @@ app.directive("currencyInput", function ($filter, myFactory) {
                                     let target = $event.target;
                                     target.blur();
                                     document.querySelector(".dashboard_container").focus();
-                                    console.log(myFactory.process);
                                     return;
                                 }
                                 i++;
@@ -782,7 +789,6 @@ app.factory("myFactory", function () {
                     this.multi.mode = true;
                 } else this.multi.mode = false;
             } else this.multi.mode = mode;
-            console.log(this.multi.mode);
         },
         /**
          * этот раздел с keyCodes можно удалить
@@ -943,12 +949,32 @@ app.factory("myFactory", function () {
                             break;
                     }
                 };
-                this.totalPrice = price;
+                const calcPrices = (price,payments) => {
+                    price = Math.round(Number(price));
+                    const res = {}
+                    res.total = addSpaces(price);
+                    if (payments===1) {
+                        res.month = res.total;
+                        return res;
+                    }
+                    const month = price/payments;
+                    if (month%1===0 || month%1===0.5) {
+                        res.month = addSpaces(month);
+                        return res;
+                    };
+                    res.month = Math.round(month);
+                    res.last = addSpaces(roundToFixed((price-res.month*payments),2) + res.month);
+                    return res;
+                }
+                const {total, month, last} = calcPrices (price, this.val);
+                // this.totalPrice = Number(price.toFixed(0));
+                this.totalPrice = total;
                 this.datesWhenCreated = { start, end, time }; //записываем значение, чтобы потом сравнивать и если что обновлять финансы
-
-                let payment = addSpaces(Math.round(price / this.val)); //рассчитываем цену одного платежа
+                // let payment = addSpaces(roundToFixed((price / this.val),2)); //рассчитываем цену одного платежа
+                const payment = month;
                 this.calcDebt = payment; //устанавливаем долг равный полной цене
-                this.leftPrice = addSpaces(Math.round(price / this.val) * this.val);
+                // this.leftPrice = addSpaces(roundToFixed((price / this.val),2)*this.val);
+                this.leftPrice = total;
                 start = start.replace(/(\d+).(\d+).(\d+)/, "$2.$1.$3"); // меняем местами месяц и день в дате, чтобы js воспринимал нормально дату
                 end = end.replace(/(\d+).(\d+).(\d+)/, "$2.$1.$3");
                 const array = [];
@@ -963,12 +989,19 @@ app.factory("myFactory", function () {
                     array.push({
                         price: "",
                         date: "",
-                        debt: payment,
+                        debt: (last && i===this.val-1) ? last : payment,
                         debtDate: date,
                         manual: false
                     });
                 }
                 this.array = array;
+                function roundToFixed(number, places) {
+                    var multiplier = Math.pow(10, places+2); 
+                    var fixed = Math.floor(number*multiplier); 
+                    fixed += 44; // round down on anything less than x.xxx56
+                    fixed = Math.floor(fixed/100);
+                    return fixed/Math.pow(10, places);
+                }
             }
         },
         agents: {
@@ -1484,13 +1517,13 @@ app.factory("myFactory", function () {
                 let mass = park.check(false);
                 park.replaceBase();
             });
+            myFactory.checkPracticalPriceKoef(myFactory.practicalPrice.val!=='0');
         },
         /**
          * основная функция для расчета, в которую входят все остальные
          */
         finalCalc() {
             this.parkTemplate = [];
-
             //**************************при загрузке расчета из БД**************************
             if (risks.length == 0 && this.currObj !== undefined) {
                 for (let i = 0; i < this.currObj.length; i++) {
@@ -1508,6 +1541,10 @@ app.factory("myFactory", function () {
             let myFactory = this;
             this.parks.forEach(park => {
                 park.processes.forEach(process => {
+                    if (process.limit===0) {
+                        process.limit=process.cost;
+                        console.warn('Process limit 0 was changed to process price');
+                    }
                     delete process.showRows;
                 });
             });
@@ -1663,7 +1700,6 @@ app.factory("myFactory", function () {
                             throw new Error(
                                 "Верхний мульти с другой структурой. Нет .processes"
                             );
-                            debugger;
                         }
                         newMulti.processes.push(process.multi.processes[0]);
                     }

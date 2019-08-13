@@ -212,9 +212,8 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
             scope.config=string;
 
             if(typeof type !="undefined") scope.myFactory.matrixType=type;
-            console.log(myFactory.parks);
             },function error (response){
-                console.log(response);
+                console.error(response);
 
             }
         );
@@ -234,12 +233,9 @@ app.controller('dashboardCtrl',function($rootScope,$http,$cookies, myFactory, $f
         }
         scope.selectParam(0);
     },function error (response){
-        console.log(response);
+        console.error(response);
     }
     );
-
-
-
     this.relocatePage=function(value){//переход на другую страницу(как в случае с калькулятором который не написан)
         this.myFactory.cameFrom = {
             name: getPathName($location.$$path),

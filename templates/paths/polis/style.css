@@ -275,3 +275,28 @@ ul.park li table .td_cars{
     font-family: 'Lato', Calibri, Arial, sans-serif;
     color: var(--dark-blue);
 }
+
+.config_plate{
+    display: flex;
+    flex-direction: column;
+}
+.input_box {
+    background-color: var(--gray);
+    box-sizing: content-box;
+    cursor: text;
+}
+.input_cell {
+    width: 99%;
+    height: 100%;
+    border: none;
+    background-color: var(--gray);
+    text-align: center;
+    font-size: 12pt;
+    resize: none;
+    font-family: Calibri, Arial, sans-serif;
+}
+
+.no_hover:hover { 
+    color: black !important;
+    background-color: var(--gray) !important;
+}

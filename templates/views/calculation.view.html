@@ -22,7 +22,7 @@
                     <input ng-if="process.isFull" class='input_cars' type="text" ng-model="car.data.autNumber" placeholder="Гос. номер" ng-blur="updateSelectorAutNumber(car)">
                     <select class="open_cars" ng-if="!process.isFull" ng-model="process.cars[$index].selectorAutNumber" ng-change="changeCar(process, process.cars[$index],park.carGroup.cars)">
                         <option disabled selected>{{aCar.data.autNumber || 'Гос. номер'}}</option>
-                        <option ng-repeat="aCar in process.park.carGroup.cars" value="{{aCar.data.autNumber}}" ng-selected="console.log('yo')">{{aCar.data.autNumber}}</option>
+                        <option ng-repeat="aCar in process.park.carGroup.cars" value="{{aCar.data.autNumber}}">{{aCar.data.autNumber}}</option>
                     </select>
                 </td>
                 <td class='td_cars'>
@@ -30,6 +30,9 @@
                 </td>
                 <td class='td_cars'>
                     <input  class='input_cars' type="text" ng-model="car.data.prodYear" placeholder="Год производства">
+                </td>
+                <td class="td_cars" ng-if="myFactory.polisObj.insurants.length>1">
+                    <input  class='input_cars' type="text" ng-model="car.data.insurant" placeholder="Страхователь №">
                 </td>
             </tr>
         </table>

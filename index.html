@@ -2,19 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="cache-control" content="no-cache">
-    <meta http-equiv="expires" content="0">
+    <meta http-equiv="expires" content="-1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     
     <title>Расчет</title>
     <script src="build/pdfmake.min.js?v=2"></script>
     <script src='build/vfs_fonts.js?v=3'></script>
-    
 
     <script src="build/circular-json.js"></script>
     <script src="build/xlsx.core.min.js"></script>
     <link rel="shortcut icon" href="img/favicon.ico?v=1">
     
+
     <link rel="stylesheet" href="dist/main.css?v=5.05">
     <script src="dist/main.js?v=5.05"></script>
 
@@ -40,6 +41,8 @@
     <!-- <script src="js/lib/angular.min.js?v=1"></script> -->
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-i18n/1.6.3/angular-locale_ru-ru.js"></script>
+
+
 </head>
 <body ng-app="mainApp" ng-controller="dashboardCtrl as dashboard">
 <div ng-view class="mi_slider"></div>

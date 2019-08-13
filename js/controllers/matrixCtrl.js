@@ -22,7 +22,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
            if (response.data==="Успешно удалено") console.log('calculation successfully deleted');
            else console.error('problem with deleting', response);
         },function error(response){
-            console.log(response)
+            console.error(response)
         });
     };
     /**
@@ -286,12 +286,10 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
                             if(process.koef!==undefined) proc.practicalPriceKoef=process.koef;
                             array.push(proc);
                         });
-
                         let park=new Park(array[0]);
                         myFactory.parks.push(park);
                         array.splice(0,1);
                         myFactory.choosePark(array,park, 0);
-                        console.log(myFactory.parks);
                     }
                     if (myFactory.packages===undefined) {
                         let resp = await fetch('./src/HIP.json');
@@ -470,6 +468,7 @@ app.controller('matrixCtrl', function($rootScope,$http, myFactory, $timeout, $lo
             companyObj.card = myFactory.newClientCard;
             companyObj.markAsLoaded();
             await loadAddresses();
+            companyObj.transliterate();
             if (myFactory.polisObj &&
                 !myFactory.polisObj.insurants.some(ins=>ins.id===companyObj.id) ) {
                     if (myFactory.polisObj.insurants.length===4) {

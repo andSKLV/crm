@@ -28,6 +28,12 @@ export default class Company {
       'status': data.status,
     }
   }
+  transliterate () {
+    const name = this.card["Данные компании"]["Наименование организации"];
+    const adres = this.card["Доп. информация"]["Юридический адрес"];
+    this.engName = transliterate (name);
+    this.engAdres = transliterate (adres);
+  }
   markAsLoaded(){
     this.isLoaded = true;
     this.isSaved = true;

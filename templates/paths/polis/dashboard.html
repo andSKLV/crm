@@ -11,15 +11,30 @@
          <!-- найти/создать/изменить расчет или компанию -->
         <div ng-if="param.type=='search/create'">
             <div>
-                <input ng-controller="searchCtrl as searchCtrl" type="search" ng-model="param.values[0].name" placeholder="Найти"
-                ng-keyup="param.values[0].name.length>=1 ? searchCtrl.searchForPolis({
+                <input ng-controller="searchCtrl as searchCtrl" 
+                    type="search" ng-model="param.values[0].name" placeholder="Найти"
+                    ng-keyup="param.values[0].name.length>=1 ? searchCtrl.searchForPolis({
                     type: param.name,
                     value: param.values[0].name
                 }) : ''" 
                 >
             </div>
-            <div ng-if='param.name!=="Компания" || !myFactory.companyObj.id' ng-click="changeLocation(param.name)">Создать/Изменить</div>
-            <div ng-if='param.name==="Компания" && myFactory.companyObj.id' ng-click="loadCompanyProfile(myFactory.companyObj.id)">Создать/Изменить</div>
+            <div ng-if='param.name!=="Компания" || !myFactory.companyObj.id' 
+                ng-click="changeLocation(param.name)"
+                >Создать/Изменить</div>
+            <div ng-if='param.name==="Компания" && myFactory.companyObj.id' 
+                ng-click="loadCompanyProfile(myFactory.companyObj.id)"
+                >Создать/Изменить</div>
+        </div>
+        <!-- checkboxes -->
+        <div ng-if="param.type==='config'">
+            <div ng-repeat="val in param.values" class="properties" 
+                ng-class="[{alreadySelected: myFactory.polisObj.docsIncluded[val.field]}]"
+                ng-click="onClickConfigCheckbox(val.field)">
+                <div>
+                    {{val.name}}
+                </div>
+            </div>
         </div>
 
         <!-- доп. списки -->
@@ -36,7 +51,8 @@
         </div>
         <!-- Даты -->
         <div ng-if="param.type=='dates'" >
-            <div ng-repeat="val in param.values" ng-click="(val.type=='btn-switch')?switchBtnClick(val):''" class="properties">
+            <div ng-repeat="val in param.values" ng-click="(val.type=='btn-switch')?switchBtnClick(val):''" 
+                class="properties">
                 {{(val.type=='btn-switch')? val.name+val.selected : ''}}
                 <input ng-if="val.type=='date'" id="input_{{val.control}}"
                 type="text" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="{{val.name}}" 

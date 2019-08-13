@@ -139,7 +139,7 @@ app.controller('searchCtrl', function ($rootScope, $http, $q, $location, myFacto
                 return result;
             }
         }, function error(response) {
-            if (response.data !== null) console.log(response);
+            if (response.data !== null) console.error(response);
         }
         );
     };
