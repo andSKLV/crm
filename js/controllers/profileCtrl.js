@@ -2,6 +2,7 @@ import Company from '../protos/company.js';
 import Profile from '../protos/profile.js';
 import Loading from '../protos/loading.js';
 import { GenerateClientCard } from '../ServiceFunctions.js';
+import { isNumeric, delay, getPathName} from '../calculation.js';
 
 app.controller('profileCtrl', function ($scope, $rootScope, $http, $q, $location, myFactory) {
   $scope.myFactory = myFactory;

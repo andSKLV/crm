@@ -1,20 +1,17 @@
-/**
- * Created by RoGGeR on 17.07.17.
- */
 "use strict";
-let Points={
+window.Points={
     cost:[],
     amount:[],
     risk:[],
     payment: []
 };
-let MB= [[],[]];
-let MC= [[],[]];
-let MD= [[],[]];
-let risks=[];
-let koef_pow;
-const BASENAME = 'CMR/TTH пакет';
-const OLDBASENAMES = ['Базовые риски'];
+window.MB= [[],[]];
+window.MC= [[],[]];
+window.MD= [[],[]];
+window.risks=[];
+window.koef_pow = null;
+window.BASENAME = 'CMR/TTH пакет';
+window.OLDBASENAMES = ['Базовые риски'];
 
 init();
 // SKLV: функция для асинхронной загрузки БД
@@ -361,4 +358,19 @@ function getPathName (path) {
             break;
     }
     return name;
+}
+
+export {
+    loadRisks,
+    SplineKoeff,
+    Spline,
+    Franchise,
+    BubbleSort,
+    Limit,
+    isNumeric,
+    addSpaces,
+    intFromStr,
+    delay,
+    parseDate,
+    getPathName
 }

@@ -1,12 +1,11 @@
-/**
- * Created by RoGGeR on 25.05.17.
- */
-"use strict";
-let app = angular.module("mainApp", [
+import { Process, Park, Multi } from './proto.js';
+import { loadRisks, SplineKoeff, Spline, Franchise, BubbleSort, Limit, isNumeric, addSpaces, intFromStr, delay, parseDate, getPathName} from './calculation.js';
+
+const app = angular.module("mainApp", [
     "ngRoute",
-    "ngCookies",
-    "ngAnimate",
+    "ngCookies"
 ]);
+window.app = app;
 app.config(function ($routeProvider) {
     //с помощью .config мы определяем маршруты приложения. Для конфигурации маршрутов используется объект $routeProvider.
     /*
@@ -16,7 +15,7 @@ app.config(function ($routeProvider) {
        */
     $routeProvider
         .when("/", {
-            templateUrl: "dashboard.html",
+            templateUrl: "./templates/paths/main/dashboard.html",
             controller: "dashboardCtrl as dashboard"
         })
         .when("/dashboard", {
@@ -51,7 +50,7 @@ app.config(function ($routeProvider) {
                     } else $location.path("/");
                 }
             },
-            templateUrl: "dashboard.html",
+            templateUrl: "./templates/paths/main/dashboard.html",
             controller: "dashboardCtrl as dashboard"
         })
         .when("/company", {
@@ -1724,6 +1723,7 @@ app.factory("myFactory", function () {
          * Функция очистки фактори от всех следов вычислений. обнуление
          */
         cleanCalculations() {
+            debugger;
             this.calculationName = "";
             const lim = this.a_limit;
             lim.max_limit = 0;

@@ -2,6 +2,7 @@ import Polis from '../protos/polis.js';
 import { Car, CarGroup } from "../protos/car.js";
 import Company from '../protos/company.js';
 import { DeleteInsurant } from '../ServiceFunctions.js';
+
 import { polisMaker, contractMaker } from '../polismaker.js';
 
 app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $rootScope, $timeout) {
@@ -462,8 +463,11 @@ app.controller("polisCtrl", function (myFactory, $http, $location, $scope, $root
                     })
                 }
             })
+
+
             await polisMaker.start(myFactory, risks);
             contractMaker.makePDF(myFactory);
+
             return null;
         }, function error(response) {
             console.error(response);
