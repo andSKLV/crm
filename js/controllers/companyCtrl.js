@@ -1,8 +1,6 @@
 import Company from '../protos/company.js';
+import { delay, getPathName} from '../calculation.js';
 
-/**
- * Created by RoGGeR on 30.11.2017.
- */
 app.controller("companyCtrl", function (myFactory, $scope, $http, $location, $timeout) {
     //******    Инициализация   *******
     if ($location.$$path!=='/company') return false; //если вызывается контроллер в профайле, так не должно быть

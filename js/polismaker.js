@@ -1,5 +1,7 @@
+
 import { GetLocaleMonth, GetFullForm, GetWordsFromPrice, GetWordsFromNumber, ExampleCompany } from './ServiceFunctions.js';
 import {g as declination} from '../build/declination.min.js';
+
 
 const NOBORDER = [false, false, false, false];
 const DASHBORDER = {
@@ -25,7 +27,9 @@ const currencySign = {
     'USD': '$',
 }
 
-class PolisMaker {
+
+export class PolisMaker {
+
     constructor(myFactory) {
         this.carsTables = [];
         this.carsNumber = 0;

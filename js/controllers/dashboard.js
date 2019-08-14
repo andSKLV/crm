@@ -1,4 +1,5 @@
 import Company from "../protos/company.js";
+import { isNumeric, delay, getPathName} from '../calculation.js';
 
 /**
  * Created by RoGGeR on 30.05.17.
