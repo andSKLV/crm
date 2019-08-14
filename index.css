@@ -1,0 +1,11 @@
+@import url(https://fonts.googleapis.com/css?family=Tenor+Sans);
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,900);
+
+@import "./css/style.css";
+@import "./templates/paths/calculation/style.css";
+@import "./templates/paths/company/style.css";
+@import "./templates/paths/finance/style.css";
+@import "./templates/paths/main/style.css";
+@import "./templates/paths/polis/style.css";
+@import "./templates/paths/polisEditor/style.css";
+@import "./templates/paths/profile/style.css";

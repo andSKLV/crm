@@ -1,3 +1,5 @@
+import { loadRisks, isNumeric, addSpaces, intFromStr, delay, parseDate, getPathName} from '../calculation.js';
+
 app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
     $scope.myFactory = myFactory;
     myFactory.scopes.finance = $scope;
@@ -5,6 +7,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
      * Инициализация, запускается каждый раз при открытии окна финансы
      */
     $scope.init = async () => {
+        if ($scope.myFactory.parks.length===0) $scope.returnToDashboard();
         const priceToString = () => {
             $scope.myFactory.payment.totalPrice = addSpaces(
                 Math.round($scope.myFactory.payment.totalPrice).toString()
@@ -31,7 +34,7 @@ app.controller("financeCtrl", function ($scope, $http, $location, myFactory) {
      */
     $scope.newDashboard = {
         mode: "new",
-        currentPage: ($scope.myFactory.polisObj.isSaved) ? 0 : 2,
+        currentPage: ($scope.myFactory.polisObj && $scope.myFactory.polisObj.isSaved) ? 0 : 2,
         previousPage: -1,
         currPayment: null,
         toLeft(index) {
